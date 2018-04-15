@@ -40,7 +40,7 @@ class C
         [InlineData("0 == items.Count()", "!items.Any()")]
         [InlineData("1 > items.Count()", "!items.Any()")]
         [InlineData("0 >= items.Count()", "!items.Any()")]
-        public static void DiagnosticWithFix1(string source, string sourceWithFix)
+        public static void DiagnosticWithFix(string source, string sourceWithFix)
         {
             VerifyDiagnosticAndCodeFix(
                 SourceTemplate,
@@ -56,15 +56,24 @@ class C
         [InlineData("items.Count() == i")]
         [InlineData("items.Count() != 1")]
         [InlineData("items.Count() != i")]
+        [InlineData("items.Count() > i")]
+        [InlineData("items.Count() >= i")]
+        [InlineData("items.Count() <= i")]
+        [InlineData("items.Count() < i")]
         [InlineData("1 == items.Count()")]
         [InlineData("i == items.Count()")]
         [InlineData("1 != items.Count()")]
         [InlineData("i != items.Count()")]
-        public static void NoDiagnostic1(string source)
+        [InlineData("i < items.Count()")]
+        [InlineData("i <= items.Count()")]
+        [InlineData("i >= items.Count()")]
+        [InlineData("i > items.Count()")]
+        public static void NoDiagnostic(string source)
         {
             VerifyNoDiagnostic(
                 SourceTemplate,
                 source,
+                DiagnosticDescriptors.CallAnyInsteadOfCount,
                 new InvocationExpressionAnalyzer());
         }
     }

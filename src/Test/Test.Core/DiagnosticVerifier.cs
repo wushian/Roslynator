@@ -15,17 +15,17 @@ namespace Roslynator.Test
     {
         public static void VerifyNoDiagnostic(
             string source,
-            DiagnosticAnalyzer analyzer,
             DiagnosticDescriptor descriptor,
+            DiagnosticAnalyzer analyzer,
             string language)
         {
-            VerifyNoDiagnostic(new string[] { source }, analyzer, descriptor, language);
+            VerifyNoDiagnostic(new string[] { source }, descriptor, analyzer, language);
         }
 
         public static void VerifyNoDiagnostic(
             IEnumerable<string> sources,
-            DiagnosticAnalyzer analyzer,
             DiagnosticDescriptor descriptor,
+            DiagnosticAnalyzer analyzer,
             string language)
         {
             Assert.True(analyzer.SupportedDiagnostics.IndexOf(descriptor, DiagnosticDescriptorComparer.IdOrdinal) != -1,
@@ -33,15 +33,8 @@ namespace Roslynator.Test
 
             Diagnostic[] diagnostics = TestUtility.GetSortedDiagnostics(analyzer, sources, language);
 
-            if (diagnostics.Length > 0
-                && analyzer.SupportedDiagnostics.Length > 1
-                && diagnostics.Any(f => !string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)))
-            {
-                diagnostics = diagnostics.Where(f => string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)).ToArray();
-
-                Assert.True(false,
-                    $"Mismatch between number of diagnostics returned, expected: {0} actual: {diagnostics.Length}\r\n\r\nDiagnostics:\r\n{string.Join<Diagnostic>("\r\n", diagnostics)}\r\n");
-            }
+            Assert.True(diagnostics.Length == 0 || diagnostics.All(f => !string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)),
+                    $"No diagnostic expected\r\n\r\nDiagnostics:\r\n{string.Join("\r\n", diagnostics.Where(f => string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)))}\r\n");
         }
 
         public static void VerifyDiagnostic(
@@ -61,44 +54,23 @@ namespace Roslynator.Test
         {
             ImmutableArray<DiagnosticDescriptor> supportedDiagnostics = analyzer.SupportedDiagnostics;
 
-            VerifySupportedDiagnostics(analyzer, expectedDiagnostics, supportedDiagnostics);
+            foreach (Diagnostic diagnostic in expectedDiagnostics)
+            {
+                Assert.True(supportedDiagnostics.IndexOf(diagnostic.Descriptor, DiagnosticDescriptorComparer.IdOrdinal) != -1,
+                    $"Diagnostic \"{diagnostic.Descriptor.Id}\" is not supported by analyzer \"{analyzer.GetType().Name}\"");
+            }
 
             Diagnostic[] diagnostics = TestUtility.GetSortedDiagnostics(analyzer, sources, language);
 
             if (diagnostics.Length > 0
                 && analyzer.SupportedDiagnostics.Length > 1)
             {
-                RemoveOtherDiagnostics();
+                diagnostics = diagnostics
+                    .Where(d => expectedDiagnostics.Any(ed => DiagnosticComparer.IdOrdinal.Equals(d, ed)))
+                    .ToArray();
             }
 
             VerifyDiagnostics(diagnostics, expectedDiagnostics);
-
-            void RemoveOtherDiagnostics()
-            {
-                foreach (Diagnostic diagnostic in diagnostics)
-                {
-                    foreach (Diagnostic expectedDiagnostic in expectedDiagnostics)
-                    {
-                        if (!DiagnosticComparer.IdOrdinal.Equals(diagnostic, expectedDiagnostic))
-                        {
-                            diagnostics = diagnostics
-                                .Where(d => !expectedDiagnostics.Any(ed => DiagnosticComparer.IdOrdinal.Equals(d, ed)))
-                                .ToArray();
-
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-
-        private static void VerifySupportedDiagnostics(DiagnosticAnalyzer analyzer, Diagnostic[] expectedDiagnostics, ImmutableArray<DiagnosticDescriptor> supportedDiagnostics)
-        {
-            foreach (Diagnostic diagnostic in expectedDiagnostics)
-            {
-                Assert.True(supportedDiagnostics.IndexOf(diagnostic.Descriptor, DiagnosticDescriptorComparer.IdOrdinal) != -1,
-                    $"Diagnostic \"{diagnostic.Descriptor.Id}\" is not supported by analyzer \"{analyzer.GetType().Name}\"");
-            }
         }
 
         private static void VerifyDiagnostics(

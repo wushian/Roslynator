@@ -36,7 +36,7 @@ class C
         [InlineData("i >= items.Count()", "!items.Skip(i).Any()")]
         [InlineData("items.Count() < i", "!items.Skip(i - 1).Any()")]
         [InlineData("i > items.Count()", "!items.Skip(i - 1).Any()")]
-        public static void DiagnosticWithFix1(string source, string sourceWithFix)
+        public static void DiagnosticWithFix(string source, string sourceWithFix)
         {
             VerifyDiagnosticAndCodeFix(
                 SourceTemplate,
@@ -48,32 +48,32 @@ class C
         }
 
         [Theory]
+        [InlineData("items.Count() == 0")]
         [InlineData("items.Count() == 1")]
         [InlineData("items.Count() == i")]
+        [InlineData("items.Count() != 0")]
         [InlineData("items.Count() != 1")]
         [InlineData("items.Count() != i")]
-        [InlineData("1 == items.Count()")]
-        [InlineData("i == items.Count()")]
-        [InlineData("1 != items.Count()")]
-        [InlineData("i != items.Count()")]
-
-        [InlineData("items.Count() != 0")]
         [InlineData("items.Count() > 0")]
         [InlineData("items.Count() >= 1")]
-        [InlineData("0 != items.Count()")]
-        [InlineData("0 < items.Count()")]
-        [InlineData("1 <= items.Count()")]
-        [InlineData("items.Count() == 0")]
         [InlineData("items.Count() < 1")]
         [InlineData("items.Count() <= 0")]
         [InlineData("0 == items.Count()")]
+        [InlineData("1 == items.Count()")]
+        [InlineData("i == items.Count()")]
+        [InlineData("0 != items.Count()")]
+        [InlineData("1 != items.Count()")]
+        [InlineData("i != items.Count()")]
+        [InlineData("0 < items.Count()")]
+        [InlineData("1 <= items.Count()")]
         [InlineData("1 > items.Count()")]
         [InlineData("0 >= items.Count()")]
-        public static void NoDiagnostic1(string source)
+        public static void NoDiagnostic(string source)
         {
             VerifyNoDiagnostic(
                 SourceTemplate,
                 source,
+                DiagnosticDescriptors.CallSkipAndAnyInsteadOfCount,
                 new InvocationExpressionAnalyzer());
         }
     }

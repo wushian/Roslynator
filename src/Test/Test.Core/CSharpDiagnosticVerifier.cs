@@ -49,27 +49,6 @@ namespace Roslynator.Test
             VerifyFix(source, newSource, analyzer, codeFixProvider, allowNewCompilerDiagnostics);
         }
 
-        public static void VerifyNoDiagnostic(
-            string source,
-            DiagnosticDescriptor descriptor,
-            DiagnosticAnalyzer analyzer)
-        {
-            VerifyNoDiagnostic(source, descriptor, analyzer);
-        }
-
-        public static void VerifyNoDiagnostic(
-            string sourceTemplate,
-            string source,
-            DiagnosticDescriptor descriptor,
-            DiagnosticAnalyzer analyzer)
-        {
-            int index = sourceTemplate.IndexOf("<<>>");
-
-            source = sourceTemplate.Remove(index, 4).Insert(index, source);
-
-            DiagnosticVerifier.VerifyNoDiagnostic(source, analyzer, descriptor, LanguageNames.CSharp);
-        }
-
         public static void VerifyDiagnostic(
             string source,
             DiagnosticAnalyzer analyzer,
@@ -97,6 +76,35 @@ namespace Roslynator.Test
             params Diagnostic[] expected)
         {
             DiagnosticVerifier.VerifyDiagnostic(sources, analyzer, LanguageNames.CSharp, expected);
+        }
+
+        public static void VerifyNoDiagnostic(
+            string sourceTemplate,
+            string source,
+            DiagnosticDescriptor descriptor,
+            DiagnosticAnalyzer analyzer)
+        {
+            int index = sourceTemplate.IndexOf("<<>>");
+
+            source = sourceTemplate.Remove(index, 4).Insert(index, source);
+
+            VerifyNoDiagnostic(source, descriptor, analyzer);
+        }
+
+        public static void VerifyNoDiagnostic(
+            string source,
+            DiagnosticDescriptor descriptor,
+            DiagnosticAnalyzer analyzer)
+        {
+            VerifyNoDiagnostic(new string[] { source }, descriptor, analyzer);
+        }
+
+        public static void VerifyNoDiagnostic(
+            IEnumerable<string> sources,
+            DiagnosticDescriptor descriptor,
+            DiagnosticAnalyzer analyzer)
+        {
+            DiagnosticVerifier.VerifyNoDiagnostic(sources, descriptor, analyzer, LanguageNames.CSharp);
         }
     }
 }
