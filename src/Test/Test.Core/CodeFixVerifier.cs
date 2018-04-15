@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -15,27 +16,15 @@ namespace Roslynator.Test
 {
     public static class CodeFixVerifier
     {
-        public static void VerifyCSharpFix(
-            string oldSource,
-            string newSource,
-            DiagnosticAnalyzer analyzer,
-            CodeFixProvider codeFixProvider,
-            int? codeFixIndex = null,
-            bool allowNewCompilerDiagnostics = false)
-        {
-            VerifyFix(LanguageNames.CSharp, analyzer, codeFixProvider, oldSource, newSource, codeFixIndex, allowNewCompilerDiagnostics);
-        }
-
         public static void VerifyFix(
-            string language,
+            string source,
+            string newSource,
             DiagnosticAnalyzer analyzer,
             CodeFixProvider codeFixProvider,
-            string oldSource,
-            string newSource,
-            int? codeFixIndex = null,
+            string language,
             bool allowNewCompilerDiagnostics = false)
         {
-            Document document = TestUtility.GetDocument(oldSource, language);
+            Document document = TestUtility.GetDocument(source, language);
 
             Diagnostic[] analyzerDiagnostics = TestUtility.GetSortedDiagnostics(analyzer, document);
 
@@ -56,13 +45,8 @@ namespace Roslynator.Test
                 if (actions.Count == 0)
                     break;
 
-                if (codeFixIndex != null)
-                {
-                    document = ApplyFix(document, actions[(int)codeFixIndex]);
-                    break;
-                }
-
                 document = ApplyFix(document, actions[0]);
+
                 analyzerDiagnostics = TestUtility.GetSortedDiagnostics(analyzer, document);
 
                 IEnumerable<Diagnostic> newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, GetCompilerDiagnostics(document));
@@ -85,7 +69,7 @@ namespace Roslynator.Test
             Assert.Equal(newSource, actual);
         }
 
-        public static Document ApplyFix(Document document, CodeAction codeAction)
+        private static Document ApplyFix(Document document, CodeAction codeAction)
         {
             return codeAction
                 .GetOperationsAsync(CancellationToken.None)
@@ -96,7 +80,7 @@ namespace Roslynator.Test
                 .GetDocument(document.Id);
         }
 
-        public static IEnumerable<Diagnostic> GetNewDiagnostics(
+        private static IEnumerable<Diagnostic> GetNewDiagnostics(
             IEnumerable<Diagnostic> diagnostics,
             IEnumerable<Diagnostic> newDiagnostics)
         {
@@ -125,12 +109,12 @@ namespace Roslynator.Test
             }
         }
 
-        public static IEnumerable<Diagnostic> GetCompilerDiagnostics(Document document)
+        private static IEnumerable<Diagnostic> GetCompilerDiagnostics(Document document)
         {
             return document.GetSemanticModelAsync().Result.GetDiagnostics();
         }
 
-        public static string GetStringFromDocument(Document document)
+        private static string GetStringFromDocument(Document document)
         {
             Document simplifiedDocument = Simplifier.ReduceAsync(document, Simplifier.Annotation).Result;
 

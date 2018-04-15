@@ -16,13 +16,6 @@ namespace Roslynator.Test
         internal static readonly MetadataReference CSharpCodeAnalysisReference = MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location);
         internal static readonly MetadataReference CodeAnalysisReference = MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location);
 
-        //TODO: bug
-        //private static readonly ImmutableDictionary<string, string> _assemblyMap = AppContext
-        //    .GetData("TRUSTED_PLATFORM_ASSEMBLIES")
-        //    .ToString()
-        //    .Split(';')
-        //    .ToImmutableDictionary(Path.GetFileNameWithoutExtension);
-
         private static readonly ImmutableDictionary<string, string> _assemblyMap = AppContext
             .GetData("TRUSTED_PLATFORM_ASSEMBLIES")
             .ToString()

@@ -22,6 +22,8 @@ namespace Roslynator.Test
 
         internal static readonly Comparison<Diagnostic> DiagnosticSpanStartComparison = new Comparison<Diagnostic>((x, y) => Comparer<int>.Default.Compare(x.Location.SourceSpan.Start, y.Location.SourceSpan.Start));
 
+        public static Project EmptyCSharpProject { get; } = CreateProject();
+
         public static Document GetDocument(string source, string language = LanguageNames.CSharp)
         {
             if (language != LanguageNames.CSharp
@@ -46,7 +48,7 @@ namespace Roslynator.Test
 
         public static Project CreateProject(string source, string language = LanguageNames.CSharp)
         {
-            Project project = CreateProject();
+            Project project = (language == LanguageNames.CSharp) ? EmptyCSharpProject : CreateProject(language);
 
             ProjectId projectId = project.Id;
 
@@ -62,7 +64,7 @@ namespace Roslynator.Test
 
         public static Project CreateProject(IEnumerable<string> sources, string language = LanguageNames.CSharp)
         {
-            Project project = CreateProject();
+            Project project = (language == LanguageNames.CSharp) ? EmptyCSharpProject : CreateProject(language);
 
             Solution solution = project.Solution;
 
@@ -93,7 +95,7 @@ namespace Roslynator.Test
                         RuntimeMetadataReferenceResolver.SystemCoreReference,
                         RuntimeMetadataReferenceResolver.CSharpCodeAnalysisReference,
                         RuntimeMetadataReferenceResolver.CodeAnalysisReference,
-                        MetadataReference.CreateFromFile(RuntimeMetadataReferenceResolver.GetAssemblyLocation(AssemblyNames.System_Runtime))
+                        MetadataReference.CreateFromFile(RuntimeMetadataReferenceResolver.GetAssemblyLocation("System.Runtime.dll"))
                     })
                 .GetProject(projectId);
         }
@@ -182,14 +184,30 @@ namespace Roslynator.Test
 
         private static ImmutableArray<Diagnostic> GetDiagnostics(Project project, DiagnosticAnalyzer analyzer)
         {
-            return project
+            Compilation compilation = project
                 .GetCompilationAsync()
-                .Result
-                .WithAnalyzers(ImmutableArray.Create(analyzer))
-                .GetAnalyzerDiagnosticsAsync()
                 .Result;
+
+            foreach (DiagnosticDescriptor descriptor in analyzer.SupportedDiagnostics)
+            {
+                if (!descriptor.IsEnabledByDefault)
+                {
+                    CompilationOptions compilationOptions = compilation.Options;
+                    ImmutableDictionary<string, ReportDiagnostic> specificDiagnosticOptions = compilationOptions.SpecificDiagnosticOptions;
+
+                    specificDiagnosticOptions = specificDiagnosticOptions.Add(descriptor.Id, descriptor.DefaultSeverity.ToReportDiagnostic());
+                    CompilationOptions options = compilationOptions.WithSpecificDiagnosticOptions(specificDiagnosticOptions);
+
+                    compilation = compilation.WithOptions(options);
+                }
+            }
+
+            CompilationWithAnalyzers compilationWithAnalyzers = compilation.WithAnalyzers(ImmutableArray.Create(analyzer));
+
+            return compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().Result;
         }
 
+        //TODO: del
         public static (string newText, List<LinePositionSpan> spans) GetTextAndSpans(string s)
         {
             var sb = new StringBuilder();
