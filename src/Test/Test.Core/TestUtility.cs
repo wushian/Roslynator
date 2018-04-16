@@ -91,11 +91,13 @@ namespace Roslynator.Test
                     projectId,
                     new MetadataReference[]
                     {
-                        RuntimeMetadataReferenceResolver.CorLibReference,
-                        RuntimeMetadataReferenceResolver.SystemCoreReference,
-                        RuntimeMetadataReferenceResolver.CSharpCodeAnalysisReference,
-                        RuntimeMetadataReferenceResolver.CodeAnalysisReference,
-                        MetadataReference.CreateFromFile(RuntimeMetadataReferenceResolver.GetAssemblyLocation("System.Runtime.dll"))
+                        RuntimeMetadataReference.CorLibReference,
+                        RuntimeMetadataReference.CSharpCodeAnalysisReference,
+                        RuntimeMetadataReference.CodeAnalysisReference,
+                        RuntimeMetadataReference.CreateFromAssemblyName("System.Core.dll"),
+                        RuntimeMetadataReference.CreateFromAssemblyName("System.Linq.dll"),
+                        RuntimeMetadataReference.CreateFromAssemblyName("System.Linq.Expressions.dll"),
+                        RuntimeMetadataReference.CreateFromAssemblyName("System.Runtime.dll")
                     })
                 .GetProject(projectId);
         }
@@ -188,6 +190,15 @@ namespace Roslynator.Test
                 .GetCompilationAsync()
                 .Result;
 
+            //foreach (Diagnostic diagnostic in compilation.GetDiagnostics())
+            //{
+            //    if (diagnostic.Descriptor.DefaultSeverity == DiagnosticSeverity.Error
+            //        && diagnostic.Descriptor.CustomTags.Contains(WellKnownDiagnosticTags.Compiler))
+            //    {
+            //        Debug.WriteLine(diagnostic.ToString());
+            //    }
+            //}
+
             foreach (DiagnosticDescriptor descriptor in analyzer.SupportedDiagnostics)
             {
                 if (!descriptor.IsEnabledByDefault)
@@ -205,108 +216,6 @@ namespace Roslynator.Test
             CompilationWithAnalyzers compilationWithAnalyzers = compilation.WithAnalyzers(ImmutableArray.Create(analyzer));
 
             return compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().Result;
-        }
-
-        //TODO: del
-        public static (string newText, List<LinePositionSpan> spans) GetTextAndSpans(string s)
-        {
-            var sb = new StringBuilder();
-
-            var spans = new List<LinePositionSpan>();
-
-            int lastPos = 0;
-
-            int line = 0;
-            int column = 0;
-
-            int startLine = -1;
-            int startColumn = -1;
-
-            int length = s.Length;
-
-            for (int i = 0; i < length; i++)
-            {
-                switch (s[i])
-                {
-                    case '\r':
-                        {
-                            if (i < length - 1
-                                && s[i + 1] == '\n')
-                            {
-                                i++;
-                            }
-
-                            line++;
-                            column = 0;
-                            continue;
-                        }
-                    case '\n':
-                        {
-                            line++;
-                            column = 0;
-                            continue;
-                        }
-                    case '<':
-                        {
-                            if (i < length - 1
-                                && s[i + 1] == '<'
-                                && i < length - 2
-                                && s[i + 2] == '<'
-                                && i < length - 3
-                                && s[i + 3] != '<')
-                            {
-                                sb.Append(s, lastPos, i - lastPos);
-
-                                startLine = line;
-                                startColumn = column;
-
-                                i += 2;
-
-                                lastPos = i + 1;
-
-                                continue;
-                            }
-
-                            break;
-                        }
-                    case '>':
-                        {
-                            if (startColumn != -1
-                                && i < length - 1
-                                && s[i + 1] == '>'
-                                && i < length - 2
-                                && s[i + 2] == '>'
-                                && i < length - 3
-                                && s[i + 3] != '>')
-                            {
-                                sb.Append(s, lastPos, i - lastPos);
-
-                                var span = new LinePositionSpan(
-                                    new LinePosition(startLine, startColumn),
-                                    new LinePosition(line, column));
-
-                                spans.Add(span);
-
-                                i += 2;
-
-                                lastPos = i + 1;
-
-                                startLine = -1;
-                                startColumn = -1;
-
-                                continue;
-                            }
-
-                            break;
-                        }
-                }
-
-                column++;
-            }
-
-            sb.Append(s, lastPos, s.Length - lastPos);
-
-            return (sb.ToString(), spans);
         }
     }
 }

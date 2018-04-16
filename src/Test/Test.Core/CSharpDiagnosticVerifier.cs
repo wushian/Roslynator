@@ -11,6 +11,21 @@ namespace Roslynator.Test
 {
     public static class CSharpDiagnosticVerifier
     {
+        public static void VerifyDiagnosticAndCodeFix2(
+            string source,
+            string newSource,
+            DiagnosticDescriptor descriptor,
+            DiagnosticAnalyzer analyzer,
+            CodeFixProvider codeFixProvider,
+            bool allowNewCompilerDiagnostics = false)
+        {
+            (string source2, List<Diagnostic> diagnostics) = TextUtility.GetMarkedDiagnostics(source, descriptor, TestUtility.CreateFileName());
+
+            VerifyDiagnostic(source2, analyzer, diagnostics.ToArray());
+
+            VerifyFix(source2, newSource, analyzer, codeFixProvider, allowNewCompilerDiagnostics);
+        }
+
         public static void VerifyDiagnosticAndCodeFix(
             string source,
             string newSource,
