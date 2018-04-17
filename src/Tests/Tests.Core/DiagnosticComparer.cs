@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 
-namespace Roslynator.Test
+namespace Roslynator
 {
     public abstract class DiagnosticComparer : IComparer<Diagnostic>, IEqualityComparer<Diagnostic>
     {

@@ -5,9 +5,9 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
-using static Roslynator.Test.CSharpCodeFixVerifier;
+using static Roslynator.Tests.CSharpCodeFixVerifier;
 
-namespace Roslynator.Test
+namespace Roslynator.Tests
 {
     public static class CSharpDiagnosticVerifier
     {

@@ -4,14 +4,14 @@ using Roslynator.CSharp;
 using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
 using Xunit;
-using static Roslynator.Test.CSharpDiagnosticVerifier;
+using static Roslynator.Tests.CSharpDiagnosticVerifier;
 
-namespace Roslynator.Test.Analyzers
+namespace Roslynator.Analyzers.Tests
 {
-    public static class RCS1146_UseConditionalAccess
+    public static class RCS1146UseConditionalAccess
     {
         [Fact]
-        public static void DiagnosticWithFix_IfStatement()
+        public static void TestDiagnosticWithFix_IfStatement()
         {
             VerifyDiagnosticAndCodeFix(
 @"
@@ -78,7 +78,7 @@ public struct S
         }
 
         [Fact]
-        public static void DiagnosticWithFix_LogicalAndExpression_ReferenceType()
+        public static void TestDiagnosticWithFix_LogicalAndExpression_ReferenceType()
         {
             VerifyDiagnosticAndCodeFix(
 @"
@@ -202,7 +202,7 @@ public class Foo
         }
 
         [Fact]
-        public static void DiagnosticWithFix_LogicalAndExpression_NullableType()
+        public static void TestDiagnosticWithFix_LogicalAndExpression_NullableType()
         {
             VerifyDiagnosticAndCodeFix(
 @"
@@ -273,7 +273,7 @@ public struct Foo
         }
 
         [Fact]
-        public static void NoDiagnostic_LogicalAndExpression_ReferenceType()
+        public static void TestNoDiagnostic_LogicalAndExpression_ReferenceType()
         {
             VerifyNoDiagnostic(
 @"
@@ -313,7 +313,7 @@ public class Foo
         }
 
         [Fact]
-        public static void NoDiagnostic_LogicalAndExpression_ValueType()
+        public static void TestNoDiagnostic_LogicalAndExpression_ValueType()
         {
             VerifyNoDiagnostic(
 @"
@@ -338,7 +338,7 @@ public struct Foo
         }
 
         [Fact]
-        public static void NoDiagnostic_LogicalAndExpression_NullableType()
+        public static void TestNoDiagnostic_LogicalAndExpression_NullableType()
         {
             VerifyNoDiagnostic(
 @"
@@ -389,7 +389,7 @@ public struct Foo
         }
 
         [Fact]
-        public static void NoDiagnostic_LogicalAndExpression_OutParameter()
+        public static void TestNoDiagnostic_LogicalAndExpression_OutParameter()
         {
             VerifyNoDiagnostic(
 @"
@@ -417,7 +417,7 @@ public class C
         }
 
         [Fact]
-        public static void NoDiagnostic_LogicalAndExpression_ExpressionTree()
+        public static void TestNoDiagnostic_LogicalAndExpression_ExpressionTree()
         {
             VerifyNoDiagnostic(
 @"

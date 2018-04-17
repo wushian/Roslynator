@@ -7,7 +7,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace Roslynator.Test
+namespace Roslynator
 {
     public static class DiagnosticUtility
     {

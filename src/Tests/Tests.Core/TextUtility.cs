@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Roslynator.Text;
 
-namespace Roslynator.Test
+namespace Roslynator.Tests
 {
     public static class TextUtility
     {

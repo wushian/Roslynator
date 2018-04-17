@@ -2,7 +2,7 @@
 
 using Microsoft.CodeAnalysis.Text;
 
-namespace Roslynator.Test
+namespace Roslynator
 {
     public static class TextSpanExtensions
     {

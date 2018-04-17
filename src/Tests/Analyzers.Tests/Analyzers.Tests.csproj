@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyName>Roslynator.Test.Analyzers</AssemblyName>
-    <RootNamespace>Roslynator.Test.Analyzers</RootNamespace>
+    <AssemblyName>Roslynator.Analyzers.Tests</AssemblyName>
+    <RootNamespace>Roslynator.Analyzers.Tests</RootNamespace>
     <CodeAnalysisRuleSet>..\..\global.ruleset</CodeAnalysisRuleSet>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Test.Analyzers.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Analyzers.Tests.snk</AssemblyOriginatorKeyFile>
     <LangVersion>latest</LangVersion>
     <IsPackable>false</IsPackable>
     <Copyright>Copyright (c) 2017-2018 Josef Pihrt</Copyright>
@@ -27,7 +27,11 @@
     <ProjectReference Include="..\..\Analyzers\Analyzers.csproj" />
     <ProjectReference Include="..\..\Analyzers.CodeFixes\Analyzers.CodeFixes.csproj" />
     <ProjectReference Include="..\..\Common.Workspaces\Common.Workspaces.csproj" />
-    <ProjectReference Include="..\Test.Core\Test.Core.csproj" />
+    <ProjectReference Include="..\Tests.Core\Tests.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Analyzers.Tests.snk" />
   </ItemGroup>
 
 </Project>

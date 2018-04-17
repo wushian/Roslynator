@@ -3,7 +3,7 @@
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
-namespace Roslynator.Test
+namespace Roslynator
 {
     public static class DiagnosticDescriptorExtensions
     {

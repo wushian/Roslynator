@@ -4,11 +4,11 @@ using Roslynator.CSharp;
 using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
 using Xunit;
-using static Roslynator.Test.CSharpDiagnosticVerifier;
+using static Roslynator.Tests.CSharpDiagnosticVerifier;
 
-namespace Roslynator.Test.Analyzers
+namespace Roslynator.Analyzers.Tests
 {
-    public static class RCS1219_CallSkipAndAnyInsteadOfCountTests
+    public static class RCS1219CallSkipAndAnyInsteadOfCountTests
     {
         private const string SourceTemplate = @"
 using System.Collections.Generic;
@@ -25,7 +25,8 @@ class C
         {
         }
     }
-}";
+}
+";
 
         [Theory]
         [InlineData("items.Count() > i", "items.Skip(i).Any()")]
@@ -36,7 +37,7 @@ class C
         [InlineData("i >= items.Count()", "!items.Skip(i).Any()")]
         [InlineData("items.Count() < i", "!items.Skip(i - 1).Any()")]
         [InlineData("i > items.Count()", "!items.Skip(i - 1).Any()")]
-        public static void DiagnosticWithFix(string source, string sourceWithFix)
+        public static void TestDiagnosticWithFix(string source, string sourceWithFix)
         {
             VerifyDiagnosticAndCodeFix(
                 SourceTemplate,
@@ -68,7 +69,7 @@ class C
         [InlineData("1 <= items.Count()")]
         [InlineData("1 > items.Count()")]
         [InlineData("0 >= items.Count()")]
-        public static void NoDiagnostic(string source)
+        public static void TestNoDiagnostic(string source)
         {
             VerifyNoDiagnostic(
                 SourceTemplate,

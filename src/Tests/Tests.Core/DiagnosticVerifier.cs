@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 using Xunit;
 
-namespace Roslynator.Test
+namespace Roslynator.Tests
 {
     public static class DiagnosticVerifier
     {

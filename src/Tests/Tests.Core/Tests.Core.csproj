@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyName>Roslynator.Test.Core</AssemblyName>
-    <RootNamespace>Roslynator.Test</RootNamespace>
+    <AssemblyName>Roslynator.Tests.Core</AssemblyName>
+    <RootNamespace>Roslynator</RootNamespace>
     <CodeAnalysisRuleSet>..\..\global.ruleset</CodeAnalysisRuleSet>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Test.Core.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Tests.Core.snk</AssemblyOriginatorKeyFile>
     <LangVersion>latest</LangVersion>
     <IsPackable>false</IsPackable>
     <Copyright>Copyright (c) 2017-2018 Josef Pihrt</Copyright>
@@ -24,6 +24,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\CSharp\CSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Tests.Core.snk" />
   </ItemGroup>
 
 </Project>

@@ -6,7 +6,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
-namespace Roslynator.Test
+namespace Roslynator
 {
     public static class WorkspaceUtility
     {

@@ -11,7 +11,7 @@ using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Simplification;
 using Xunit;
 
-namespace Roslynator.Test
+namespace Roslynator.Tests
 {
     public static class CodeFixVerifier
     {
