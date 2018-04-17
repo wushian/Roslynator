@@ -21,7 +21,7 @@ class C
         int i = 0;
         IEnumerable<object> items = null;
 
-        if (<<>>)
+        if (<<<>>>)
         {
         }
     }

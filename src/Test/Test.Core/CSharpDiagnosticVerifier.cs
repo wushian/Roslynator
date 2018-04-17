@@ -11,7 +11,7 @@ namespace Roslynator.Test
 {
     public static class CSharpDiagnosticVerifier
     {
-        public static void VerifyDiagnosticAndCodeFix2(
+        public static void VerifyDiagnosticAndCodeFix(
             string source,
             string newSource,
             DiagnosticDescriptor descriptor,
@@ -19,7 +19,7 @@ namespace Roslynator.Test
             CodeFixProvider codeFixProvider,
             bool allowNewCompilerDiagnostics = false)
         {
-            (string source2, List<Diagnostic> diagnostics) = TextUtility.GetMarkedDiagnostics(source, descriptor, TestUtility.CreateFileName());
+            (string source2, List<Diagnostic> diagnostics) = TextUtility.GetSourceAndDiagnostics(source, descriptor, WorkspaceUtility.DefaultCSharpFileName);
 
             VerifyDiagnostic(source2, analyzer, diagnostics.ToArray());
 
@@ -41,23 +41,23 @@ namespace Roslynator.Test
         }
 
         public static void VerifyDiagnosticAndCodeFix(
-            string sourceTemplate,
-            string source,
-            string newSource,
+            string text,
+            string codeWithDiagnostic,
+            string codeWithFix,
             DiagnosticDescriptor descriptor,
             DiagnosticAnalyzer analyzer,
             CodeFixProvider codeFixProvider,
             bool allowNewCompilerDiagnostics = false)
         {
-            int index = sourceTemplate.IndexOf("<<>>");
+            int index = text.IndexOf(TextUtility.OpenMarker + TextUtility.CloseMarker);
 
-            var span = new TextSpan(index, source.Length);
+            var span = new TextSpan(index, codeWithDiagnostic.Length);
 
-            sourceTemplate = sourceTemplate.Remove(index, 4);
+            text = text.Remove(index, TextUtility.OpenMarker.Length + TextUtility.CloseMarker.Length);
 
-            source = sourceTemplate.Insert(index, source);
+            string source = text.Insert(index, codeWithDiagnostic);
 
-            newSource = sourceTemplate.Insert(index, newSource);
+            string newSource = text.Insert(index, codeWithFix);
 
             VerifyDiagnostic(source, analyzer, span, descriptor);
 
@@ -70,7 +70,7 @@ namespace Roslynator.Test
             TextSpan span,
             DiagnosticDescriptor descriptor)
         {
-            Location location = Location.Create(TestUtility.CreateFileName(), span, span.ToLinePositionSpan(source));
+            Location location = Location.Create(WorkspaceUtility.DefaultCSharpFileName, span, span.ToLinePositionSpan(source));
 
             Diagnostic diagnostic = Diagnostic.Create(descriptor, location);
 
@@ -99,9 +99,9 @@ namespace Roslynator.Test
             DiagnosticDescriptor descriptor,
             DiagnosticAnalyzer analyzer)
         {
-            int index = sourceTemplate.IndexOf("<<>>");
+            int index = sourceTemplate.IndexOf(TextUtility.OpenMarker + TextUtility.CloseMarker);
 
-            source = sourceTemplate.Remove(index, 4).Insert(index, source);
+            source = sourceTemplate.Remove(index, TextUtility.OpenMarker.Length + TextUtility.CloseMarker.Length).Insert(index, source);
 
             VerifyNoDiagnostic(source, descriptor, analyzer);
         }

@@ -10,12 +10,15 @@ namespace Roslynator.Test
 {
     public static class TextUtility
     {
-        public static (string newText, List<Diagnostic> diagnostics) GetMarkedDiagnostics(
-            string text,
+        internal const string OpenMarker = "<<<";
+        internal const string CloseMarker = ">>>";
+
+        public static (string sourceWithDiagnostics, List<Diagnostic> diagnostics) GetSourceAndDiagnostics(
+            string s,
             DiagnosticDescriptor descriptor,
             string filePath)
         {
-            StringBuilder sb = StringBuilderCache.GetInstance(text.Length);
+            StringBuilder sb = StringBuilderCache.GetInstance(s.Length - OpenMarker.Length - CloseMarker.Length);
 
             var diagnostics = new List<Diagnostic>();
 
@@ -27,16 +30,16 @@ namespace Roslynator.Test
             int startLine = -1;
             int startColumn = -1;
 
-            int length = text.Length;
+            int length = s.Length;
 
             for (int i = 0; i < length; i++)
             {
-                switch (text[i])
+                switch (s[i])
                 {
                     case '\r':
                         {
                             if (i < length - 1
-                                && text[i + 1] == '\n')
+                                && s[i + 1] == '\n')
                             {
                                 i++;
                             }
@@ -54,13 +57,13 @@ namespace Roslynator.Test
                     case '<':
                         {
                             if (i < length - 1
-                                && text[i + 1] == '<'
+                                && s[i + 1] == '<'
                                 && i < length - 2
-                                && text[i + 2] == '<'
+                                && s[i + 2] == '<'
                                 && i < length - 3
-                                && text[i + 3] != '<')
+                                && s[i + 3] != '<')
                             {
-                                sb.Append(text, lastPos, i - lastPos);
+                                sb.Append(s, lastPos, i - lastPos);
 
                                 startLine = line;
                                 startColumn = column;
@@ -78,13 +81,13 @@ namespace Roslynator.Test
                         {
                             if (startColumn != -1
                                 && i < length - 1
-                                && text[i + 1] == '>'
+                                && s[i + 1] == '>'
                                 && i < length - 2
-                                && text[i + 2] == '>'
+                                && s[i + 2] == '>'
                                 && i < length - 3
-                                && text[i + 3] != '>')
+                                && s[i + 3] != '>')
                             {
-                                sb.Append(text, lastPos, i - lastPos);
+                                sb.Append(s, lastPos, i - lastPos);
 
                                 var lineSpan = new LinePositionSpan(
                                     new LinePosition(startLine, startColumn),
@@ -115,7 +118,7 @@ namespace Roslynator.Test
                 column++;
             }
 
-            sb.Append(text, lastPos, text.Length - lastPos);
+            sb.Append(s, lastPos, s.Length - lastPos);
 
             return (StringBuilderCache.GetStringAndFree(sb), diagnostics);
         }

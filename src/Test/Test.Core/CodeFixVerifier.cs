@@ -23,9 +23,9 @@ namespace Roslynator.Test
             string language,
             bool allowNewCompilerDiagnostics = false)
         {
-            Document document = TestUtility.GetDocument(source, language);
+            Document document = WorkspaceUtility.GetDocument(source, language);
 
-            Diagnostic[] analyzerDiagnostics = TestUtility.GetSortedDiagnostics(analyzer, document);
+            Diagnostic[] analyzerDiagnostics = DiagnosticUtility.GetSortedDiagnostics(analyzer, document);
 
             IEnumerable<Diagnostic> compilerDiagnostics = GetCompilerDiagnostics(document);
 
@@ -46,7 +46,7 @@ namespace Roslynator.Test
 
                 document = ApplyFix(document, actions[0]);
 
-                analyzerDiagnostics = TestUtility.GetSortedDiagnostics(analyzer, document);
+                analyzerDiagnostics = DiagnosticUtility.GetSortedDiagnostics(analyzer, document);
 
                 IEnumerable<Diagnostic> newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, GetCompilerDiagnostics(document));
 

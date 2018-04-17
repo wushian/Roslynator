@@ -31,7 +31,7 @@ namespace Roslynator.Test
             Assert.True(analyzer.SupportedDiagnostics.IndexOf(descriptor, DiagnosticDescriptorComparer.IdOrdinal) != -1,
                 $"Diagnostic \"{descriptor.Id}\" is not supported by analyzer \"{analyzer.GetType().Name}\"");
 
-            Diagnostic[] diagnostics = TestUtility.GetSortedDiagnostics(analyzer, sources, language);
+            Diagnostic[] diagnostics = DiagnosticUtility.GetSortedDiagnostics(analyzer, sources, language);
 
             Assert.True(diagnostics.Length == 0 || diagnostics.All(f => !string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)),
                     $"No diagnostic expected\r\n\r\nDiagnostics:\r\n{string.Join("\r\n", diagnostics.Where(f => string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)))}\r\n");
@@ -60,7 +60,7 @@ namespace Roslynator.Test
                     $"Diagnostic \"{diagnostic.Descriptor.Id}\" is not supported by analyzer \"{analyzer.GetType().Name}\"");
             }
 
-            Diagnostic[] diagnostics = TestUtility.GetSortedDiagnostics(analyzer, sources, language);
+            Diagnostic[] diagnostics = DiagnosticUtility.GetSortedDiagnostics(analyzer, sources, language);
 
             if (diagnostics.Length > 0
                 && analyzer.SupportedDiagnostics.Length > 1)
