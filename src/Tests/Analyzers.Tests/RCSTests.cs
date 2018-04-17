@@ -6,9 +6,11 @@ using Roslynator.CSharp.CodeFixes;
 using Xunit;
 using static Roslynator.Tests.CSharpDiagnosticVerifier;
 
+#pragma warning disable xUnit1008
+
 namespace Roslynator.Analyzers.Tests
 {
-    public static class RCS0000Tests
+    public static class RCSTests
     {
         private const string SourceTemplate = @"
 using System.Collections.Generic;
@@ -22,7 +24,6 @@ class C
 }
 ";
 
-        [Fact]
         public static void TestDiagnosticWithFix()
         {
             VerifyDiagnosticAndCodeFix(
@@ -35,7 +36,6 @@ class C
                 codeFixProvider: default);
         }
 
-        [Theory]
         [InlineData("", "")]
         public static void TestDiagnosticWithFix2(string source, string sourceWithFix)
         {
@@ -48,7 +48,6 @@ class C
                 codeFixProvider: default);
         }
 
-        [Fact]
         public static void TestNoDiagnostic()
         {
             VerifyNoDiagnostic(
@@ -58,7 +57,6 @@ class C
                 analyzer: default);
         }
 
-        [Theory]
         [InlineData("")]
         public static void TestNoDiagnostic2(string source)
         {

@@ -119,5 +119,37 @@ namespace Roslynator
 
             return compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().Result;
         }
+
+        internal static IEnumerable<Diagnostic> GetNewDiagnostics(
+            IEnumerable<Diagnostic> diagnostics,
+            IEnumerable<Diagnostic> newDiagnostics)
+        {
+            using (IEnumerator<Diagnostic> enNew = newDiagnostics.OrderBy(f => f.Location.SourceSpan.Start).GetEnumerator())
+            using (IEnumerator<Diagnostic> en = diagnostics.OrderBy(f => f.Location.SourceSpan.Start).GetEnumerator())
+            {
+                while (enNew.MoveNext())
+                {
+                    if (en.MoveNext())
+                    {
+                        if (en.Current.Id != enNew.Current.Id)
+                            yield return enNew.Current;
+                    }
+                    else
+                    {
+                        yield return enNew.Current;
+
+                        while (enNew.MoveNext())
+                            yield return enNew.Current;
+
+                        yield break;
+                    }
+                }
+            }
+        }
+
+        public static ImmutableArray<Diagnostic> GetCompilerDiagnostics(Document document)
+        {
+            return document.GetSemanticModelAsync().Result.GetDiagnostics();
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace Roslynator.Tests
             CodeFixProvider codeFixProvider,
             bool allowNewCompilerDiagnostics = false)
         {
-            (string source2, List<Diagnostic> diagnostics) = TextUtility.GetSourceAndDiagnostics(source, descriptor, WorkspaceUtility.DefaultCSharpFileName);
+            (string source2, List<Diagnostic> diagnostics) = TextUtility.GetMarkedDiagnostics(source, descriptor, WorkspaceUtility.DefaultCSharpFileName);
 
             VerifyDiagnostic(source2, analyzer, diagnostics.ToArray());
 
@@ -49,15 +49,7 @@ namespace Roslynator.Tests
             CodeFixProvider codeFixProvider,
             bool allowNewCompilerDiagnostics = false)
         {
-            int index = text.IndexOf(TextUtility.OpenMarker + TextUtility.CloseMarker);
-
-            var span = new TextSpan(index, codeWithDiagnostic.Length);
-
-            text = text.Remove(index, TextUtility.OpenMarker.Length + TextUtility.CloseMarker.Length);
-
-            string source = text.Insert(index, codeWithDiagnostic);
-
-            string newSource = text.Insert(index, codeWithFix);
+            (string source, string newSource, TextSpan span) = TextUtility.GetMarkedSpan(text, codeWithDiagnostic, codeWithFix);
 
             VerifyDiagnostic(source, analyzer, span, descriptor);
 
@@ -99,9 +91,7 @@ namespace Roslynator.Tests
             DiagnosticDescriptor descriptor,
             DiagnosticAnalyzer analyzer)
         {
-            int index = sourceTemplate.IndexOf(TextUtility.OpenMarker + TextUtility.CloseMarker);
-
-            source = sourceTemplate.Remove(index, TextUtility.OpenMarker.Length + TextUtility.CloseMarker.Length).Insert(index, source);
+            (string source2, TextSpan span) = TextUtility.GetMarkedSpan(sourceTemplate, source);
 
             VerifyNoDiagnostic(source, descriptor, analyzer);
         }

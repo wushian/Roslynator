@@ -13,7 +13,50 @@ namespace Roslynator.Tests
         internal const string OpenMarker = "<<<";
         internal const string CloseMarker = ">>>";
 
-        public static (string sourceWithDiagnostics, List<Diagnostic> diagnostics) GetSourceAndDiagnostics(
+        public static (string source, TextSpan span) GetMarkedSpan(string s)
+        {
+            int startIndex = s.IndexOf(OpenMarker);
+
+            int endIndex = s.IndexOf(CloseMarker, startIndex + OpenMarker.Length);
+
+            TextSpan span = TextSpan.FromBounds(startIndex, endIndex - OpenMarker.Length);
+
+            s = s
+                .Remove(endIndex, CloseMarker.Length)
+                .Remove(startIndex, OpenMarker.Length);
+
+            return (s, span);
+        }
+
+        public static (string source, TextSpan span) GetMarkedSpan(string s, string diagnosticReplacement)
+        {
+            int index = s.IndexOf(OpenMarker + CloseMarker);
+
+            var span = new TextSpan(index, diagnosticReplacement.Length);
+
+            s = s.Remove(index, OpenMarker.Length + CloseMarker.Length);
+
+            string source = s.Insert(index, diagnosticReplacement);
+
+            return (source, span);
+        }
+
+        public static (string source, string newSource, TextSpan span) GetMarkedSpan(string s, string diagnosticReplacement, string codeFixReplacement)
+        {
+            int index = s.IndexOf(OpenMarker + CloseMarker);
+
+            var span = new TextSpan(index, diagnosticReplacement.Length);
+
+            s = s.Remove(index, OpenMarker.Length + CloseMarker.Length);
+
+            string source = s.Insert(index, diagnosticReplacement);
+
+            string newSource = s.Insert(index, codeFixReplacement);
+
+            return (source, newSource, span);
+        }
+
+        public static (string source, List<Diagnostic> diagnostics) GetMarkedDiagnostics(
             string s,
             DiagnosticDescriptor descriptor,
             string filePath)

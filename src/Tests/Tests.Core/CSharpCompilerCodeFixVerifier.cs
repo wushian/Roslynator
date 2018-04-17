@@ -2,38 +2,35 @@
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Roslynator.Tests
 {
-    public static class CSharpCodeFixVerifier
+    public static class CSharpCompilerCodeFixVerifier
     {
         public static void VerifyNoFix(
             string source,
-            DiagnosticAnalyzer analyzer,
-            CodeFixProvider codeFixProvider)
+            CodeFixProvider codeFixProvider,
+            string equivalenceKey = null)
         {
-            CodeFixVerifier.VerifyNoFix(
+            CompilerCodeFixVerifier.VerifyNoFix(
                 source: source,
-                analyzer: analyzer,
                 codeFixProvider: codeFixProvider,
-                language: LanguageNames.CSharp);
+                language: LanguageNames.CSharp,
+                equivalenceKey: equivalenceKey);
         }
 
         public static void VerifyFix(
             string source,
             string newSource,
-            DiagnosticAnalyzer analyzer,
             CodeFixProvider codeFixProvider,
-            bool allowNewCompilerDiagnostics = false)
+            string equivalenceKey = null)
         {
-            CodeFixVerifier.VerifyFix(
+            CompilerCodeFixVerifier.VerifyFix(
                 source: source,
                 newSource: newSource,
-                analyzer: analyzer,
                 codeFixProvider: codeFixProvider,
                 language: LanguageNames.CSharp,
-                allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
+                equivalenceKey: equivalenceKey);
         }
     }
 }
