@@ -24,7 +24,7 @@ class C
 }
 ";
 
-        public static void TestDiagnosticWithFix()
+        public static void TestDiagnosticWithCodeFix()
         {
             VerifyDiagnosticAndCodeFix(
 @"
@@ -37,12 +37,12 @@ class C
         }
 
         [InlineData("", "")]
-        public static void TestDiagnosticWithFix2(string source, string sourceWithFix)
+        public static void TestDiagnosticWithCodeFix2(string fixableCode, string fixedCode)
         {
             VerifyDiagnosticAndCodeFix(
                 SourceTemplate,
-                source,
-                sourceWithFix,
+                fixableCode,
+                fixedCode,
                 descriptor: default,
                 analyzer: default,
                 codeFixProvider: default);
@@ -58,11 +58,11 @@ class C
         }
 
         [InlineData("")]
-        public static void TestNoDiagnostic2(string source)
+        public static void TestNoDiagnostic2(string fixableCode)
         {
             VerifyNoDiagnostic(
                 SourceTemplate,
-                source,
+                fixableCode,
                 descriptor: default,
                 analyzer: default);
         }

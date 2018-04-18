@@ -2,30 +2,47 @@
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.Text;
 
 namespace Roslynator.Tests
 {
     public static class CSharpCompilerCodeFixVerifier
     {
-        public static void VerifyNoFix(
+        public static void VerifyNoCodeFix(
             string source,
             CodeFixProvider codeFixProvider,
             string equivalenceKey = null)
         {
-            CompilerCodeFixVerifier.VerifyNoFix(
+            CompilerCodeFixVerifier.VerifyNoCodeFix(
                 source: source,
                 codeFixProvider: codeFixProvider,
                 language: LanguageNames.CSharp,
                 equivalenceKey: equivalenceKey);
         }
 
-        public static void VerifyFix(
+        public static void VerifyCodeFix(
+            string sourceTemplate,
+            string fixableCode,
+            string fixedCode,
+            CodeFixProvider codeFixProvider,
+            string equivalenceKey = null)
+        {
+            (string source, string newSource, TextSpan span) = TextUtility.GetMarkedSpan(sourceTemplate, fixableCode, fixedCode);
+
+            VerifyCodeFix(
+                source: source,
+                newSource: newSource,
+                codeFixProvider: codeFixProvider,
+                equivalenceKey: equivalenceKey);
+        }
+
+        public static void VerifyCodeFix(
             string source,
             string newSource,
             CodeFixProvider codeFixProvider,
             string equivalenceKey = null)
         {
-            CompilerCodeFixVerifier.VerifyFix(
+            CompilerCodeFixVerifier.VerifyCodeFix(
                 source: source,
                 newSource: newSource,
                 codeFixProvider: codeFixProvider,

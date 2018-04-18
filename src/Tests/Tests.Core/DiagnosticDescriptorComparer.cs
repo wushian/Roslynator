@@ -8,7 +8,9 @@ namespace Roslynator
 {
     public abstract class DiagnosticDescriptorComparer : IComparer<DiagnosticDescriptor>, IEqualityComparer<DiagnosticDescriptor>
     {
-        public static DiagnosticDescriptorComparer IdOrdinal { get; } = new DiagnosticDescriptorIdComparer();
+        private static readonly StringComparer _ordinalStringComparer = StringComparer.Ordinal;
+
+        public static DiagnosticDescriptorComparer IdOrdinal { get; } = new DiagnosticDescriptorIdOrdinalComparer();
 
         public abstract int Compare(DiagnosticDescriptor x, DiagnosticDescriptor y);
 
@@ -16,7 +18,7 @@ namespace Roslynator
 
         public abstract int GetHashCode(DiagnosticDescriptor obj);
 
-        private class DiagnosticDescriptorIdComparer : DiagnosticDescriptorComparer
+        private class DiagnosticDescriptorIdOrdinalComparer : DiagnosticDescriptorComparer
         {
             public override int Compare(DiagnosticDescriptor x, DiagnosticDescriptor y)
             {
@@ -48,7 +50,7 @@ namespace Roslynator
 
             public override int GetHashCode(DiagnosticDescriptor obj)
             {
-                return obj?.Id.GetHashCode() ?? 0;
+                return _ordinalStringComparer.GetHashCode(obj?.Id);
             }
         }
     }

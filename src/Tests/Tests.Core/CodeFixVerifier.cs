@@ -15,27 +15,30 @@ namespace Roslynator.Tests
 {
     public static class CodeFixVerifier
     {
-        public static void VerifyNoFix(
+        public static void VerifyNoCodeFix(
             string source,
             DiagnosticAnalyzer analyzer,
             CodeFixProvider codeFixProvider,
             string language)
         {
-            Document document = WorkspaceUtility.GetDocument(source, language);
+            Document document = WorkspaceUtility.CreateDocument(source, language);
 
-            Diagnostic[] analyzerDiagnostics = DiagnosticUtility.GetSortedDiagnostics(analyzer, document);
+            DiagnosticUtility.VerifyNoCompilerError(document);
 
-            List<CodeAction> actions = null;
+            foreach (Diagnostic diagnostic in DiagnosticUtility.GetSortedDiagnostics(document, analyzer))
+            {
+                List<CodeAction> actions = null;
 
-            var context = new CodeFixContext(
-                document,
-                analyzerDiagnostics[0],
-                (a, _) => (actions ?? (actions = new List<CodeAction>())).Add(a),
-                CancellationToken.None);
+                var context = new CodeFixContext(
+                    document,
+                    diagnostic,
+                    (a, _) => (actions ?? (actions = new List<CodeAction>())).Add(a),
+                    CancellationToken.None);
 
-            codeFixProvider.RegisterCodeFixesAsync(context).Wait();
+                codeFixProvider.RegisterCodeFixesAsync(context).Wait();
 
-            Assert.True(actions == null, $"Expected no code fix, actual: {actions.Count}.");
+                Assert.True(actions == null, $"Expected no code fix, actual: {actions.Count}.");
+            }
         }
 
         public static void VerifyFix(
@@ -46,30 +49,30 @@ namespace Roslynator.Tests
             string language,
             bool allowNewCompilerDiagnostics = false)
         {
-            Document document = WorkspaceUtility.GetDocument(source, language);
+            Document document = WorkspaceUtility.CreateDocument(source, language);
 
-            Diagnostic[] analyzerDiagnostics = DiagnosticUtility.GetSortedDiagnostics(analyzer, document);
+            Diagnostic[] analyzerDiagnostics = DiagnosticUtility.GetSortedDiagnostics(document, analyzer);
 
             ImmutableArray<Diagnostic> compilerDiagnostics = DiagnosticUtility.GetCompilerDiagnostics(document);
 
             while (analyzerDiagnostics.Length > 0)
             {
-                var actions = new List<CodeAction>();
+                List<CodeAction> actions = null;
 
                 var context = new CodeFixContext(
                     document,
                     analyzerDiagnostics[0],
-                    (a, _) => actions.Add(a),
+                    (a, _) => (actions ?? (actions = new List<CodeAction>())).Add(a),
                     CancellationToken.None);
 
                 codeFixProvider.RegisterCodeFixesAsync(context).Wait();
 
-                if (actions.Count == 0)
+                if (actions == null)
                     break;
 
                 document = WorkspaceUtility.ApplyCodeAction(document, actions[0]);
 
-                analyzerDiagnostics = DiagnosticUtility.GetSortedDiagnostics(analyzer, document);
+                analyzerDiagnostics = DiagnosticUtility.GetSortedDiagnostics(document, analyzer);
 
                 IEnumerable<Diagnostic> newCompilerDiagnostics = DiagnosticUtility.GetNewDiagnostics(compilerDiagnostics, DiagnosticUtility.GetCompilerDiagnostics(document));
 
@@ -79,10 +82,8 @@ namespace Roslynator.Tests
                     document = document.WithSyntaxRoot(Formatter.Format(document.GetSyntaxRootAsync().Result, Formatter.Annotation, document.Project.Solution.Workspace));
                     newCompilerDiagnostics = DiagnosticUtility.GetNewDiagnostics(compilerDiagnostics, DiagnosticUtility.GetCompilerDiagnostics(document));
 
-                    string diagnostics = string.Join("\r\n", newCompilerDiagnostics.Select(d => d.ToString()));
-
                     Assert.True(false,
-                        $"Fix introduced new compiler diagnostics:\r\n{diagnostics}\r\n\r\nNew document:\r\n{document.GetSyntaxRootAsync().Result.ToFullString()}\r\n");
+                        $"Fix introduced new compiler diagnostics\r\n\r\nDiagnostics:\r\n{newCompilerDiagnostics.ToMultilineString()}\r\n\r\nNew document:\r\n{document.ToFullString()}\r\n");
                 }
             }
 

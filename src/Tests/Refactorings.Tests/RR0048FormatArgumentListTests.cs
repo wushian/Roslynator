@@ -11,7 +11,7 @@ namespace Roslynator.Refactorings.Tests
         [Fact]
         public static void TestFormatArgumentListToMultiLine()
         {
-            VerifyRefactoring(
+            VerifyCodeRefactoring(
 @"
 class C
 {
@@ -40,7 +40,7 @@ class C
         [Fact]
         public static void TestFormatArgumentListToMultiLine2()
         {
-            VerifyRefactoring(
+            VerifyCodeRefactoring(
 @"
 class C
 {
@@ -69,7 +69,7 @@ class C
         [Fact]
         public static void TestFormatArgumentListToSingleLine()
         {
-            VerifyRefactoring(
+            VerifyCodeRefactoring(
 @"
 class C
 {
@@ -98,7 +98,7 @@ class C
         [Fact]
         public static void TestFormatArgumentListToSingleLine2()
         {
-            VerifyRefactoring(
+            VerifyCodeRefactoring(
 @"
 class C
 {
@@ -127,7 +127,7 @@ class C
         [Fact]
         public static void TestNoRefactoring()
         {
-            VerifyNoRefactoring(
+            VerifyNoCodeRefactoring(
 @"
 class C
 {

@@ -8,19 +8,19 @@ namespace Roslynator.Tests
 {
     public static class CSharpCodeFixVerifier
     {
-        public static void VerifyNoFix(
+        public static void VerifyNoCodeFix(
             string source,
             DiagnosticAnalyzer analyzer,
             CodeFixProvider codeFixProvider)
         {
-            CodeFixVerifier.VerifyNoFix(
+            CodeFixVerifier.VerifyNoCodeFix(
                 source: source,
                 analyzer: analyzer,
                 codeFixProvider: codeFixProvider,
                 language: LanguageNames.CSharp);
         }
 
-        public static void VerifyFix(
+        public static void VerifyCodeFix(
             string source,
             string newSource,
             DiagnosticAnalyzer analyzer,

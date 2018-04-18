@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.Formatting;
@@ -25,31 +25,19 @@ namespace Roslynator
         public const string DefaultCSharpFileName = TestFileName + "0." + CSharpFileExtension;
         public const string DefaultVisualBasicFileName = TestFileName + "0." + VisualBasicFileExtension;
 
-        public static Project EmptyCSharpProject { get; } = CreateProject();
+        public static Project EmptyCSharpProject { get; } = CreateProject(LanguageNames.CSharp);
 
-        public static Document GetDocument(string source, string language = LanguageNames.CSharp)
+        public static Document CreateDocument(string source, string language)
         {
-            if (language != LanguageNames.CSharp
-                && language != LanguageNames.VisualBasic)
-            {
-                throw new ArgumentException("Unsupported language.", nameof(language));
-            }
-
             return CreateProject(source, language).Documents.First();
         }
 
-        public static IEnumerable<Document> GetDocuments(IEnumerable<string> sources, string language = LanguageNames.CSharp)
+        public static IEnumerable<Document> CreateDocuments(IEnumerable<string> sources, string language)
         {
-            if (language != LanguageNames.CSharp
-                && language != LanguageNames.VisualBasic)
-            {
-                throw new ArgumentException("Unsupported language.", nameof(language));
-            }
-
             return CreateProject(sources, language).Documents;
         }
 
-        public static Project CreateProject(string source, string language = LanguageNames.CSharp)
+        public static Project CreateProject(string source, string language)
         {
             Project project = (language == LanguageNames.CSharp) ? EmptyCSharpProject : CreateProject(language);
 
@@ -65,7 +53,7 @@ namespace Roslynator
                 .GetProject(projectId);
         }
 
-        public static Project CreateProject(IEnumerable<string> sources, string language = LanguageNames.CSharp)
+        public static Project CreateProject(IEnumerable<string> sources, string language)
         {
             Project project = (language == LanguageNames.CSharp) ? EmptyCSharpProject : CreateProject(language);
 
@@ -83,7 +71,7 @@ namespace Roslynator
             return solution.GetProject(project.Id);
         }
 
-        public static Project CreateProject(string language = LanguageNames.CSharp)
+        public static Project CreateProject(string language)
         {
             ProjectId projectId = ProjectId.CreateNewId(debugName: TestProjectName);
 
@@ -95,12 +83,12 @@ namespace Roslynator
                     new MetadataReference[]
                     {
                         RuntimeMetadataReference.CorLibReference,
-                        RuntimeMetadataReference.CSharpCodeAnalysisReference,
-                        RuntimeMetadataReference.CodeAnalysisReference,
                         RuntimeMetadataReference.CreateFromAssemblyName("System.Core.dll"),
                         RuntimeMetadataReference.CreateFromAssemblyName("System.Linq.dll"),
                         RuntimeMetadataReference.CreateFromAssemblyName("System.Linq.Expressions.dll"),
-                        RuntimeMetadataReference.CreateFromAssemblyName("System.Runtime.dll")
+                        RuntimeMetadataReference.CreateFromAssemblyName("System.Runtime.dll"),
+                        RuntimeMetadataReference.CreateFromAssemblyName("Microsoft.CodeAnalysis.dll"),
+                        RuntimeMetadataReference.CreateFromAssemblyName("Microsoft.CodeAnalysis.CSharp.dll"),
                     })
                 .GetProject(projectId);
         }
@@ -119,16 +107,21 @@ namespace Roslynator
 
         public static string GetSimplifiedAndFormattedText(Document document)
         {
-            Document simplifiedDocument = Simplifier.ReduceAsync(document, Simplifier.Annotation).Result;
+            return GetSimplifiedAndFormattedTextAsync(document).Result;
+        }
 
-            SyntaxNode root = simplifiedDocument.GetSyntaxRootAsync().Result;
+        public static async Task<string> GetSimplifiedAndFormattedTextAsync(Document document)
+        {
+            Document simplifiedDocument = await Simplifier.ReduceAsync(document, Simplifier.Annotation).ConfigureAwait(false);
+
+            SyntaxNode root = await simplifiedDocument.GetSyntaxRootAsync().ConfigureAwait(false);
 
             root = Formatter.Format(root, Formatter.Annotation, simplifiedDocument.Project.Solution.Workspace);
 
             return root.ToFullString();
         }
 
-        public static Document ApplyCodeAction(Document document, CodeAction codeAction)
+        internal static Document ApplyCodeAction(Document document, CodeAction codeAction)
         {
             return codeAction
                 .GetOperationsAsync(CancellationToken.None)

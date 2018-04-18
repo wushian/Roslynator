@@ -23,7 +23,7 @@ namespace Roslynator.Tests
 
             VerifyDiagnostic(source2, analyzer, diagnostics.ToArray());
 
-            VerifyFix(source2, newSource, analyzer, codeFixProvider, allowNewCompilerDiagnostics);
+            VerifyCodeFix(source2, newSource, analyzer, codeFixProvider, allowNewCompilerDiagnostics);
         }
 
         public static void VerifyDiagnosticAndCodeFix(
@@ -35,31 +35,31 @@ namespace Roslynator.Tests
             CodeFixProvider codeFixProvider,
             bool allowNewCompilerDiagnostics = false)
         {
-            VerifyDiagnostic(source, analyzer, span, descriptor);
+            VerifyDiagnostic(source, span, analyzer, descriptor);
 
-            VerifyFix(source, newSource, analyzer, codeFixProvider, allowNewCompilerDiagnostics);
+            VerifyCodeFix(source, newSource, analyzer, codeFixProvider, allowNewCompilerDiagnostics);
         }
 
         public static void VerifyDiagnosticAndCodeFix(
-            string text,
-            string codeWithDiagnostic,
-            string codeWithFix,
+            string source,
+            string fixableCode,
+            string fixedCode,
             DiagnosticDescriptor descriptor,
             DiagnosticAnalyzer analyzer,
             CodeFixProvider codeFixProvider,
             bool allowNewCompilerDiagnostics = false)
         {
-            (string source, string newSource, TextSpan span) = TextUtility.GetMarkedSpan(text, codeWithDiagnostic, codeWithFix);
+            (string source2, string newSource, TextSpan span) = TextUtility.GetMarkedSpan(source, fixableCode, fixedCode);
 
-            VerifyDiagnostic(source, analyzer, span, descriptor);
+            VerifyDiagnostic(source2, span, analyzer, descriptor);
 
-            VerifyFix(source, newSource, analyzer, codeFixProvider, allowNewCompilerDiagnostics);
+            VerifyCodeFix(source2, newSource, analyzer, codeFixProvider, allowNewCompilerDiagnostics);
         }
 
         public static void VerifyDiagnostic(
             string source,
-            DiagnosticAnalyzer analyzer,
             TextSpan span,
+            DiagnosticAnalyzer analyzer,
             DiagnosticDescriptor descriptor)
         {
             Location location = Location.Create(WorkspaceUtility.DefaultCSharpFileName, span, span.ToLinePositionSpan(source));
@@ -72,28 +72,28 @@ namespace Roslynator.Tests
         public static void VerifyDiagnostic(
             string source,
             DiagnosticAnalyzer analyzer,
-            params Diagnostic[] expected)
+            params Diagnostic[] expectedDiagnostics)
         {
-            VerifyDiagnostic(new string[] { source }, analyzer, expected);
+            VerifyDiagnostic(new string[] { source }, analyzer, expectedDiagnostics);
         }
 
         public static void VerifyDiagnostic(
             IEnumerable<string> sources,
             DiagnosticAnalyzer analyzer,
-            params Diagnostic[] expected)
+            params Diagnostic[] expectedDiagnostics)
         {
-            DiagnosticVerifier.VerifyDiagnostic(sources, analyzer, LanguageNames.CSharp, expected);
+            DiagnosticVerifier.VerifyDiagnostic(sources, analyzer, LanguageNames.CSharp, expectedDiagnostics);
         }
 
         public static void VerifyNoDiagnostic(
-            string sourceTemplate,
             string source,
+            string fixableCode,
             DiagnosticDescriptor descriptor,
             DiagnosticAnalyzer analyzer)
         {
-            (string source2, TextSpan span) = TextUtility.GetMarkedSpan(sourceTemplate, source);
+            (string source2, TextSpan span) = TextUtility.GetMarkedSpan(source, fixableCode);
 
-            VerifyNoDiagnostic(source, descriptor, analyzer);
+            VerifyNoDiagnostic(fixableCode, descriptor, analyzer);
         }
 
         public static void VerifyNoDiagnostic(

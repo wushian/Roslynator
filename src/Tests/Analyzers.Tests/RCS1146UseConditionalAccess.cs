@@ -11,7 +11,7 @@ namespace Roslynator.Analyzers.Tests
     public static class RCS1146UseConditionalAccess
     {
         [Fact]
-        public static void TestDiagnosticWithFix_IfStatement()
+        public static void TestDiagnosticWithCodeFix_IfStatement()
         {
             VerifyDiagnosticAndCodeFix(
 @"
@@ -78,7 +78,7 @@ public struct S
         }
 
         [Fact]
-        public static void TestDiagnosticWithFix_LogicalAndExpression_ReferenceType()
+        public static void TestDiagnosticWithCodeFix_LogicalAndExpression_ReferenceType()
         {
             VerifyDiagnosticAndCodeFix(
 @"
@@ -202,7 +202,7 @@ public class Foo
         }
 
         [Fact]
-        public static void TestDiagnosticWithFix_LogicalAndExpression_NullableType()
+        public static void TestDiagnosticWithCodeFix_LogicalAndExpression_NullableType()
         {
             VerifyDiagnosticAndCodeFix(
 @"

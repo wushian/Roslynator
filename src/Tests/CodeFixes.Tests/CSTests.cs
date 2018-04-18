@@ -26,7 +26,7 @@ class C
 
         public static void TestCodeFix()
         {
-            VerifyFix(
+            VerifyCodeFix(
 @"
 ",
 @"
@@ -36,29 +36,21 @@ class C
         }
 
         [InlineData("", "")]
-        public static void TestCodeFix2(string source, string sourceWithFix)
+        public static void TestCodeFix2(string fixableCode, string fixedCode)
         {
-            VerifyFix(
-                source,
-                sourceWithFix,
+            VerifyCodeFix(
+                SourceTemplate,
+                fixableCode,
+                fixedCode,
                 codeFixProvider: default,
                 equivalenceKey: default);
         }
 
         public static void TestNoCodeFix()
         {
-            VerifyNoFix(
+            VerifyNoCodeFix(
 @"
 ",
-                codeFixProvider: default,
-                equivalenceKey: default);
-        }
-
-        [InlineData("")]
-        public static void TestNoCodeFix2(string source)
-        {
-            VerifyNoFix(
-                source,
                 codeFixProvider: default,
                 equivalenceKey: default);
         }

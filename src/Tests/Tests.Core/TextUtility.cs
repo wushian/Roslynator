@@ -28,30 +28,33 @@ namespace Roslynator.Tests
             return (s, span);
         }
 
-        public static (string source, TextSpan span) GetMarkedSpan(string s, string diagnosticReplacement)
+        public static (string source, TextSpan span) GetMarkedSpan(string s, string fixableCode)
         {
             int index = s.IndexOf(OpenMarker + CloseMarker);
 
-            var span = new TextSpan(index, diagnosticReplacement.Length);
+            var span = new TextSpan(index, fixableCode.Length);
 
             s = s.Remove(index, OpenMarker.Length + CloseMarker.Length);
 
-            string source = s.Insert(index, diagnosticReplacement);
+            string source = s.Insert(index, fixableCode);
 
             return (source, span);
         }
 
-        public static (string source, string newSource, TextSpan span) GetMarkedSpan(string s, string diagnosticReplacement, string codeFixReplacement)
+        public static (string source, string newSource, TextSpan span) GetMarkedSpan(
+            string s,
+            string fixableCode,
+            string fixedCode)
         {
             int index = s.IndexOf(OpenMarker + CloseMarker);
 
-            var span = new TextSpan(index, diagnosticReplacement.Length);
+            var span = new TextSpan(index, fixableCode.Length);
 
             s = s.Remove(index, OpenMarker.Length + CloseMarker.Length);
 
-            string source = s.Insert(index, diagnosticReplacement);
+            string source = s.Insert(index, fixableCode);
 
-            string newSource = s.Insert(index, codeFixReplacement);
+            string newSource = s.Insert(index, fixedCode);
 
             return (source, newSource, span);
         }

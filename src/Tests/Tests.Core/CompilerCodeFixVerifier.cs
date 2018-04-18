@@ -12,39 +12,40 @@ namespace Roslynator.Tests
 {
     public static class CompilerCodeFixVerifier
     {
-        public static void VerifyNoFix(
+        public static void VerifyNoCodeFix(
             string source,
             CodeFixProvider codeFixProvider,
             string language,
             string equivalenceKey = null)
         {
-            Document document = WorkspaceUtility.GetDocument(source, language);
+            Document document = WorkspaceUtility.CreateDocument(source, language);
 
-            ImmutableArray<Diagnostic> compilerDiagnostics = DiagnosticUtility.GetCompilerDiagnostics(document);
+            foreach (Diagnostic compilerDiagnostic in DiagnosticUtility.GetCompilerDiagnostics(document))
+            {
+                var context = new CodeFixContext(
+                    document,
+                    compilerDiagnostic,
+                    (a, _) => Assert.True(equivalenceKey != null && !a.EquivalenceKey.StartsWith(equivalenceKey), "Expected no code fix."),
+                    CancellationToken.None);
 
-            var context = new CodeFixContext(
-                document,
-                compilerDiagnostics[0],
-                (a, _) => Assert.True(equivalenceKey != null && !a.EquivalenceKey.StartsWith(equivalenceKey), "Expected no code fix."),
-                CancellationToken.None);
-
-            codeFixProvider.RegisterCodeFixesAsync(context).Wait();
+                codeFixProvider.RegisterCodeFixesAsync(context).Wait();
+            }
         }
 
-        public static void VerifyFix(
+        public static void VerifyCodeFix(
             string source,
             string newSource,
             CodeFixProvider codeFixProvider,
             string language,
             string equivalenceKey = null)
         {
-            Document document = WorkspaceUtility.GetDocument(source, language);
+            Document document = WorkspaceUtility.CreateDocument(source, language);
 
             ImmutableArray<Diagnostic> compilerDiagnostics = DiagnosticUtility.GetCompilerDiagnostics(document);
 
             while (compilerDiagnostics.Length > 0)
             {
-                var actions = new List<CodeAction>();
+                List<CodeAction> actions = null;
 
                 var context = new CodeFixContext(
                     document,
@@ -54,14 +55,14 @@ namespace Roslynator.Tests
                         if (equivalenceKey == null
                             || a.EquivalenceKey.StartsWith(equivalenceKey))
                         {
-                            actions.Add(a);
+                            (actions ?? (actions = new List<CodeAction>())).Add(a);
                         }
                     },
                     CancellationToken.None);
 
                 codeFixProvider.RegisterCodeFixesAsync(context).Wait();
 
-                if (actions.Count == 0)
+                if (actions == null)
                     break;
 
                 document = WorkspaceUtility.ApplyCodeAction(document, actions[0]);

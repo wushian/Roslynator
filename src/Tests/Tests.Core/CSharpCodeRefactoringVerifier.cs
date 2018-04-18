@@ -8,27 +8,27 @@ namespace Roslynator.Tests
 {
     public static class CSharpCodeRefactoringVerifier
     {
-        public static void VerifyNoRefactoring(
+        public static void VerifyNoCodeRefactoring(
             string source,
             CodeRefactoringProvider codeRefactoringProvider,
             string equivalenceKey = null)
         {
             (string source2, TextSpan span) = TextUtility.GetMarkedSpan(source);
 
-            VerifyNoRefactoring(
+            VerifyNoCodeRefactoring(
                 source: source2,
                 span: span,
                 codeRefactoringProvider: codeRefactoringProvider,
                 equivalenceKey: equivalenceKey);
         }
 
-        public static void VerifyNoRefactoring(
+        public static void VerifyNoCodeRefactoring(
             string source,
             TextSpan span,
             CodeRefactoringProvider codeRefactoringProvider,
             string equivalenceKey = null)
         {
-            CodeRefactoringVerifier.VerifyNoRefactoring(
+            CodeRefactoringVerifier.VerifyNoCodeRefactoring(
                 source: source,
                 span: span,
                 codeRefactoringProvider: codeRefactoringProvider,
@@ -36,7 +36,7 @@ namespace Roslynator.Tests
                 equivalenceKey: equivalenceKey);
         }
 
-        public static void VerifyRefactoring(
+        public static void VerifyCodeRefactoring(
             string source,
             string newSource,
             CodeRefactoringProvider codeRefactoringProvider,
@@ -45,7 +45,7 @@ namespace Roslynator.Tests
         {
             (string source2, TextSpan span) = TextUtility.GetMarkedSpan(source);
 
-            VerifyRefactoring(
+            VerifyCodeRefactoring(
                 source: source2,
                 newSource: newSource,
                 span: span,
@@ -54,7 +54,26 @@ namespace Roslynator.Tests
                 allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
         }
 
-        public static void VerifyRefactoring(
+        public static void VerifyCodeRefactoring(
+            string sourceTemplate,
+            string fixableCode,
+            string fixedCode,
+            CodeRefactoringProvider codeRefactoringProvider,
+            string equivalenceKey = null,
+            bool allowNewCompilerDiagnostics = false)
+        {
+            (string source, string newSource, TextSpan span) = TextUtility.GetMarkedSpan(sourceTemplate, fixableCode, fixedCode);
+
+            VerifyCodeRefactoring(
+                source: source,
+                newSource: newSource,
+                span: span,
+                codeRefactoringProvider: codeRefactoringProvider,
+                equivalenceKey: equivalenceKey,
+                allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
+        }
+
+        public static void VerifyCodeRefactoring(
             string source,
             string newSource,
             TextSpan span,
@@ -62,7 +81,7 @@ namespace Roslynator.Tests
             string equivalenceKey = null,
             bool allowNewCompilerDiagnostics = false)
         {
-            CodeRefactoringVerifier.VerifyRefactoring(
+            CodeRefactoringVerifier.VerifyCodeRefactoring(
                 source: source,
                 newSource: newSource,
                 span: span,

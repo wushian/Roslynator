@@ -21,9 +21,9 @@ class C
 }
 ";
 
-        public static void TestRefactoring()
+        public static void TestCodeRefactoring()
         {
-            VerifyRefactoring(
+            VerifyCodeRefactoring(
 @"
 ",
 @"
@@ -34,31 +34,21 @@ class C
         }
 
         [InlineData("", "")]
-        public static void TestRefactoring2(string source, string newSource)
+        public static void TestCodeRefactoring2(string fixableCode, string fixedCode)
         {
-            VerifyRefactoring(
-                source,
-                newSource,
-                span: default,
+            VerifyCodeRefactoring(
+                SourceTemplate,
+                fixableCode,
+                fixedCode,
                 codeRefactoringProvider: default,
                 equivalenceKey: null);
         }
 
-        public static void TestNoRefactoring()
+        public static void TestNoCodeRefactoring()
         {
-            VerifyNoRefactoring(
+            VerifyNoCodeRefactoring(
 @"
 ",
-                span: default,
-                codeRefactoringProvider: default,
-                equivalenceKey: default);
-        }
-
-        [InlineData("")]
-        public static void TestNoRefactoring2(string source)
-        {
-            VerifyNoRefactoring(
-                source,
                 span: default,
                 codeRefactoringProvider: default,
                 equivalenceKey: default);

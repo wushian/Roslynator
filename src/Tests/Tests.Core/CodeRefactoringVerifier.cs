@@ -16,14 +16,16 @@ namespace Roslynator.Tests
 {
     public static class CodeRefactoringVerifier
     {
-        public static void VerifyNoRefactoring(
+        public static void VerifyNoCodeRefactoring(
             string source,
             TextSpan span,
             CodeRefactoringProvider codeRefactoringProvider,
             string language,
             string equivalenceKey = null)
         {
-            Document document = WorkspaceUtility.GetDocument(source, language);
+            Document document = WorkspaceUtility.CreateDocument(source, language);
+
+            DiagnosticUtility.VerifyNoCompilerError(document);
 
             List<CodeAction> actions = null;
 
@@ -42,10 +44,10 @@ namespace Roslynator.Tests
 
             codeRefactoringProvider.ComputeRefactoringsAsync(context).Wait();
 
-            Assert.True(actions == null, $"Expected no refactoring, actual: {actions?.Count ?? 0}");
+            Assert.True(actions == null, $"Expected no code refactoring, actual: {actions?.Count ?? 0}");
         }
 
-        public static void VerifyRefactoring(
+        public static void VerifyCodeRefactoring(
             string source,
             string newSource,
             TextSpan span,
@@ -54,7 +56,7 @@ namespace Roslynator.Tests
             string equivalenceKey = null,
             bool allowNewCompilerDiagnostics = false)
         {
-            Document document = WorkspaceUtility.GetDocument(source, language);
+            Document document = WorkspaceUtility.CreateDocument(source, language);
 
             ImmutableArray<Diagnostic> compilerDiagnostics = DiagnosticUtility.GetCompilerDiagnostics(document);
 
@@ -85,10 +87,8 @@ namespace Roslynator.Tests
                 document = document.WithSyntaxRoot(Formatter.Format(document.GetSyntaxRootAsync().Result, Formatter.Annotation, document.Project.Solution.Workspace));
                 newCompilerDiagnostics = DiagnosticUtility.GetNewDiagnostics(compilerDiagnostics, DiagnosticUtility.GetCompilerDiagnostics(document));
 
-                string diagnostics = string.Join("\r\n", newCompilerDiagnostics.Select(d => d.ToString()));
-
                 Assert.True(false,
-                    $"Fix introduced new compiler diagnostics:\r\n{diagnostics}\r\n\r\nNew document:\r\n{document.GetSyntaxRootAsync().Result.ToFullString()}\r\n");
+                    $"Fix introduced new compiler diagnostics\r\n\r\nDiagnostics:\r\n{newCompilerDiagnostics.ToMultilineString()}\r\n\r\nNew document:\r\n{document.ToFullString()}\r\n");
             }
 
             string actual = WorkspaceUtility.GetSimplifiedAndFormattedText(document);

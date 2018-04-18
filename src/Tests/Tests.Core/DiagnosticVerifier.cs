@@ -31,7 +31,11 @@ namespace Roslynator.Tests
             Assert.True(analyzer.SupportedDiagnostics.IndexOf(descriptor, DiagnosticDescriptorComparer.IdOrdinal) != -1,
                 $"Diagnostic \"{descriptor.Id}\" is not supported by analyzer \"{analyzer.GetType().Name}\"");
 
-            Diagnostic[] diagnostics = DiagnosticUtility.GetSortedDiagnostics(analyzer, sources, language);
+            IEnumerable<Document> documents = WorkspaceUtility.CreateDocuments(sources, language);
+
+            DiagnosticUtility.VerifyNoCompilerError(documents);
+
+            Diagnostic[] diagnostics = DiagnosticUtility.GetSortedDiagnostics(documents, analyzer);
 
             Assert.True(diagnostics.Length == 0 || diagnostics.All(f => !string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)),
                     $"No diagnostic expected\r\n\r\nDiagnostics:\r\n{string.Join("\r\n", diagnostics.Where(f => string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)))}\r\n");
@@ -60,13 +64,13 @@ namespace Roslynator.Tests
                     $"Diagnostic \"{diagnostic.Descriptor.Id}\" is not supported by analyzer \"{analyzer.GetType().Name}\"");
             }
 
-            Diagnostic[] diagnostics = DiagnosticUtility.GetSortedDiagnostics(analyzer, sources, language);
+            Diagnostic[] diagnostics = DiagnosticUtility.GetSortedDiagnostics(sources, analyzer, language);
 
             if (diagnostics.Length > 0
                 && analyzer.SupportedDiagnostics.Length > 1)
             {
                 diagnostics = diagnostics
-                    .Where(d => expectedDiagnostics.Any(ed => DiagnosticComparer.IdOrdinal.Equals(d, ed)))
+                    .Where(diagnostic => expectedDiagnostics.Any(expectedDiagnostic => DiagnosticComparer.IdOrdinal.Equals(diagnostic, expectedDiagnostic)))
                     .ToArray();
             }
 
@@ -75,7 +79,7 @@ namespace Roslynator.Tests
 
         private static void VerifyDiagnostics(
             Diagnostic[] actual,
-            params Diagnostic[] expected)
+            Diagnostic[] expected)
         {
             int expectedCount = expected.Length;
             int actualCount = actual.Length;
@@ -117,10 +121,10 @@ namespace Roslynator.Tests
             Location actual,
             Location expected)
         {
-            VerifySpan(diagnostic, actual.GetLineSpan(), expected.GetLineSpan());
+            VerifyFileLinePositionSpan(diagnostic, actual.GetLineSpan(), expected.GetLineSpan());
         }
 
-        private static void VerifySpan(
+        private static void VerifyFileLinePositionSpan(
             Diagnostic diagnostic,
             FileLinePositionSpan actual,
             FileLinePositionSpan expected)

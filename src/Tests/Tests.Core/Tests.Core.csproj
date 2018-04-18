@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\CSharp\CSharp.csproj" />
+    <ProjectReference Include="..\..\CSharp.Workspaces\CSharp.Workspaces.csproj" />
   </ItemGroup>
 
   <ItemGroup>
