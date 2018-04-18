@@ -24,6 +24,7 @@ namespace Roslynator.Tests
             string sourceTemplate,
             string fixableCode,
             string fixedCode,
+            string diagnosticId,
             CodeFixProvider codeFixProvider,
             string equivalenceKey = null)
         {
@@ -32,6 +33,7 @@ namespace Roslynator.Tests
             VerifyCodeFix(
                 source: source,
                 newSource: newSource,
+                diagnosticId: diagnosticId,
                 codeFixProvider: codeFixProvider,
                 equivalenceKey: equivalenceKey);
         }
@@ -39,12 +41,14 @@ namespace Roslynator.Tests
         public static void VerifyCodeFix(
             string source,
             string newSource,
+            string diagnosticId,
             CodeFixProvider codeFixProvider,
             string equivalenceKey = null)
         {
             CompilerCodeFixVerifier.VerifyCodeFix(
                 source: source,
                 newSource: newSource,
+                diagnosticId: diagnosticId,
                 codeFixProvider: codeFixProvider,
                 language: LanguageNames.CSharp,
                 equivalenceKey: equivalenceKey);

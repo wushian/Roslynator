@@ -25,7 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\CodeFixes\CodeFixes.csproj" />
-    <ProjectReference Include="..\..\Common.Workspaces\Common.Workspaces.csproj" />
+    <ProjectReference Include="..\..\Common\Common.csproj" />
     <ProjectReference Include="..\Tests.Core\Tests.Core.csproj" />
   </ItemGroup>
 

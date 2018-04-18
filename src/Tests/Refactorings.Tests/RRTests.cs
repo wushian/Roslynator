@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using Roslynator.CSharp.Refactorings;
 using Xunit;
 using static Roslynator.Tests.CSharpCodeRefactoringVerifier;
 
@@ -9,6 +10,8 @@ namespace Roslynator.Refactorings.Tests
 {
     public static class RRTests
     {
+        private const string RefactoringId = RefactoringIdentifiers.AddBraces;
+
         private const string SourceTemplate = @"
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +33,7 @@ class C
 ",
                 span: default,
                 codeRefactoringProvider: default,
-                equivalenceKey: null);
+                equivalenceKey: RefactoringId);
         }
 
         [InlineData("", "")]
@@ -41,7 +44,7 @@ class C
                 fixableCode,
                 fixedCode,
                 codeRefactoringProvider: default,
-                equivalenceKey: null);
+                equivalenceKey: RefactoringId);
         }
 
         public static void TestNoCodeRefactoring()
@@ -51,7 +54,7 @@ class C
 ",
                 span: default,
                 codeRefactoringProvider: default,
-                equivalenceKey: default);
+                equivalenceKey: RefactoringId);
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
@@ -25,7 +27,7 @@ namespace Roslynator.Tests
                 var context = new CodeFixContext(
                     document,
                     compilerDiagnostic,
-                    (a, _) => Assert.True(equivalenceKey != null && !a.EquivalenceKey.StartsWith(equivalenceKey), "Expected no code fix."),
+                    (a, _) => Assert.True(equivalenceKey != null && !string.Equals(a.EquivalenceKey, equivalenceKey, StringComparison.Ordinal), "Expected no code fix."),
                     CancellationToken.None);
 
                 codeFixProvider.RegisterCodeFixesAsync(context).Wait();
@@ -35,6 +37,7 @@ namespace Roslynator.Tests
         public static void VerifyCodeFix(
             string source,
             string newSource,
+            string diagnosticId,
             CodeFixProvider codeFixProvider,
             string language,
             string equivalenceKey = null)
@@ -45,15 +48,29 @@ namespace Roslynator.Tests
 
             while (compilerDiagnostics.Length > 0)
             {
+                Diagnostic diagnostic = null;
+
+                foreach (Diagnostic compilerDiagnostic in compilerDiagnostics)
+                {
+                    if (string.Equals(compilerDiagnostic.Id, diagnosticId, StringComparison.Ordinal))
+                    {
+                        diagnostic = compilerDiagnostic;
+                        break;
+                    }
+                }
+
+                if (diagnostic == null)
+                    break;
+
                 List<CodeAction> actions = null;
 
                 var context = new CodeFixContext(
                     document,
-                    compilerDiagnostics[0],
+                    compilerDiagnostics.First(f => string.Equals(f.Id, diagnosticId, StringComparison.Ordinal)),
                     (a, _) =>
                     {
                         if (equivalenceKey == null
-                            || a.EquivalenceKey.StartsWith(equivalenceKey))
+                            || string.Equals(a.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
                         {
                             (actions ?? (actions = new List<CodeAction>())).Add(a);
                         }

@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Refactorings\Refactorings.csproj" />
-    <ProjectReference Include="..\..\Common.Workspaces\Common.Workspaces.csproj" />
     <ProjectReference Include="..\Tests.Core\Tests.Core.csproj" />
   </ItemGroup>
 
