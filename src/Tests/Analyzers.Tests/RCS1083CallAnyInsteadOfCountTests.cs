@@ -1,5 +1,8 @@
 // Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.Diagnostics;
 using Roslynator.CSharp;
 using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
@@ -10,6 +13,12 @@ namespace Roslynator.Analyzers.Tests
 {
     public static class RCS1083CallAnyInsteadOfCountTests
     {
+        public static DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.CallAnyInsteadOfCount;
+
+        public static DiagnosticAnalyzer Analyzer { get; } = new InvocationExpressionAnalyzer();
+
+        public static CodeFixProvider CodeFixProvider { get; } = new BinaryExpressionCodeFixProvider();
+
         [Theory]
         [InlineData("items.Count() != 0", "items.Any()")]
         [InlineData("items.Count() > 0", "items.Any()")]
@@ -45,9 +54,9 @@ class C
 ",
                 fixableCode,
                 fixedCode,
-                DiagnosticDescriptors.CallAnyInsteadOfCount,
-                new InvocationExpressionAnalyzer(),
-                new BinaryExpressionCodeFixProvider());
+                Descriptor,
+                Analyzer,
+                CodeFixProvider);
         }
 
         [Fact]
@@ -84,8 +93,8 @@ class C
     }
 }
 ",
-                DiagnosticDescriptors.CallAnyInsteadOfCount,
-                new InvocationExpressionAnalyzer());
+                Descriptor,
+                Analyzer);
         }
     }
 }

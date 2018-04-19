@@ -11,13 +11,13 @@ using static Roslynator.Tests.CSharpDiagnosticVerifier;
 
 namespace Roslynator.Analyzers.Tests
 {
-    public static class RCSTests
+    public static class RCS1009UseExplicitTypeInsteadOfVarInForEachTests
     {
-        private static DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddBracesWhenExpressionSpansOverMultipleLines;
+        private static DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UseExplicitTypeInsteadOfVarInForEach;
 
-        private static DiagnosticAnalyzer Analyzer { get; }
+        private static DiagnosticAnalyzer Analyzer { get; } = new UseExplicitTypeInForEachAnalyzer();
 
-        private static CodeFixProvider CodeFixProvider { get; }
+        private static CodeFixProvider CodeFixProvider { get; } = new UseExplicitTypeInsteadOfVarInForEachCodeFixProvider();
 
         private const string SourceTemplate = @"
 using System.Collections.Generic;
@@ -31,13 +31,41 @@ class C
 }
 ";
 
-        //[Fact]
+        [Fact]
         public static void TestDiagnosticWithCodeFix()
         {
             VerifyDiagnosticAndCodeFix(
 @"
+using System;
+using System.Collections.Generic;
+
+class C
+{
+    public void M()
+    {
+        var items = new List<DateTime>();
+
+        foreach (<<<var>>> item in items)
+        {
+        }
+    }
+}
 ",
 @"
+using System;
+using System.Collections.Generic;
+
+class C
+{
+    public void M()
+    {
+        var items = new List<DateTime>();
+
+        foreach (DateTime item in items)
+        {
+        }
+    }
+}
 ",
                 descriptor: Descriptor,
                 analyzer: Analyzer,
@@ -46,7 +74,7 @@ class C
 
         //[Theory]
         //[InlineData("", "")]
-        public static void TestDiagnosticWithCodeFix2(string fixableCode, string fixedCode)
+        internal static void TestDiagnosticWithCodeFix2(string fixableCode, string fixedCode)
         {
             VerifyDiagnosticAndCodeFix(
                 SourceTemplate,
@@ -58,7 +86,7 @@ class C
         }
 
         //[Fact]
-        public static void TestNoDiagnostic()
+        internal static void TestNoDiagnostic()
         {
             VerifyNoDiagnostic(
 @"
@@ -69,7 +97,7 @@ class C
 
         //[Theory]
         //[InlineData("")]
-        public static void TestNoDiagnostic2(string fixableCode)
+        internal static void TestNoDiagnostic2(string fixableCode)
         {
             VerifyNoDiagnostic(
                 SourceTemplate,

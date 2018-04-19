@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeRefactorings;
 using Roslynator.CSharp.Refactorings;
 using Xunit;
 using static Roslynator.Tests.CSharpCodeRefactoringVerifier;
@@ -9,6 +11,8 @@ namespace Roslynator.Refactorings.Tests
     public static class RRTests
     {
         private const string RefactoringId = RefactoringIdentifiers.AddBraces;
+
+        private static CodeRefactoringProvider CodeRefactoringProvider { get; } = new RoslynatorCodeRefactoringProvider();
 
         private const string SourceTemplate = @"
 using System.Collections.Generic;
@@ -31,7 +35,7 @@ class C
 @"
 ",
                 span: default,
-                codeRefactoringProvider: default,
+                codeRefactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
 
@@ -43,7 +47,7 @@ class C
                 SourceTemplate,
                 fixableCode,
                 fixedCode,
-                codeRefactoringProvider: default,
+                codeRefactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
 
@@ -54,7 +58,7 @@ class C
 @"
 ",
                 span: default,
-                codeRefactoringProvider: default,
+                codeRefactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
     }

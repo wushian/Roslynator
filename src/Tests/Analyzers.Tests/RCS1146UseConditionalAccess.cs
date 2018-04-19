@@ -1,5 +1,8 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.Diagnostics;
 using Roslynator.CSharp;
 using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
@@ -10,6 +13,12 @@ namespace Roslynator.Analyzers.Tests
 {
     public static class RCS1146UseConditionalAccess
     {
+        private static DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UseConditionalAccess;
+
+        private static DiagnosticAnalyzer Analyzer { get; } = new UseConditionalAccessAnalyzer();
+
+        private static CodeFixProvider CodeFixProvider { get; } = new UseConditionalAccessCodeFixProvider();
+
         [Fact]
         public static void TestDiagnosticWithCodeFix_IfStatement()
         {
@@ -73,8 +82,8 @@ public struct S
 }
 ",
                 DiagnosticDescriptors.UseConditionalAccess,
-                new UseConditionalAccessAnalyzer(),
-                new UseConditionalAccessCodeFixProvider());
+                Analyzer,
+                CodeFixProvider);
         }
 
         [Fact]
@@ -196,9 +205,9 @@ public class Foo
     }
 }
 ",
-                DiagnosticDescriptors.UseConditionalAccess,
-                new UseConditionalAccessAnalyzer(),
-                new UseConditionalAccessCodeFixProvider());
+                Descriptor,
+                Analyzer,
+                CodeFixProvider);
         }
 
         [Fact]
@@ -267,9 +276,9 @@ public struct Foo
     }
 }
 ",
-                DiagnosticDescriptors.UseConditionalAccess,
-                new UseConditionalAccessAnalyzer(),
-                new UseConditionalAccessCodeFixProvider());
+                Descriptor,
+                Analyzer,
+                CodeFixProvider);
         }
 
         [Fact]
@@ -308,8 +317,8 @@ public class Foo
     }
 }
 ",
-                DiagnosticDescriptors.UseConditionalAccess,
-                new UseConditionalAccessAnalyzer());
+                Descriptor,
+                Analyzer);
         }
 
         [Fact]
@@ -333,8 +342,8 @@ public struct Foo
     public static bool operator !=(Foo left, Foo right) => !(left == right);
 }
 ",
-                DiagnosticDescriptors.UseConditionalAccess,
-                new UseConditionalAccessAnalyzer());
+                Descriptor,
+                Analyzer);
         }
 
         [Fact]
@@ -384,8 +393,8 @@ public struct Foo
     public static bool operator !=(Foo left, Foo right) => !(left == right);
 }
 ",
-                DiagnosticDescriptors.UseConditionalAccess,
-                new UseConditionalAccessAnalyzer());
+                Descriptor,
+                Analyzer);
         }
 
         [Fact]
@@ -412,8 +421,8 @@ public class C
     }
 }
 ",
-                DiagnosticDescriptors.UseConditionalAccess,
-                new UseConditionalAccessAnalyzer());
+                Descriptor,
+                Analyzer);
         }
 
         [Fact]
@@ -434,8 +443,8 @@ public class C
     }
 }
 ",
-                DiagnosticDescriptors.UseConditionalAccess,
-                new UseConditionalAccessAnalyzer());
+                Descriptor,
+                Analyzer);
         }
     }
 }

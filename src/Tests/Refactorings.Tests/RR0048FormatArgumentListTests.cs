@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using Microsoft.CodeAnalysis.CodeRefactorings;
 using Roslynator.CSharp.Refactorings;
 using Xunit;
 using static Roslynator.Tests.CSharpCodeRefactoringVerifier;
@@ -8,6 +9,10 @@ namespace Roslynator.Refactorings.Tests
 {
     public static class RR0048FormatArgumentListTests
     {
+        private const string RefactoringId = RefactoringIdentifiers.FormatArgumentList;
+
+        private static CodeRefactoringProvider CodeRefactoringProvider { get; } = new RoslynatorCodeRefactoringProvider();
+
         [Fact]
         public static void TestFormatArgumentListToMultiLine()
         {
@@ -33,8 +38,8 @@ class C
     }
 }
 ",
-                codeRefactoringProvider: new RoslynatorCodeRefactoringProvider(),
-                equivalenceKey: RefactoringIdentifiers.FormatArgumentList);
+                codeRefactoringProvider: CodeRefactoringProvider,
+                equivalenceKey: RefactoringId);
         }
 
         [Fact]
@@ -62,8 +67,8 @@ class C
     }
 }
 ",
-                codeRefactoringProvider: new RoslynatorCodeRefactoringProvider(),
-                equivalenceKey: RefactoringIdentifiers.FormatArgumentList);
+                codeRefactoringProvider: CodeRefactoringProvider,
+                equivalenceKey: RefactoringId);
         }
 
         [Fact]
@@ -91,8 +96,8 @@ class C
     }
 }
 ",
-                codeRefactoringProvider: new RoslynatorCodeRefactoringProvider(),
-                equivalenceKey: RefactoringIdentifiers.FormatArgumentList);
+                codeRefactoringProvider: CodeRefactoringProvider,
+                equivalenceKey: RefactoringId);
         }
 
         [Fact]
@@ -120,8 +125,8 @@ class C
     }
 }
 ",
-                codeRefactoringProvider: new RoslynatorCodeRefactoringProvider(),
-                equivalenceKey: RefactoringIdentifiers.FormatArgumentList);
+                codeRefactoringProvider: CodeRefactoringProvider,
+                equivalenceKey: RefactoringId);
         }
 
         [Fact]
@@ -140,8 +145,8 @@ class C
     }
 }
 ",
-                codeRefactoringProvider: new RoslynatorCodeRefactoringProvider(),
-                equivalenceKey: RefactoringIdentifiers.FormatArgumentList);
+                codeRefactoringProvider: CodeRefactoringProvider,
+                equivalenceKey: RefactoringId);
         }
     }
 }
