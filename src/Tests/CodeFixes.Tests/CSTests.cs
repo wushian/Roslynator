@@ -5,8 +5,6 @@ using Roslynator.CSharp.CodeFixes;
 using Xunit;
 using static Roslynator.Tests.CSharpCompilerCodeFixVerifier;
 
-#pragma warning disable xUnit1008
-
 namespace Roslynator.CodeFixes.Tests
 {
     public static class CSTests
@@ -25,6 +23,7 @@ class C
 }
 ";
 
+        //[Fact]
         public static void TestCodeFix()
         {
             VerifyCodeFix(
@@ -37,7 +36,8 @@ class C
                 equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
 
-        [InlineData("", "")]
+        //[Theory]
+        //[InlineData("", "")]
         public static void TestCodeFix2(string fixableCode, string fixedCode)
         {
             VerifyCodeFix(
@@ -49,6 +49,7 @@ class C
                 equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
 
+        //[Fact]
         public static void TestNoCodeFix()
         {
             VerifyNoCodeFix(

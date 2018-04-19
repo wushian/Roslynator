@@ -4,8 +4,6 @@ using Roslynator.CSharp.Refactorings;
 using Xunit;
 using static Roslynator.Tests.CSharpCodeRefactoringVerifier;
 
-#pragma warning disable xUnit1008
-
 namespace Roslynator.Refactorings.Tests
 {
     public static class RRTests
@@ -24,6 +22,7 @@ class C
 }
 ";
 
+        //[Fact]
         public static void TestCodeRefactoring()
         {
             VerifyCodeRefactoring(
@@ -36,7 +35,8 @@ class C
                 equivalenceKey: RefactoringId);
         }
 
-        [InlineData("", "")]
+        //[Theory]
+        //[InlineData("", "")]
         public static void TestCodeRefactoring2(string fixableCode, string fixedCode)
         {
             VerifyCodeRefactoring(
@@ -47,6 +47,7 @@ class C
                 equivalenceKey: RefactoringId);
         }
 
+        //[Fact]
         public static void TestNoCodeRefactoring()
         {
             VerifyNoCodeRefactoring(
