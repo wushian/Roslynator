@@ -42,6 +42,8 @@ namespace Roslynator.Tests
             string language,
             string equivalenceKey = null)
         {
+            Assert.True(codeFixProvider.FixableDiagnosticIds.Contains(diagnosticId), $"Code fix provider '{codeFixProvider.GetType().Name}' cannot fix diagnostic '{diagnosticId}'.");
+
             Document document = WorkspaceUtility.CreateDocument(source, language);
 
             ImmutableArray<Diagnostic> compilerDiagnostics = DiagnosticUtility.GetCompilerDiagnostics(document);
