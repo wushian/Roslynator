@@ -23,7 +23,7 @@ namespace Roslynator.CSharp.Refactorings
             if (context.IsRefactoringEnabled(RefactoringIdentifiers.DuplicateArgument))
             {
                 var refactoring = new DuplicateArgumentRefactoring(argumentList);
-                refactoring.ComputeRefactoring(context);
+                refactoring.ComputeRefactoring(context, RefactoringIdentifiers.DuplicateArgument);
             }
 
             if (context.IsRefactoringEnabled(RefactoringIdentifiers.FormatArgumentList)
