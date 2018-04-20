@@ -179,6 +179,7 @@ namespace Roslynator
                 VerifyNoCompilerError(document);
         }
 
+        //TODO: move to DiagnosticVerifier
         public static void VerifyNoCompilerError(Document document)
         {
             ImmutableArray<Diagnostic> compilerDiagnostics = GetCompilerDiagnostics(document);

@@ -18,6 +18,24 @@ namespace Roslynator.Tests
     {
         public static void VerifyNoCodeRefactoring(
             string source,
+            IEnumerable<TextSpan> spans,
+            CodeRefactoringProvider codeRefactoringProvider,
+            string language,
+            string equivalenceKey = null)
+        {
+            foreach (TextSpan span in spans)
+            {
+                VerifyNoCodeRefactoring(
+                    source: source,
+                    span: span,
+                    codeRefactoringProvider: codeRefactoringProvider,
+                    language: language,
+                    equivalenceKey: equivalenceKey);
+            }
+        }
+
+        public static void VerifyNoCodeRefactoring(
+            string source,
             TextSpan span,
             CodeRefactoringProvider codeRefactoringProvider,
             string language,
@@ -50,6 +68,32 @@ namespace Roslynator.Tests
         public static void VerifyCodeRefactoring(
             string source,
             string newSource,
+            IEnumerable<TextSpan> spans,
+            CodeRefactoringProvider codeRefactoringProvider,
+            string language,
+            string equivalenceKey = null,
+            bool allowNewCompilerDiagnostics = false)
+        {
+            Document document = WorkspaceUtility.CreateDocument(source, language);
+
+            foreach (TextSpan span in spans.OrderByDescending(f => f.Start))
+            {
+                document = VerifyCodeRefactoring(
+                    document: document,
+                    span: span,
+                    codeRefactoringProvider: codeRefactoringProvider,
+                    equivalenceKey: equivalenceKey,
+                    allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
+            }
+
+            string actual = WorkspaceUtility.GetSimplifiedAndFormattedText(document);
+
+            Assert.Equal(newSource, actual);
+        }
+
+        public static void VerifyCodeRefactoring(
+            string source,
+            string newSource,
             TextSpan span,
             CodeRefactoringProvider codeRefactoringProvider,
             string language,
@@ -58,9 +102,28 @@ namespace Roslynator.Tests
         {
             Document document = WorkspaceUtility.CreateDocument(source, language);
 
+            document = VerifyCodeRefactoring(
+                document: document,
+                span: span,
+                codeRefactoringProvider: codeRefactoringProvider,
+                equivalenceKey: equivalenceKey,
+                allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
+
+            string actual = WorkspaceUtility.GetSimplifiedAndFormattedText(document);
+
+            Assert.Equal(newSource, actual);
+        }
+
+        private static Document VerifyCodeRefactoring(
+            Document document,
+            TextSpan span,
+            CodeRefactoringProvider codeRefactoringProvider,
+            string equivalenceKey,
+            bool allowNewCompilerDiagnostics)
+        {
             ImmutableArray<Diagnostic> compilerDiagnostics = DiagnosticUtility.GetCompilerDiagnostics(document);
 
-            var actions = new List<CodeAction>();
+            List<CodeAction> actions = null;
 
             var context = new CodeRefactoringContext(
                 document,
@@ -70,12 +133,14 @@ namespace Roslynator.Tests
                     if (equivalenceKey == null
                         || string.Equals(a.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
                     {
-                        actions.Add(a);
+                        (actions ?? (actions = new List<CodeAction>())).Add(a);
                     }
                 },
                 CancellationToken.None);
 
             codeRefactoringProvider.ComputeRefactoringsAsync(context).Wait();
+
+            Assert.True(actions != null, "No code refactoring has been registered.");
 
             document = WorkspaceUtility.ApplyCodeAction(document, actions[0]);
 
@@ -91,9 +156,7 @@ namespace Roslynator.Tests
                     $"Fix introduced new compiler diagnostics\r\n\r\nDiagnostics:\r\n{newCompilerDiagnostics.ToMultilineString()}\r\n\r\nNew document:\r\n{document.ToFullString()}\r\n");
             }
 
-            string actual = WorkspaceUtility.GetSimplifiedAndFormattedText(document);
-
-            Assert.Equal(newSource, actual);
+            return document;
         }
     }
 }

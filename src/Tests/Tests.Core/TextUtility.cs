@@ -59,6 +59,61 @@ namespace Roslynator.Tests
             return (source, newSource, span);
         }
 
+        public static (string source, List<TextSpan> spans) GetMarkedSpans(string s)
+        {
+            StringBuilder sb = StringBuilderCache.GetInstance(s.Length - OpenMarker.Length - CloseMarker.Length);
+
+            var spans = new List<TextSpan>();
+
+            int lastPos = 0;
+
+            bool inSpan = false;
+
+            int length = s.Length;
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (s[i])
+                {
+                    case '<':
+                        {
+                            if (IsOpenMarker(s, length, i))
+                            {
+                                sb.Append(s, lastPos, i - lastPos);
+
+                                i += 2;
+                                lastPos = i + 1;
+                                inSpan = true;
+                                continue;
+                            }
+
+                            break;
+                        }
+                    case '>':
+                        {
+                            if (inSpan
+                                && IsCloseMarker(s, length, i))
+                            {
+                                spans.Add(new TextSpan(sb.Length, i - lastPos));
+
+                                sb.Append(s, lastPos, i - lastPos);
+
+                                i += 2;
+                                lastPos = i + 1;
+                                inSpan = false;
+                                continue;
+                            }
+
+                            break;
+                        }
+                }
+            }
+
+            sb.Append(s, lastPos, s.Length - lastPos);
+
+            return (StringBuilderCache.GetStringAndFree(sb), spans);
+        }
+
         public static (string source, List<Diagnostic> diagnostics) GetMarkedDiagnostics(
             string s,
             DiagnosticDescriptor descriptor,
@@ -103,11 +158,7 @@ namespace Roslynator.Tests
                     case '<':
                         {
                             if (i < length - 1
-                                && s[i + 1] == '<'
-                                && i < length - 2
-                                && s[i + 2] == '<'
-                                && i < length - 3
-                                && s[i + 3] != '<')
+                                && IsOpenMarker(s, length, i))
                             {
                                 sb.Append(s, lastPos, i - lastPos);
 
@@ -126,12 +177,7 @@ namespace Roslynator.Tests
                     case '>':
                         {
                             if (startColumn != -1
-                                && i < length - 1
-                                && s[i + 1] == '>'
-                                && i < length - 2
-                                && s[i + 2] == '>'
-                                && i < length - 3
-                                && s[i + 3] != '>')
+                                && IsCloseMarker(s, length, i))
                             {
                                 sb.Append(s, lastPos, i - lastPos);
 
@@ -167,6 +213,26 @@ namespace Roslynator.Tests
             sb.Append(s, lastPos, s.Length - lastPos);
 
             return (StringBuilderCache.GetStringAndFree(sb), diagnostics);
+        }
+
+        private static bool IsOpenMarker(string s, int length, int i)
+        {
+            return i < length - 1
+                && s[i + 1] == '<'
+                && i < length - 2
+                && s[i + 2] == '<'
+                && i < length - 3
+                && s[i + 3] != '<';
+        }
+
+        private static bool IsCloseMarker(string s, int length, int i)
+        {
+            return i < length - 1
+                && s[i + 1] == '>'
+                && i < length - 2
+                && s[i + 2] == '>'
+                && i < length - 3
+                && s[i + 3] != '>';
         }
     }
 }
