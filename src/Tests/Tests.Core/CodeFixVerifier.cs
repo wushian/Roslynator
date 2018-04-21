@@ -2,13 +2,11 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.CodeAnalysis.Formatting;
 using Xunit;
 
 namespace Roslynator.Tests
@@ -23,7 +21,7 @@ namespace Roslynator.Tests
         {
             Document document = WorkspaceUtility.CreateDocument(source, language);
 
-            DiagnosticUtility.VerifyNoCompilerError(document);
+            DiagnosticVerifier.VerifyNoCompilerError(document);
 
             foreach (Diagnostic diagnostic in DiagnosticUtility.GetSortedDiagnostics(document, analyzer))
             {
@@ -49,13 +47,15 @@ namespace Roslynator.Tests
             string language,
             bool allowNewCompilerDiagnostics = false)
         {
-            Assert.True(codeFixProvider.FixableDiagnosticIds.Intersect(analyzer.SupportedDiagnostics.Select(f => f.Id)).Any(), $"Code fix provider '{codeFixProvider.GetType().Name}' cannot fix any diagnostic supported by analyzer '{analyzer}'.");
+            Assert.True(codeFixProvider.CanFixAny(analyzer.SupportedDiagnostics), $"Code fix provider '{codeFixProvider.GetType().Name}' cannot fix any diagnostic supported by analyzer '{analyzer}'.");
 
             Document document = WorkspaceUtility.CreateDocument(source, language);
 
-            Diagnostic[] analyzerDiagnostics = DiagnosticUtility.GetSortedDiagnostics(document, analyzer);
+            ImmutableArray<Diagnostic> compilerDiagnostics = document.GetCompilerDiagnostics();
 
-            ImmutableArray<Diagnostic> compilerDiagnostics = DiagnosticUtility.GetCompilerDiagnostics(document);
+            DiagnosticVerifier.VerifyNoCompilerError(compilerDiagnostics);
+
+            Diagnostic[] analyzerDiagnostics = DiagnosticUtility.GetSortedDiagnostics(document, analyzer);
 
             while (analyzerDiagnostics.Length > 0)
             {
@@ -72,24 +72,15 @@ namespace Roslynator.Tests
                 if (actions == null)
                     break;
 
-                document = WorkspaceUtility.ApplyCodeAction(document, actions[0]);
+                document = document.ApplyCodeAction(actions[0]);
+
+                if (!allowNewCompilerDiagnostics)
+                    DiagnosticVerifier.VerifyNoNewCompilerDiagnostics(document, compilerDiagnostics);
 
                 analyzerDiagnostics = DiagnosticUtility.GetSortedDiagnostics(document, analyzer);
-
-                IEnumerable<Diagnostic> newCompilerDiagnostics = DiagnosticUtility.GetNewDiagnostics(compilerDiagnostics, DiagnosticUtility.GetCompilerDiagnostics(document));
-
-                if (!allowNewCompilerDiagnostics
-                    && newCompilerDiagnostics.Any())
-                {
-                    document = document.WithSyntaxRoot(Formatter.Format(document.GetSyntaxRootAsync().Result, Formatter.Annotation, document.Project.Solution.Workspace));
-                    newCompilerDiagnostics = DiagnosticUtility.GetNewDiagnostics(compilerDiagnostics, DiagnosticUtility.GetCompilerDiagnostics(document));
-
-                    Assert.True(false,
-                        $"Fix introduced new compiler diagnostics\r\n\r\nDiagnostics:\r\n{newCompilerDiagnostics.ToMultilineString()}\r\n\r\nNew document:\r\n{document.ToFullString()}\r\n");
-                }
             }
 
-            string actual = WorkspaceUtility.GetSimplifiedAndFormattedText(document);
+            string actual = document.GetSimplifiedAndFormattedText();
 
             Assert.Equal(newSource, actual);
         }

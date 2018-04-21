@@ -2,12 +2,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeActions;
-using Microsoft.CodeAnalysis.Formatting;
-using Microsoft.CodeAnalysis.Simplification;
 using Microsoft.CodeAnalysis.Text;
 
 namespace Roslynator
@@ -103,33 +98,6 @@ namespace Roslynator
             string extension = ((language == LanguageNames.CSharp) ? CSharpFileExtension : VisualBasicFileExtension);
 
             return $"{fileName}{suffix}.{extension}";
-        }
-
-        public static string GetSimplifiedAndFormattedText(Document document)
-        {
-            return GetSimplifiedAndFormattedTextAsync(document).Result;
-        }
-
-        public static async Task<string> GetSimplifiedAndFormattedTextAsync(Document document)
-        {
-            Document simplifiedDocument = await Simplifier.ReduceAsync(document, Simplifier.Annotation).ConfigureAwait(false);
-
-            SyntaxNode root = await simplifiedDocument.GetSyntaxRootAsync().ConfigureAwait(false);
-
-            root = Formatter.Format(root, Formatter.Annotation, simplifiedDocument.Project.Solution.Workspace);
-
-            return root.ToFullString();
-        }
-
-        internal static Document ApplyCodeAction(Document document, CodeAction codeAction)
-        {
-            return codeAction
-                .GetOperationsAsync(CancellationToken.None)
-                .Result
-                .OfType<ApplyChangesOperation>()
-                .Single()
-                .ChangedSolution
-                .GetDocument(document.Id);
         }
     }
 }

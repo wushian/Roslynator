@@ -6,6 +6,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Text;
 using Xunit;
 
@@ -28,17 +29,17 @@ namespace Roslynator.Tests
             DiagnosticAnalyzer analyzer,
             string language)
         {
-            Assert.True(analyzer.SupportedDiagnostics.IndexOf(descriptor, DiagnosticDescriptorComparer.IdOrdinal) != -1,
-                $"Diagnostic \"{descriptor.Id}\" is not supported by analyzer \"{analyzer.GetType().Name}\"");
+            Assert.True(analyzer.IsSupported(descriptor),
+                $"Diagnostic \"{descriptor.Id}\" is not supported by analyzer \"{analyzer.GetType().Name}\".");
 
             IEnumerable<Document> documents = WorkspaceUtility.CreateDocuments(sources, language);
 
-            DiagnosticUtility.VerifyNoCompilerError(documents);
+            VerifyNoCompilerError(documents);
 
             Diagnostic[] diagnostics = DiagnosticUtility.GetSortedDiagnostics(documents, analyzer);
 
             Assert.True(diagnostics.Length == 0 || diagnostics.All(f => !string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)),
-                    $"No diagnostic expected\r\n\r\nDiagnostics:\r\n{string.Join("\r\n", diagnostics.Where(f => string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)))}\r\n");
+                    $"No diagnostic expected\r\n\r\nDiagnostics:\r\n{diagnostics.Where(f => string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)).ToMultilineString()}\r\n");
         }
 
         public static void VerifyDiagnostic(
@@ -56,12 +57,10 @@ namespace Roslynator.Tests
             string language,
             params Diagnostic[] expectedDiagnostics)
         {
-            ImmutableArray<DiagnosticDescriptor> supportedDiagnostics = analyzer.SupportedDiagnostics;
-
             foreach (Diagnostic diagnostic in expectedDiagnostics)
             {
-                Assert.True(supportedDiagnostics.IndexOf(diagnostic.Descriptor, DiagnosticDescriptorComparer.IdOrdinal) != -1,
-                    $"Diagnostic \"{diagnostic.Descriptor.Id}\" is not supported by analyzer \"{analyzer.GetType().Name}\"");
+                Assert.True(analyzer.IsSupported(diagnostic.Descriptor),
+                    $"Diagnostic \"{diagnostic.Descriptor.Id}\" is not supported by analyzer \"{analyzer.GetType().Name}\".");
             }
 
             Diagnostic[] diagnostics = DiagnosticUtility.GetSortedDiagnostics(sources, analyzer, language);
@@ -85,7 +84,7 @@ namespace Roslynator.Tests
             int actualCount = actual.Length;
 
             Assert.True(expectedCount == actualCount,
-                $"Mismatch between number of diagnostics returned, expected: {expectedCount} actual: {actualCount}\r\n\r\nDiagnostics:\r\n{string.Join<Diagnostic>("\r\n", actual)}\r\n");
+                $"Mismatch between number of diagnostics returned, expected: {expectedCount} actual: {actualCount}\r\n\r\nDiagnostics:\r\n{actual.ToMultilineString()}\r\n");
 
             for (int i = 0; i < expectedCount; i++)
                 VerifyDiagnostic(actual[i], expected[i]);
@@ -110,7 +109,7 @@ namespace Roslynator.Tests
             int expectedCount = expected.Count;
 
             Assert.True(actualCount == expectedCount,
-                $"Expected {expectedCount} additional locations but got {actualCount} for Diagnostic:\r\n{diagnostic}\r\n");
+                $"Expected {expectedCount} additional locations, actual: {actualCount}\r\n\r\nDiagnostic:\r\n{diagnostic}\r\n");
 
             for (int j = 0; j < actualCount; j++)
                 VerifyLocation(diagnostic, actual[j], expected[j]);
@@ -130,7 +129,7 @@ namespace Roslynator.Tests
             FileLinePositionSpan expected)
         {
             Assert.True(actual.Path == expected.Path,
-                $"Expected diagnostic to be in file \"{expected.Path}\" was actually in file \"{actual.Path}\"\r\n\r\nDiagnostic:\r\n{diagnostic}\r\n");
+                $"Expected diagnostic to be in file \"{expected.Path}\", actual: \"{actual.Path}\"\r\n\r\nDiagnostic:\r\n{diagnostic}\r\n");
 
             VerifyLinePosition(diagnostic, actual.StartLinePosition, expected.StartLinePosition, "start");
 
@@ -147,13 +146,47 @@ namespace Roslynator.Tests
             int expectedLine = expected.Line;
 
             Assert.True(actualLine == expectedLine,
-                $"Expected diagnostic to {name} on line \"{expectedLine}\" actually {name}s on line \"{actualLine}\"\r\n\r\nDiagnostic:\r\n{diagnostic}\r\n");
+                $"Expected diagnostic to {name} on line {expectedLine}, actual: {actualLine}\r\n\r\nDiagnostic:\r\n{diagnostic}\r\n");
 
             int actualCharacter = actual.Character;
             int expectedCharacter = expected.Character;
 
             Assert.True(actualCharacter == expectedCharacter,
-                $"Expected diagnostic to {name} at column \"{expectedCharacter}\" actually {name}s at column \"{actualCharacter}\"\r\n\r\nDiagnostic:\r\n{diagnostic}\r\n");
+                $"Expected diagnostic to {name} at column {expectedCharacter}, actual: {actualCharacter}\r\n\r\nDiagnostic:\r\n{diagnostic}\r\n");
+        }
+
+        public static void VerifyNoCompilerError(Document document)
+        {
+            ImmutableArray<Diagnostic> compilerDiagnostics = document.GetCompilerDiagnostics();
+
+            VerifyNoCompilerError(compilerDiagnostics);
+        }
+
+        public static void VerifyNoCompilerError(ImmutableArray<Diagnostic> compilerDiagnostics)
+        {
+            Assert.False(compilerDiagnostics.Any(f => f.Severity == DiagnosticSeverity.Error),
+                $"No compiler error expected\r\n\r\nDiagnostics:\r\n{compilerDiagnostics.Where(f => f.Severity == DiagnosticSeverity.Error).ToMultilineString()}");
+        }
+
+        public static void VerifyNoCompilerError(IEnumerable<Document> documents)
+        {
+            foreach (Document document in documents)
+                VerifyNoCompilerError(document);
+        }
+
+        public static void VerifyNoNewCompilerDiagnostics(Document document, ImmutableArray<Diagnostic> compilerDiagnostics)
+        {
+            IEnumerable<Diagnostic> newCompilerDiagnostics = DiagnosticUtility.GetNewDiagnostics(compilerDiagnostics, document.GetCompilerDiagnostics());
+
+            if (!newCompilerDiagnostics.Any())
+                return;
+
+            document = document.WithSyntaxRoot(Formatter.Format(document.GetSyntaxRootAsync().Result, Formatter.Annotation, document.Project.Solution.Workspace));
+
+            newCompilerDiagnostics = DiagnosticUtility.GetNewDiagnostics(compilerDiagnostics, document.GetCompilerDiagnostics());
+
+            Assert.True(false,
+                $"Code fix introduced new compiler diagnostics\r\n\r\nDiagnostics:\r\n{newCompilerDiagnostics.ToMultilineString()}\r\n\r\nNew document:\r\n{document.ToFullString()}\r\n");
         }
     }
 }

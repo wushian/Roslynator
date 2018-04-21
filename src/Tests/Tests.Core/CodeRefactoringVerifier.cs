@@ -8,7 +8,6 @@ using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeRefactorings;
-using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Text;
 using Xunit;
 
@@ -43,7 +42,7 @@ namespace Roslynator.Tests
         {
             Document document = WorkspaceUtility.CreateDocument(source, language);
 
-            DiagnosticUtility.VerifyNoCompilerError(document);
+            DiagnosticVerifier.VerifyNoCompilerError(document);
 
             List<CodeAction> actions = null;
 
@@ -86,7 +85,7 @@ namespace Roslynator.Tests
                     allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
             }
 
-            string actual = WorkspaceUtility.GetSimplifiedAndFormattedText(document);
+            string actual = document.GetSimplifiedAndFormattedText();
 
             Assert.Equal(newSource, actual);
         }
@@ -109,7 +108,7 @@ namespace Roslynator.Tests
                 equivalenceKey: equivalenceKey,
                 allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
 
-            string actual = WorkspaceUtility.GetSimplifiedAndFormattedText(document);
+            string actual = document.GetSimplifiedAndFormattedText();
 
             Assert.Equal(newSource, actual);
         }
@@ -121,9 +120,9 @@ namespace Roslynator.Tests
             string equivalenceKey,
             bool allowNewCompilerDiagnostics)
         {
-            ImmutableArray<Diagnostic> compilerDiagnostics = DiagnosticUtility.GetCompilerDiagnostics(document);
+            ImmutableArray<Diagnostic> compilerDiagnostics = document.GetCompilerDiagnostics();
 
-            DiagnosticUtility.VerifyNoCompilerError(compilerDiagnostics);
+            DiagnosticVerifier.VerifyNoCompilerError(compilerDiagnostics);
 
             List<CodeAction> actions = null;
 
@@ -144,19 +143,10 @@ namespace Roslynator.Tests
 
             Assert.True(actions != null, "No code refactoring has been registered.");
 
-            document = WorkspaceUtility.ApplyCodeAction(document, actions[0]);
+            document = document.ApplyCodeAction(actions[0]);
 
-            IEnumerable<Diagnostic> newCompilerDiagnostics = DiagnosticUtility.GetNewDiagnostics(compilerDiagnostics, DiagnosticUtility.GetCompilerDiagnostics(document));
-
-            if (!allowNewCompilerDiagnostics
-                && newCompilerDiagnostics.Any())
-            {
-                document = document.WithSyntaxRoot(Formatter.Format(document.GetSyntaxRootAsync().Result, Formatter.Annotation, document.Project.Solution.Workspace));
-                newCompilerDiagnostics = DiagnosticUtility.GetNewDiagnostics(compilerDiagnostics, DiagnosticUtility.GetCompilerDiagnostics(document));
-
-                Assert.True(false,
-                    $"Fix introduced new compiler diagnostics\r\n\r\nDiagnostics:\r\n{newCompilerDiagnostics.ToMultilineString()}\r\n\r\nNew document:\r\n{document.ToFullString()}\r\n");
-            }
+            if (!allowNewCompilerDiagnostics)
+                DiagnosticVerifier.VerifyNoNewCompilerDiagnostics(document, compilerDiagnostics);
 
             return document;
         }
