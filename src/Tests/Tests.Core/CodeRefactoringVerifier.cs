@@ -123,6 +123,8 @@ namespace Roslynator.Tests
         {
             ImmutableArray<Diagnostic> compilerDiagnostics = DiagnosticUtility.GetCompilerDiagnostics(document);
 
+            DiagnosticUtility.VerifyNoCompilerError(compilerDiagnostics);
+
             List<CodeAction> actions = null;
 
             var context = new CodeRefactoringContext(

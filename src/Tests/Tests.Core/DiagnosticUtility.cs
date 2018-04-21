@@ -184,6 +184,12 @@ namespace Roslynator
         {
             ImmutableArray<Diagnostic> compilerDiagnostics = GetCompilerDiagnostics(document);
 
+            compilerDiagnostics = VerifyNoCompilerError(compilerDiagnostics);
+        }
+
+        //TODO: move to DiagnosticVerifier
+        public static ImmutableArray<Diagnostic> VerifyNoCompilerError(ImmutableArray<Diagnostic> compilerDiagnostics)
+        {
             if (compilerDiagnostics.Any(f => f.Severity == DiagnosticSeverity.Error))
             {
                 compilerDiagnostics = compilerDiagnostics.Where(f => f.Severity == DiagnosticSeverity.Error).ToImmutableArray();
@@ -191,6 +197,8 @@ namespace Roslynator
                 Assert.True(false,
                     $"No compiler error expected\r\n\r\nDiagnostics:\r\n{compilerDiagnostics.ToMultilineString()}");
             }
+
+            return compilerDiagnostics;
         }
     }
 }

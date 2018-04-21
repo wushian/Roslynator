@@ -34,7 +34,6 @@ class C
 ",
 @"
 ",
-                span: default,
                 codeRefactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
@@ -57,7 +56,6 @@ class C
             VerifyNoCodeRefactoring(
 @"
 ",
-                span: default,
                 codeRefactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
