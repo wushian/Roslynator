@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 
 namespace Roslynator
@@ -70,7 +71,7 @@ namespace Roslynator
         {
             ProjectId projectId = ProjectId.CreateNewId(debugName: TestProjectName);
 
-            return new AdhocWorkspace()
+            Project project = new AdhocWorkspace()
                 .CurrentSolution
                 .AddProject(projectId, TestProjectName, TestProjectName, language)
                 .AddMetadataReferences(
@@ -86,6 +87,19 @@ namespace Roslynator
                         RuntimeMetadataReference.CreateFromAssemblyName("Microsoft.CodeAnalysis.CSharp.dll"),
                     })
                 .GetProject(projectId);
+
+            if (language == LanguageNames.CSharp)
+            {
+                var compilationOptions = (CSharpCompilationOptions)project.CompilationOptions;
+
+                var parseOptions = (CSharpParseOptions)project.ParseOptions;
+
+                project = project
+                    .WithCompilationOptions(compilationOptions.WithAllowUnsafe(true))
+                    .WithParseOptions(parseOptions.WithLanguageVersion(LanguageVersion.Latest));
+            }
+
+            return project;
         }
 
         public static string CreateDefaultFileName(string language)

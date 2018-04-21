@@ -22,7 +22,7 @@ namespace Roslynator
 
             LinePosition GetLinePosition(int startIndex, int endIndex)
             {
-                int i = endIndex;
+                int i = endIndex - 1;
 
                 while (i >= startIndex)
                 {
