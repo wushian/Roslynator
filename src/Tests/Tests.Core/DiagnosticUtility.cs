@@ -143,8 +143,8 @@ namespace Roslynator
             IEnumerable<Diagnostic> diagnostics,
             IEnumerable<Diagnostic> newDiagnostics)
         {
-            using (IEnumerator<Diagnostic> enNew = newDiagnostics.OrderBy(f => f.Location.SourceSpan.Start).GetEnumerator())
-            using (IEnumerator<Diagnostic> en = diagnostics.OrderBy(f => f.Location.SourceSpan.Start).GetEnumerator())
+            using (IEnumerator<Diagnostic> enNew = GetEnumerator(newDiagnostics))
+            using (IEnumerator<Diagnostic> en = GetEnumerator(diagnostics))
             {
                 while (enNew.MoveNext())
                 {
@@ -163,6 +163,14 @@ namespace Roslynator
                         yield break;
                     }
                 }
+            }
+
+            IEnumerator<Diagnostic> GetEnumerator(IEnumerable<Diagnostic> items)
+            {
+                return items
+                    .Where(f => f.Severity != DiagnosticSeverity.Hidden)
+                    .OrderBy(f => f.Location.SourceSpan.Start)
+                    .GetEnumerator();
             }
         }
      }
