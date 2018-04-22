@@ -214,7 +214,7 @@ class C
         [InlineData("items.FirstOrDefault(_ => true) != null", "items.Any(_ => true)")]
         [InlineData("items.FirstOrDefault(_ => true) == null", "!items.Any(_ => true)")]
         [InlineData("items.FirstOrDefault(_ => true) is null", "!items.Any(_ => true)")]
-        public static void TestNullCheckWithFirstOrDefault_IEnumerable(string fixableCode, string fixedCode)
+        public static void TestNullCheckWithFirstOrDefault_IEnumerableOfReferenceType(string fixableCode, string fixedCode)
         {
             VerifyDiagnosticAndCodeFix(
 @"
@@ -242,7 +242,35 @@ class C
         [InlineData("items.FirstOrDefault(_ => true) != null", "items.Any(_ => true)")]
         [InlineData("items.FirstOrDefault(_ => true) == null", "!items.Any(_ => true)")]
         [InlineData("items.FirstOrDefault(_ => true) is null", "!items.Any(_ => true)")]
-        public static void TestNullCheckWithFirstOrDefault_ImmutableArray(string fixableCode, string fixedCode)
+        public static void TestNullCheckWithFirstOrDefault_IEnumerableOfNullableType(string fixableCode, string fixedCode)
+        {
+            VerifyDiagnosticAndCodeFix(
+@"
+using System.Collections.Generic;
+using System.Linq;
+
+class C
+{
+    void M()
+    {
+        var items = new List<int?>();
+
+        if (<<<>>>) { }
+    }
+}
+",
+                fixableCode,
+                fixedCode,
+                descriptor: Descriptor,
+                analyzer: Analyzer,
+                codeFixProvider: CodeFixProvider);
+        }
+
+        [Theory]
+        [InlineData("items.FirstOrDefault(_ => true) != null", "items.Any(_ => true)")]
+        [InlineData("items.FirstOrDefault(_ => true) == null", "!items.Any(_ => true)")]
+        [InlineData("items.FirstOrDefault(_ => true) is null", "!items.Any(_ => true)")]
+        public static void TestNullCheckWithFirstOrDefault_ImmutableArrayOfReferenceType(string fixableCode, string fixedCode)
         {
             VerifyDiagnosticAndCodeFix(
 @"
@@ -266,14 +294,32 @@ class C
                 codeFixProvider: CodeFixProvider);
         }
 
-        [Fact]
-        public static void TestNoDiagnostic()
+        [Theory]
+        [InlineData("items.FirstOrDefault(_ => true) != null", "items.Any(_ => true)")]
+        [InlineData("items.FirstOrDefault(_ => true) == null", "!items.Any(_ => true)")]
+        [InlineData("items.FirstOrDefault(_ => true) is null", "!items.Any(_ => true)")]
+        public static void TestNullCheckWithFirstOrDefault_ImmutableArrayOfNullableType(string fixableCode, string fixedCode)
         {
-            VerifyNoDiagnostic(
+            VerifyDiagnosticAndCodeFix(
 @"
+using System.Collections.Immutable;
+using System.Linq;
+
+class C
+{
+    void M()
+    {
+        ImmutableArray<int?> items = ImmutableArray<int?>.Empty;
+
+        if (<<<>>>) { }
+    }
+}
 ",
+                fixableCode,
+                fixedCode,
                 descriptor: Descriptor,
-                analyzer: Analyzer);
+                analyzer: Analyzer,
+                codeFixProvider: CodeFixProvider);
         }
 
         [Fact]
@@ -313,6 +359,38 @@ class C
         var items = new List<string>();
 
         if (items.Where(f => f.StartsWith(""a"")).Any(g => g.StartsWith(""b""))) { }
+    }
+}
+",
+                descriptor: Descriptor,
+                analyzer: Analyzer);
+        }
+
+        [Fact]
+        public static void TestNoDiagnostic_SimplifyNullCheckWithFirstOrDefault_ValueType()
+        {
+            VerifyNoDiagnostic(
+@"
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+
+class C
+{
+    void M()
+    {
+        var items = new List<int>();
+
+        if (items.FirstOrDefault(_ => true) != null) { }
+        if (items.FirstOrDefault(_ => true) == null) { }
+    }
+
+    void M2()
+    {
+        ImmutableArray<int> items = ImmutableArray<int>.Empty;
+
+        if (items.FirstOrDefault(_ => true) != null) { }
+        if (items.FirstOrDefault(_ => true) == null) { }
     }
 }
 ",

@@ -25,15 +25,23 @@ namespace Roslynator.CSharp.Analysis
             if (node.ContainsDirectives)
                 return;
 
-            IMethodSymbol methodSymbol = context.SemanticModel
-                .GetReducedExtensionMethodInfo(invocation, context.CancellationToken)
-                .Symbol;
+            ExtensionMethodSymbolInfo extensionMethodSymbolInfo = context.SemanticModel.GetReducedExtensionMethodInfo(invocation, context.CancellationToken);
+
+            IMethodSymbol methodSymbol = extensionMethodSymbolInfo.Symbol;
 
             if (methodSymbol == null)
                 return;
 
             if (!SymbolUtility.IsLinqExtensionOfIEnumerableOfTWithPredicate(methodSymbol, context.SemanticModel, name : invocationInfo.NameText, allowImmutableArrayExtension: true))
                 return;
+
+            if (!extensionMethodSymbolInfo
+                .ReducedSymbol
+                .ReturnType
+                .IsReferenceTypeOrNullableType())
+            {
+                return;
+            }
 
             context.ReportDiagnostic(DiagnosticDescriptors.SimplifyLinqMethodChain, node);
         }
