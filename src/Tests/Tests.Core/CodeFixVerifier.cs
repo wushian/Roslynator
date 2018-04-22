@@ -59,11 +59,25 @@ namespace Roslynator.Tests
 
             while (analyzerDiagnostics.Length > 0)
             {
+                Diagnostic diagnostic = null;
+
+                foreach (Diagnostic analyzerDiagnostic in analyzerDiagnostics)
+                {
+                    if (codeFixProvider.FixableDiagnosticIds.Contains(analyzerDiagnostic.Id))
+                    {
+                        diagnostic = analyzerDiagnostic;
+                        break;
+                    }
+                }
+
+                if (diagnostic == null)
+                    break;
+
                 List<CodeAction> actions = null;
 
                 var context = new CodeFixContext(
                     document,
-                    analyzerDiagnostics[0],
+                    diagnostic,
                     (a, _) => (actions ?? (actions = new List<CodeAction>())).Add(a),
                     CancellationToken.None);
 

@@ -189,6 +189,7 @@ namespace Roslynator.CSharp.Analysis
                                         }
                                     case "FirstOrDefault":
                                         {
+                                            SimplifyNullCheckWithFirstOrDefaultAnalysis.Analyze(context, invocationInfo);
                                             CallFindInsteadOfFirstOrDefaultAnalysis.Analyze(context, invocationInfo);
                                             break;
                                         }

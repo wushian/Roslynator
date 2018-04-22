@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Text;
 
-namespace Roslynator.Tests
+namespace Roslynator.Tests.CSharp
 {
     public static class CSharpCompilerCodeFixVerifier
     {

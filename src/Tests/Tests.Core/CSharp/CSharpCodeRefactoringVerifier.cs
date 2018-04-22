@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.Text;
 
-namespace Roslynator.Tests
+namespace Roslynator.Tests.CSharp
 {
     public static class CSharpCodeRefactoringVerifier
     {
