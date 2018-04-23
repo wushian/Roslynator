@@ -11,9 +11,12 @@ using Roslynator;
 using Roslynator.CSharp;
 using Roslynator.CSharp.Syntax;
 
-class C
+namespace Roslynator.Tests
 {
-    void M()
+    class C
     {
+        void M()
+        {
+        }
     }
 }

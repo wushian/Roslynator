@@ -59,9 +59,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGeneration", "Tools\Cod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharp.Workspaces", "CSharp.Workspaces\CSharp.Workspaces.csproj", "{56DA29A3-C179-471C-9941-42426EEB84D0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Utilities.Library", "Tests\Tests.Utilities.Library\Tests.Utilities.Library.csproj", "{B26059E8-E5D8-415F-AF7C-210750DB4CB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.TestLibrary", "Tests\Tests.TestLibrary\Tests.TestLibrary.csproj", "{B26059E8-E5D8-415F-AF7C-210750DB4CB0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Utilities.Console", "Tests\Tests.Utilities.Console\Tests.Utilities.Console.csproj", "{09B4373A-8AA6-48CF-804C-E209CC12BC5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.TestConsole", "Tests\Tests.TestConsole\Tests.TestConsole.csproj", "{09B4373A-8AA6-48CF-804C-E209CC12BC5C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Workspaces", "Common.Workspaces\Common.Workspaces.csproj", "{D6B3FAF2-C92D-4B2D-82DF-D6B3DD7F4107}"
 EndProject

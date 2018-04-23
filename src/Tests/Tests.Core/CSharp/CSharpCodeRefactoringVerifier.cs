@@ -37,6 +37,14 @@ namespace Roslynator.Tests.CSharp
         {
             (string source, string newSource, TextSpan span) = TextUtility.GetMarkedSpan(sourceTemplate, fixableCode, fixedCode);
 
+            (string source2, List<TextSpan> spans) = TextUtility.GetMarkedSpans(source);
+
+            if (spans != null)
+            {
+                source = source2;
+                span = spans[0];
+            }
+
             VerifyCodeRefactoring(
                 source: source,
                 newSource: newSource,
