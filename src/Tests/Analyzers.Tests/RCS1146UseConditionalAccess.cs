@@ -22,7 +22,7 @@ namespace Roslynator.Analyzers.Tests
         [Fact]
         public static void TestDiagnosticWithCodeFix_IfStatement()
         {
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
 @"
 public class C
 {
@@ -89,7 +89,7 @@ public struct S
         [Fact]
         public static void TestDiagnosticWithCodeFix_LogicalAndExpression_ReferenceType()
         {
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
 @"
 using System.Collections.Generic;
 
@@ -213,7 +213,7 @@ public class Foo
         [Fact]
         public static void TestDiagnosticWithCodeFix_LogicalAndExpression_NullableType()
         {
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
 @"
 public struct Foo
 {

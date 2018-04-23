@@ -30,7 +30,7 @@ namespace Roslynator.Analyzers.Tests
         [InlineData("Where(_ => true).Single()", "Single(_ => true)")]
         public static void TestDiagnosticWithCodeFix(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
 @"
 using System.Collections.Generic;
 using System.Linq;
@@ -49,13 +49,13 @@ class C
                 fixedCode,
                 descriptor: Descriptor,
                 analyzer: Analyzer,
-                codeFixProvider: CodeFixProvider);
+                fixProvider: CodeFixProvider);
         }
 
         [Fact]
         public static void TestDiagnosticWithCodeFix_Multiline()
         {
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
 @"
 using System.Collections.Generic;
 using System.Linq;
@@ -67,8 +67,8 @@ class C
         var items = new List<string>();
 
         var x = items
-            .Where(_ => true)
-            .Any();
+            .<<<Where(_ => true)
+            .Any()>>>;
     }
 }
 ",
@@ -89,7 +89,7 @@ class C
 ",
                 descriptor: Descriptor,
                 analyzer: Analyzer,
-                codeFixProvider: CodeFixProvider);
+                fixProvider: CodeFixProvider);
         }
 
         [Theory]
@@ -103,7 +103,7 @@ class C
         [InlineData("Where(_ => true).Single()", "Single(_ => true)")]
         public static void TestDiagnosticWithCodeFix_ImmutableArray(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
 @"
 using System.Collections.Immutable;
 using System.Linq;
@@ -122,7 +122,7 @@ class C
             fixedCode,
             descriptor: Descriptor,
             analyzer: Analyzer,
-            codeFixProvider: CodeFixProvider);
+            fixProvider: CodeFixProvider);
         }
 
         [Theory]
@@ -134,7 +134,7 @@ class C
         }).Cast<object>()", "OfType<object>()")]
         public static void TestCallOfTypeInsteadOfWhereAndCast(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
 @"
 using System.Collections.Generic;
 using System.Linq;
@@ -153,7 +153,7 @@ class C
                 fixedCode,
                 descriptor: Descriptor,
                 analyzer: Analyzer,
-                codeFixProvider: CodeFixProvider);
+                fixProvider: CodeFixProvider);
         }
 
         [Theory]
@@ -161,7 +161,7 @@ class C
         [InlineData(@"Where((f) => f.StartsWith(""a"")).Any(f => f.StartsWith(""b""))", @"Any((f) => f.StartsWith(""a"") && f.StartsWith(""b""))")]
         public static void TestCombineWhereAndAny(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
 @"
 using System.Collections.Generic;
 using System.Linq;
@@ -180,7 +180,7 @@ class C
                 fixedCode,
                 descriptor: Descriptor,
                 analyzer: Analyzer,
-                codeFixProvider: CodeFixProvider);
+                fixProvider: CodeFixProvider);
         }
 
         [Theory]
@@ -188,7 +188,7 @@ class C
         [InlineData(@"Where((f) => f.StartsWith(""a"")).Any(f => f.StartsWith(""b""))", @"Any((f) => f.StartsWith(""a"") && f.StartsWith(""b""))")]
         public static void TestCombineWhereAndAny_ImmutableArray(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
 @"
 using System.Collections.Immutable;
 using System.Linq;
@@ -207,7 +207,7 @@ class C
                 fixedCode,
                 descriptor: Descriptor,
                 analyzer: Analyzer,
-                codeFixProvider: CodeFixProvider);
+                fixProvider: CodeFixProvider);
         }
 
         [Theory]
@@ -216,7 +216,7 @@ class C
         [InlineData("items.FirstOrDefault(_ => true) is null", "!items.Any(_ => true)")]
         public static void TestNullCheckWithFirstOrDefault_IEnumerableOfReferenceType(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
 @"
 using System.Collections.Generic;
 using System.Linq;
@@ -235,7 +235,7 @@ class C
                 fixedCode,
                 descriptor: Descriptor,
                 analyzer: Analyzer,
-                codeFixProvider: CodeFixProvider);
+                fixProvider: CodeFixProvider);
         }
 
         [Theory]
@@ -244,7 +244,7 @@ class C
         [InlineData("items.FirstOrDefault(_ => true) is null", "!items.Any(_ => true)")]
         public static void TestNullCheckWithFirstOrDefault_IEnumerableOfNullableType(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
 @"
 using System.Collections.Generic;
 using System.Linq;
@@ -263,7 +263,7 @@ class C
                 fixedCode,
                 descriptor: Descriptor,
                 analyzer: Analyzer,
-                codeFixProvider: CodeFixProvider);
+                fixProvider: CodeFixProvider);
         }
 
         [Theory]
@@ -272,7 +272,7 @@ class C
         [InlineData("items.FirstOrDefault(_ => true) is null", "!items.Any(_ => true)")]
         public static void TestNullCheckWithFirstOrDefault_ImmutableArrayOfReferenceType(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
 @"
 using System.Collections.Immutable;
 using System.Linq;
@@ -291,7 +291,7 @@ class C
                 fixedCode,
                 descriptor: Descriptor,
                 analyzer: Analyzer,
-                codeFixProvider: CodeFixProvider);
+                fixProvider: CodeFixProvider);
         }
 
         [Theory]
@@ -300,7 +300,7 @@ class C
         [InlineData("items.FirstOrDefault(_ => true) is null", "!items.Any(_ => true)")]
         public static void TestNullCheckWithFirstOrDefault_ImmutableArrayOfNullableType(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
 @"
 using System.Collections.Immutable;
 using System.Linq;
@@ -319,7 +319,7 @@ class C
                 fixedCode,
                 descriptor: Descriptor,
                 analyzer: Analyzer,
-                codeFixProvider: CodeFixProvider);
+                fixProvider: CodeFixProvider);
         }
 
         [Fact]

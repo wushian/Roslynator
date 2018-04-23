@@ -15,28 +15,28 @@ namespace Roslynator.Tests
 {
     public static class CodeRefactoringVerifier
     {
-        public static void VerifyNoCodeRefactoring(
+        public static void VerifyNoRefactoring(
             string source,
             IEnumerable<TextSpan> spans,
-            CodeRefactoringProvider codeRefactoringProvider,
+            CodeRefactoringProvider refactoringProvider,
             string language,
             string equivalenceKey = null)
         {
             foreach (TextSpan span in spans)
             {
-                VerifyNoCodeRefactoring(
+                VerifyNoRefactoring(
                     source: source,
                     span: span,
-                    codeRefactoringProvider: codeRefactoringProvider,
+                    refactoringProvider: refactoringProvider,
                     language: language,
                     equivalenceKey: equivalenceKey);
             }
         }
 
-        public static void VerifyNoCodeRefactoring(
+        public static void VerifyNoRefactoring(
             string source,
             TextSpan span,
-            CodeRefactoringProvider codeRefactoringProvider,
+            CodeRefactoringProvider refactoringProvider,
             string language,
             string equivalenceKey = null)
         {
@@ -59,16 +59,16 @@ namespace Roslynator.Tests
                 },
                 CancellationToken.None);
 
-            codeRefactoringProvider.ComputeRefactoringsAsync(context).Wait();
+            refactoringProvider.ComputeRefactoringsAsync(context).Wait();
 
             Assert.True(actions == null, $"Expected no code refactoring, actual: {actions?.Count ?? 0}");
         }
 
-        public static void VerifyCodeRefactoring(
+        public static void VerifyRefactoring(
             string source,
             string newSource,
             IEnumerable<TextSpan> spans,
-            CodeRefactoringProvider codeRefactoringProvider,
+            CodeRefactoringProvider refactoringProvider,
             string language,
             string equivalenceKey = null,
             bool allowNewCompilerDiagnostics = false)
@@ -77,46 +77,46 @@ namespace Roslynator.Tests
 
             foreach (TextSpan span in spans.OrderByDescending(f => f.Start))
             {
-                document = VerifyCodeRefactoring(
+                document = VerifyRefactoring(
                     document: document,
                     span: span,
-                    codeRefactoringProvider: codeRefactoringProvider,
+                    refactoringProvider: refactoringProvider,
                     equivalenceKey: equivalenceKey,
                     allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
             }
 
-            string actual = document.GetSimplifiedAndFormattedText();
+            string actual = document.ToSimplifiedAndFormattedFullString();
 
             Assert.Equal(newSource, actual);
         }
 
-        public static void VerifyCodeRefactoring(
+        public static void VerifyRefactoring(
             string source,
             string newSource,
             TextSpan span,
-            CodeRefactoringProvider codeRefactoringProvider,
+            CodeRefactoringProvider refactoringProvider,
             string language,
             string equivalenceKey = null,
             bool allowNewCompilerDiagnostics = false)
         {
             Document document = WorkspaceUtility.CreateDocument(source, language);
 
-            document = VerifyCodeRefactoring(
+            document = VerifyRefactoring(
                 document: document,
                 span: span,
-                codeRefactoringProvider: codeRefactoringProvider,
+                refactoringProvider: refactoringProvider,
                 equivalenceKey: equivalenceKey,
                 allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
 
-            string actual = document.GetSimplifiedAndFormattedText();
+            string actual = document.ToSimplifiedAndFormattedFullString();
 
             Assert.Equal(newSource, actual);
         }
 
-        private static Document VerifyCodeRefactoring(
+        private static Document VerifyRefactoring(
             Document document,
             TextSpan span,
-            CodeRefactoringProvider codeRefactoringProvider,
+            CodeRefactoringProvider refactoringProvider,
             string equivalenceKey,
             bool allowNewCompilerDiagnostics)
         {
@@ -139,7 +139,7 @@ namespace Roslynator.Tests
                 },
                 CancellationToken.None);
 
-            codeRefactoringProvider.ComputeRefactoringsAsync(context).Wait();
+            refactoringProvider.ComputeRefactoringsAsync(context).Wait();
 
             Assert.True(actions != null, "No code refactoring has been registered.");
 

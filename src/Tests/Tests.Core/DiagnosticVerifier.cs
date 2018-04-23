@@ -29,7 +29,7 @@ namespace Roslynator.Tests
             DiagnosticAnalyzer analyzer,
             string language)
         {
-            Assert.True(analyzer.IsSupported(descriptor),
+            Assert.True(analyzer.Supports(descriptor),
                 $"Diagnostic \"{descriptor.Id}\" is not supported by analyzer \"{analyzer.GetType().Name}\".");
 
             IEnumerable<Document> documents = WorkspaceUtility.CreateDocuments(sources, language);
@@ -39,7 +39,7 @@ namespace Roslynator.Tests
             Diagnostic[] diagnostics = DiagnosticUtility.GetSortedDiagnostics(documents, analyzer);
 
             Assert.True(diagnostics.Length == 0 || diagnostics.All(f => !string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)),
-                    $"No diagnostic expected\r\n\r\nDiagnostics:\r\n{diagnostics.Where(f => string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)).ToMultilineString()}\r\n");
+                    $"No diagnostic expected{diagnostics.Where(f => string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)).ToDebugString()}");
         }
 
         public static void VerifyDiagnostic(
@@ -59,7 +59,7 @@ namespace Roslynator.Tests
         {
             foreach (Diagnostic diagnostic in expectedDiagnostics)
             {
-                Assert.True(analyzer.IsSupported(diagnostic.Descriptor),
+                Assert.True(analyzer.Supports(diagnostic.Descriptor),
                     $"Diagnostic \"{diagnostic.Descriptor.Id}\" is not supported by analyzer \"{analyzer.GetType().Name}\".");
             }
 
@@ -84,7 +84,7 @@ namespace Roslynator.Tests
             int actualCount = actual.Length;
 
             Assert.True(expectedCount == actualCount,
-                $"Mismatch between number of diagnostics returned, expected: {expectedCount} actual: {actualCount}\r\n\r\nDiagnostics:\r\n{actual.ToMultilineString()}\r\n");
+                $"Mismatch between number of diagnostics returned, expected: {expectedCount} actual: {actualCount}{actual.ToDebugString()}");
 
             for (int i = 0; i < expectedCount; i++)
                 VerifyDiagnostic(actual[i], expected[i]);
@@ -165,7 +165,7 @@ namespace Roslynator.Tests
         public static void VerifyNoCompilerError(ImmutableArray<Diagnostic> compilerDiagnostics)
         {
             Assert.False(compilerDiagnostics.Any(f => f.Severity == DiagnosticSeverity.Error),
-                $"No compiler error expected\r\n\r\nDiagnostics:\r\n{compilerDiagnostics.Where(f => f.Severity == DiagnosticSeverity.Error).ToMultilineString()}");
+                $"No compiler error expected{compilerDiagnostics.Where(f => f.Severity == DiagnosticSeverity.Error).ToDebugString()}");
         }
 
         public static void VerifyNoCompilerError(IEnumerable<Document> documents)
@@ -186,7 +186,7 @@ namespace Roslynator.Tests
             newCompilerDiagnostics = DiagnosticUtility.GetNewDiagnostics(compilerDiagnostics, document.GetCompilerDiagnostics());
 
             Assert.True(false,
-                $"Code fix introduced new compiler diagnostics\r\n\r\nDiagnostics:\r\n{newCompilerDiagnostics.ToMultilineString()}\r\n\r\nNew document:\r\n{document.ToFullString()}\r\n");
+                $"Code fix introduced new compiler diagnostics{newCompilerDiagnostics.ToDebugString()}");
         }
     }
 }

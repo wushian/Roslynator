@@ -8,31 +8,31 @@ namespace Roslynator.Tests.CSharp
 {
     public static class CSharpCodeFixVerifier
     {
-        public static void VerifyCodeFix(
+        public static void VerifyFix(
             string source,
             string newSource,
             DiagnosticAnalyzer analyzer,
-            CodeFixProvider codeFixProvider,
+            CodeFixProvider fixProvider,
             bool allowNewCompilerDiagnostics = false)
         {
             CodeFixVerifier.VerifyFix(
                 source: source,
                 newSource: newSource,
                 analyzer: analyzer,
-                codeFixProvider: codeFixProvider,
+                fixProvider: fixProvider,
                 language: LanguageNames.CSharp,
                 allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
         }
 
-        public static void VerifyNoCodeFix(
+        public static void VerifyNoFix(
             string source,
             DiagnosticAnalyzer analyzer,
-            CodeFixProvider codeFixProvider)
+            CodeFixProvider fixProvider)
         {
-            CodeFixVerifier.VerifyNoCodeFix(
+            CodeFixVerifier.VerifyNoFix(
                 source: source,
                 analyzer: analyzer,
-                codeFixProvider: codeFixProvider,
+                fixProvider: fixProvider,
                 language: LanguageNames.CSharp);
         }
     }

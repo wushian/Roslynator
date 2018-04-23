@@ -29,13 +29,13 @@ class C
         //[Fact]
         public static void TestCodeFix()
         {
-            VerifyCodeFix(
+            VerifyFix(
 @"
 ",
 @"
 ",
                 diagnosticId: DiagnosticId,
-                codeFixProvider: CodeFixProvider,
+                fixProvider: CodeFixProvider,
                 equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
 
@@ -48,17 +48,17 @@ class C
                 fixableCode,
                 fixedCode,
                 diagnosticId: DiagnosticId,
-                codeFixProvider: CodeFixProvider,
+                fixProvider: CodeFixProvider,
                 equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
 
         //[Fact]
         public static void TestNoCodeFix()
         {
-            VerifyNoCodeFix(
+            VerifyNoFix(
 @"
 ",
-                codeFixProvider: CodeFixProvider,
+                fixProvider: CodeFixProvider,
                 equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
     }

@@ -34,7 +34,7 @@ namespace Roslynator.Analyzers.Tests
         [InlineData("0 >= items.Count()", "!items.Any()")]
         public static void TestDiagnosticWithCodeFix(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
 @"
 using System.Collections.Generic;
 using System.Linq;

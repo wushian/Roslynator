@@ -40,13 +40,13 @@ class Foo
     }
 }
 ";
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
                     sourceTemplate,
                     fixableCode,
                     fixedCode,
                     descriptor: Descriptor,
                     analyzer: Analyzer,
-                    codeFixProvider: CodeFixProvider);
+                    fixProvider: CodeFixProvider);
         }
 
         [Theory]
@@ -73,13 +73,13 @@ class Foo
 }
 ";
 
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
                 sourceTemplate,
                 fixableCode,
                 fixedCode,
                 descriptor: Descriptor,
                 analyzer: Analyzer,
-                codeFixProvider: CodeFixProvider);
+                fixProvider: CodeFixProvider);
         }
 
         [Theory]
@@ -105,13 +105,13 @@ class Foo
     public int? Value { get; }
 }
 ";
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
                     sourceTemplate,
                     fixableCode,
                     fixedCode,
                     descriptor: Descriptor,
                     analyzer: Analyzer,
-                    codeFixProvider: CodeFixProvider);
+                    fixProvider: CodeFixProvider);
         }
 
         [Theory]
@@ -132,13 +132,13 @@ class C
     }
 }
 ";
-        VerifyDiagnosticAndCodeFix(
+        VerifyDiagnosticAndFix(
                 sourceTemplate,
                 fixableCode,
                 fixedCode,
                 descriptor: Descriptor,
                 analyzer: Analyzer,
-                codeFixProvider: CodeFixProvider);
+                fixProvider: CodeFixProvider);
         }
 
         [Theory]
@@ -159,13 +159,13 @@ class C
     }
 }
 ";
-        VerifyDiagnosticAndCodeFix(
+        VerifyDiagnosticAndFix(
                 sourceTemplate,
                 fixableCode,
                 fixedCode,
                 descriptor: Descriptor,
                 analyzer: Analyzer,
-                codeFixProvider: CodeFixProvider);
+                fixProvider: CodeFixProvider);
         }
 
         [Fact]

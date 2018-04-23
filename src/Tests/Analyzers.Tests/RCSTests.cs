@@ -34,27 +34,27 @@ class C
         //[Fact]
         public static void TestDiagnosticWithCodeFix()
         {
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
 @"
 ",
 @"
 ",
                 descriptor: Descriptor,
                 analyzer: Analyzer,
-                codeFixProvider: CodeFixProvider);
+                fixProvider: CodeFixProvider);
         }
 
         //[Theory]
         //[InlineData("", "")]
         public static void TestDiagnosticWithCodeFix2(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
                 SourceTemplate,
                 fixableCode,
                 fixedCode,
                 descriptor: Descriptor,
                 analyzer: Analyzer,
-                codeFixProvider: CodeFixProvider);
+                fixProvider: CodeFixProvider);
         }
 
         //[Fact]

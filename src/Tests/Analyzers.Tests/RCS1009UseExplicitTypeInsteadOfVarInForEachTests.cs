@@ -34,7 +34,7 @@ class C
         [Fact]
         public static void TestDiagnosticWithCodeFix()
         {
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
 @"
 using System;
 using System.Collections.Generic;
@@ -69,20 +69,20 @@ class C
 ",
                 descriptor: Descriptor,
                 analyzer: Analyzer,
-                codeFixProvider: CodeFixProvider);
+                fixProvider: CodeFixProvider);
         }
 
         //[Theory]
         //[InlineData("", "")]
         internal static void TestDiagnosticWithCodeFix2(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndCodeFix(
+            VerifyDiagnosticAndFix(
                 SourceTemplate,
                 fixableCode,
                 fixedCode,
                 descriptor: Descriptor,
                 analyzer: Analyzer,
-                codeFixProvider: CodeFixProvider);
+                fixProvider: CodeFixProvider);
         }
 
         //[Fact]

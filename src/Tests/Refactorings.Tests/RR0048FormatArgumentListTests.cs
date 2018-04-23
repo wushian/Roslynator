@@ -16,7 +16,7 @@ namespace Roslynator.Refactorings.Tests
         [Fact]
         public static void TestFormatArgumentListToMultiLine()
         {
-            VerifyCodeRefactoring(
+            VerifyRefactoring(
 @"
 class C
 {
@@ -38,14 +38,14 @@ class C
     }
 }
 ",
-                codeRefactoringProvider: CodeRefactoringProvider,
+                refactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
 
         [Fact]
         public static void TestFormatArgumentListToMultiLine2()
         {
-            VerifyCodeRefactoring(
+            VerifyRefactoring(
 @"
 class C
 {
@@ -67,14 +67,14 @@ class C
     }
 }
 ",
-                codeRefactoringProvider: CodeRefactoringProvider,
+                refactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
 
         [Fact]
         public static void TestFormatArgumentListToSingleLine()
         {
-            VerifyCodeRefactoring(
+            VerifyRefactoring(
 @"
 class C
 {
@@ -96,14 +96,14 @@ class C
     }
 }
 ",
-                codeRefactoringProvider: CodeRefactoringProvider,
+                refactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
 
         [Fact]
         public static void TestFormatArgumentListToSingleLine2()
         {
-            VerifyCodeRefactoring(
+            VerifyRefactoring(
 @"
 class C
 {
@@ -125,14 +125,14 @@ class C
     }
 }
 ",
-                codeRefactoringProvider: CodeRefactoringProvider,
+                refactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
 
         [Fact]
         public static void TestNoRefactoring()
         {
-            VerifyNoCodeRefactoring(
+            VerifyNoRefactoring(
 @"
 class C
 {
@@ -145,7 +145,7 @@ class C
     }
 }
 ",
-                codeRefactoringProvider: CodeRefactoringProvider,
+                refactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
     }

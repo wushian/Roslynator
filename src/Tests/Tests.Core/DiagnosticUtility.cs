@@ -169,7 +169,7 @@ namespace Roslynator
             {
                 return items
                     .Where(f => f.Severity != DiagnosticSeverity.Hidden)
-                    .OrderBy(f => f.Location.SourceSpan.Start)
+                    .OrderBy(f => f, DiagnosticComparer.SpanStart)
                     .GetEnumerator();
             }
         }

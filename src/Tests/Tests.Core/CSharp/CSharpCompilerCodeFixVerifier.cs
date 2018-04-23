@@ -8,14 +8,14 @@ namespace Roslynator.Tests.CSharp
 {
     public static class CSharpCompilerCodeFixVerifier
     {
-        public static void VerifyNoCodeFix(
+        public static void VerifyNoFix(
             string source,
-            CodeFixProvider codeFixProvider,
+            CodeFixProvider fixProvider,
             string equivalenceKey = null)
         {
-            CompilerCodeFixVerifier.VerifyNoCodeFix(
+            CompilerCodeFixVerifier.VerifyNoFix(
                 source: source,
-                codeFixProvider: codeFixProvider,
+                fixProvider: fixProvider,
                 language: LanguageNames.CSharp,
                 equivalenceKey: equivalenceKey);
         }
@@ -25,31 +25,31 @@ namespace Roslynator.Tests.CSharp
             string fixableCode,
             string fixedCode,
             string diagnosticId,
-            CodeFixProvider codeFixProvider,
+            CodeFixProvider fixProvider,
             string equivalenceKey = null)
         {
             (string source, string newSource, TextSpan span) = TextUtility.GetMarkedSpan(sourceTemplate, fixableCode, fixedCode);
 
-            VerifyCodeFix(
+            VerifyFix(
                 source: source,
                 newSource: newSource,
                 diagnosticId: diagnosticId,
-                codeFixProvider: codeFixProvider,
+                fixProvider: fixProvider,
                 equivalenceKey: equivalenceKey);
         }
 
-        public static void VerifyCodeFix(
+        public static void VerifyFix(
             string source,
             string newSource,
             string diagnosticId,
-            CodeFixProvider codeFixProvider,
+            CodeFixProvider fixProvider,
             string equivalenceKey = null)
         {
-            CompilerCodeFixVerifier.VerifyCodeFix(
+            CompilerCodeFixVerifier.VerifyFix(
                 source: source,
                 newSource: newSource,
                 diagnosticId: diagnosticId,
-                codeFixProvider: codeFixProvider,
+                fixProvider: fixProvider,
                 language: LanguageNames.CSharp,
                 equivalenceKey: equivalenceKey);
         }

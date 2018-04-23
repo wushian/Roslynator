@@ -13,18 +13,18 @@ namespace Roslynator
 {
     public static class DocumentExtensions
     {
-        public static string GetSimplifiedAndFormattedText(this Document document)
+        public static string ToSimplifiedAndFormattedFullString(this Document document)
         {
-            return GetSimplifiedAndFormattedTextAsync(document).Result;
+            return ToSimplifiedAndFormattedFullStringAsync(document).Result;
         }
 
-        public static async Task<string> GetSimplifiedAndFormattedTextAsync(this Document document)
+        public static async Task<string> ToSimplifiedAndFormattedFullStringAsync(this Document document)
         {
-            Document simplifiedDocument = await Simplifier.ReduceAsync(document, Simplifier.Annotation).ConfigureAwait(false);
+            document = await Simplifier.ReduceAsync(document, Simplifier.Annotation).ConfigureAwait(false);
 
-            SyntaxNode root = await simplifiedDocument.GetSyntaxRootAsync().ConfigureAwait(false);
+            SyntaxNode root = await document.GetSyntaxRootAsync().ConfigureAwait(false);
 
-            root = Formatter.Format(root, Formatter.Annotation, simplifiedDocument.Project.Solution.Workspace);
+            root = Formatter.Format(root, Formatter.Annotation, document.Project.Solution.Workspace);
 
             return root.ToFullString();
         }
@@ -43,6 +43,11 @@ namespace Roslynator
         public static ImmutableArray<Diagnostic> GetCompilerDiagnostics(this Document document, CancellationToken cancellation = default(CancellationToken))
         {
             return document.GetSemanticModelAsync(cancellation).Result.GetDiagnostics();
+        }
+
+        public static string ToFullString(this Document document)
+        {
+            return document.GetSyntaxRootAsync().Result.ToFullString();
         }
     }
 }

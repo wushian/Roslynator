@@ -29,12 +29,12 @@ class C
         //[Fact]
         public static void TestCodeRefactoring()
         {
-            VerifyCodeRefactoring(
+            VerifyRefactoring(
 @"
 ",
 @"
 ",
-                codeRefactoringProvider: CodeRefactoringProvider,
+                refactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
 
@@ -42,21 +42,21 @@ class C
         //[InlineData("", "")]
         public static void TestCodeRefactoring2(string fixableCode, string fixedCode)
         {
-            VerifyCodeRefactoring(
+            VerifyRefactoring(
                 SourceTemplate,
                 fixableCode,
                 fixedCode,
-                codeRefactoringProvider: CodeRefactoringProvider,
+                refactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
 
         //[Fact]
         public static void TestNoCodeRefactoring()
         {
-            VerifyNoCodeRefactoring(
+            VerifyNoRefactoring(
 @"
 ",
-                codeRefactoringProvider: CodeRefactoringProvider,
+                refactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
     }

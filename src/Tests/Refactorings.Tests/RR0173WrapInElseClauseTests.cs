@@ -17,7 +17,7 @@ namespace Roslynator.Refactorings.Tests
         [Fact]
         public static void TestCodeRefactoring()
         {
-            VerifyCodeRefactoring(
+            VerifyRefactoring(
 @"
 class C
 {
@@ -48,14 +48,14 @@ class C
     }
 }
 ",
-                codeRefactoringProvider: CodeRefactoringProvider,
+                refactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
 
         [Fact]
         public static void TestCodeRefactoring2()
         {
-            VerifyCodeRefactoring(
+            VerifyRefactoring(
 @"
 class C
 {
@@ -80,14 +80,14 @@ class C
     }
 }
 ",
-                codeRefactoringProvider: CodeRefactoringProvider,
+                refactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
 
         [Fact]
         public static void TestCodeRefactoring3()
         {
-            VerifyCodeRefactoring(
+            VerifyRefactoring(
 @"
 class C
 {
@@ -122,14 +122,14 @@ class C
     }
 }
 ",
-                codeRefactoringProvider: CodeRefactoringProvider,
+                refactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
 
         [Fact]
         public static void TestCodeRefactoring4()
         {
-            VerifyCodeRefactoring(
+            VerifyRefactoring(
 @"
 using System;
 
@@ -202,14 +202,14 @@ class C
     }
 }
 ",
-                codeRefactoringProvider: CodeRefactoringProvider,
+                refactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
 
         [Fact]
         public static void TestNoCodeRefactoring()
         {
-            VerifyNoCodeRefactoring(
+            VerifyNoRefactoring(
 @"
 class C
 {
@@ -237,7 +237,7 @@ class C
     }
 }
 ",
-                codeRefactoringProvider: CodeRefactoringProvider,
+                refactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
     }

@@ -17,7 +17,7 @@ namespace Roslynator.Refactorings.Tests
         [Fact]
         public static void TestCodeRefactoring_VariableDeclaration()
         {
-            VerifyCodeRefactoring(
+            VerifyRefactoring(
 @"
 using System;
 
@@ -72,14 +72,14 @@ public class C
     public string M2(string s1, string s2) => null;
 }
 ",
-                codeRefactoringProvider: CodeRefactoringProvider,
+                refactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
 
         [Fact]
         public static void TestCodeRefactoring_SimpleAssignment()
         {
-            VerifyCodeRefactoring(
+            VerifyRefactoring(
 @"
 using System;
 
@@ -150,14 +150,14 @@ public class C
     public string M2(string s1, string s2) => null;
 }
 ",
-                codeRefactoringProvider: CodeRefactoringProvider,
+                refactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
 
         [Fact]
         public static void TestCodeRefactoring_Argument()
         {
-            VerifyCodeRefactoring(
+            VerifyRefactoring(
 @"
 using System;
 
@@ -228,7 +228,7 @@ public class C
     public string M2(string s1, string s2) => null;
 }
 ",
-                codeRefactoringProvider: CodeRefactoringProvider,
+                refactoringProvider: CodeRefactoringProvider,
                 equivalenceKey: RefactoringId);
         }
     }

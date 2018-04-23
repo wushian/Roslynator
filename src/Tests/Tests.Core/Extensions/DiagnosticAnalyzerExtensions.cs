@@ -8,7 +8,7 @@ namespace Roslynator
 {
     public static class DiagnosticAnalyzerExtensions
     {
-        public static bool IsSupported(this DiagnosticAnalyzer analyzer, DiagnosticDescriptor descriptor)
+        public static bool Supports(this DiagnosticAnalyzer analyzer, DiagnosticDescriptor descriptor)
         {
             return analyzer.SupportedDiagnostics.IndexOf(descriptor, DiagnosticDescriptorComparer.IdOrdinal) != -1;
         }
