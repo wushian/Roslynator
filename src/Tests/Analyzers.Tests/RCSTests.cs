@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Roslynator.CSharp;
 using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
+using Xunit;
 using static Roslynator.Tests.CSharp.CSharpDiagnosticVerifier;
 
 namespace Roslynator.Analyzers.Tests

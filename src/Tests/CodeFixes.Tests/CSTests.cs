@@ -2,6 +2,7 @@
 
 using Microsoft.CodeAnalysis.CodeFixes;
 using Roslynator.CSharp;
+using Xunit;
 using static Roslynator.Tests.CSharp.CSharpCompilerCodeFixVerifier;
 
 namespace Roslynator.CodeFixes.Tests
