@@ -15,4 +15,8 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.7.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Tests.Core\Tests.Core.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -5,27 +5,28 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyName>Roslynator.Tests.Core</AssemblyName>
+    <AssemblyName>Roslynator.Tests.Verifiers</AssemblyName>
     <RootNamespace>Roslynator</RootNamespace>
     <CodeAnalysisRuleSet>..\..\global.ruleset</CodeAnalysisRuleSet>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Tests.Core.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Tests.Verifiers.snk</AssemblyOriginatorKeyFile>
     <LangVersion>latest</LangVersion>
     <IsPackable>false</IsPackable>
     <Copyright>Copyright (c) 2017-2018 Josef Pihrt</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
-
+    <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.3.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Tests.Core\Tests.Core.csproj" />
     <ProjectReference Include="..\..\CSharp\CSharp.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Tests.Core.snk" />
+    <None Remove="Tests.Verifiers.snk" />
   </ItemGroup>
 
 </Project>
