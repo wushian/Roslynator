@@ -1,6 +1,5 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Roslynator.CSharp.Refactorings;
 using Xunit;
@@ -17,8 +16,7 @@ namespace Roslynator.Refactorings.Tests
         [Fact]
         public static void TestCodeRefactoring_VariableDeclaration()
         {
-            VerifyRefactoring(
-@"
+            VerifyRefactoring(@"
 using System;
 
 public class C
@@ -44,8 +42,7 @@ public class C
     public string M1(string s) => null;
     public string M2(string s1, string s2) => null;
 }
-",
-@"
+", @"
 using System;
 
 public class C
@@ -71,16 +68,13 @@ public class C
     public string M1(string s) => null;
     public string M2(string s1, string s2) => null;
 }
-",
-                refactoringProvider: CodeRefactoringProvider,
-                equivalenceKey: RefactoringId);
+", CodeRefactoringProvider, RefactoringId);
         }
 
         [Fact]
         public static void TestCodeRefactoring_SimpleAssignment()
         {
-            VerifyRefactoring(
-@"
+            VerifyRefactoring(@"
 using System;
 
 public class C
@@ -114,8 +108,7 @@ public class C
     public string M1(string s) => null;
     public string M2(string s1, string s2) => null;
 }
-",
-@"
+", @"
 using System;
 
 public class C
@@ -149,16 +142,13 @@ public class C
     public string M1(string s) => null;
     public string M2(string s1, string s2) => null;
 }
-",
-                refactoringProvider: CodeRefactoringProvider,
-                equivalenceKey: RefactoringId);
+", CodeRefactoringProvider, RefactoringId);
         }
 
         [Fact]
         public static void TestCodeRefactoring_Argument()
         {
-            VerifyRefactoring(
-@"
+            VerifyRefactoring(@"
 using System;
 
 public class C
@@ -192,8 +182,7 @@ public class C
     public string M1(string s) => null;
     public string M2(string s1, string s2) => null;
 }
-",
-@"
+", @"
 using System;
 
 public class C
@@ -227,9 +216,7 @@ public class C
     public string M1(string s) => null;
     public string M2(string s1, string s2) => null;
 }
-",
-                refactoringProvider: CodeRefactoringProvider,
-                equivalenceKey: RefactoringId);
+", CodeRefactoringProvider, RefactoringId);
         }
     }
 }

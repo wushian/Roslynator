@@ -30,8 +30,7 @@ namespace Roslynator.Analyzers.Tests
         [InlineData("Where(_ => true).Single()", "Single(_ => true)")]
         public static void TestDiagnosticWithCodeFix(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(
-@"
+            VerifyDiagnosticAndFix(@"
 using System.Collections.Generic;
 using System.Linq;
 
@@ -44,19 +43,13 @@ class C
         var x = items.<<<>>>;
     }
 }
-",
-                fixableCode,
-                fixedCode,
-                descriptor: Descriptor,
-                analyzer: Analyzer,
-                fixProvider: CodeFixProvider);
+", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
         }
 
         [Fact]
         public static void TestDiagnosticWithCodeFix_Multiline()
         {
-            VerifyDiagnosticAndFix(
-@"
+            VerifyDiagnosticAndFix(@"
 using System.Collections.Generic;
 using System.Linq;
 
@@ -71,8 +64,7 @@ class C
             .Any()>>>;
     }
 }
-",
-@"
+", @"
 using System.Collections.Generic;
 using System.Linq;
 
@@ -86,10 +78,7 @@ class C
             .Any(_ => true);
     }
 }
-",
-                descriptor: Descriptor,
-                analyzer: Analyzer,
-                fixProvider: CodeFixProvider);
+", Descriptor, Analyzer, CodeFixProvider);
         }
 
         [Theory]
@@ -103,8 +92,7 @@ class C
         [InlineData("Where(_ => true).Single()", "Single(_ => true)")]
         public static void TestDiagnosticWithCodeFix_ImmutableArray(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(
-@"
+            VerifyDiagnosticAndFix(@"
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -117,12 +105,7 @@ class C
         var x = items.<<<>>>;
     }
 }
-",
-            fixableCode,
-            fixedCode,
-            descriptor: Descriptor,
-            analyzer: Analyzer,
-            fixProvider: CodeFixProvider);
+", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
         }
 
         [Theory]
@@ -134,8 +117,7 @@ class C
         }).Cast<object>()", "OfType<object>()")]
         public static void TestCallOfTypeInsteadOfWhereAndCast(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(
-@"
+            VerifyDiagnosticAndFix(@"
 using System.Collections.Generic;
 using System.Linq;
 
@@ -148,12 +130,7 @@ class C
         IEnumerable<object> q = items.<<<>>>;
     }
 }
-",
-                fixableCode,
-                fixedCode,
-                descriptor: Descriptor,
-                analyzer: Analyzer,
-                fixProvider: CodeFixProvider);
+", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
         }
 
         [Theory]
@@ -161,8 +138,7 @@ class C
         [InlineData(@"Where((f) => f.StartsWith(""a"")).Any(f => f.StartsWith(""b""))", @"Any((f) => f.StartsWith(""a"") && f.StartsWith(""b""))")]
         public static void TestCombineWhereAndAny(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(
-@"
+            VerifyDiagnosticAndFix(@"
 using System.Collections.Generic;
 using System.Linq;
 
@@ -175,12 +151,7 @@ class C
         if (items.<<<>>>) { }
     }
 }
-",
-                fixableCode,
-                fixedCode,
-                descriptor: Descriptor,
-                analyzer: Analyzer,
-                fixProvider: CodeFixProvider);
+", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
         }
 
         [Theory]
@@ -188,8 +159,7 @@ class C
         [InlineData(@"Where((f) => f.StartsWith(""a"")).Any(f => f.StartsWith(""b""))", @"Any((f) => f.StartsWith(""a"") && f.StartsWith(""b""))")]
         public static void TestCombineWhereAndAny_ImmutableArray(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(
-@"
+            VerifyDiagnosticAndFix(@"
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -202,12 +172,7 @@ class C
         if (items.<<<>>>) { }
     }
 }
-",
-                fixableCode,
-                fixedCode,
-                descriptor: Descriptor,
-                analyzer: Analyzer,
-                fixProvider: CodeFixProvider);
+", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
         }
 
         [Theory]
@@ -216,8 +181,7 @@ class C
         [InlineData("items.FirstOrDefault(_ => true) is null", "!items.Any(_ => true)")]
         public static void TestNullCheckWithFirstOrDefault_IEnumerableOfReferenceType(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(
-@"
+            VerifyDiagnosticAndFix(@"
 using System.Collections.Generic;
 using System.Linq;
 
@@ -230,12 +194,7 @@ class C
         if (<<<>>>) { }
     }
 }
-",
-                fixableCode,
-                fixedCode,
-                descriptor: Descriptor,
-                analyzer: Analyzer,
-                fixProvider: CodeFixProvider);
+", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
         }
 
         [Theory]
@@ -244,8 +203,7 @@ class C
         [InlineData("items.FirstOrDefault(_ => true) is null", "!items.Any(_ => true)")]
         public static void TestNullCheckWithFirstOrDefault_IEnumerableOfNullableType(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(
-@"
+            VerifyDiagnosticAndFix(@"
 using System.Collections.Generic;
 using System.Linq;
 
@@ -258,12 +216,7 @@ class C
         if (<<<>>>) { }
     }
 }
-",
-                fixableCode,
-                fixedCode,
-                descriptor: Descriptor,
-                analyzer: Analyzer,
-                fixProvider: CodeFixProvider);
+", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
         }
 
         [Theory]
@@ -272,8 +225,7 @@ class C
         [InlineData("items.FirstOrDefault(_ => true) is null", "!items.Any(_ => true)")]
         public static void TestNullCheckWithFirstOrDefault_ImmutableArrayOfReferenceType(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(
-@"
+            VerifyDiagnosticAndFix(@"
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -286,12 +238,7 @@ class C
         if (<<<>>>) { }
     }
 }
-",
-                fixableCode,
-                fixedCode,
-                descriptor: Descriptor,
-                analyzer: Analyzer,
-                fixProvider: CodeFixProvider);
+", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
         }
 
         [Theory]
@@ -300,8 +247,7 @@ class C
         [InlineData("items.FirstOrDefault(_ => true) is null", "!items.Any(_ => true)")]
         public static void TestNullCheckWithFirstOrDefault_ImmutableArrayOfNullableType(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(
-@"
+            VerifyDiagnosticAndFix(@"
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -314,19 +260,13 @@ class C
         if (<<<>>>) { }
     }
 }
-",
-                fixableCode,
-                fixedCode,
-                descriptor: Descriptor,
-                analyzer: Analyzer,
-                fixProvider: CodeFixProvider);
+", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
         }
 
         [Fact]
         public static void TestNoDiagnostic_CallOfTypeInsteadOfWhereAndCast()
         {
-            VerifyNoDiagnostic(
-@"
+            VerifyNoDiagnostic(@"
 using System.Collections.Generic;
 using System.Linq;
 
@@ -339,16 +279,13 @@ class C
         IEnumerable<object> q = items.Where(f => f is string).Cast<object>();
     }
 }
-",
-                descriptor: Descriptor,
-                analyzer: Analyzer);
+", Descriptor, Analyzer);
         }
 
         [Fact]
         public static void TestNoDiagnostic_CombineWhereAndAny()
         {
-            VerifyNoDiagnostic(
-@"
+            VerifyNoDiagnostic(@"
 using System.Collections.Generic;
 using System.Linq;
 
@@ -361,16 +298,13 @@ class C
         if (items.Where(f => f.StartsWith(""a"")).Any(g => g.StartsWith(""b""))) { }
     }
 }
-",
-                descriptor: Descriptor,
-                analyzer: Analyzer);
+", Descriptor, Analyzer);
         }
 
         [Fact]
         public static void TestNoDiagnostic_SimplifyNullCheckWithFirstOrDefault_ValueType()
         {
-            VerifyNoDiagnostic(
-@"
+            VerifyNoDiagnostic(@"
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -393,9 +327,7 @@ class C
         if (items.FirstOrDefault(_ => true) == null) { }
     }
 }
-",
-                descriptor: Descriptor,
-                analyzer: Analyzer);
+", Descriptor, Analyzer);
         }
     }
 }

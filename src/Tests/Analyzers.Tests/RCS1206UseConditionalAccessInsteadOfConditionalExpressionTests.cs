@@ -29,7 +29,7 @@ namespace Roslynator.Analyzers.Tests
         [InlineData("(x == null) ? default(string) : x.ToString()", "x?.ToString()")]
         public static void TestDiagnosticWithCodeFix_ReferenceTypeToReferenceType(string fixableCode, string fixedCode)
         {
-            const string sourceTemplate = @"
+            VerifyDiagnosticAndFix(@"
 class Foo
 {
     void M()
@@ -39,14 +39,7 @@ class Foo
         string s = <<<>>>;
     }
 }
-";
-            VerifyDiagnosticAndFix(
-                    sourceTemplate,
-                    fixableCode,
-                    fixedCode,
-                    descriptor: Descriptor,
-                    analyzer: Analyzer,
-                    fixProvider: CodeFixProvider);
+", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
         }
 
         [Theory]
@@ -59,7 +52,7 @@ class Foo
         [InlineData("(x == null) ? default(int) : x.Value", "x?.Value ?? default(int)")]
         public static void TestDiagnosticWithCodeFix_ReferenceTypeToValueType(string fixableCode, string fixedCode)
         {
-            const string sourceTemplate = @"
+            VerifyDiagnosticAndFix(@"
 class Foo
 {
     void M()
@@ -71,15 +64,7 @@ class Foo
 
     public int Value { get; }
 }
-";
-
-            VerifyDiagnosticAndFix(
-                sourceTemplate,
-                fixableCode,
-                fixedCode,
-                descriptor: Descriptor,
-                analyzer: Analyzer,
-                fixProvider: CodeFixProvider);
+", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
         }
 
         [Theory]
@@ -92,7 +77,7 @@ class Foo
         [InlineData("(x == null) ? default(int?) : x.Value", "x?.Value")]
         public static void TestDiagnosticWithCodeFix_ReferenceTypeToNullableType(string fixableCode, string fixedCode)
         {
-            const string sourceTemplate = @"
+            VerifyDiagnosticAndFix(@"
 class Foo
 {
     void M()
@@ -104,14 +89,7 @@ class Foo
 
     public int? Value { get; }
 }
-";
-            VerifyDiagnosticAndFix(
-                    sourceTemplate,
-                    fixableCode,
-                    fixedCode,
-                    descriptor: Descriptor,
-                    analyzer: Analyzer,
-                    fixProvider: CodeFixProvider);
+", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
         }
 
         [Theory]
@@ -121,7 +99,7 @@ class Foo
         [InlineData("(!ni.HasValue) ? null : ni.Value.ToString()", "ni?.ToString()")]
         public static void TestDiagnosticWithCodeFix_NullableTypeToReferenceType(string fixableCode, string fixedCode)
         {
-            const string sourceTemplate = @"
+            VerifyDiagnosticAndFix(@"
 class C
 {
     void M()
@@ -131,14 +109,7 @@ class C
         string s = <<<>>>;
     }
 }
-";
-        VerifyDiagnosticAndFix(
-                sourceTemplate,
-                fixableCode,
-                fixedCode,
-                descriptor: Descriptor,
-                analyzer: Analyzer,
-                fixProvider: CodeFixProvider);
+", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
         }
 
         [Theory]
@@ -148,7 +119,7 @@ class C
         [InlineData("(!ni.HasValue) ? 0 : ni.Value.GetHashCode()", "ni?.GetHashCode() ?? 0")]
         public static void TestDiagnosticWithCodeFix_NullableTypeToValueType(string fixableCode, string fixedCode)
         {
-            const string sourceTemplate = @"
+            VerifyDiagnosticAndFix(@"
 class C
 {
     void M()
@@ -158,21 +129,13 @@ class C
         int i = <<<>>>;
     }
 }
-";
-        VerifyDiagnosticAndFix(
-                sourceTemplate,
-                fixableCode,
-                fixedCode,
-                descriptor: Descriptor,
-                analyzer: Analyzer,
-                fixProvider: CodeFixProvider);
+", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
         }
 
         [Fact]
         public static void TestNoDiagnostic()
         {
-            VerifyNoDiagnostic(
-@"
+            VerifyNoDiagnostic(@"
 class Foo
 {
     void M()
@@ -209,9 +172,7 @@ class Foo
 
     public int Value { get; }
 }
-",
-                descriptor: Descriptor,
-                analyzer: Analyzer);
+", Descriptor, Analyzer);
         }
     }
 }

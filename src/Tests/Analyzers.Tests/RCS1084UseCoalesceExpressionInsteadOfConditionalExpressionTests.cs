@@ -27,7 +27,7 @@ namespace Roslynator.Analyzers.Tests
         [InlineData("(s == null) ? (\"\") : (s)", "s ?? \"\"")]
         public static void TestDiagnosticWithCodeFix_ReferenceType(string fixableCode, string fixedCode)
         {
-            const string sourceTemplate = @"
+        VerifyDiagnosticAndFix(@"
 class C
 {
     void M()
@@ -37,14 +37,7 @@ class C
         s = <<<>>>;
     }
 }
-";
-        VerifyDiagnosticAndFix(
-                sourceTemplate,
-                fixableCode,
-                fixedCode,
-                descriptor: Descriptor,
-                analyzer: Analyzer,
-                fixProvider: CodeFixProvider);
+", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
         }
 
         [Theory]
@@ -54,7 +47,7 @@ class C
         [InlineData("(!ni.HasValue) ? 1 : ni.Value", "ni ?? 1")]
         public static void TestDiagnosticWithCodeFix_ValuType(string fixableCode, string fixedCode)
         {
-            const string sourceTemplate = @"
+            VerifyDiagnosticAndFix(@"
 class C
 {
     void M()
@@ -65,22 +58,13 @@ class C
         i = <<<>>>;
     }
 }
-";
-
-            VerifyDiagnosticAndFix(
-                sourceTemplate,
-                fixableCode,
-                fixedCode,
-                descriptor: Descriptor,
-                analyzer: Analyzer,
-                fixProvider: CodeFixProvider);
+", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
         }
 
         [Fact]
         public static void TestNoDiagnostic()
         {
-            VerifyNoDiagnostic(
-@"
+            VerifyNoDiagnostic(@"
 class C
 {
     public unsafe void M()
@@ -91,16 +75,13 @@ class C
         s = (s == null) ? s : """";
     }
 }
-",
-                descriptor: Descriptor,
-                analyzer: Analyzer);
+", Descriptor, Analyzer);
         }
 
         [Fact]
         public static void TestNoDiagnostic_Pointer()
         {
-            VerifyNoDiagnostic(
-@"
+            VerifyNoDiagnostic(@"
 class C
 {
     public unsafe void M()
@@ -111,9 +92,7 @@ class C
         i = (i != null) ? i : default(int*);
     }
 }
-",
-                descriptor: Descriptor,
-                analyzer: Analyzer);
+", Descriptor, Analyzer);
         }
     }
 }

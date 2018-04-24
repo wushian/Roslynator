@@ -16,8 +16,7 @@ namespace Roslynator.Refactorings.Tests
         [Fact]
         public static void TestFormatArgumentListToMultiLine()
         {
-            VerifyRefactoring(
-@"
+            VerifyRefactoring(@"
 class C
 {
     void M(string p1, string p2, string p3)
@@ -25,8 +24,7 @@ class C
         M(p1<<<>>>, p2, p3);
     }
 }
-",
-@"
+", @"
 class C
 {
     void M(string p1, string p2, string p3)
@@ -37,16 +35,13 @@ class C
             p3);
     }
 }
-",
-                refactoringProvider: CodeRefactoringProvider,
-                equivalenceKey: RefactoringId);
+", CodeRefactoringProvider, RefactoringId);
         }
 
         [Fact]
         public static void TestFormatArgumentListToMultiLine2()
         {
-            VerifyRefactoring(
-@"
+            VerifyRefactoring(@"
 class C
 {
     void M(string p1, string p2, string p3)
@@ -54,8 +49,7 @@ class C
         M<<<(p1, p2, p3)>>>;
     }
 }
-",
-@"
+", @"
 class C
 {
     void M(string p1, string p2, string p3)
@@ -66,16 +60,13 @@ class C
             p3);
     }
 }
-",
-                refactoringProvider: CodeRefactoringProvider,
-                equivalenceKey: RefactoringId);
+", CodeRefactoringProvider, RefactoringId);
         }
 
         [Fact]
         public static void TestFormatArgumentListToSingleLine()
         {
-            VerifyRefactoring(
-@"
+            VerifyRefactoring(@"
 class C
 {
     void M(string p1, string p2, string p3)
@@ -86,8 +77,7 @@ class C
             p3);
     }
 }
-",
-@"
+", @"
 class C
 {
     void M(string p1, string p2, string p3)
@@ -95,16 +85,13 @@ class C
         M(p1, p2, p3);
     }
 }
-",
-                refactoringProvider: CodeRefactoringProvider,
-                equivalenceKey: RefactoringId);
+", CodeRefactoringProvider, RefactoringId);
         }
 
         [Fact]
         public static void TestFormatArgumentListToSingleLine2()
         {
-            VerifyRefactoring(
-@"
+            VerifyRefactoring(@"
 class C
 {
     void M(string p1, string p2, string p3)
@@ -115,8 +102,7 @@ class C
             p3)>>>;
     }
 }
-",
-@"
+", @"
 class C
 {
     void M(string p1, string p2, string p3)
@@ -124,9 +110,7 @@ class C
         M(p1, p2, p3);
     }
 }
-",
-                refactoringProvider: CodeRefactoringProvider,
-                equivalenceKey: RefactoringId);
+", CodeRefactoringProvider, RefactoringId);
         }
 
         [Fact]
@@ -144,9 +128,7 @@ class C
             p3>>>);
     }
 }
-",
-                refactoringProvider: CodeRefactoringProvider,
-                equivalenceKey: RefactoringId);
+", CodeRefactoringProvider, RefactoringId);
         }
     }
 }

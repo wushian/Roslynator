@@ -6,7 +6,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Roslynator.CSharp;
 using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
-using Xunit;
 using static Roslynator.Tests.CSharp.CSharpDiagnosticVerifier;
 
 namespace Roslynator.Analyzers.Tests
@@ -19,7 +18,11 @@ namespace Roslynator.Analyzers.Tests
 
         private static CodeFixProvider CodeFixProvider { get; }
 
-        private const string SourceTemplate = @"
+        //[Fact]
+        public static void TestDiagnosticWithCodeFix()
+        {
+            VerifyDiagnosticAndFix(@"
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -29,32 +32,26 @@ class C
     {
     }
 }
-";
-
-        //[Fact]
-        public static void TestDiagnosticWithCodeFix()
-        {
-            VerifyDiagnosticAndFix(
-@"
-",
-@"
-",
-                descriptor: Descriptor,
-                analyzer: Analyzer,
-                fixProvider: CodeFixProvider);
+", @"
+", Descriptor, Analyzer, CodeFixProvider);
         }
 
         //[Theory]
         //[InlineData("", "")]
         public static void TestDiagnosticWithCodeFix2(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(
-                SourceTemplate,
-                fixableCode,
-                fixedCode,
-                descriptor: Descriptor,
-                analyzer: Analyzer,
-                fixProvider: CodeFixProvider);
+            VerifyDiagnosticAndFix(@"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class C
+{
+    void M()
+    {
+    }
+}
+", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
         }
 
         //[Fact]
@@ -62,20 +59,35 @@ class C
         {
             VerifyNoDiagnostic(
 @"
-",
-                descriptor: Descriptor,
-                analyzer: Analyzer);
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class C
+{
+    void M()
+    {
+    }
+}
+", Descriptor, Analyzer);
         }
 
         //[Theory]
         //[InlineData("")]
         public static void TestNoDiagnostic2(string fixableCode)
         {
-            VerifyNoDiagnostic(
-                SourceTemplate,
-                fixableCode,
-                descriptor: Descriptor,
-                analyzer: Analyzer);
+            VerifyNoDiagnostic(@"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class C
+{
+    void M()
+    {
+    }
+}
+", fixableCode: fixableCode, Descriptor, Analyzer);
         }
     }
 }
