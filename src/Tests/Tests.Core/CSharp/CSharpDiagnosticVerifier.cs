@@ -51,6 +51,14 @@ namespace Roslynator.Tests.CSharp
         {
             (string source2, string newSource, TextSpan span) = TextUtility.GetMarkedSpan(source, fixableCode, fixedCode);
 
+            (string source3, List<TextSpan> spans) = TextUtility.GetMarkedSpans(source2);
+
+            if (spans != null)
+            {
+                source2 = source3;
+                span = spans[0];
+            }
+
             VerifyDiagnostic(source2, span, analyzer, descriptor);
 
             VerifyFix(source2, newSource, analyzer, fixProvider, allowNewCompilerDiagnostics);
