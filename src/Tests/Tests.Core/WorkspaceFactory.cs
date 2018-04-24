@@ -8,19 +8,8 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace Roslynator
 {
-    public static class WorkspaceUtility
+    public static class WorkspaceFactory
     {
-        public const string TestFileName = "Test";
-        public const string TestProjectName = "TestProject";
-
-        public const string CSharpFileExtension = "cs";
-        public const string VisualBasicFileExtension = "vb";
-
-        private const int FileNumberingBase = 0;
-
-        public const string DefaultCSharpFileName = TestFileName + "0." + CSharpFileExtension;
-        public const string DefaultVisualBasicFileName = TestFileName + "0." + VisualBasicFileExtension;
-
         public static Project EmptyCSharpProject { get; } = CreateProject(LanguageNames.CSharp);
 
         public static Document CreateDocument(string source, string language)
@@ -39,7 +28,7 @@ namespace Roslynator
 
             ProjectId projectId = project.Id;
 
-            string newFileName = CreateDefaultFileName(language: language);
+            string newFileName = FileUtility.CreateDefaultFileName(language: language);
 
             DocumentId documentId = DocumentId.CreateNewId(projectId, debugName: newFileName);
 
@@ -55,10 +44,10 @@ namespace Roslynator
 
             Solution solution = project.Solution;
 
-            int count = FileNumberingBase;
+            int count = FileUtility.FileNumberingBase;
             foreach (string source in sources)
             {
-                string newFileName = CreateFileName(suffix: count, language: language);
+                string newFileName = FileUtility.CreateFileName(suffix: count, language: language);
                 DocumentId documentId = DocumentId.CreateNewId(project.Id, debugName: newFileName);
                 solution = solution.AddDocument(documentId, newFileName, SourceText.From(source));
                 count++;
@@ -69,11 +58,11 @@ namespace Roslynator
 
         public static Project CreateProject(string language)
         {
-            ProjectId projectId = ProjectId.CreateNewId(debugName: TestProjectName);
+            ProjectId projectId = ProjectId.CreateNewId(debugName: FileUtility.TestProjectName);
 
             Project project = new AdhocWorkspace()
                 .CurrentSolution
-                .AddProject(projectId, TestProjectName, TestProjectName, language)
+                .AddProject(projectId, FileUtility.TestProjectName, FileUtility.TestProjectName, language)
                 .AddMetadataReferences(
                     projectId,
                     new MetadataReference[]
@@ -101,18 +90,6 @@ namespace Roslynator
             }
 
             return project;
-        }
-
-        public static string CreateDefaultFileName(string language)
-        {
-            return (language == LanguageNames.CSharp) ? DefaultCSharpFileName : DefaultVisualBasicFileName;
-        }
-
-        public static string CreateFileName(string fileName = TestFileName, int suffix = FileNumberingBase, string language = LanguageNames.CSharp)
-        {
-            string extension = ((language == LanguageNames.CSharp) ? CSharpFileExtension : VisualBasicFileExtension);
-
-            return $"{fileName}{suffix}.{extension}";
         }
     }
 }

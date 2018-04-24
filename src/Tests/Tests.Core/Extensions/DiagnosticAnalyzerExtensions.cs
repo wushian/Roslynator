@@ -10,7 +10,7 @@ namespace Roslynator
     {
         public static bool Supports(this DiagnosticAnalyzer analyzer, DiagnosticDescriptor descriptor)
         {
-            return analyzer.SupportedDiagnostics.IndexOf(descriptor, DiagnosticDescriptorComparer.IdOrdinal) != -1;
+            return analyzer.SupportedDiagnostics.IndexOf(descriptor, DiagnosticDescriptorComparer.Id) != -1;
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Roslynator
             DiagnosticAnalyzer analyzer,
             string language)
         {
-            IEnumerable<Document> documents = WorkspaceUtility.CreateDocuments(sources, language);
+            IEnumerable<Document> documents = WorkspaceFactory.CreateDocuments(sources, language);
 
             return GetSortedDiagnostics(documents, analyzer);
         }

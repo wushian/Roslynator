@@ -19,7 +19,7 @@ namespace Roslynator.Tests.CSharp
             CodeFixProvider fixProvider,
             bool allowNewCompilerDiagnostics = false)
         {
-            (string source2, List<Diagnostic> diagnostics) = TextUtility.GetMarkedDiagnostics(source, descriptor, WorkspaceUtility.DefaultCSharpFileName);
+            (string source2, List<Diagnostic> diagnostics) = TextUtility.GetMarkedDiagnostics(source, descriptor, FileUtility.DefaultCSharpFileName);
 
             VerifyDiagnostic(source2, analyzer, diagnostics.ToArray());
 
@@ -70,7 +70,7 @@ namespace Roslynator.Tests.CSharp
             DiagnosticAnalyzer analyzer,
             DiagnosticDescriptor descriptor)
         {
-            Location location = Location.Create(WorkspaceUtility.DefaultCSharpFileName, span, span.ToLinePositionSpan(source));
+            Location location = Location.Create(FileUtility.DefaultCSharpFileName, span, span.ToLinePositionSpan(source));
 
             Diagnostic diagnostic = Diagnostic.Create(descriptor, location);
 

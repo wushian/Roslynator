@@ -14,34 +14,6 @@ namespace Roslynator.Tests
 {
     public static class DiagnosticVerifier
     {
-        public static void VerifyNoDiagnostic(
-            string source,
-            DiagnosticDescriptor descriptor,
-            DiagnosticAnalyzer analyzer,
-            string language)
-        {
-            VerifyNoDiagnostic(new string[] { source }, descriptor, analyzer, language);
-        }
-
-        public static void VerifyNoDiagnostic(
-            IEnumerable<string> sources,
-            DiagnosticDescriptor descriptor,
-            DiagnosticAnalyzer analyzer,
-            string language)
-        {
-            Assert.True(analyzer.Supports(descriptor),
-                $"Diagnostic \"{descriptor.Id}\" is not supported by analyzer \"{analyzer.GetType().Name}\".");
-
-            IEnumerable<Document> documents = WorkspaceUtility.CreateDocuments(sources, language);
-
-            VerifyNoCompilerError(documents);
-
-            Diagnostic[] diagnostics = DiagnosticUtility.GetSortedDiagnostics(documents, analyzer);
-
-            Assert.True(diagnostics.Length == 0 || diagnostics.All(f => !string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)),
-                    $"No diagnostic expected{diagnostics.Where(f => string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)).ToDebugString()}");
-        }
-
         public static void VerifyDiagnostic(
             string source,
             DiagnosticAnalyzer analyzer,
@@ -69,7 +41,7 @@ namespace Roslynator.Tests
                 && analyzer.SupportedDiagnostics.Length > 1)
             {
                 diagnostics = diagnostics
-                    .Where(diagnostic => expectedDiagnostics.Any(expectedDiagnostic => DiagnosticComparer.IdOrdinal.Equals(diagnostic, expectedDiagnostic)))
+                    .Where(diagnostic => expectedDiagnostics.Any(expectedDiagnostic => DiagnosticComparer.Id.Equals(diagnostic, expectedDiagnostic)))
                     .ToArray();
             }
 
@@ -153,6 +125,34 @@ namespace Roslynator.Tests
 
             Assert.True(actualCharacter == expectedCharacter,
                 $"Expected diagnostic to {name} at column {expectedCharacter}, actual: {actualCharacter}\r\n\r\nDiagnostic:\r\n{diagnostic}\r\n");
+        }
+
+        public static void VerifyNoDiagnostic(
+            string source,
+            DiagnosticDescriptor descriptor,
+            DiagnosticAnalyzer analyzer,
+            string language)
+        {
+            VerifyNoDiagnostic(new string[] { source }, descriptor, analyzer, language);
+        }
+
+        public static void VerifyNoDiagnostic(
+            IEnumerable<string> sources,
+            DiagnosticDescriptor descriptor,
+            DiagnosticAnalyzer analyzer,
+            string language)
+        {
+            Assert.True(analyzer.Supports(descriptor),
+                $"Diagnostic \"{descriptor.Id}\" is not supported by analyzer \"{analyzer.GetType().Name}\".");
+
+            IEnumerable<Document> documents = WorkspaceFactory.CreateDocuments(sources, language);
+
+            VerifyNoCompilerError(documents);
+
+            Diagnostic[] diagnostics = DiagnosticUtility.GetSortedDiagnostics(documents, analyzer);
+
+            Assert.True(diagnostics.Length == 0 || diagnostics.All(f => !string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)),
+                    $"No diagnostic expected{diagnostics.Where(f => string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)).ToDebugString()}");
         }
 
         public static void VerifyNoCompilerError(Document document)

@@ -13,26 +13,6 @@ namespace Roslynator.Tests
 {
     public static class CompilerCodeFixVerifier
     {
-        public static void VerifyNoFix(
-            string source,
-            CodeFixProvider fixProvider,
-            string language,
-            string equivalenceKey = null)
-        {
-            Document document = WorkspaceUtility.CreateDocument(source, language);
-
-            foreach (Diagnostic compilerDiagnostic in document.GetCompilerDiagnostics())
-            {
-                var context = new CodeFixContext(
-                    document,
-                    compilerDiagnostic,
-                    (a, _) => Assert.True(equivalenceKey != null && !string.Equals(a.EquivalenceKey, equivalenceKey, StringComparison.Ordinal), "Expected no code fix."),
-                    CancellationToken.None);
-
-                fixProvider.RegisterCodeFixesAsync(context).Wait();
-            }
-        }
-
         public static void VerifyFix(
             string source,
             string newSource,
@@ -43,7 +23,7 @@ namespace Roslynator.Tests
         {
             Assert.True(fixProvider.FixableDiagnosticIds.Contains(diagnosticId), $"Code fix provider '{fixProvider.GetType().Name}' cannot fix diagnostic '{diagnosticId}'.");
 
-            Document document = WorkspaceUtility.CreateDocument(source, language);
+            Document document = WorkspaceFactory.CreateDocument(source, language);
 
             ImmutableArray<Diagnostic> compilerDiagnostics = document.GetCompilerDiagnostics();
 
@@ -91,6 +71,26 @@ namespace Roslynator.Tests
             string actual = document.ToSimplifiedAndFormattedFullString();
 
             Assert.Equal(newSource, actual);
+        }
+
+        public static void VerifyNoFix(
+            string source,
+            CodeFixProvider fixProvider,
+            string language,
+            string equivalenceKey = null)
+        {
+            Document document = WorkspaceFactory.CreateDocument(source, language);
+
+            foreach (Diagnostic compilerDiagnostic in document.GetCompilerDiagnostics())
+            {
+                var context = new CodeFixContext(
+                    document,
+                    compilerDiagnostic,
+                    (a, _) => Assert.True(equivalenceKey != null && !string.Equals(a.EquivalenceKey, equivalenceKey, StringComparison.Ordinal), "Expected no code fix."),
+                    CancellationToken.None);
+
+                fixProvider.RegisterCodeFixesAsync(context).Wait();
+            }
         }
     }
 }

@@ -8,19 +8,7 @@ namespace Roslynator.Tests.CSharp
 {
     public static class CSharpCompilerCodeFixVerifier
     {
-        public static void VerifyNoFix(
-            string source,
-            CodeFixProvider fixProvider,
-            string equivalenceKey = null)
-        {
-            CompilerCodeFixVerifier.VerifyNoFix(
-                source: source,
-                fixProvider: fixProvider,
-                language: LanguageNames.CSharp,
-                equivalenceKey: equivalenceKey);
-        }
-
-        public static void VerifyCodeFix(
+        public static void VerifyFix(
             string sourceTemplate,
             string fixableCode,
             string fixedCode,
@@ -49,6 +37,18 @@ namespace Roslynator.Tests.CSharp
                 source: source,
                 newSource: newSource,
                 diagnosticId: diagnosticId,
+                fixProvider: fixProvider,
+                language: LanguageNames.CSharp,
+                equivalenceKey: equivalenceKey);
+        }
+
+        public static void VerifyNoFix(
+            string source,
+            CodeFixProvider fixProvider,
+            string equivalenceKey = null)
+        {
+            CompilerCodeFixVerifier.VerifyNoFix(
+                source: source,
                 fixProvider: fixProvider,
                 language: LanguageNames.CSharp,
                 equivalenceKey: equivalenceKey);

@@ -18,7 +18,7 @@ namespace Roslynator.Tests.CSharp
         {
             (string source2, List<TextSpan> spans) = TextUtility.GetMarkedSpans(source);
 
-            VerifyCodeRefactoring(
+            VerifyRefactoring(
                 source: source2,
                 newSource: newSource,
                 spans: spans,
@@ -72,7 +72,7 @@ namespace Roslynator.Tests.CSharp
                 allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
         }
 
-        public static void VerifyCodeRefactoring(
+        public static void VerifyRefactoring(
             string source,
             string newSource,
             IEnumerable<TextSpan> spans,

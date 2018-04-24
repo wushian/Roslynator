@@ -15,55 +15,6 @@ namespace Roslynator.Tests
 {
     public static class CodeRefactoringVerifier
     {
-        public static void VerifyNoRefactoring(
-            string source,
-            IEnumerable<TextSpan> spans,
-            CodeRefactoringProvider refactoringProvider,
-            string language,
-            string equivalenceKey = null)
-        {
-            foreach (TextSpan span in spans)
-            {
-                VerifyNoRefactoring(
-                    source: source,
-                    span: span,
-                    refactoringProvider: refactoringProvider,
-                    language: language,
-                    equivalenceKey: equivalenceKey);
-            }
-        }
-
-        public static void VerifyNoRefactoring(
-            string source,
-            TextSpan span,
-            CodeRefactoringProvider refactoringProvider,
-            string language,
-            string equivalenceKey = null)
-        {
-            Document document = WorkspaceUtility.CreateDocument(source, language);
-
-            DiagnosticVerifier.VerifyNoCompilerError(document);
-
-            List<CodeAction> actions = null;
-
-            var context = new CodeRefactoringContext(
-                document,
-                span,
-                codeAction =>
-                {
-                    if (equivalenceKey == null
-                        || string.Equals(codeAction.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
-                    {
-                        (actions ?? (actions = new List<CodeAction>())).Add(codeAction);
-                    }
-                },
-                CancellationToken.None);
-
-            refactoringProvider.ComputeRefactoringsAsync(context).Wait();
-
-            Assert.True(actions == null, $"Expected no code refactoring, actual: {actions?.Count ?? 0}");
-        }
-
         public static void VerifyRefactoring(
             string source,
             string newSource,
@@ -73,7 +24,7 @@ namespace Roslynator.Tests
             string equivalenceKey = null,
             bool allowNewCompilerDiagnostics = false)
         {
-            Document document = WorkspaceUtility.CreateDocument(source, language);
+            Document document = WorkspaceFactory.CreateDocument(source, language);
 
             foreach (TextSpan span in spans.OrderByDescending(f => f.Start))
             {
@@ -99,7 +50,7 @@ namespace Roslynator.Tests
             string equivalenceKey = null,
             bool allowNewCompilerDiagnostics = false)
         {
-            Document document = WorkspaceUtility.CreateDocument(source, language);
+            Document document = WorkspaceFactory.CreateDocument(source, language);
 
             document = VerifyRefactoring(
                 document: document,
@@ -149,6 +100,55 @@ namespace Roslynator.Tests
                 DiagnosticVerifier.VerifyNoNewCompilerDiagnostics(document, compilerDiagnostics);
 
             return document;
+        }
+
+        public static void VerifyNoRefactoring(
+            string source,
+            IEnumerable<TextSpan> spans,
+            CodeRefactoringProvider refactoringProvider,
+            string language,
+            string equivalenceKey = null)
+        {
+            foreach (TextSpan span in spans)
+            {
+                VerifyNoRefactoring(
+                    source: source,
+                    span: span,
+                    refactoringProvider: refactoringProvider,
+                    language: language,
+                    equivalenceKey: equivalenceKey);
+            }
+        }
+
+        public static void VerifyNoRefactoring(
+            string source,
+            TextSpan span,
+            CodeRefactoringProvider refactoringProvider,
+            string language,
+            string equivalenceKey = null)
+        {
+            Document document = WorkspaceFactory.CreateDocument(source, language);
+
+            DiagnosticVerifier.VerifyNoCompilerError(document);
+
+            List<CodeAction> actions = null;
+
+            var context = new CodeRefactoringContext(
+                document,
+                span,
+                codeAction =>
+                {
+                    if (equivalenceKey == null
+                        || string.Equals(codeAction.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
+                    {
+                        (actions ?? (actions = new List<CodeAction>())).Add(codeAction);
+                    }
+                },
+                CancellationToken.None);
+
+            refactoringProvider.ComputeRefactoringsAsync(context).Wait();
+
+            Assert.True(actions == null, $"Expected no code refactoring, actual: {actions?.Count ?? 0}");
         }
     }
 }
