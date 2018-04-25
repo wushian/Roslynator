@@ -75,13 +75,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzers.Tests", "Tests\An
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{A1DB0C05-3710-4B69-955F-2F46E330591B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Core", "Tests\Tests.Core\Tests.Core.csproj", "{55CD01C6-FF55-4828-887C-3067BC8242BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Utilities", "Tests\Tests.Utilities\Tests.Utilities.csproj", "{55CD01C6-FF55-4828-887C-3067BC8242BE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Refactorings.Tests", "Tests\Refactorings.Tests\Refactorings.Tests.csproj", "{B2E65325-8B4A-46D1-9726-0B1AF9BF26EC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeFixes.Tests", "Tests\CodeFixes.Tests\CodeFixes.Tests.csproj", "{BD31315B-B89B-43F7-994D-EBE6FFC2D89B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Verifiers", "Tests\Tests.Verifiers\Tests.Verifiers.csproj", "{306D8762-6A4E-4957-ABE6-5C30E13BD95F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Core", "Tests\Tests.Core\Tests.Core.csproj", "{306D8762-6A4E-4957-ABE6-5C30E13BD95F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
