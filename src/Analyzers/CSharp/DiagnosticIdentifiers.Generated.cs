@@ -208,5 +208,8 @@ namespace Roslynator.CSharp
         public const string ReplaceInterpolatedStringWithConcatenation = "RCS1217";
         public const string SimplifyCodeBranching = "RCS1218";
         public const string CallSkipAndAnyInsteadOfCount = "RCS1219";
+        public const string UsePatternMatchingInsteadOfIsAndCast = "RCS1220";
+        public const string UsePatternMatchingInsteadOfAsAndNullCheck = "RCS1221";
+        public const string MergePreprocessorDirectives = "RCS1222";
     }
 }
