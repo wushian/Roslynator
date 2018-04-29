@@ -27,14 +27,14 @@ using System;
 
 class C
 {
-    public void B()
+    void M()
     {
-        <<<var>>> a = ""a"";
+        [|var|] a = ""a"";
 
-        <<<var>>> s = a;
+        [|var|] s = a;
 
         string value = null;
-        if (DateTime.TryParse(s, out <<<var>>> result))
+        if (DateTime.TryParse(s, out [|var|] result))
         {
         }
     }
@@ -44,7 +44,7 @@ using System;
 
 class C
 {
-    public void B()
+    void M()
     {
         string a = ""a"";
 
@@ -68,9 +68,9 @@ using System.Collections.Generic;
 
 class C
 {
-    public (IEnumerable<DateTime> e1, string e2) M()
+    (IEnumerable<DateTime> e1, string e2) M()
     {
-        <<<var>>> x = M();
+        [|var|] x = M();
 
         return default((IEnumerable<DateTime>, string));
     }
@@ -81,7 +81,7 @@ using System.Collections.Generic;
 
 class C
 {
-    public (IEnumerable<DateTime> e1, string e2) M()
+    (IEnumerable<DateTime> e1, string e2) M()
     {
         (IEnumerable<DateTime> e1, string e2) x = M();
 
@@ -99,7 +99,7 @@ using System;
 
 class C
 {
-    public void B()
+    void M()
     {
         string a = ""a"";
 

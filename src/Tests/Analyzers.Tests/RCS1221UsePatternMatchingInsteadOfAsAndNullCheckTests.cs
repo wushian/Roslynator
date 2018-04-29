@@ -30,7 +30,7 @@ class C
     {
         object x = null;
 
-        <<<var s = x as string;>>>
+        [|var s = x as string;|]
         if (s == null)
         {
             return;
@@ -68,7 +68,7 @@ class C
     {
         object x = null;
 
-        <<<var s = x as string;>>>
+        [|var s = x as string;|]
         if (s is null)
         {
             return;

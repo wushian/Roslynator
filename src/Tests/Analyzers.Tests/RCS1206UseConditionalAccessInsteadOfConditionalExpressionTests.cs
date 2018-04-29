@@ -36,7 +36,7 @@ class Foo
     {
         var x = new Foo();
 
-        string s = <<<>>>;
+        string s = [||];
     }
 }
 ", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
@@ -59,7 +59,7 @@ class Foo
     {
         var x = new Foo();
 
-        int i = <<<>>>;
+        int i = [||];
     }
 
     public int Value { get; }
@@ -84,7 +84,7 @@ class Foo
     {
         Foo x = null;
 
-        int? ni = <<<>>>;
+        int? ni = [||];
     }
 
     public int? Value { get; }
@@ -106,7 +106,7 @@ class C
     {
         int? ni = null;
 
-        string s = <<<>>>;
+        string s = [||];
     }
 }
 ", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
@@ -126,7 +126,7 @@ class C
     {
         int? ni = null;
 
-        int i = <<<>>>;
+        int i = [||];
     }
 }
 ", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);

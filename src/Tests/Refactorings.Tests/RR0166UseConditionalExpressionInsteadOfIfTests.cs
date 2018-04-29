@@ -23,7 +23,7 @@ class C
 {
     void M(bool f, string x, string y, string z)
     {
-        <<<>>>
+        [||]
     }
 }
 ", fixableCode, fixedCode, CodeRefactoringProvider, RefactoringId);
@@ -37,7 +37,7 @@ class C
 {
     void M(bool f, string x, string y, string z)
     {
-<<<        z = null;
+[|        z = null;
         if (f)
         {
             z = x;
@@ -45,7 +45,7 @@ class C
         else
         {
             z = y;
-        }>>>
+        }|]
     }
 }
 ",
@@ -68,7 +68,7 @@ class C
 {
     void M(bool f, string x, string y)
     {
-<<<        string z = null;
+[|        string z = null;
         if (f)
         {
             z = x;
@@ -76,7 +76,7 @@ class C
         else
         {
             z = y;
-        }>>>
+        }|]
     }
 }
 ",
@@ -103,7 +103,7 @@ class C
 {
     string M(bool f, string x, string y, string z)
     {
-        <<<>>>
+        [||]
     }
 }
 ", fixableCode, fixedCode, CodeRefactoringProvider, RefactoringId);
@@ -121,7 +121,7 @@ class C
 {
     IEnumerable<string> M(bool f, string x, string y, string z)
     {
-        <<<>>>
+        [||]
     }
 }
 ", fixableCode, fixedCode, CodeRefactoringProvider, RefactoringId);
@@ -137,7 +137,7 @@ class C
     void M(bool f)
     {
         int? ni;
-        <<<>>>if (f)
+        [||]if (f)
         {
             ni = null;
         }
@@ -159,7 +159,7 @@ class C
 {
     void M(bool f)
     {
-<<<        int? ni;
+[|        int? ni;
         if (f)
         {
             ni = null;
@@ -167,7 +167,7 @@ class C
         else
         {
             ni = 1;
-        }>>>
+        }|]
     }
 }
 ", CodeRefactoringProvider, RefactoringId);
@@ -182,7 +182,7 @@ class C
     void M(bool f)
     {
         int? ni;
-<<<        ni = null;
+[|        ni = null;
         if (f)
         {
             ni = null;
@@ -190,7 +190,7 @@ class C
         else
         {
             ni = 1;
-        }>>>
+        }|]
     }
 }
 ", CodeRefactoringProvider, RefactoringId);
@@ -206,14 +206,14 @@ class C
 {
     IEnumerable<int?> M(bool f)
     {
-<<<        if (f)
+[|        if (f)
         {
             yield return null;
         }
         else
         {
             yield return 1;
-        }>>>
+        }|]
     }
 }
 ", CodeRefactoringProvider, RefactoringId);
@@ -227,14 +227,14 @@ class C
 {
     int? M(bool f)
     {
-<<<        if (f)
+[|        if (f)
         {
             return null;
         }
         else
         {
             return 1;
-        }>>>
+        }|]
     }
 }
 ", CodeRefactoringProvider, RefactoringId);
@@ -248,12 +248,12 @@ class C
 {
     int? M(bool f)
     {
-<<<        if (f)
+[|        if (f)
         {
             return null;
         }
 
-        return 1;>>>
+        return 1;|]
     }
 }
 ", CodeRefactoringProvider, RefactoringId);

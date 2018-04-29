@@ -13,31 +13,31 @@ namespace Roslynator.Tests.CSharp
     {
         public static void VerifyDiagnosticAndFix(
             string source,
-            string newSource,
+            string expected,
             DiagnosticDescriptor descriptor,
             DiagnosticAnalyzer analyzer,
             CodeFixProvider fixProvider,
-            bool allowNewCompilerDiagnostics = false)
+            CodeVerificationSettings settings = null)
         {
-            (string source2, List<Diagnostic> diagnostics) = TextUtility.GetMarkedDiagnostics(source, descriptor, FileUtility.DefaultCSharpFileName);
+            (string result, List<Diagnostic> diagnostics) = TextUtility.GetMarkedDiagnostics(source, descriptor, FileUtility.DefaultCSharpFileName);
 
-            VerifyDiagnostic(source2, analyzer, diagnostics.ToArray());
+            VerifyDiagnostic(result, analyzer, diagnostics.ToArray());
 
-            VerifyFix(source2, newSource, analyzer, fixProvider, allowNewCompilerDiagnostics);
+            VerifyFix(result, expected, analyzer, fixProvider, settings);
         }
 
         public static void VerifyDiagnosticAndFix(
             string source,
-            string newSource,
+            string expected,
             TextSpan span,
             DiagnosticDescriptor descriptor,
             DiagnosticAnalyzer analyzer,
             CodeFixProvider fixProvider,
-            bool allowNewCompilerDiagnostics = false)
+            CodeVerificationSettings settings = null)
         {
             VerifyDiagnostic(source, span, analyzer, descriptor);
 
-            VerifyFix(source, newSource, analyzer, fixProvider, allowNewCompilerDiagnostics);
+            VerifyFix(source, expected, analyzer, fixProvider, settings);
         }
 
         public static void VerifyDiagnosticAndFix(
@@ -47,21 +47,21 @@ namespace Roslynator.Tests.CSharp
             DiagnosticDescriptor descriptor,
             DiagnosticAnalyzer analyzer,
             CodeFixProvider fixProvider,
-            bool allowNewCompilerDiagnostics = false)
+            CodeVerificationSettings settings = null)
         {
-            (string source2, string newSource, TextSpan span) = TextUtility.GetMarkedSpan(source, fixableCode, fixedCode);
+            (string result1, string result2, TextSpan span) = TextUtility.GetMarkedSpan(source, fixableCode, fixedCode);
 
-            (string source3, List<TextSpan> spans) = TextUtility.GetMarkedSpans(source2);
+            (string result3, List<TextSpan> spans) = TextUtility.GetMarkedSpans(result1);
 
             if (spans != null)
             {
-                source2 = source3;
+                result1 = result3;
                 span = spans[0];
             }
 
-            VerifyDiagnostic(source2, span, analyzer, descriptor);
+            VerifyDiagnostic(result1, span, analyzer, descriptor);
 
-            VerifyFix(source2, newSource, analyzer, fixProvider, allowNewCompilerDiagnostics);
+            VerifyFix(result1, result2, analyzer, fixProvider, settings);
         }
 
         public static void VerifyDiagnostic(
@@ -90,7 +90,7 @@ namespace Roslynator.Tests.CSharp
             DiagnosticAnalyzer analyzer,
             params Diagnostic[] expectedDiagnostics)
         {
-            DiagnosticVerifier.VerifyDiagnostic(sources, analyzer, LanguageNames.CSharp, expectedDiagnostics);
+            DiagnosticVerifier.VerifyDiagnosticAsync(sources, analyzer, LanguageNames.CSharp, expectedDiagnostics).Wait();
         }
 
         public static void VerifyNoDiagnostic(
@@ -99,7 +99,7 @@ namespace Roslynator.Tests.CSharp
             DiagnosticDescriptor descriptor,
             DiagnosticAnalyzer analyzer)
         {
-            (string source2, TextSpan span) = TextUtility.GetMarkedSpan(source, fixableCode);
+            (string result, TextSpan span) = TextUtility.GetMarkedSpan(source, fixableCode);
 
             VerifyNoDiagnostic(fixableCode, descriptor, analyzer);
         }
@@ -117,7 +117,7 @@ namespace Roslynator.Tests.CSharp
             DiagnosticDescriptor descriptor,
             DiagnosticAnalyzer analyzer)
         {
-            DiagnosticVerifier.VerifyNoDiagnostic(sources, descriptor, analyzer, LanguageNames.CSharp);
+            DiagnosticVerifier.VerifyNoDiagnosticAsync(sources, descriptor, analyzer, LanguageNames.CSharp).Wait();
         }
     }
 }

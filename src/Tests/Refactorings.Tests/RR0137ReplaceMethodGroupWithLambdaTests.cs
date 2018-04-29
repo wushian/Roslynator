@@ -23,16 +23,16 @@ public class C
 {
     public void Foo()
     {
-        Action action1 = <<<>>>VM;
-        Action<string> action2 = <<<>>>VM1;
-        Action<string, string> action3 = <<<>>>VM2;
+        Action action1 = [||]VM;
+        Action<string> action2 = [||]VM1;
+        Action<string, string> action3 = [||]VM2;
     }
 
     public void Foo2()
     {
-        Func<string> func1 = <<<>>>M;
-        Func<string, string> func2 = <<<>>>M1;
-        Func<string, string, string> func3 = <<<>>>M2;
+        Func<string> func1 = [||]M;
+        Func<string, string> func2 = [||]M1;
+        Func<string, string, string> func3 = [||]M2;
     }
 
     public void VM() { }
@@ -85,9 +85,9 @@ public class C
         Action<string> action2 = null;
         Action<string, string> action3 = null;
 
-        action1 = <<<>>>VM;
-        action2 = <<<>>>VM1;
-        action3 = <<<>>>VM2;
+        action1 = [||]VM;
+        action2 = [||]VM1;
+        action3 = [||]VM2;
     }
 
     public void Foo2()
@@ -96,9 +96,9 @@ public class C
         Func<string, string> func2 = null;
         Func<string, string, string> func3 = null;
 
-        func1 = <<<>>>M;
-        func2 = <<<>>>M1;
-        func3 = <<<>>>M2;
+        func1 = [||]M;
+        func2 = [||]M1;
+        func3 = [||]M2;
     }
 
     public void VM() { }
@@ -159,9 +159,9 @@ public class C
         Func<string, string, string> func3)
     {
         M(
-            <<<>>>M,
-            <<<>>>M1,
-            <<<>>>M2);
+            [||]M,
+            [||]M1,
+            [||]M2);
     }
 
     public void MM(
@@ -170,9 +170,9 @@ public class C
         Action<string, string> action3)
     {
         MM(
-            <<<>>>VM,
-            <<<>>>VM1,
-            <<<>>>VM2);
+            [||]VM,
+            [||]VM1,
+            [||]VM2);
     }
 
     public void VM() { }

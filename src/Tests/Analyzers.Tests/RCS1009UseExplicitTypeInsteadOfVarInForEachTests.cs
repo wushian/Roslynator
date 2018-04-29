@@ -32,7 +32,7 @@ class C
     {
         var items = new List<DateTime>();
 
-        foreach (<<<var>>> item in items)
+        foreach ([|var|] item in items)
         {
         }
     }

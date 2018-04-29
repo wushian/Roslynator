@@ -21,7 +21,7 @@ class C
 {
     void M(string p1, string p2, string p3)
     {
-        M(p1<<<>>>, p2, p3);
+        M(p1[||], p2, p3);
     }
 }
 ", @"
@@ -46,7 +46,7 @@ class C
 {
     void M(string p1, string p2, string p3)
     {
-        M<<<(p1, p2, p3)>>>;
+        M[|(p1, p2, p3)|];
     }
 }
 ", @"
@@ -72,7 +72,7 @@ class C
     void M(string p1, string p2, string p3)
     {
         M(
-            p1<<<>>>,
+            p1[||],
             p2,
             p3);
     }
@@ -96,10 +96,10 @@ class C
 {
     void M(string p1, string p2, string p3)
     {
-        M<<<(
+        M[|(
             p1,
             p2,
-            p3)>>>;
+            p3)|];
     }
 }
 ", @"
@@ -123,9 +123,9 @@ class C
     void M(string p1, string p2, string p3)
     {
         M(
-            <<<p1,
+            [|p1,
             p2, //x
-            p3>>>);
+            p3|]);
     }
 }
 ", CodeRefactoringProvider, RefactoringId);

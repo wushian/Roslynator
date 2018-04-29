@@ -34,7 +34,7 @@ class C
     {
         string s = null;
 
-        s = <<<>>>;
+        s = [||];
     }
 }
 ", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
@@ -55,7 +55,7 @@ class C
         int i = 0;
         int? ni = null;
 
-        i = <<<>>>;
+        i = [||];
     }
 }
 ", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);

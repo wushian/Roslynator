@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.Text;
@@ -11,83 +12,83 @@ namespace Roslynator.Tests.CSharp
     {
         public static void VerifyRefactoring(
             string source,
-            string newSource,
+            string expected,
             CodeRefactoringProvider refactoringProvider,
             string equivalenceKey = null,
-            bool allowNewCompilerDiagnostics = false)
+            CodeVerificationSettings settings = null)
         {
-            (string source2, List<TextSpan> spans) = TextUtility.GetMarkedSpans(source);
+            (string result, List<TextSpan> spans) = TextUtility.GetMarkedSpans(source);
 
             VerifyRefactoring(
-                source: source2,
-                newSource: newSource,
-                spans: spans,
+                source: result,
+                expected: expected,
+                spans: spans.ToImmutableArray(),
                 refactoringProvider: refactoringProvider,
                 equivalenceKey: equivalenceKey,
-                allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
+                settings: settings);
         }
 
         public static void VerifyRefactoring(
-            string sourceTemplate,
+            string source,
             string fixableCode,
             string fixedCode,
             CodeRefactoringProvider refactoringProvider,
             string equivalenceKey = null,
-            bool allowNewCompilerDiagnostics = false)
+            CodeVerificationSettings settings = null)
         {
-            (string source, string newSource, TextSpan span) = TextUtility.GetMarkedSpan(sourceTemplate, fixableCode, fixedCode);
+            (string result1, string result2, TextSpan span) = TextUtility.GetMarkedSpan(source, fixableCode, fixedCode);
 
-            (string source2, List<TextSpan> spans) = TextUtility.GetMarkedSpans(source);
+            (string result3, List<TextSpan> spans) = TextUtility.GetMarkedSpans(result1);
 
             if (spans != null)
             {
-                source = source2;
+                result1 = result3;
                 span = spans[0];
             }
 
             VerifyRefactoring(
-                source: source,
-                newSource: newSource,
+                source: result1,
+                expected: result2,
                 span: span,
                 refactoringProvider: refactoringProvider,
                 equivalenceKey: equivalenceKey,
-                allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
+                settings: settings);
         }
 
         public static void VerifyRefactoring(
             string source,
-            string newSource,
+            string expected,
             TextSpan span,
             CodeRefactoringProvider refactoringProvider,
             string equivalenceKey = null,
-            bool allowNewCompilerDiagnostics = false)
+            CodeVerificationSettings settings = null)
         {
-            CodeRefactoringVerifier.VerifyRefactoring(
+            CodeRefactoringVerifier.VerifyRefactoringAsync(
                 source: source,
-                newSource: newSource,
+                expected: expected,
                 span: span,
                 refactoringProvider: refactoringProvider,
                 language: LanguageNames.CSharp,
                 equivalenceKey: equivalenceKey,
-                allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
+                settings: settings).Wait();
         }
 
         public static void VerifyRefactoring(
             string source,
-            string newSource,
-            IEnumerable<TextSpan> spans,
+            string expected,
+            ImmutableArray<TextSpan> spans,
             CodeRefactoringProvider refactoringProvider,
             string equivalenceKey = null,
-            bool allowNewCompilerDiagnostics = false)
+            CodeVerificationSettings settings = null)
         {
-            CodeRefactoringVerifier.VerifyRefactoring(
+            CodeRefactoringVerifier.VerifyRefactoringAsync(
                 source: source,
-                newSource: newSource,
+                expected: expected,
                 spans: spans,
                 refactoringProvider: refactoringProvider,
                 language: LanguageNames.CSharp,
                 equivalenceKey: equivalenceKey,
-                allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
+                settings: settings).Wait();
         }
 
         public static void VerifyNoRefactoring(
@@ -97,12 +98,12 @@ namespace Roslynator.Tests.CSharp
         {
             (string source2, List<TextSpan> spans) = TextUtility.GetMarkedSpans(source);
 
-            CodeRefactoringVerifier.VerifyNoRefactoring(
+            CodeRefactoringVerifier.VerifyNoRefactoringAsync(
                 source: source2,
                 spans: spans,
                 refactoringProvider: refactoringProvider,
                 language: LanguageNames.CSharp,
-                equivalenceKey: equivalenceKey);
+                equivalenceKey: equivalenceKey).Wait();
         }
 
         public static void VerifyNoRefactoring(
@@ -111,12 +112,12 @@ namespace Roslynator.Tests.CSharp
             CodeRefactoringProvider refactoringProvider,
             string equivalenceKey = null)
         {
-            CodeRefactoringVerifier.VerifyNoRefactoring(
+            CodeRefactoringVerifier.VerifyNoRefactoringAsync(
                 source: source,
                 span: span,
                 refactoringProvider: refactoringProvider,
                 language: LanguageNames.CSharp,
-                equivalenceKey: equivalenceKey);
+                equivalenceKey: equivalenceKey).Wait();
         }
     }
 }

@@ -3,8 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeRefactorings;
@@ -15,140 +15,149 @@ namespace Roslynator.Tests
 {
     public static class CodeRefactoringVerifier
     {
-        public static void VerifyRefactoring(
+        public static async Task VerifyRefactoringAsync(
             string source,
-            string newSource,
-            IEnumerable<TextSpan> spans,
-            CodeRefactoringProvider refactoringProvider,
-            string language,
-            string equivalenceKey = null,
-            bool allowNewCompilerDiagnostics = false)
-        {
-            Document document = WorkspaceFactory.CreateDocument(source, language);
-
-            foreach (TextSpan span in spans.OrderByDescending(f => f.Start))
-            {
-                document = VerifyRefactoring(
-                    document: document,
-                    span: span,
-                    refactoringProvider: refactoringProvider,
-                    equivalenceKey: equivalenceKey,
-                    allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
-            }
-
-            string actual = document.ToSimplifiedAndFormattedFullString();
-
-            Assert.Equal(newSource, actual);
-        }
-
-        public static void VerifyRefactoring(
-            string source,
-            string newSource,
+            string expected,
             TextSpan span,
             CodeRefactoringProvider refactoringProvider,
             string language,
             string equivalenceKey = null,
-            bool allowNewCompilerDiagnostics = false)
+            CodeVerificationSettings settings = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            Document document = WorkspaceFactory.CreateDocument(source, language);
-
-            document = VerifyRefactoring(
-                document: document,
-                span: span,
+            await VerifyRefactoringAsync(
+                source: source,
+                expected: expected,
+                spans: ImmutableArray.Create(span),
                 refactoringProvider: refactoringProvider,
+                language: language,
                 equivalenceKey: equivalenceKey,
-                allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
-
-            string actual = document.ToSimplifiedAndFormattedFullString();
-
-            Assert.Equal(newSource, actual);
+                settings: settings,
+                cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        private static Document VerifyRefactoring(
-            Document document,
-            TextSpan span,
-            CodeRefactoringProvider refactoringProvider,
-            string equivalenceKey,
-            bool allowNewCompilerDiagnostics)
-        {
-            ImmutableArray<Diagnostic> compilerDiagnostics = document.GetCompilerDiagnostics();
-
-            DiagnosticVerifier.VerifyNoCompilerError(compilerDiagnostics);
-
-            List<CodeAction> actions = null;
-
-            var context = new CodeRefactoringContext(
-                document,
-                span,
-                a =>
-                {
-                    if (equivalenceKey == null
-                        || string.Equals(a.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
-                    {
-                        (actions ?? (actions = new List<CodeAction>())).Add(a);
-                    }
-                },
-                CancellationToken.None);
-
-            refactoringProvider.ComputeRefactoringsAsync(context).Wait();
-
-            Assert.True(actions != null, "No code refactoring has been registered.");
-
-            document = document.ApplyCodeAction(actions[0]);
-
-            if (!allowNewCompilerDiagnostics)
-                DiagnosticVerifier.VerifyNoNewCompilerDiagnostics(document, compilerDiagnostics);
-
-            return document;
-        }
-
-        public static void VerifyNoRefactoring(
+        public static async Task VerifyRefactoringAsync(
             string source,
-            IEnumerable<TextSpan> spans,
+            string expected,
+            ImmutableArray<TextSpan> spans,
             CodeRefactoringProvider refactoringProvider,
             string language,
-            string equivalenceKey = null)
+            string equivalenceKey = null,
+            CodeVerificationSettings settings = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            if (settings == null)
+                settings = CodeVerificationSettings.Default;
+
+            Document document = WorkspaceFactory.Document(source, language);
+
+            SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+
+            ImmutableArray<Diagnostic> compilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
+
+            DiagnosticVerifier.VerifyDiagnostics(compilerDiagnostics, settings.MaxAllowedCompilerDiagnosticSeverity);
+
+            spans = spans.Sort((x, y) => y.Start.CompareTo(x.Start));
+
             foreach (TextSpan span in spans)
             {
-                VerifyNoRefactoring(
-                    source: source,
-                    span: span,
-                    refactoringProvider: refactoringProvider,
-                    language: language,
-                    equivalenceKey: equivalenceKey);
+                CodeAction action = null;
+
+                var context = new CodeRefactoringContext(
+                    document,
+                    span,
+                    a =>
+                    {
+                        if (equivalenceKey == null
+                            || string.Equals(a.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
+                        {
+                            if (action != null)
+                            {
+                                action = a;
+                            }
+                        }
+                    },
+                    CancellationToken.None);
+
+                refactoringProvider.ComputeRefactoringsAsync(context).Wait();
+
+                Assert.True(action != null, "No code refactoring has been registered.");
+
+                document = await document.ApplyCodeActionAsync(action).ConfigureAwait(false);
+
+                semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+
+                ImmutableArray<Diagnostic> compilerDiagnostics2 = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
+
+                DiagnosticVerifier.VerifyDiagnostics(compilerDiagnostics2, settings.MaxAllowedCompilerDiagnosticSeverity);
+
+                if (!settings.AllowNewCompilerDiagnostics)
+                {
+                    await DiagnosticVerifier.VerifyNoNewCompilerDiagnosticsAsync(document, compilerDiagnostics, compilerDiagnostics2).ConfigureAwait(false);
+                }
             }
+
+            string actual = await document.ToSimplifiedAndFormattedFullStringAsync().ConfigureAwait(false);
+
+            Assert.Equal(expected, actual);
         }
 
-        public static void VerifyNoRefactoring(
+        public static async Task VerifyNoRefactoringAsync(
             string source,
             TextSpan span,
             CodeRefactoringProvider refactoringProvider,
             string language,
-            string equivalenceKey = null)
+            string equivalenceKey = null,
+            CodeVerificationSettings settings = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            Document document = WorkspaceFactory.CreateDocument(source, language);
+            await VerifyNoRefactoringAsync(
+                source,
+                ImmutableArray.Create(span),
+                refactoringProvider,
+                language,
+                equivalenceKey,
+                settings,
+                cancellationToken).ConfigureAwait(false);
+        }
 
-            DiagnosticVerifier.VerifyNoCompilerError(document);
+        public static async Task VerifyNoRefactoringAsync(
+            string source,
+            IEnumerable<TextSpan> spans,
+            CodeRefactoringProvider refactoringProvider,
+            string language,
+            string equivalenceKey = null,
+            CodeVerificationSettings settings = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (settings == null)
+                settings = CodeVerificationSettings.Default;
 
-            List<CodeAction> actions = null;
+            Document document = WorkspaceFactory.Document(source, language);
 
-            var context = new CodeRefactoringContext(
-                document,
-                span,
-                codeAction =>
-                {
-                    if (equivalenceKey == null
-                        || string.Equals(codeAction.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
+            SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+
+            ImmutableArray<Diagnostic> compilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
+
+            DiagnosticVerifier.VerifyDiagnostics(compilerDiagnostics, settings.MaxAllowedCompilerDiagnosticSeverity);
+
+            foreach (TextSpan span in spans)
+            {
+                var context = new CodeRefactoringContext(
+                    document,
+                    span,
+                    codeAction =>
                     {
-                        (actions ?? (actions = new List<CodeAction>())).Add(codeAction);
-                    }
-                },
-                CancellationToken.None);
+                        if (equivalenceKey == null
+                            || string.Equals(codeAction.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
+                        {
+                            Assert.True(false, "Expected no code refactoring.");
+                        }
+                    },
+                    CancellationToken.None);
 
-            refactoringProvider.ComputeRefactoringsAsync(context).Wait();
-
-            Assert.True(actions == null, $"Expected no code refactoring, actual: {actions?.Count ?? 0}");
+                await refactoringProvider.ComputeRefactoringsAsync(context).ConfigureAwait(false);
+            }
         }
     }
 }

@@ -29,13 +29,13 @@ public class C
     {
         C x = null;
 
-        <<<if (x != null)
-            x.M();>>>
+        [|if (x != null)
+            x.M();|]
 
-        <<<if (x != null)
+        [|if (x != null)
         {
             x.M();
-        }>>>
+        }|]
     }
 }
 
@@ -45,13 +45,13 @@ public struct S
     {
         S? x = null;
 
-        <<<if (x != null)
-            x.Value.M();>>>
+        [|if (x != null)
+            x.Value.M();|]
 
-        <<<if (x != null)
+        [|if (x != null)
         {
             x.Value.M();
-        }>>>
+        }|]
     }
 }
 ", @"
@@ -99,46 +99,46 @@ public class Foo
 
         Foo x = null;
 
-        if (<<<x != null && x.Equals(x)>>>) { }
+        if ([|x != null && x.Equals(x)|]) { }
 
-        if (<<<null != x && x.Equals(x)>>>) { }
+        if ([|null != x && x.Equals(x)|]) { }
 
-        if (<<<x != null && (x.Equals(x))>>>) { }
+        if ([|x != null && (x.Equals(x))|]) { }
 
-        if (<<<x != null && x.Equals(x)>>> && f) { }
+        if ([|x != null && x.Equals(x)|] && f) { }
 
-        if (f && <<<x != null && x.Equals(x)>>>) { }
+        if (f && [|x != null && x.Equals(x)|]) { }
 
-        if (<<<x != null && x.Value.Length > 1>>>) { }
+        if ([|x != null && x.Value.Length > 1|]) { }
 
-        if (<<<x != null && !x.Equals(x)>>>) { }
+        if ([|x != null && !x.Equals(x)|]) { }
 
-        if (<<<x != null && (!x.Equals(x))>>>) { }
+        if ([|x != null && (!x.Equals(x))|]) { }
 
-        if (<<<x != null && x.Value == ""x"">>>) { }
+        if ([|x != null && x.Value == ""x""|]) { }
 
-        if (<<<x != null && x.Value == NonNullConst>>>) { }
+        if ([|x != null && x.Value == NonNullConst|]) { }
 
-        if (<<<x != null && x.Value != null>>>) { }
+        if ([|x != null && x.Value != null|]) { }
 
-        if (<<<x != null && x.Value is object>>>) { }
+        if ([|x != null && x.Value is object|]) { }
 
-        if (<<<x != null && x.Value is object _>>>) { }
+        if ([|x != null && x.Value is object _|]) { }
 
-        if (x != null && <<<x.ToString() != null && x.ToString().ToString() != null>>>) { }
+        if (x != null && [|x.ToString() != null && x.ToString().ToString() != null|]) { }
 
         if (f &&
-     /*lt*/ <<<x != null &&
-            x.Equals(""x"")>>> /*tt*/
+     /*lt*/ [|x != null &&
+            x.Equals(""x"")|] /*tt*/
             && f) { }
 
         Dictionary<int, string> dic = null;
 
-        if (<<<dic != null && dic[0].Equals(""x"")>>>) { }
+        if ([|dic != null && dic[0].Equals(""x"")|]) { }
 
-        if (<<<dic != null && dic[0].Length > 1>>>) { }
+        if ([|dic != null && dic[0].Length > 1|]) { }
 
-        if (<<<dic != null && !dic[0].Equals(""x"")>>>) { }
+        if ([|dic != null && !dic[0].Equals(""x"")|]) { }
     }
 }
 ", @"
@@ -214,23 +214,23 @@ public struct Foo
     {
         Foo? x = null;
 
-        if (<<<x != null && x.Value.Equals(x)>>>) { }
+        if ([|x != null && x.Value.Equals(x)|]) { }
 
-        if (<<<x != null && x.Value.V.Length > 1>>>) { }
+        if ([|x != null && x.Value.V.Length > 1|]) { }
 
-        if (<<<x != null && !x.Value.Equals(x)>>>) { }
+        if ([|x != null && !x.Value.Equals(x)|]) { }
 
-        if (<<<x != null && x.Value.V == ""x"">>>) { }
+        if ([|x != null && x.Value.V == ""x""|]) { }
 
-        if (<<<x != null && x.Value.V == NonNullConst>>>) { }
+        if ([|x != null && x.Value.V == NonNullConst|]) { }
 
-        if (<<<x != null && x.Value.V != null>>>) { }
+        if ([|x != null && x.Value.V != null|]) { }
 
-        if (<<<x != null && x.Value.V is object>>>) { }
+        if ([|x != null && x.Value.V is object|]) { }
 
-        if (<<<x != null && x.Value.V is object _>>>) { }
+        if ([|x != null && x.Value.V is object _|]) { }
 
-        if (x != null && <<<x.Value.ToString() != null && x.Value.ToString().ToString() != null>>>) { }
+        if (x != null && [|x.Value.ToString() != null && x.Value.ToString().ToString() != null|]) { }
     }
 }
 ", @"

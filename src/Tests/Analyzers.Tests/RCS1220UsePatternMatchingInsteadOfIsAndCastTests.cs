@@ -34,19 +34,19 @@ class C
 
         object x = null;
 
-        if (<<<x is string && ((string)x) == s>>>) { }
+        if ([|x is string && ((string)x) == s|]) { }
 
-        if (<<<x is string && ((string)x).Equals((string)x)>>>) { }
+        if ([|x is string && ((string)x).Equals((string)x)|]) { }
 
-        if (<<<_f is string && (string)(_f) == s>>>) { }
+        if ([|_f is string && (string)(_f) == s|]) { }
 
-        if (<<<this._f is string && (string)this._f == s>>>) { }
+        if ([|this._f is string && (string)this._f == s|]) { }
 
-        if (<<<_f is string && (string)(this._f) == s>>>) { }
+        if ([|_f is string && (string)(this._f) == s|]) { }
 
-        if (<<<this._f is string && (string)_f == s>>>) { }
+        if ([|this._f is string && (string)_f == s|]) { }
 
-        if (<<<this._f is string && ((string)_f).Equals((string)this._f)>>>) { }
+        if ([|this._f is string && ((string)_f).Equals((string)this._f)|]) { }
     }
 }
 ",
@@ -97,37 +97,37 @@ class C
 
         object x = null;
 
-        if (<<<x is string>>>)
+        if ([|x is string|])
         {
             if (((string)x) == s) { }
         }
 
-        if (<<<x is string>>>)
+        if ([|x is string|])
         {
             if (((string)x).Equals((string)x)) { }
         }
 
-        if (<<<_f is string>>>)
+        if ([|_f is string|])
         {
             if ((string)_f == s) { }
         }
 
-        if (<<<this._f is string>>>)
+        if ([|this._f is string|])
         {
             if ((string)this._f == s) { }
         }
 
-        if (<<<_f is string>>>)
+        if ([|_f is string|])
         {
             if ((string)this._f == s) { }
         }
 
-        if (<<<this._f is string>>>)
+        if ([|this._f is string|])
         {
             if ((string)_f == s) { }
         }
 
-        if (<<<this._f is string>>>)
+        if ([|this._f is string|])
         {
             if (((string)_f).Equals((string)this._f)) { }
         }

@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -10,21 +11,22 @@ namespace Roslynator
 {
     public static class WorkspaceFactory
     {
-        public static Project EmptyCSharpProject { get; } = CreateProject(LanguageNames.CSharp);
+        public static Project EmptyCSharpProject { get; } = Project(LanguageNames.CSharp);
 
-        public static Document CreateDocument(string source, string language)
+        public static Document Document(string source, string language)
         {
-            return CreateProject(source, language).Documents.First();
+            return Project(source, language).Documents.First();
         }
 
-        public static IEnumerable<Document> CreateDocuments(IEnumerable<string> sources, string language)
+        public static Project Project(string source, string language)
         {
-            return CreateProject(sources, language).Documents;
-        }
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
 
-        public static Project CreateProject(string source, string language)
-        {
-            Project project = (language == LanguageNames.CSharp) ? EmptyCSharpProject : CreateProject(language);
+            if (language == null)
+                throw new ArgumentNullException(nameof(language));
+
+            Project project = (language == LanguageNames.CSharp) ? EmptyCSharpProject : Project(language);
 
             ProjectId projectId = project.Id;
 
@@ -38,9 +40,15 @@ namespace Roslynator
                 .GetProject(projectId);
         }
 
-        public static Project CreateProject(IEnumerable<string> sources, string language)
+        public static Project Project(IEnumerable<string> sources, string language)
         {
-            Project project = (language == LanguageNames.CSharp) ? EmptyCSharpProject : CreateProject(language);
+            if (sources == null)
+                throw new ArgumentNullException(nameof(sources));
+
+            if (language == null)
+                throw new ArgumentNullException(nameof(language));
+
+            Project project = (language == LanguageNames.CSharp) ? EmptyCSharpProject : Project(language);
 
             Solution solution = project.Solution;
 
@@ -56,7 +64,7 @@ namespace Roslynator
             return solution.GetProject(project.Id);
         }
 
-        public static Project CreateProject(string language)
+        public static Project Project(string language)
         {
             ProjectId projectId = ProjectId.CreateNewId(debugName: FileUtility.TestProjectName);
 
@@ -84,8 +92,12 @@ namespace Roslynator
 
                 var parseOptions = (CSharpParseOptions)project.ParseOptions;
 
+                CSharpCompilationOptions newCompilationOptions = compilationOptions
+                    .WithAllowUnsafe(true)
+                    .WithOutputKind(OutputKind.DynamicallyLinkedLibrary);
+
                 project = project
-                    .WithCompilationOptions(compilationOptions.WithAllowUnsafe(true))
+                    .WithCompilationOptions(newCompilationOptions)
                     .WithParseOptions(parseOptions.WithLanguageVersion(LanguageVersion.Latest));
             }
 

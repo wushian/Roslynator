@@ -31,9 +31,9 @@ namespace Roslynator.Analyzers.Tests
             ? true
             : false", "f")]
 
-        [InlineData(@"<<<f //a
+        [InlineData(@"[|f //a
               /*b*/ ? /*c*/ true //d
-                                 /*e*/ : /*f*/ false>>> /*g*/", @"f //a
+                                 /*e*/ : /*f*/ false|] /*g*/", @"f //a
               /*b*/  /*c*/  //d
                                  /*e*/  /*f*/  /*g*/")]
         public static void TestDiagnosticWithCodeFix(string fixableCode, string fixedCode)
@@ -43,7 +43,7 @@ class C
 {
     void M(bool f, bool g)
     {
-        if (<<<>>>) { }
+        if ([||]) { }
 }
 }
 ", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
@@ -51,9 +51,9 @@ class C
 
         [Theory]
         [InlineData("f ? g : false", "f && g")]
-        [InlineData(@"<<<f
+        [InlineData(@"[|f
             ? g
-            : false>>> /**/", @"f
+            : false|] /**/", @"f
             && g /**/")]
         public static void TestDiagnosticWithCodeFix_LogicalAnd(string fixableCode, string fixedCode)
         {
@@ -62,7 +62,7 @@ class C
 {
     void M(bool f, bool g)
     {
-        if (<<<>>>) { }
+        if ([||]) { }
     }
 }
 ", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
@@ -70,9 +70,9 @@ class C
 
         [Theory]
         [InlineData("f ? true : g", "f || g")]
-        [InlineData(@"<<<f
+        [InlineData(@"[|f
             ? true
-            : g>>> /**/", @"f
+            : g|] /**/", @"f
             || g /**/")]
         public static void TestDiagnosticWithCodeFix_LogicalOr(string fixableCode, string fixedCode)
         {
@@ -81,7 +81,7 @@ class C
 {
     void M(bool f, bool g)
     {
-        if (<<<>>>) { }
+        if ([||]) { }
     }
 }
 ", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);

@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Formatting;
@@ -14,46 +16,70 @@ namespace Roslynator.Tests
 {
     public static class DiagnosticVerifier
     {
-        public static void VerifyDiagnostic(
+        public static async Task VerifyDiagnosticAsync(
             string source,
             DiagnosticAnalyzer analyzer,
             string language,
-            params Diagnostic[] expectedDiagnostics)
+            Diagnostic[] expectedDiagnostics,
+            CodeVerificationSettings settings = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            VerifyDiagnostic(new string[] { source }, analyzer, language, expectedDiagnostics);
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            await VerifyDiagnosticAsync(new string[] { source }, analyzer, language, expectedDiagnostics, settings, cancellationToken).ConfigureAwait(false);
         }
 
-        public static void VerifyDiagnostic(
+        public static async Task VerifyDiagnosticAsync(
             IEnumerable<string> sources,
             DiagnosticAnalyzer analyzer,
             string language,
-            params Diagnostic[] expectedDiagnostics)
+            Diagnostic[] expectedDiagnostics,
+            CodeVerificationSettings settings = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            if (expectedDiagnostics == null)
+                throw new ArgumentNullException(nameof(expectedDiagnostics));
+
+            if (settings == null)
+                settings = CodeVerificationSettings.Default;
+
             foreach (Diagnostic diagnostic in expectedDiagnostics)
             {
                 Assert.True(analyzer.Supports(diagnostic.Descriptor),
                     $"Diagnostic \"{diagnostic.Descriptor.Id}\" is not supported by analyzer \"{analyzer.GetType().Name}\".");
             }
 
-            Diagnostic[] diagnostics = DiagnosticUtility.GetSortedDiagnostics(sources, analyzer, language);
+            Project project = WorkspaceFactory.Project(sources, language);
+
+            Compilation compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
+
+            ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
+
+            VerifyDiagnostics(compilerDiagnostics, settings.MaxAllowedCompilerDiagnosticSeverity);
+
+            if (settings.EnableDiagnosticsDisabledByDefault)
+                compilation = compilation.EnableDiagnosticsDisabledByDefault(analyzer);
+
+            ImmutableArray<Diagnostic> diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(analyzer, cancellationToken).ConfigureAwait(false);
 
             if (diagnostics.Length > 0
                 && analyzer.SupportedDiagnostics.Length > 1)
             {
                 diagnostics = diagnostics
                     .Where(diagnostic => expectedDiagnostics.Any(expectedDiagnostic => DiagnosticComparer.Id.Equals(diagnostic, expectedDiagnostic)))
-                    .ToArray();
+                    .ToImmutableArray();
             }
 
             VerifyDiagnostics(diagnostics, expectedDiagnostics);
         }
 
         private static void VerifyDiagnostics(
-            Diagnostic[] actual,
-            Diagnostic[] expected)
+            IList<Diagnostic> actual,
+            IList<Diagnostic> expected)
         {
-            int expectedCount = expected.Length;
-            int actualCount = actual.Length;
+            int expectedCount = expected.Count;
+            int actualCount = actual.Count;
 
             Assert.True(expectedCount == actualCount,
                 $"Mismatch between number of diagnostics returned, expected: {expectedCount} actual: {actualCount}{actual.ToDebugString()}");
@@ -69,6 +95,7 @@ namespace Roslynator.Tests
 
             VerifyLocation(actual, actual.Location, expected.Location);
 
+            //TODO: 
             //VerifyAdditionalLocations(actual, actual.AdditionalLocations, expected.AdditionalLocations);
         }
 
@@ -127,66 +154,119 @@ namespace Roslynator.Tests
                 $"Expected diagnostic to {name} at column {expectedCharacter}, actual: {actualCharacter}\r\n\r\nDiagnostic:\r\n{diagnostic}\r\n");
         }
 
-        public static void VerifyNoDiagnostic(
+        public static async Task VerifyNoDiagnosticAsync(
             string source,
             DiagnosticDescriptor descriptor,
             DiagnosticAnalyzer analyzer,
             string language)
         {
-            VerifyNoDiagnostic(new string[] { source }, descriptor, analyzer, language);
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            await VerifyNoDiagnosticAsync(new string[] { source }, descriptor, analyzer, language).ConfigureAwait(false);
         }
 
-        public static void VerifyNoDiagnostic(
+        public static async Task VerifyNoDiagnosticAsync(
             IEnumerable<string> sources,
             DiagnosticDescriptor descriptor,
             DiagnosticAnalyzer analyzer,
-            string language)
+            string language,
+            CodeVerificationSettings settings = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            if (sources == null)
+                throw new ArgumentNullException(nameof(sources));
+
+            if (descriptor == null)
+                throw new ArgumentNullException(nameof(descriptor));
+
+            if (analyzer == null)
+                throw new ArgumentNullException(nameof(analyzer));
+
+            if (language == null)
+                throw new ArgumentNullException(nameof(language));
+
+            if (settings == null)
+                settings = CodeVerificationSettings.Default;
+
             Assert.True(analyzer.Supports(descriptor),
                 $"Diagnostic \"{descriptor.Id}\" is not supported by analyzer \"{analyzer.GetType().Name}\".");
 
-            IEnumerable<Document> documents = WorkspaceFactory.CreateDocuments(sources, language);
+            Project project = WorkspaceFactory.Project(sources, language);
 
-            VerifyNoCompilerError(documents);
+            Compilation compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
-            Diagnostic[] diagnostics = DiagnosticUtility.GetSortedDiagnostics(documents, analyzer);
+            ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
 
-            Assert.True(diagnostics.Length == 0 || diagnostics.All(f => !string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)),
-                    $"No diagnostic expected{diagnostics.Where(f => string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)).ToDebugString()}");
+            VerifyDiagnostics(compilerDiagnostics, settings.MaxAllowedCompilerDiagnosticSeverity);
+
+            if (settings.EnableDiagnosticsDisabledByDefault)
+                compilation = compilation.EnableDiagnosticsDisabledByDefault(analyzer);
+
+            ImmutableArray<Diagnostic> analyzerDiagnostics = await compilation.GetAnalyzerDiagnosticsAsync(analyzer, cancellationToken).ConfigureAwait(false);
+
+            Assert.True(analyzerDiagnostics.Length == 0 || analyzerDiagnostics.All(f => !string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)),
+                    $"No diagnostic expected{analyzerDiagnostics.Where(f => string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)).ToDebugString()}");
         }
 
-        public static void VerifyNoCompilerError(Document document)
+        public static void VerifyDiagnostics(ImmutableArray<Diagnostic> diagnostics, DiagnosticSeverity maxAllowedSeverity = DiagnosticSeverity.Info)
         {
-            ImmutableArray<Diagnostic> compilerDiagnostics = document.GetCompilerDiagnostics();
-
-            VerifyNoCompilerError(compilerDiagnostics);
+            Assert.False(diagnostics.Any(f => f.Severity > maxAllowedSeverity),
+                $"No compiler error expected{diagnostics.Where(f => f.Severity > maxAllowedSeverity).ToDebugString()}");
         }
 
-        public static void VerifyNoCompilerError(ImmutableArray<Diagnostic> compilerDiagnostics)
+        public static async Task VerifyNoNewCompilerDiagnosticsAsync(
+            Document document,
+            ImmutableArray<Diagnostic> compilerDiagnostics,
+            ImmutableArray<Diagnostic> compilerDiagnostics2,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            Assert.False(compilerDiagnostics.Any(f => f.Severity == DiagnosticSeverity.Error),
-                $"No compiler error expected{compilerDiagnostics.Where(f => f.Severity == DiagnosticSeverity.Error).ToDebugString()}");
-        }
-
-        public static void VerifyNoCompilerError(IEnumerable<Document> documents)
-        {
-            foreach (Document document in documents)
-                VerifyNoCompilerError(document);
-        }
-
-        public static void VerifyNoNewCompilerDiagnostics(Document document, ImmutableArray<Diagnostic> compilerDiagnostics)
-        {
-            IEnumerable<Diagnostic> newCompilerDiagnostics = DiagnosticUtility.GetNewDiagnostics(compilerDiagnostics, document.GetCompilerDiagnostics());
+            IEnumerable<Diagnostic> newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, compilerDiagnostics2);
 
             if (!newCompilerDiagnostics.Any())
                 return;
 
-            document = document.WithSyntaxRoot(Formatter.Format(document.GetSyntaxRootAsync().Result, Formatter.Annotation, document.Project.Solution.Workspace));
+            SyntaxNode root = await document.GetSyntaxRootAsync().ConfigureAwait(false);
 
-            newCompilerDiagnostics = DiagnosticUtility.GetNewDiagnostics(compilerDiagnostics, document.GetCompilerDiagnostics());
+            document = document.WithSyntaxRoot(Formatter.Format(root, Formatter.Annotation, document.Project.Solution.Workspace, cancellationToken: cancellationToken));
 
             Assert.True(false,
                 $"Code fix introduced new compiler diagnostics{newCompilerDiagnostics.ToDebugString()}");
+        }
+
+        private static IEnumerable<Diagnostic> GetNewDiagnostics(
+            IEnumerable<Diagnostic> diagnostics,
+            IEnumerable<Diagnostic> diagnostics2)
+        {
+            using (IEnumerator<Diagnostic> en2 = GetEnumerator(diagnostics2))
+            using (IEnumerator<Diagnostic> en = GetEnumerator(diagnostics))
+            {
+                while (en2.MoveNext())
+                {
+                    if (en.MoveNext())
+                    {
+                        if (en.Current.Id != en2.Current.Id)
+                            yield return en2.Current;
+                    }
+                    else
+                    {
+                        yield return en2.Current;
+
+                        while (en2.MoveNext())
+                            yield return en2.Current;
+
+                        yield break;
+                    }
+                }
+            }
+
+            IEnumerator<Diagnostic> GetEnumerator(IEnumerable<Diagnostic> items)
+            {
+                return items
+                    .Where(f => f.Severity != DiagnosticSeverity.Hidden)
+                    .OrderBy(f => f, DiagnosticComparer.SpanStart)
+                    .GetEnumerator();
+            }
         }
     }
 }

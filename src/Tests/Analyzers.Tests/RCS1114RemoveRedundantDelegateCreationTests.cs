@@ -29,8 +29,8 @@ class Foo
 {
     void M()
     {
-        Changed += <<<new EventHandler(Foo_Changed)>>>;
-        Changed -= <<<new EventHandler(Foo_Changed)>>>;
+        Changed += [|new EventHandler(Foo_Changed)|];
+        Changed -= [|new EventHandler(Foo_Changed)|];
     }
 
     protected virtual void Foo_Changed(object sender, EventArgs e) { }
@@ -65,8 +65,8 @@ class Foo
 {
     void M()
     {
-        Changed += <<<new EventHandler<FooEventArgs>(Foo_Changed)>>>;
-        Changed -= <<<new EventHandler<FooEventArgs>(Foo_Changed)>>>;
+        Changed += [|new EventHandler<FooEventArgs>(Foo_Changed)|];
+        Changed -= [|new EventHandler<FooEventArgs>(Foo_Changed)|];
     }
 
     protected virtual void Foo_Changed(object sender, FooEventArgs e) { }
@@ -109,8 +109,8 @@ class Foo
 {
     void M()
     {
-        Changed += <<<new FooEventHandler(Foo_Changed)>>>;
-        Changed -= <<<new FooEventHandler(Foo_Changed)>>>;
+        Changed += [|new FooEventHandler(Foo_Changed)|];
+        Changed -= [|new FooEventHandler(Foo_Changed)|];
     }
 
     protected virtual void Foo_Changed(object sender, FooEventArgs e) { }
@@ -157,8 +157,8 @@ class Foo<TEventArgs>
 {
     void M()
     {
-        Changed += <<<new EventHandler<TEventArgs>(Foo_Changed)>>>;
-        Changed -= <<<new EventHandler<TEventArgs>(Foo_Changed)>>>;
+        Changed += [|new EventHandler<TEventArgs>(Foo_Changed)|];
+        Changed -= [|new EventHandler<TEventArgs>(Foo_Changed)|];
     }
 
     protected virtual void Foo_Changed(object sender, TEventArgs e) { }

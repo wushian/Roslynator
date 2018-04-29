@@ -27,7 +27,7 @@ class C
 {
     void M(object x)
     {
-        M(<<<(>>>x));
+        M([|(|]x));
     }
 }
 ", @"
@@ -47,7 +47,7 @@ class C
             VerifyDiagnosticAndFix(@"
 using System;
 
-[Obsolete(<<<(>>>""""))]
+[Obsolete([|(|]""""))]
 class C
 {
 }
@@ -69,7 +69,7 @@ class C
 {
     object M()
     {
-        return <<<(>>>null);
+        return [|(|]null);
     }
 }
 ", @"
@@ -93,7 +93,7 @@ class C
 {
     IEnumerable<object> M()
     {
-        yield return <<<(>>>null);
+        yield return [|(|]null);
     }
 }
 ", @"
@@ -115,7 +115,7 @@ class C
             VerifyDiagnosticAndFix(@"
 class C
 {
-    object M() => <<<(>>>null);
+    object M() => [|(|]null);
 }
 ", @"
 class C
@@ -135,8 +135,8 @@ class C
 {
     async Task FooAsync()
     {
-        await <<<(>>>FooAsync().ConfigureAwait(false));
-        await <<<(>>>(Task)FooAsync());
+        await [|(|]FooAsync().ConfigureAwait(false));
+        await [|(|](Task)FooAsync());
     }
 }
 ", @"
@@ -154,27 +154,27 @@ class C
         }
 
         [Theory]
-        [InlineData("while (<<<(>>>true)) { }", "while (true) { }")]
-        [InlineData("do { } while (<<<(>>>true));", "do { } while (true);")]
-        [InlineData("using (<<<(>>>(IDisposable)null)) { }", "using ((IDisposable)null) { }")]
-        [InlineData("lock (<<<(>>>s)) { }", "lock (s) { }")]
-        [InlineData("if (<<<(>>>true)) { }", "if (true) { }")]
-        [InlineData("switch (<<<(>>>true)) { }", "switch (true) { }")]
-        [InlineData(@"M(<<<(>>>""""));", @"M("""");")]
-        [InlineData("var arr = new string[] { <<<(>>>null) };", "var arr = new string[] { null };")]
-        [InlineData("var items = new List<string>() { <<<(>>>null) };", "var items = new List<string>() { null };")]
-        [InlineData(@"s = $""{<<<(>>>"""")}"";", @"s = $""{""""}"";")]
-        [InlineData("<<<(>>>i) = (0);", "i = (0);")]
-        [InlineData("<<<(>>>i) += (0);", "i += (0);")]
-        [InlineData("<<<(>>>i) -= (0);", "i -= (0);")]
-        [InlineData("<<<(>>>i) *= (0);", "i *= (0);")]
-        [InlineData("<<<(>>>i) /= (0);", "i /= (0);")]
-        [InlineData("<<<(>>>i) %= (0);", "i %= (0);")]
-        [InlineData("<<<(>>>i) &= (0);", "i &= (0);")]
-        [InlineData("<<<(>>>i) ^= (0);", "i ^= (0);")]
-        [InlineData("<<<(>>>i) |= (0);", "i |= (0);")]
-        [InlineData("<<<(>>>i) <<= (0);", "i <<= (0);")]
-        [InlineData("<<<(>>>i) >>= (0);", "i >>= (0);")]
+        [InlineData("while ([|(|]true)) { }", "while (true) { }")]
+        [InlineData("do { } while ([|(|]true));", "do { } while (true);")]
+        [InlineData("using ([|(|](IDisposable)null)) { }", "using ((IDisposable)null) { }")]
+        [InlineData("lock ([|(|]s)) { }", "lock (s) { }")]
+        [InlineData("if ([|(|]true)) { }", "if (true) { }")]
+        [InlineData("switch ([|(|]true)) { }", "switch (true) { }")]
+        [InlineData(@"M([|(|]""""));", @"M("""");")]
+        [InlineData("var arr = new string[] { [|(|]null) };", "var arr = new string[] { null };")]
+        [InlineData("var items = new List<string>() { [|(|]null) };", "var items = new List<string>() { null };")]
+        [InlineData(@"s = $""{[|(|]"""")}"";", @"s = $""{""""}"";")]
+        [InlineData("[|(|]i) = (0);", "i = (0);")]
+        [InlineData("[|(|]i) += (0);", "i += (0);")]
+        [InlineData("[|(|]i) -= (0);", "i -= (0);")]
+        [InlineData("[|(|]i) *= (0);", "i *= (0);")]
+        [InlineData("[|(|]i) /= (0);", "i /= (0);")]
+        [InlineData("[|(|]i) %= (0);", "i %= (0);")]
+        [InlineData("[|(|]i) &= (0);", "i &= (0);")]
+        [InlineData("[|(|]i) ^= (0);", "i ^= (0);")]
+        [InlineData("[|(|]i) |= (0);", "i |= (0);")]
+        [InlineData("[|(|]i) <<= (0);", "i <<= (0);")]
+        [InlineData("[|(|]i) >>= (0);", "i >>= (0);")]
         public static void TestDiagnosticWithCodeFix_Statement(string fixableCode, string fixedCode)
         {
             VerifyDiagnosticAndFix(@"
@@ -187,17 +187,17 @@ class C
     {
         int i = 0;
 
-        <<<>>>
+        [||]
     }
 }
 ", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
         }
 
         [Theory]
-        [InlineData("f = !<<<(>>>f);", "f = !f;")]
-        [InlineData(@"f = !<<<(>>>s.StartsWith(""""));", @"f = !s.StartsWith("""");")]
-        [InlineData("f = !<<<(>>>foo.Value);", "f = !foo.Value;")]
-        [InlineData("f = !<<<(>>>foo[0]);", "f = !foo[0];")]
+        [InlineData("f = ![|(|]f);", "f = !f;")]
+        [InlineData(@"f = ![|(|]s.StartsWith(""""));", @"f = !s.StartsWith("""");")]
+        [InlineData("f = ![|(|]foo.Value);", "f = !foo.Value;")]
+        [InlineData("f = ![|(|]foo[0]);", "f = !foo[0];")]
         public static void TestDiagnosticWithCodeFix_LogicalNot(string fixableCode, string fixedCode)
         {
             VerifyDiagnosticAndFix(@"
@@ -209,7 +209,7 @@ class Foo
         string s = null;
         var foo = new Foo();
 
-        <<<>>>
+        [||]
     }
 
     public bool Value { get; }

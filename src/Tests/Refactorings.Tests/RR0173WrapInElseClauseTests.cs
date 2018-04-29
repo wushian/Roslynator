@@ -27,7 +27,7 @@ class C
             return null;
         }
 
-<<<        return null;>>>
+[|        return null;|]
     }
 }
 ", @"
@@ -59,7 +59,7 @@ class C
         if (f)
             return null;
 
-<<<        return null;>>>
+[|        return null;|]
     }
 }
 ", @"
@@ -90,8 +90,8 @@ class C
             return null;
         }
 
-<<<        M(f);
-        return null;>>>
+[|        M(f);
+        return null;|]
     }
 }
 ", @"
@@ -145,7 +145,7 @@ class C
                 throw new InvalidOperationException();
             }
 
-<<<            return null;>>>
+[|            return null;|]
         }
 
         return null;
@@ -203,7 +203,7 @@ class C
             M(f);
         }
 
-<<<        return null;>>>
+[|        return null;|]
     }
 
     public string M2(bool f)
@@ -216,7 +216,7 @@ class C
         {
         }
 
-<<<        return null;>>>
+[|        return null;|]
     }
 }
 ", CodeRefactoringProvider, RefactoringId);

@@ -10,18 +10,18 @@ namespace Roslynator.Tests.CSharp
     {
         public static void VerifyFix(
             string source,
-            string newSource,
+            string expected,
             DiagnosticAnalyzer analyzer,
             CodeFixProvider fixProvider,
-            bool allowNewCompilerDiagnostics = false)
+            CodeVerificationSettings settings = null)
         {
-            CodeFixVerifier.VerifyFix(
+            CodeFixVerifier.VerifyFixAsync(
                 source: source,
-                newSource: newSource,
+                expected: expected,
                 analyzer: analyzer,
                 fixProvider: fixProvider,
                 language: LanguageNames.CSharp,
-                allowNewCompilerDiagnostics: allowNewCompilerDiagnostics);
+                settings: settings).Wait();
         }
 
         public static void VerifyNoFix(
@@ -29,11 +29,11 @@ namespace Roslynator.Tests.CSharp
             DiagnosticAnalyzer analyzer,
             CodeFixProvider fixProvider)
         {
-            CodeFixVerifier.VerifyNoFix(
+            CodeFixVerifier.VerifyNoFixAsync(
                 source: source,
                 analyzer: analyzer,
                 fixProvider: fixProvider,
-                language: LanguageNames.CSharp);
+                language: LanguageNames.CSharp).Wait();
         }
     }
 }

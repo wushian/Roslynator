@@ -27,7 +27,7 @@ class C
 {
     void M()
     {
-<<<#pragma warning disable RCS0>>>
+[|#pragma warning disable RCS0|]
 #pragma warning disable RCS1, RCS2,
     
 #pragma warning disable RCS3, RCS4, RCS5
@@ -54,7 +54,7 @@ class C
 {
     void M()
     {
-<<<#pragma warning restore RCS0>>>
+[|#pragma warning restore RCS0|]
 #pragma warning restore RCS1, RCS2,
     
 #pragma warning restore RCS3, RCS4, RCS5

@@ -40,7 +40,7 @@ class C
     {
         var items = new List<string>();
 
-        var x = items.<<<>>>;
+        var x = items.[||];
     }
 }
 ", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
@@ -60,8 +60,8 @@ class C
         var items = new List<string>();
 
         var x = items
-            .<<<Where(_ => true)
-            .Any()>>>;
+            .[|Where(_ => true)
+            .Any()|];
     }
 }
 ", @"
@@ -102,7 +102,7 @@ class C
     {
         ImmutableArray<string> items = ImmutableArray.Create<string>();
 
-        var x = items.<<<>>>;
+        var x = items.[||];
     }
 }
 ", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
@@ -127,7 +127,7 @@ class C
     {
         var items = new List<string>();
 
-        IEnumerable<object> q = items.<<<>>>;
+        IEnumerable<object> q = items.[||];
     }
 }
 ", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
@@ -148,7 +148,7 @@ class C
     {
         var items = new List<string>();
 
-        if (items.<<<>>>) { }
+        if (items.[||]) { }
     }
 }
 ", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
@@ -169,7 +169,7 @@ class C
     {
         ImmutableArray<string> items = ImmutableArray<string>.Empty;
 
-        if (items.<<<>>>) { }
+        if (items.[||]) { }
     }
 }
 ", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
@@ -191,7 +191,7 @@ class C
     {
         var items = new List<string>();
 
-        if (<<<>>>) { }
+        if ([||]) { }
     }
 }
 ", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
@@ -213,7 +213,7 @@ class C
     {
         var items = new List<int?>();
 
-        if (<<<>>>) { }
+        if ([||]) { }
     }
 }
 ", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
@@ -235,7 +235,7 @@ class C
     {
         ImmutableArray<string> items = ImmutableArray<string>.Empty;
 
-        if (<<<>>>) { }
+        if ([||]) { }
     }
 }
 ", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
@@ -257,7 +257,7 @@ class C
     {
         ImmutableArray<int?> items = ImmutableArray<int?>.Empty;
 
-        if (<<<>>>) { }
+        if ([||]) { }
     }
 }
 ", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);

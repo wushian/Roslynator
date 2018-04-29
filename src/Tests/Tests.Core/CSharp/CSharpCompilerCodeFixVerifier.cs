@@ -9,18 +9,18 @@ namespace Roslynator.Tests.CSharp
     public static class CSharpCompilerCodeFixVerifier
     {
         public static void VerifyFix(
-            string sourceTemplate,
+            string source,
             string fixableCode,
             string fixedCode,
             string diagnosticId,
             CodeFixProvider fixProvider,
             string equivalenceKey = null)
         {
-            (string source, string newSource, TextSpan span) = TextUtility.GetMarkedSpan(sourceTemplate, fixableCode, fixedCode);
+            (string result1, string result2, TextSpan span) = TextUtility.GetMarkedSpan(source, fixableCode, fixedCode);
 
             VerifyFix(
-                source: source,
-                newSource: newSource,
+                source: result1,
+                expected: result2,
                 diagnosticId: diagnosticId,
                 fixProvider: fixProvider,
                 equivalenceKey: equivalenceKey);
@@ -28,18 +28,18 @@ namespace Roslynator.Tests.CSharp
 
         public static void VerifyFix(
             string source,
-            string newSource,
+            string expected,
             string diagnosticId,
             CodeFixProvider fixProvider,
             string equivalenceKey = null)
         {
-            CompilerCodeFixVerifier.VerifyFix(
+            CompilerCodeFixVerifier.VerifyFixAsync(
                 source: source,
-                newSource: newSource,
+                expected: expected,
                 diagnosticId: diagnosticId,
                 fixProvider: fixProvider,
                 language: LanguageNames.CSharp,
-                equivalenceKey: equivalenceKey);
+                equivalenceKey: equivalenceKey).Wait();
         }
 
         public static void VerifyNoFix(
@@ -47,11 +47,11 @@ namespace Roslynator.Tests.CSharp
             CodeFixProvider fixProvider,
             string equivalenceKey = null)
         {
-            CompilerCodeFixVerifier.VerifyNoFix(
+            CompilerCodeFixVerifier.VerifyNoFixAsync(
                 source: source,
                 fixProvider: fixProvider,
                 language: LanguageNames.CSharp,
-                equivalenceKey: equivalenceKey);
+                equivalenceKey: equivalenceKey).Wait();
         }
     }
 }

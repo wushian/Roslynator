@@ -10,58 +10,40 @@ namespace Roslynator.Tests
 {
     public static class TextUtility
     {
-        internal const string OpenMarker = "<<<";
-        internal const string CloseMarker = ">>>";
+        internal const string OpenMarker = "[|";
+        internal const string CloseMarker = "|]";
+        internal const string OpenMarkerAndCloseMarker = OpenMarker + CloseMarker;
+        internal static readonly int MarkersLength = OpenMarkerAndCloseMarker.Length;
 
-        public static (string source, TextSpan span) GetMarkedSpan(string s)
+        public static (string result, TextSpan span) GetMarkedSpan(string s, string replacement)
         {
-            int startIndex = s.IndexOf(OpenMarker);
+            int index = s.IndexOf(OpenMarkerAndCloseMarker);
 
-            int endIndex = s.IndexOf(CloseMarker, startIndex + OpenMarker.Length);
+            var span = new TextSpan(index, replacement.Length);
 
-            TextSpan span = TextSpan.FromBounds(startIndex, endIndex - OpenMarker.Length);
+            string result = Replace(s, index, replacement);
 
-            s = s
-                .Remove(endIndex, CloseMarker.Length)
-                .Remove(startIndex, OpenMarker.Length);
-
-            return (s, span);
+            return (result, span);
         }
 
-        public static (string source, TextSpan span) GetMarkedSpan(string s, string fixableCode)
-        {
-            int index = s.IndexOf(OpenMarker + CloseMarker);
-
-            var span = new TextSpan(index, fixableCode.Length);
-
-            s = s.Remove(index, OpenMarker.Length + CloseMarker.Length);
-
-            string source = s.Insert(index, fixableCode);
-
-            return (source, span);
-        }
-
-        public static (string source, string newSource, TextSpan span) GetMarkedSpan(
+        public static (string result1, string result2, TextSpan span) GetMarkedSpan(
             string s,
-            string fixableCode,
-            string fixedCode)
+            string replacement1,
+            string replacement2)
         {
-            int index = s.IndexOf(OpenMarker + CloseMarker);
+            int index = s.IndexOf(OpenMarkerAndCloseMarker);
 
-            var span = new TextSpan(index, fixableCode.Length);
+            var span = new TextSpan(index, replacement1.Length);
 
-            s = s.Remove(index, OpenMarker.Length + CloseMarker.Length);
+            string result1 = Replace(s, index, replacement1);
+            string result2 = Replace(s, index, replacement2);
 
-            string source = s.Insert(index, fixableCode);
-
-            string newSource = s.Insert(index, fixedCode);
-
-            return (source, newSource, span);
+            return (result1, result2, span);
         }
 
-        public static (string source, List<TextSpan> spans) GetMarkedSpans(string s)
+        public static (string result, List<TextSpan> spans) GetMarkedSpans(string s)
         {
-            StringBuilder sb = StringBuilderCache.GetInstance(s.Length - OpenMarker.Length - CloseMarker.Length);
+            StringBuilder sb = StringBuilderCache.GetInstance(s.Length - MarkersLength);
 
             List<TextSpan> spans = null;
 
@@ -75,13 +57,14 @@ namespace Roslynator.Tests
             {
                 switch (s[i])
                 {
-                    case '<':
+                    case '[':
                         {
-                            if (IsOpenMarker(s, length, i))
+                            if (i < length - 1
+                                && s[i + 1] == '|')
                             {
                                 sb.Append(s, lastPos, i - lastPos);
 
-                                i += 2;
+                                i++;
                                 lastPos = i + 1;
                                 inSpan = true;
                                 continue;
@@ -89,10 +72,11 @@ namespace Roslynator.Tests
 
                             break;
                         }
-                    case '>':
+                    case '|':
                         {
                             if (inSpan
-                                && IsCloseMarker(s, length, i))
+                                && i < length - 1
+                                && s[i + 1] == ']')
                             {
                                 var span = new TextSpan(sb.Length, i - lastPos);
 
@@ -100,7 +84,7 @@ namespace Roslynator.Tests
 
                                 sb.Append(s, lastPos, i - lastPos);
 
-                                i += 2;
+                                i++;
                                 lastPos = i + 1;
                                 inSpan = false;
                                 continue;
@@ -116,12 +100,12 @@ namespace Roslynator.Tests
             return (StringBuilderCache.GetStringAndFree(sb), spans);
         }
 
-        public static (string source, List<Diagnostic> diagnostics) GetMarkedDiagnostics(
+        public static (string result, List<Diagnostic> diagnostics) GetMarkedDiagnostics(
             string s,
             DiagnosticDescriptor descriptor,
             string filePath)
         {
-            StringBuilder sb = StringBuilderCache.GetInstance(s.Length - OpenMarker.Length - CloseMarker.Length);
+            StringBuilder sb = StringBuilderCache.GetInstance(s.Length - MarkersLength);
 
             List<Diagnostic> diagnostics = null;
 
@@ -157,17 +141,18 @@ namespace Roslynator.Tests
                             column = 0;
                             continue;
                         }
-                    case '<':
+                    case '[':
                         {
                             if (i < length - 1
-                                && IsOpenMarker(s, length, i))
+                                && i < length - 1
+                                && s[i + 1] == '|')
                             {
                                 sb.Append(s, lastPos, i - lastPos);
 
                                 startLine = line;
                                 startColumn = column;
 
-                                i += 2;
+                                i++;
 
                                 lastPos = i + 1;
 
@@ -176,10 +161,11 @@ namespace Roslynator.Tests
 
                             break;
                         }
-                    case '>':
+                    case '|':
                         {
                             if (startColumn != -1
-                                && IsCloseMarker(s, length, i))
+                                && i < length - 1
+                                && s[i + 1] == ']')
                             {
                                 sb.Append(s, lastPos, i - lastPos);
 
@@ -195,7 +181,7 @@ namespace Roslynator.Tests
 
                                 (diagnostics ?? (diagnostics = new List<Diagnostic>())).Add(diagnostic);
 
-                                i += 2;
+                                i++;
 
                                 lastPos = i + 1;
 
@@ -217,24 +203,14 @@ namespace Roslynator.Tests
             return (StringBuilderCache.GetStringAndFree(sb), diagnostics);
         }
 
-        private static bool IsOpenMarker(string s, int length, int i)
+        private static string Replace(string s, int index, string replacement)
         {
-            return i < length - 1
-                && s[i + 1] == '<'
-                && i < length - 2
-                && s[i + 2] == '<'
-                && i < length - 3
-                && s[i + 3] != '<';
-        }
+            StringBuilder sb = StringBuilderCache.GetInstance(s.Length - MarkersLength + replacement.Length)
+                .Append(s, 0, index)
+                .Append(replacement)
+                .Append(s, index + MarkersLength, s.Length - index - MarkersLength);
 
-        private static bool IsCloseMarker(string s, int length, int i)
-        {
-            return i < length - 1
-                && s[i + 1] == '>'
-                && i < length - 2
-                && s[i + 2] == '>'
-                && i < length - 3
-                && s[i + 3] != '>';
+            return StringBuilderCache.GetStringAndFree(sb);
         }
     }
 }

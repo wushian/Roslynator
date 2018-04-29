@@ -20,9 +20,9 @@ namespace Roslynator.Refactorings.Tests
 @"
 class Foo : FooBase
 {
-<<<    private string bar;
+[|    private string bar;
 
-    private string _bar2, _bar3;>>>
+    private string _bar2, _bar3;|]
 
     public Foo()
     {

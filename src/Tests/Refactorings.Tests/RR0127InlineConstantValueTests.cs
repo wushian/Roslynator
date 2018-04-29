@@ -29,11 +29,11 @@ namespace A.B
 
         void M(string s)
         {
-            s = <<<K>>>;
-            s = <<<K3>>>;
-            s = <<<C.K>>>;
-            s = <<<A.B.C.K>>>;
-            s = <<<K4>>>;
+            s = [|K|];
+            s = [|K3|];
+            s = [|C.K|];
+            s = [|A.B.C.K|];
+            s = [|K4|];
         }
     }
 }
@@ -74,10 +74,10 @@ class C
 
     void M(string s)
     {
-        bool b = <<<KB>>>;
-        char c = <<<KC>>>;
-        int i = <<<KI>>>;
-        long l = <<<KL>>>;
+        bool b = [|KB|];
+        char c = [|KC|];
+        int i = [|KI|];
+        long l = [|KL|];
     }
 }
 ", @"
@@ -112,8 +112,8 @@ class C
         const string k2 = k;
         const string k3 = k2;
 
-        s += <<<k>>>;
-        s += <<<k3>>>;
+        s += [|k|];
+        s += [|k3|];
 
         return k3;
     }
@@ -149,11 +149,11 @@ class C
 
     void M(string s)
     {
-        s = <<<""x"">>>;
-        s = <<<""x"" + ""x"">>>;
-        s = <<<F>>>;
-        s = <<<string.Empty>>>;
-        var options = <<<StringSplitOptions.None>>>;
+        s = [|""x""|];
+        s = [|""x"" + ""x""|];
+        s = [|F|];
+        s = [|string.Empty|];
+        var options = [|StringSplitOptions.None|];
     }
 }
 ", CodeRefactoringProvider, RefactoringId);
