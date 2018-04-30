@@ -1,29 +1,31 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Roslynator.CSharp;
 using Roslynator.CSharp.Analysis.UsePatternMatching;
 using Roslynator.CSharp.CodeFixes;
+using Roslynator.Tests.CSharp;
 using Xunit;
-using static Roslynator.Tests.CSharp.CSharpDiagnosticVerifier;
+
+#pragma warning disable RCS1090
 
 namespace Roslynator.Analyzers.Tests
 {
-    public static class RCS1220UsePatternMatchingInsteadOfIsAndCastTests
+    public class RCS1220UsePatternMatchingInsteadOfIsAndCastTests : CSharpCodeFixVerifier
     {
-        private static DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UsePatternMatchingInsteadOfIsAndCast;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UsePatternMatchingInsteadOfIsAndCast;
 
-        private static DiagnosticAnalyzer Analyzer { get; } = new UsePatternMatchingInsteadOfIsAndCastAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new UsePatternMatchingInsteadOfIsAndCastAnalyzer();
 
-        private static CodeFixProvider CodeFixProvider { get; } = new UsePatternMatchingInsteadOfIsAndCastCodeFixProvider();
+        public override CodeFixProvider FixProvider { get; } = new UsePatternMatchingInsteadOfIsAndCastCodeFixProvider();
 
         [Fact]
-        public static void TestDiagnosticWithFix_LogicalAndExpression()
+        public async Task TestDiagnosticWithFix_LogicalAndExpression()
         {
-            Instance.VerifyDiagnosticAndFix(
-@"
+            await VerifyDiagnosticAndFixAsync(@"
 class C
 {
     private readonly object _f;
@@ -49,8 +51,7 @@ class C
         if ([|this._f is string && ((string)_f).Equals((string)this._f)|]) { }
     }
 }
-",
-@"
+", @"
 class C
 {
     private readonly object _f;
@@ -76,17 +77,13 @@ class C
         if (this._f is string x8 && (x8).Equals(x8)) { }
     }
 }
-",
-                descriptor: Descriptor,
-                analyzer: Analyzer,
-                fixProvider: CodeFixProvider);
+");
         }
 
         [Fact]
-        public static void TestDiagnosticWithFix_IfStatement()
+        public async Task TestDiagnosticWithFix_IfStatement()
         {
-            Instance.VerifyDiagnosticAndFix(
-@"
+            await VerifyDiagnosticAndFixAsync(@"
 class C
 {
     private readonly object _f;
@@ -133,8 +130,7 @@ class C
         }
     }
 }
-",
-@"
+", @"
 class C
 {
     private readonly object _f;
@@ -181,17 +177,13 @@ class C
         }
     }
 }
-",
-                descriptor: Descriptor,
-                analyzer: Analyzer,
-                fixProvider: CodeFixProvider);
+");
         }
 
         [Fact]
-        public static void TestNoDiagnostic_LogicalAndExpression()
+        public async Task TestNoDiagnostic_LogicalAndExpression()
         {
-            Instance.VerifyNoDiagnostic(
-@"
+            await VerifyNoDiagnosticAsync(@"
 class C
 {
     private readonly object _f;
@@ -209,16 +201,13 @@ class C
         if (x is string && x == s) { }
     }
 }
-",
-                descriptor: Descriptor,
-                analyzer: Analyzer);
+");
         }
 
         [Fact]
-        public static void TestNoDiagnostic_IfStatement()
+        public async Task TestNoDiagnostic_IfStatement()
         {
-            Instance.VerifyNoDiagnostic(
-@"
+            await VerifyNoDiagnosticAsync(@"
 class C
 {
     private readonly object _f;
@@ -245,9 +234,7 @@ class C
         }
     }
 }
-",
-                descriptor: Descriptor,
-                analyzer: Analyzer);
+");
         }
     }
 }

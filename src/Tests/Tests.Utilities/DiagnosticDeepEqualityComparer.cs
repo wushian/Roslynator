@@ -41,8 +41,12 @@ namespace Roslynator
 
         public int GetHashCode(Diagnostic obj)
         {
-            //TODO: 
-            return 0;
+            if (obj == null)
+                return 0;
+
+            return Hash.Combine(obj.Descriptor,
+                Hash.Combine(obj.Location.GetLineSpan().GetHashCode(),
+                Hash.Combine((int)obj.Severity, obj.WarningLevel)));
         }
     }
 }

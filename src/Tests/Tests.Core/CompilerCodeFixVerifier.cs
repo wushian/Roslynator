@@ -7,25 +7,38 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.Text;
 using Xunit;
 
 namespace Roslynator.Tests
 {
     public abstract class CompilerCodeFixVerifier : CodeVerifier
     {
+        public abstract string DiagnosticId { get; }
+
+        public abstract CodeFixProvider FixProvider { get; }
+
+        public async Task VerifyFixAsync(
+            string theory,
+            string diagnosticData,
+            string fixData,
+            string equivalenceKey)
+        {
+            (string source, string expected, TextSpan span) = TextUtility.GetMarkedSpan(theory, diagnosticData, fixData);
+
+            await VerifyFixAsync(
+                source: source,
+                expected: expected,
+                equivalenceKey: equivalenceKey).ConfigureAwait(false);
+        }
+
         public async Task VerifyFixAsync(
             string source,
             string expected,
-            string diagnosticId,
-            CodeFixProvider fixProvider,
-            string equivalenceKey = null,
-            CodeVerificationOptions options = null,
+            string equivalenceKey,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (options == null)
-                options = CodeVerificationOptions.Default;
-
-            Assert.True(fixProvider.FixableDiagnosticIds.Contains(diagnosticId), $"Code fix provider '{fixProvider.GetType().Name}' cannot fix diagnostic '{diagnosticId}'.");
+            Assert.True(FixProvider.FixableDiagnosticIds.Contains(DiagnosticId), $"Code fix provider '{FixProvider.GetType().Name}' cannot fix diagnostic '{DiagnosticId}'.");
 
             Document document = WorkspaceFactory.Document(source, Language);
 
@@ -63,7 +76,7 @@ namespace Roslynator.Tests
                     },
                     CancellationToken.None);
 
-                await fixProvider.RegisterCodeFixesAsync(context).ConfigureAwait(false);
+                await FixProvider.RegisterCodeFixesAsync(context).ConfigureAwait(false);
 
                 if (action == null)
                     break;
@@ -75,7 +88,7 @@ namespace Roslynator.Tests
                 diagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
             }
 
-            string actual = await document.ToSimplifiedAndFormattedFullStringAsync().ConfigureAwait(false);
+            string actual = await document.ToFullStringAsync(simplify: true, format: true).ConfigureAwait(false);
 
             Assert.Equal(expected, actual);
 
@@ -83,7 +96,7 @@ namespace Roslynator.Tests
             {
                 foreach (Diagnostic diagnostic in diagnostics)
                 {
-                    if (string.Equals(diagnostic.Id, diagnosticId, StringComparison.Ordinal))
+                    if (string.Equals(diagnostic.Id, DiagnosticId, StringComparison.Ordinal))
                         return diagnostic;
                 }
 
@@ -93,19 +106,14 @@ namespace Roslynator.Tests
 
         public async Task VerifyNoFixAsync(
             string source,
-            CodeFixProvider fixProvider,
-            string equivalenceKey = null,
-            CodeVerificationOptions options = null,
+            string equivalenceKey,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (options == null)
-                options = CodeVerificationOptions.Default;
-
             Document document = WorkspaceFactory.Document(source, Language);
 
             SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
-            ImmutableArray<string> fixableDiagnosticIds = fixProvider.FixableDiagnosticIds;
+            ImmutableArray<string> fixableDiagnosticIds = FixProvider.FixableDiagnosticIds;
 
             foreach (Diagnostic diagnostic in semanticModel.GetDiagnostics(cancellationToken: cancellationToken))
             {
@@ -130,7 +138,7 @@ namespace Roslynator.Tests
                     },
                     CancellationToken.None);
 
-                await fixProvider.RegisterCodeFixesAsync(context).ConfigureAwait(false);
+                await FixProvider.RegisterCodeFixesAsync(context).ConfigureAwait(false);
             }
         }
     }

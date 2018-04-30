@@ -1,23 +1,21 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeRefactorings;
+using System.Threading.Tasks;
 using Roslynator.CSharp.Refactorings;
 using Xunit;
-using static Roslynator.Tests.CSharp.CSharpCodeRefactoringVerifier;
+
+#pragma warning disable RCS1090
 
 namespace Roslynator.Refactorings.Tests
 {
-    public static class RR0173WrapInElseClauseTests
+    public class RR0173WrapInElseClauseTests : RoslynatorCSharpCodeRefactoringVerifier
     {
-        private const string RefactoringId = RefactoringIdentifiers.WrapInElseClause;
-
-        private static CodeRefactoringProvider CodeRefactoringProvider { get; } = new RoslynatorCodeRefactoringProvider();
+        public override string RefactoringId { get; } = RefactoringIdentifiers.WrapInElseClause;
 
         [Fact]
-        public static void TestCodeRefactoring()
+        public async Task TestCodeRefactoring()
         {
-            Instance.VerifyRefactoring(@"
+            await VerifyRefactoringAsync(@"
 class C
 {
     public string M(bool f)
@@ -45,13 +43,13 @@ class C
         }
     }
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
 
         [Fact]
-        public static void TestCodeRefactoring2()
+        public async Task TestCodeRefactoring2()
         {
-            Instance.VerifyRefactoring(@"
+            await VerifyRefactoringAsync(@"
 class C
 {
     public string M(bool f)
@@ -73,13 +71,13 @@ class C
             return null;
     }
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
 
         [Fact]
-        public static void TestCodeRefactoring3()
+        public async Task TestCodeRefactoring3()
         {
-            Instance.VerifyRefactoring(@"
+            await VerifyRefactoringAsync(@"
 class C
 {
     public string M(bool f)
@@ -111,13 +109,13 @@ class C
         }
     }
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
 
         [Fact]
-        public static void TestCodeRefactoring4()
+        public async Task TestCodeRefactoring4()
         {
-            Instance.VerifyRefactoring(@"
+            await VerifyRefactoringAsync(@"
 using System;
 
 class C
@@ -187,13 +185,13 @@ class C
         return null;
     }
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
 
         [Fact]
-        public static void TestNoCodeRefactoring()
+        public async Task TestNoCodeRefactoring()
         {
-            Instance.VerifyNoRefactoring(@"
+            await VerifyNoRefactoringAsync(@"
 class C
 {
     public string M(bool f)
@@ -219,7 +217,7 @@ class C
 [|        return null;|]
     }
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
     }
 }

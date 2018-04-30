@@ -1,22 +1,21 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Microsoft.CodeAnalysis.CodeRefactorings;
+using System.Threading.Tasks;
 using Roslynator.CSharp.Refactorings;
 using Xunit;
-using static Roslynator.Tests.CSharp.CSharpCodeRefactoringVerifier;
+
+#pragma warning disable RCS1090
 
 namespace Roslynator.Refactorings.Tests
 {
-    public static class RR0137ReplaceMethodGroupWithLambdaTests
+    public class RR0137ReplaceMethodGroupWithLambdaTests : RoslynatorCSharpCodeRefactoringVerifier
     {
-        private const string RefactoringId = RefactoringIdentifiers.ReplaceMethodGroupWithLambda;
-
-        private static CodeRefactoringProvider CodeRefactoringProvider { get; } = new RoslynatorCodeRefactoringProvider();
+        public override string RefactoringId { get; } = RefactoringIdentifiers.ReplaceMethodGroupWithLambda;
 
         [Fact]
-        public static void TestCodeRefactoring_VariableDeclaration()
+        public async Task TestCodeRefactoring_VariableDeclaration()
         {
-            Instance.VerifyRefactoring(@"
+            await VerifyRefactoringAsync(@"
 using System;
 
 public class C
@@ -68,13 +67,13 @@ public class C
     public string M1(string s) => null;
     public string M2(string s1, string s2) => null;
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
 
         [Fact]
-        public static void TestCodeRefactoring_SimpleAssignment()
+        public async Task TestCodeRefactoring_SimpleAssignment()
         {
-            Instance.VerifyRefactoring(@"
+            await VerifyRefactoringAsync(@"
 using System;
 
 public class C
@@ -142,13 +141,13 @@ public class C
     public string M1(string s) => null;
     public string M2(string s1, string s2) => null;
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
 
         [Fact]
-        public static void TestCodeRefactoring_Argument()
+        public async Task TestCodeRefactoring_Argument()
         {
-            Instance.VerifyRefactoring(@"
+            await VerifyRefactoringAsync(@"
 using System;
 
 public class C
@@ -216,7 +215,7 @@ public class C
     public string M1(string s) => null;
     public string M2(string s1, string s2) => null;
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
     }
 }

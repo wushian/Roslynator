@@ -7,22 +7,25 @@ using Roslynator.CSharp;
 using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
 using Xunit;
-using static Roslynator.Tests.CSharp.CSharpDiagnosticVerifier;
+using System.Threading.Tasks;
+using Roslynator.Tests.CSharp;
+
+#pragma warning disable RCS1090
 
 namespace Roslynator.Analyzers.Tests
 {
-    public static class RCS1032RemoveRedundantParenthesesTests
+    public class RCS1032RemoveRedundantParenthesesTests : CSharpCodeFixVerifier
     {
-        private static DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.RemoveRedundantParentheses;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.RemoveRedundantParentheses;
 
-        private static DiagnosticAnalyzer Analyzer { get; } = new RemoveRedundantParenthesesAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new RemoveRedundantParenthesesAnalyzer();
 
-        private static CodeFixProvider CodeFixProvider { get; } = new RemoveRedundantParenthesesCodeFixProvider();
+        public override CodeFixProvider FixProvider { get; } = new RemoveRedundantParenthesesCodeFixProvider();
 
         [Fact]
-        public static void TestDiagnosticWithCodeFix_Argument()
+        public async Task TestDiagnosticWithCodeFix_Argument()
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 class C
 {
     void M(object x)
@@ -38,13 +41,13 @@ class C
         M(x);
     }
 }
-", Descriptor, Analyzer, CodeFixProvider);
+");
         }
 
         [Fact]
-        public static void TestDiagnosticWithCodeFix_AttributeArgument()
+        public async Task TestDiagnosticWithCodeFix_AttributeArgument()
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 using System;
 
 [Obsolete([|(|]""""))]
@@ -58,13 +61,13 @@ using System;
 class C
 {
 }
-", Descriptor, Analyzer, CodeFixProvider);
+");
         }
 
         [Fact]
-        public static void TestDiagnosticWithCodeFix_ReturnExpression()
+        public async Task TestDiagnosticWithCodeFix_ReturnExpression()
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 class C
 {
     object M()
@@ -80,13 +83,13 @@ class C
         return null;
     }
 }
-", Descriptor, Analyzer, CodeFixProvider);
+");
         }
 
         [Fact]
-        public static void TestDiagnosticWithCodeFix_YieldReturnExpression()
+        public async Task TestDiagnosticWithCodeFix_YieldReturnExpression()
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 using System.Collections.Generic;
 
 class C
@@ -106,13 +109,13 @@ class C
         yield return null;
     }
 }
-", Descriptor, Analyzer, CodeFixProvider);
+");
         }
 
         [Fact]
-        public static void TestDiagnosticWithCodeFix_ExpressionBody()
+        public async Task TestDiagnosticWithCodeFix_ExpressionBody()
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 class C
 {
     object M() => [|(|]null);
@@ -122,20 +125,20 @@ class C
 {
     object M() => null;
 }
-", Descriptor, Analyzer, CodeFixProvider);
+");
         }
 
         [Fact]
-        public static void TestDiagnosticWithCodeFix_AwaitExpression()
+        public async Task TestDiagnosticWithCodeFix_AwaitExpression()
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 using System.Threading.Tasks;
 
 class C
 {
     async Task FooAsync()
     {
-        await [|(|]FooAsync().ConfigureAwait(false));
+        await [|(|]FooAsync());
         await [|(|](Task)FooAsync());
     }
 }
@@ -146,11 +149,11 @@ class C
 {
     async Task FooAsync()
     {
-        await FooAsync().ConfigureAwait(false);
+        await FooAsync();
         await (Task)FooAsync();
     }
 }
-", Descriptor, Analyzer, CodeFixProvider);
+");
         }
 
         [Theory]
@@ -175,9 +178,9 @@ class C
         [InlineData("[|(|]i) |= (0);", "i |= (0);")]
         [InlineData("[|(|]i) <<= (0);", "i <<= (0);")]
         [InlineData("[|(|]i) >>= (0);", "i >>= (0);")]
-        public static void TestDiagnosticWithCodeFix_Statement(string fixableCode, string fixedCode)
+        public async Task TestDiagnosticWithCodeFix_Statement(string fixableCode, string fixedCode)
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 using System;
 using System.Collections.Generic;
 
@@ -190,7 +193,7 @@ class C
         [||]
     }
 }
-", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
+", fixableCode, fixedCode);
         }
 
         [Theory]
@@ -198,9 +201,9 @@ class C
         [InlineData(@"f = ![|(|]s.StartsWith(""""));", @"f = !s.StartsWith("""");")]
         [InlineData("f = ![|(|]foo.Value);", "f = !foo.Value;")]
         [InlineData("f = ![|(|]foo[0]);", "f = !foo[0];")]
-        public static void TestDiagnosticWithCodeFix_LogicalNot(string fixableCode, string fixedCode)
+        public async Task TestDiagnosticWithCodeFix_LogicalNot(string fixableCode, string fixedCode)
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 class Foo
 {
     void M()
@@ -219,13 +222,13 @@ class Foo
         get { return i == 0; }
     }
 }
-", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
+", fixableCode, fixedCode);
         }
 
         [Fact]
-        public static void TestNoDiagnostic_AssignmentInInitializer()
+        public async Task TestNoDiagnostic_AssignmentInInitializer()
         {
-            Instance.VerifyNoDiagnostic(@"
+            await VerifyNoDiagnosticAsync(@"
 using System.Collections.Generic;
 
 class C
@@ -236,13 +239,13 @@ class C
         var items = new List<string>() { (x = ""x"") };    
     }
 }
-", Descriptor, Analyzer);
+");
         }
 
         [Fact]
-        public static void TestNoDiagnostic_ConditionalExpressionInInterpolatedString()
+        public async Task TestNoDiagnostic_ConditionalExpressionInInterpolatedString()
         {
-            Instance.VerifyNoDiagnostic(@"
+            await VerifyNoDiagnosticAsync(@"
 class C
 {
     void M()
@@ -250,13 +253,13 @@ class C
             string s = $""{ ((true) ? ""a"" : ""b"")}"";
     }
 }
-", Descriptor, Analyzer);
+");
         }
 
         [Fact]
-        public static void TestNoDiagnostic_AssignmentInAwaitExpression()
+        public async Task TestNoDiagnostic_AssignmentInAwaitExpression()
         {
-            Instance.VerifyNoDiagnostic(@"
+            await VerifyNoDiagnosticAsync(@"
 using System;
 using System.Threading.Tasks;
 
@@ -264,13 +267,13 @@ class C
 {
     async Task FooAsync(Task task) => await (task = Task.Run(default(Action)));
 }
-", Descriptor, Analyzer);
+");
         }
 
         [Fact]
-        public static void TestNoDiagnostic_ForEach()
+        public async Task TestNoDiagnostic_ForEach()
         {
-            Instance.VerifyNoDiagnostic(@"
+            await VerifyNoDiagnosticAsync(@"
 using System.Collections.Generic;
 using System.Linq;
 
@@ -287,7 +290,7 @@ class C
         }
     }
 }
-", Descriptor, Analyzer);
+");
         }
     }
 }

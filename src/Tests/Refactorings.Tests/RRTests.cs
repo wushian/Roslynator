@@ -1,22 +1,23 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Roslynator.CSharp.Refactorings;
+using Roslynator.Tests.CSharp;
 using Xunit;
-using static Roslynator.Tests.CSharp.CSharpCodeRefactoringVerifier;
+
+#pragma warning disable RCS1090
 
 namespace Roslynator.Refactorings.Tests
 {
-    public static class RRTests
+    public class RRTests : RoslynatorCSharpCodeRefactoringVerifier
     {
-        private const string RefactoringId = RefactoringIdentifiers.AddBraces;
-
-        private static CodeRefactoringProvider CodeRefactoringProvider { get; } = new RoslynatorCodeRefactoringProvider();
+        public override string RefactoringId { get; } = RefactoringIdentifiers.AddBraces;
 
         //[Fact]
-        public static void TestRefactoring()
+        public async Task TestRefactoring()
         {
-            Instance.VerifyRefactoring(@"
+            await VerifyRefactoringAsync(@"
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,14 +29,14 @@ class C
     }
 }
 ", @"
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
 
         //[Theory]
         //[InlineData("", "")]
-        public static void TestRefactoring2(string fixableCode, string fixedCode)
+        public async Task TestRefactoring2(string fixableCode, string fixedCode)
         {
-            Instance.VerifyRefactoring(@"
+            await VerifyRefactoringAsync(@"
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,13 +47,13 @@ class C
     {
     }
 }
-", fixableCode, fixedCode, CodeRefactoringProvider, RefactoringId);
+", fixableCode, fixedCode, RefactoringId);
         }
 
         //[Fact]
-        public static void TestNoRefactoring()
+        public async Task TestNoRefactoring()
         {
-            Instance.VerifyNoRefactoring(@"
+            await VerifyNoRefactoringAsync(@"
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,7 +64,7 @@ class C
     {
     }
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
     }
 }

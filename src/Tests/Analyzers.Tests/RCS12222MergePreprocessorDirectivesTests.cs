@@ -1,28 +1,31 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Roslynator.CSharp;
 using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
+using Roslynator.Tests.CSharp;
 using Xunit;
-using static Roslynator.Tests.CSharp.CSharpDiagnosticVerifier;
+
+#pragma warning disable RCS1090
 
 namespace Roslynator.Analyzers.Tests
 {
-    public static class RCS12222MergePreprocessorDirectivesTests
+    public class RCS12222MergePreprocessorDirectivesTests : CSharpCodeFixVerifier
     {
-        private static DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.MergePreprocessorDirectives;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.MergePreprocessorDirectives;
 
-        private static DiagnosticAnalyzer Analyzer { get; } = new MergePreprocessorDirectivesAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new MergePreprocessorDirectivesAnalyzer();
 
-        private static CodeFixProvider CodeFixProvider { get; } = new DirectiveTriviaCodeFixProvider();
+        public override CodeFixProvider FixProvider { get; } = new DirectiveTriviaCodeFixProvider();
 
         [Fact]
-        public static void TestDiagnosticWithFix_Disable()
+        public async Task TestDiagnosticWithFix_Disable()
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 class C
 {
     void M()
@@ -43,13 +46,13 @@ class C
 #pragma warning restore RCS0
     }
 }
-", Descriptor, Analyzer, CodeFixProvider);
+");
         }
 
         [Fact]
-        public static void TestDiagnosticWithFix_Restore()
+        public async Task TestDiagnosticWithFix_Restore()
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 class C
 {
     void M()
@@ -70,14 +73,13 @@ class C
 #pragma warning disable RCS0
     }
 }
-", Descriptor, Analyzer, CodeFixProvider);
+");
         }
 
         [Fact]
-        public static void TestNoDiagnostic()
+        public async Task TestNoDiagnostic()
         {
-            Instance.VerifyNoDiagnostic(
-@"
+            await VerifyNoDiagnosticAsync(@"
 class C
 {
     void M()
@@ -87,7 +89,7 @@ class C
 #pragma warning disable RCS0
 #pragma warning restore RCS0
 }
-", Descriptor, Analyzer);
+");
         }
     }
 }

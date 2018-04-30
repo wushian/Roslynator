@@ -1,23 +1,21 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Microsoft.CodeAnalysis.CodeRefactorings;
+using System.Threading.Tasks;
 using Roslynator.CSharp.Refactorings;
 using Xunit;
-using static Roslynator.Tests.CSharp.CSharpCodeRefactoringVerifier;
+
+#pragma warning disable RCS1090
 
 namespace Roslynator.Refactorings.Tests
 {
-    public static class RR0127InlineConstantValueTests
+    public class RR0127InlineConstantValueTests : RoslynatorCSharpCodeRefactoringVerifier
     {
-        private const string RefactoringId = RefactoringIdentifiers.InlineConstantValue;
-
-        private static CodeRefactoringProvider CodeRefactoringProvider { get; } = new RoslynatorCodeRefactoringProvider();
+        public override string RefactoringId { get; } = RefactoringIdentifiers.InlineConstantValue;
 
         [Fact]
-        public static void TestCodeRefactoring_Field()
+        public async Task TestCodeRefactoring_Field()
         {
-            Instance.VerifyRefactoring(
-@"
+            await VerifyRefactoringAsync(@"
 namespace A.B
 {
     class C
@@ -57,14 +55,13 @@ namespace A.B
         }
     }
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
 
         [Fact]
-        public static void TestCodeRefactoring_Field2()
+        public async Task TestCodeRefactoring_Field2()
         {
-            Instance.VerifyRefactoring(
-@"
+            await VerifyRefactoringAsync(@"
 class C
 {
     public const bool KB = true;
@@ -96,14 +93,13 @@ class C
         long l = 1;
     }
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
 
         [Fact]
-        public static void TestCodeRefactoring_Local()
+        public async Task TestCodeRefactoring_Local()
         {
-            Instance.VerifyRefactoring(
-@"
+            await VerifyRefactoringAsync(@"
 class C
 {
     string M(string s)
@@ -133,14 +129,13 @@ class C
         return k3;
     }
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
 
         [Fact]
-        public static void TestNoCodeRefactoring()
+        public async Task TestNoCodeRefactoring()
         {
-            Instance.VerifyNoRefactoring(
-@"
+            await VerifyNoRefactoringAsync(@"
 using System;
 
 class C
@@ -156,7 +151,7 @@ class C
         var options = [|StringSplitOptions.None|];
     }
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
     }
 }

@@ -4,6 +4,11 @@ namespace Roslynator.Tests
 {
     public abstract class CodeVerifier
     {
+        public virtual CodeVerificationOptions Options
+        {
+            get { return CodeVerificationOptions.Default; }
+        }
+
         public abstract string Language { get; }
     }
 }

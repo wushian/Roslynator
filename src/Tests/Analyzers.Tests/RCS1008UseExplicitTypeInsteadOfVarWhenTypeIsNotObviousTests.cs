@@ -1,28 +1,31 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Roslynator.CSharp;
 using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
+using Roslynator.Tests.CSharp;
 using Xunit;
-using static Roslynator.Tests.CSharp.CSharpDiagnosticVerifier;
+
+#pragma warning disable RCS1090
 
 namespace Roslynator.Analyzers.Tests
 {
-    public static class RCS1008UseExplicitTypeInsteadOfVarWhenTypeIsNotObviousTests
+    public class RCS1008UseExplicitTypeInsteadOfVarWhenTypeIsNotObviousTests : CSharpCodeFixVerifier
     {
-        private static DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UseExplicitTypeInsteadOfVarWhenTypeIsNotObvious;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UseExplicitTypeInsteadOfVarWhenTypeIsNotObvious;
 
-        private static DiagnosticAnalyzer Analyzer { get; } = new UseExplicitTypeInsteadOfVarWhenTypeIsNotObviousAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new UseExplicitTypeInsteadOfVarWhenTypeIsNotObviousAnalyzer();
 
-        private static CodeFixProvider CodeFixProvider { get; } = new UseExplicitTypeInsteadOfVarCodeFixProvider();
+        public override CodeFixProvider FixProvider { get; } = new UseExplicitTypeInsteadOfVarCodeFixProvider();
 
         [Fact]
-        public static void TestDiagnosticWithCodeFix()
+        public async Task TestDiagnosticWithCodeFix()
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 using System;
 
 class C
@@ -56,13 +59,13 @@ class C
         }
     }
 }
-", Descriptor, Analyzer, CodeFixProvider);
+");
         }
 
         [Fact]
-        public static void TestDiagnosticWithCodeFix_Tuple()
+        public async Task TestDiagnosticWithCodeFix_Tuple()
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 using System;
 using System.Collections.Generic;
 
@@ -88,13 +91,13 @@ class C
         return default((IEnumerable<DateTime>, string));
     }
 }
-", Descriptor, Analyzer, CodeFixProvider);
+");
         }
 
         [Fact]
-        internal static void TestNoDiagnostic()
+        internal async Task TestNoDiagnostic()
         {
-            Instance.VerifyNoDiagnostic(@"
+            await VerifyNoDiagnosticAsync(@"
 using System;
 
 class C
@@ -111,7 +114,7 @@ class C
         }
     }
 }
-", Descriptor, Analyzer);
+");
         }
     }
 }

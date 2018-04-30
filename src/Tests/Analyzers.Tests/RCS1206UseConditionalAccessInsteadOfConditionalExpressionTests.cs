@@ -1,23 +1,26 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Roslynator.CSharp;
 using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
+using Roslynator.Tests.CSharp;
 using Xunit;
-using static Roslynator.Tests.CSharp.CSharpDiagnosticVerifier;
+
+#pragma warning disable RCS1090
 
 namespace Roslynator.Analyzers.Tests
 {
-    public static class RCS1206UseConditionalAccessInsteadOfConditionalExpressionTests
+    public class RCS1206UseConditionalAccessInsteadOfConditionalExpressionTests : CSharpCodeFixVerifier
     {
-        private static DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UseConditionalAccessInsteadOfConditionalExpression;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UseConditionalAccessInsteadOfConditionalExpression;
 
-        private static DiagnosticAnalyzer Analyzer { get; } = new SimplifyNullCheckAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new SimplifyNullCheckAnalyzer();
 
-        private static CodeFixProvider CodeFixProvider { get; } = new ConditionalExpressionCodeFixProvider();
+        public override CodeFixProvider FixProvider { get; } = new ConditionalExpressionCodeFixProvider();
 
         [Theory]
         [InlineData("(x != null) ? x.ToString() : null", "x?.ToString()")]
@@ -27,9 +30,9 @@ namespace Roslynator.Analyzers.Tests
         [InlineData("(x == null) ? null : x.ToString()", "x?.ToString()")]
         [InlineData("(x == null) ? default : x.ToString()", "x?.ToString()")]
         [InlineData("(x == null) ? default(string) : x.ToString()", "x?.ToString()")]
-        public static void TestDiagnosticWithCodeFix_ReferenceTypeToReferenceType(string fixableCode, string fixedCode)
+        public async Task TestDiagnosticWithCodeFix_ReferenceTypeToReferenceType(string fixableCode, string fixedCode)
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 class Foo
 {
     void M()
@@ -39,7 +42,7 @@ class Foo
         string s = [||];
     }
 }
-", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
+", fixableCode, fixedCode);
         }
 
         [Theory]
@@ -50,9 +53,9 @@ class Foo
         [InlineData("(x == null) ? 0 : x.Value", "x?.Value ?? 0")]
         [InlineData("(x == null) ? default : x.Value", "x?.Value ?? (default)")]
         [InlineData("(x == null) ? default(int) : x.Value", "x?.Value ?? default(int)")]
-        public static void TestDiagnosticWithCodeFix_ReferenceTypeToValueType(string fixableCode, string fixedCode)
+        public async Task TestDiagnosticWithCodeFix_ReferenceTypeToValueType(string fixableCode, string fixedCode)
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 class Foo
 {
     void M()
@@ -64,7 +67,7 @@ class Foo
 
     public int Value { get; }
 }
-", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
+", fixableCode, fixedCode);
         }
 
         [Theory]
@@ -75,9 +78,9 @@ class Foo
         [InlineData("(x == null) ? null : x.Value", "x?.Value")]
         [InlineData("(x == null) ? default : x.Value", "x?.Value")]
         [InlineData("(x == null) ? default(int?) : x.Value", "x?.Value")]
-        public static void TestDiagnosticWithCodeFix_ReferenceTypeToNullableType(string fixableCode, string fixedCode)
+        public async Task TestDiagnosticWithCodeFix_ReferenceTypeToNullableType(string fixableCode, string fixedCode)
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 class Foo
 {
     void M()
@@ -89,7 +92,7 @@ class Foo
 
     public int? Value { get; }
 }
-", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
+", fixableCode, fixedCode);
         }
 
         [Theory]
@@ -97,9 +100,9 @@ class Foo
         [InlineData("(ni == null) ? null : ni.Value.ToString()", "ni?.ToString()")]
         [InlineData("(ni.HasValue) ? ni.Value.ToString() : null", "ni?.ToString()")]
         [InlineData("(!ni.HasValue) ? null : ni.Value.ToString()", "ni?.ToString()")]
-        public static void TestDiagnosticWithCodeFix_NullableTypeToReferenceType(string fixableCode, string fixedCode)
+        public async Task TestDiagnosticWithCodeFix_NullableTypeToReferenceType(string fixableCode, string fixedCode)
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 class C
 {
     void M()
@@ -109,7 +112,7 @@ class C
         string s = [||];
     }
 }
-", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
+", fixableCode, fixedCode);
         }
 
         [Theory]
@@ -117,9 +120,9 @@ class C
         [InlineData("(ni == null) ? 0 : ni.Value.GetHashCode()", "ni?.GetHashCode() ?? 0")]
         [InlineData("(ni.HasValue) ? ni.Value.GetHashCode() : 0", "ni?.GetHashCode() ?? 0")]
         [InlineData("(!ni.HasValue) ? 0 : ni.Value.GetHashCode()", "ni?.GetHashCode() ?? 0")]
-        public static void TestDiagnosticWithCodeFix_NullableTypeToValueType(string fixableCode, string fixedCode)
+        public async Task TestDiagnosticWithCodeFix_NullableTypeToValueType(string fixableCode, string fixedCode)
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 class C
 {
     void M()
@@ -129,13 +132,13 @@ class C
         int i = [||];
     }
 }
-", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
+", fixableCode, fixedCode);
         }
 
         [Fact]
-        public static void TestNoDiagnostic()
+        public async Task TestNoDiagnostic()
         {
-            Instance.VerifyNoDiagnostic(@"
+            await VerifyNoDiagnosticAsync(@"
 class Foo
 {
     void M()
@@ -172,7 +175,7 @@ class Foo
 
     public int Value { get; }
 }
-", Descriptor, Analyzer);
+");
         }
     }
 }

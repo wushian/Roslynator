@@ -1,25 +1,23 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Microsoft.CodeAnalysis.CodeRefactorings;
+using System.Threading.Tasks;
 using Roslynator.CSharp.Refactorings;
-using Roslynator.Tests.CSharp;
 using Xunit;
-using static Roslynator.Tests.CSharp.CSharpCodeRefactoringVerifier;
+
+#pragma warning disable RCS1090
 
 namespace Roslynator.Refactorings.Tests
 {
-    public static class RR0166UseConditionalExpressionInsteadOfIfTests
+    public class RR0166UseConditionalExpressionInsteadOfIfTests : RoslynatorCSharpCodeRefactoringVerifier
     {
-        private const string RefactoringId = RefactoringIdentifiers.UseConditionalExpressionInsteadOfIf;
-
-        private static CodeRefactoringProvider CodeRefactoringProvider { get; } = new RoslynatorCodeRefactoringProvider();
+        public override string RefactoringId { get; } = RefactoringIdentifiers.UseConditionalExpressionInsteadOfIf;
 
         [Theory]
         [InlineData("if (f) { z = x; } else { z = y; }", "z = (f) ? x : y;")]
         [InlineData("if (f) z = x; else z = y;", "z = (f) ? x : y;")]
-        public static void TestRefactoring_IfElseToAssignmentWithConditionalExpression(string fixableCode, string fixedCode)
+        public async Task TestRefactoring_IfElseToAssignmentWithConditionalExpression(string fixableCode, string fixedCode)
         {
-            Instance.VerifyRefactoring(@"
+            await VerifyRefactoringAsync(@"
 class C
 {
     void M(bool f, string x, string y, string z)
@@ -27,13 +25,13 @@ class C
         [||]
     }
 }
-", fixableCode, fixedCode, CodeRefactoringProvider, RefactoringId);
+", fixableCode, fixedCode, RefactoringId);
         }
 
         [Fact]
-        public static void TestRefactoring_AssignmentAndIfElseToAssignmentWithConditionalExpression()
+        public async Task TestRefactoring_AssignmentAndIfElseToAssignmentWithConditionalExpression()
         {
-            Instance.VerifyRefactoring(@"
+            await VerifyRefactoringAsync(@"
 class C
 {
     void M(bool f, string x, string y, string z)
@@ -49,8 +47,7 @@ class C
         }|]
     }
 }
-",
-@"
+", @"
 class C
 {
     void M(bool f, string x, string y, string z)
@@ -58,13 +55,13 @@ class C
         z = (f) ? x : y;
     }
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
 
         [Fact]
-        public static void TestRefactoring_LocalDeclarationAndIfElseToAssignmentWithConditionalExpression()
+        public async Task TestRefactoring_LocalDeclarationAndIfElseToAssignmentWithConditionalExpression()
         {
-            Instance.VerifyRefactoring(@"
+            await VerifyRefactoringAsync(@"
 class C
 {
     void M(bool f, string x, string y)
@@ -80,8 +77,7 @@ class C
         }|]
     }
 }
-",
-@"
+", @"
 class C
 {
     void M(bool f, string x, string y)
@@ -89,7 +85,7 @@ class C
         string z = (f) ? x : y;
     }
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
 
         [Theory]
@@ -97,9 +93,9 @@ class C
         [InlineData("if (f) return x; else return y;", "return (f) ? x : y;")]
         [InlineData("if (f) { return x; } return y;", "return (f) ? x : y;")]
         [InlineData("if (f) return x; return y;", "return (f) ? x : y;")]
-        public static void TestRefactoring_IfToReturnWithConditionalExpression(string fixableCode, string fixedCode)
+        public async Task TestRefactoring_IfToReturnWithConditionalExpression(string fixableCode, string fixedCode)
         {
-            Instance.VerifyRefactoring(@"
+            await VerifyRefactoringAsync(@"
 class C
 {
     string M(bool f, string x, string y, string z)
@@ -107,15 +103,15 @@ class C
         [||]
     }
 }
-", fixableCode, fixedCode, CodeRefactoringProvider, RefactoringId);
+", fixableCode, fixedCode, RefactoringId);
         }
 
         [Theory]
         [InlineData("if (f) { yield return x; } else { yield return y; }", "yield return (f) ? x : y;")]
         [InlineData("if (f) yield return x; else yield return y;", "yield return (f) ? x : y;")]
-        public static void TestRefactoring_IfElseToYieldReturnWithConditionalExpression(string fixableCode, string fixedCode)
+        public async Task TestRefactoring_IfElseToYieldReturnWithConditionalExpression(string fixableCode, string fixedCode)
         {
-            Instance.VerifyRefactoring(@"
+            await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
 
 class C
@@ -125,14 +121,13 @@ class C
         [||]
     }
 }
-", fixableCode, fixedCode, CodeRefactoringProvider, RefactoringId);
+", fixableCode, fixedCode, RefactoringId);
         }
 
         [Fact]
-        public static void TestNoRefactoring_IfElseToAssignmentWithConditionalExpression()
+        public async Task TestNoRefactoring_IfElseToAssignmentWithConditionalExpression()
         {
-            Instance.VerifyNoRefactoring(
-@"
+            await VerifyNoRefactoringAsync(@"
 class C
 {
     void M(bool f)
@@ -148,14 +143,13 @@ class C
         }
     }
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
 
         [Fact]
-        public static void TestNoRefactoring_LocalDeclarationAndIfElseAssignmentWithConditionalExpression()
+        public async Task TestNoRefactoring_LocalDeclarationAndIfElseAssignmentWithConditionalExpression()
         {
-            Instance.VerifyNoRefactoring(
-@"
+            await VerifyNoRefactoringAsync(@"
 class C
 {
     void M(bool f)
@@ -171,13 +165,13 @@ class C
         }|]
     }
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
 
         [Fact]
-        public static void TestNoRefactoring_AssignmentAndIfElseToAssignmentWithConditionalExpression()
+        public async Task TestNoRefactoring_AssignmentAndIfElseToAssignmentWithConditionalExpression()
         {
-            Instance.VerifyNoRefactoring(@"
+            await VerifyNoRefactoringAsync(@"
 class C
 {
     void M(bool f)
@@ -194,13 +188,13 @@ class C
         }|]
     }
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
 
         [Fact]
-        public static void TestNoRefactoring_IfElseToYieldReturnWithConditionalExpression()
+        public async Task TestNoRefactoring_IfElseToYieldReturnWithConditionalExpression()
         {
-            Instance.VerifyNoRefactoring(@"
+            await VerifyNoRefactoringAsync(@"
 using System.Collections.Generic;
 
 class C
@@ -217,13 +211,13 @@ class C
         }|]
     }
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
 
         [Fact]
-        public static void TestNoRefactoring_IfElseToReturnWithConditionalExpression()
+        public async Task TestNoRefactoring_IfElseToReturnWithConditionalExpression()
         {
-            Instance.VerifyNoRefactoring(@"
+            await VerifyNoRefactoringAsync(@"
 class C
 {
     int? M(bool f)
@@ -238,13 +232,13 @@ class C
         }|]
     }
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
 
         [Fact]
-        public static void TestNoRefactoring_IfReturnToReturnWithConditionalExpression()
+        public async Task TestNoRefactoring_IfReturnToReturnWithConditionalExpression()
         {
-            Instance.VerifyNoRefactoring(@"
+            await VerifyNoRefactoringAsync(@"
 class C
 {
     int? M(bool f)
@@ -257,7 +251,7 @@ class C
         return 1;|]
     }
 }
-", CodeRefactoringProvider, RefactoringId);
+", RefactoringId);
         }
     }
 }

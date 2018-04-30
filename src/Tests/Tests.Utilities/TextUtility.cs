@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Text;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Roslynator.Text;
 
@@ -41,73 +41,11 @@ namespace Roslynator.Tests
             return (result1, result2, span);
         }
 
-        public static (string result, List<TextSpan> spans) GetMarkedSpans(string s)
+        public static ParseResult GetSpans(string s)
         {
             StringBuilder sb = StringBuilderCache.GetInstance(s.Length - MarkersLength);
 
-            List<TextSpan> spans = null;
-
-            int lastPos = 0;
-
-            bool inSpan = false;
-
-            int length = s.Length;
-
-            for (int i = 0; i < length; i++)
-            {
-                switch (s[i])
-                {
-                    case '[':
-                        {
-                            if (i < length - 1
-                                && s[i + 1] == '|')
-                            {
-                                sb.Append(s, lastPos, i - lastPos);
-
-                                i++;
-                                lastPos = i + 1;
-                                inSpan = true;
-                                continue;
-                            }
-
-                            break;
-                        }
-                    case '|':
-                        {
-                            if (inSpan
-                                && i < length - 1
-                                && s[i + 1] == ']')
-                            {
-                                var span = new TextSpan(sb.Length, i - lastPos);
-
-                                (spans ?? (spans = new List<TextSpan>())).Add(span);
-
-                                sb.Append(s, lastPos, i - lastPos);
-
-                                i++;
-                                lastPos = i + 1;
-                                inSpan = false;
-                                continue;
-                            }
-
-                            break;
-                        }
-                }
-            }
-
-            sb.Append(s, lastPos, s.Length - lastPos);
-
-            return (StringBuilderCache.GetStringAndFree(sb), spans);
-        }
-
-        public static (string result, List<Diagnostic> diagnostics) GetMarkedDiagnostics(
-            string s,
-            DiagnosticDescriptor descriptor,
-            string filePath)
-        {
-            StringBuilder sb = StringBuilderCache.GetInstance(s.Length - MarkersLength);
-
-            List<Diagnostic> diagnostics = null;
+            List<LinePositionSpanInfo> spans = null;
 
             int lastPos = 0;
 
@@ -167,19 +105,15 @@ namespace Roslynator.Tests
                                 && i < length - 1
                                 && s[i + 1] == ']')
                             {
+                                int index = sb.Length;
+
+                                var span = new LinePositionSpanInfo(
+                                    new LinePositionInfo(index, startLine, startColumn),
+                                    new LinePositionInfo(index + i - lastPos, line, column));
+
+                                (spans ?? (spans = new List<LinePositionSpanInfo>())).Add(span);
+
                                 sb.Append(s, lastPos, i - lastPos);
-
-                                var lineSpan = new LinePositionSpan(
-                                    new LinePosition(startLine, startColumn),
-                                    new LinePosition(line, column));
-
-                                TextSpan span = TextSpan.FromBounds(lastPos, i);
-
-                                Location location = Location.Create(filePath, span, lineSpan);
-
-                                Diagnostic diagnostic = Diagnostic.Create(descriptor, location);
-
-                                (diagnostics ?? (diagnostics = new List<Diagnostic>())).Add(diagnostic);
 
                                 i++;
 
@@ -200,7 +134,10 @@ namespace Roslynator.Tests
 
             sb.Append(s, lastPos, s.Length - lastPos);
 
-            return (StringBuilderCache.GetStringAndFree(sb), diagnostics);
+            return new ParseResult(
+                s,
+                StringBuilderCache.GetStringAndFree(sb),
+                spans?.ToImmutableArray() ?? ImmutableArray<LinePositionSpanInfo>.Empty);
         }
 
         private static string Replace(string s, int index, string replacement)

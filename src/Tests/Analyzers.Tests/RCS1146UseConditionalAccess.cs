@@ -1,28 +1,31 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Roslynator.CSharp;
 using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
+using Roslynator.Tests.CSharp;
 using Xunit;
-using static Roslynator.Tests.CSharp.CSharpDiagnosticVerifier;
+
+#pragma warning disable RCS1090
 
 namespace Roslynator.Analyzers.Tests
 {
-    public static class RCS1146UseConditionalAccess
+    public class RCS1146UseConditionalAccessTests : CSharpCodeFixVerifier
     {
-        private static DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UseConditionalAccess;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UseConditionalAccess;
 
-        private static DiagnosticAnalyzer Analyzer { get; } = new UseConditionalAccessAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new UseConditionalAccessAnalyzer();
 
-        private static CodeFixProvider CodeFixProvider { get; } = new UseConditionalAccessCodeFixProvider();
+        public override CodeFixProvider FixProvider { get; } = new UseConditionalAccessCodeFixProvider();
 
         [Fact]
-        public static void TestDiagnosticWithCodeFix_IfStatement()
+        public async Task TestDiagnosticWithCodeFix_IfStatement()
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 public class C
 {
     public void M()
@@ -78,13 +81,13 @@ public struct S
         x?.M();
     }
 }
-", DiagnosticDescriptors.UseConditionalAccess, Analyzer, CodeFixProvider);
+");
         }
 
         [Fact]
-        public static void TestDiagnosticWithCodeFix_LogicalAndExpression_ReferenceType()
+        public async Task TestDiagnosticWithCodeFix_LogicalAndExpression_ReferenceType()
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 using System.Collections.Generic;
 
 public class Foo
@@ -197,13 +200,13 @@ public class Foo
         if (dic?[0].Equals(""x"") == false) { }
     }
 }
-", Descriptor, Analyzer, CodeFixProvider);
+");
         }
 
         [Fact]
-        public static void TestDiagnosticWithCodeFix_LogicalAndExpression_NullableType()
+        public async Task TestDiagnosticWithCodeFix_LogicalAndExpression_NullableType()
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 public struct Foo
 {
     private const string NonNullConst = ""x"";
@@ -263,13 +266,13 @@ public struct Foo
         if (x?.ToString()?.ToString() != null) { }
     }
 }
-", Descriptor, Analyzer, CodeFixProvider);
+");
         }
 
         [Fact]
-        public static void TestNoDiagnostic_LogicalAndExpression_ReferenceType()
+        public async Task TestNoDiagnostic_LogicalAndExpression_ReferenceType()
         {
-            Instance.VerifyNoDiagnostic(@"
+            await VerifyNoDiagnosticAsync(@"
 public class Foo
 {
     private const string NullConst = null;
@@ -300,13 +303,13 @@ public class Foo
         if (x != null && (x.Value != null) is object _) { }
     }
 }
-", Descriptor, Analyzer);
+");
         }
 
         [Fact]
-        public static void TestNoDiagnostic_LogicalAndExpression_ValueType()
+        public async Task TestNoDiagnostic_LogicalAndExpression_ValueType()
         {
-            Instance.VerifyNoDiagnostic(@"
+            await VerifyNoDiagnosticAsync(@"
 public struct Foo
 {
     public int Value { get; }
@@ -322,13 +325,13 @@ public struct Foo
 
     public static bool operator !=(Foo left, Foo right) => !(left == right);
 }
-", Descriptor, Analyzer);
+");
         }
 
         [Fact]
-        public static void TestNoDiagnostic_LogicalAndExpression_NullableType()
+        public async Task TestNoDiagnostic_LogicalAndExpression_NullableType()
         {
-            Instance.VerifyNoDiagnostic(@"
+            await VerifyNoDiagnosticAsync(@"
 public struct Foo
 {
     public void M()
@@ -370,13 +373,13 @@ public struct Foo
 
     public static bool operator !=(Foo left, Foo right) => !(left == right);
 }
-", Descriptor, Analyzer);
+");
         }
 
         [Fact]
-        public static void TestNoDiagnostic_LogicalAndExpression_OutParameter()
+        public async Task TestNoDiagnostic_LogicalAndExpression_OutParameter()
         {
-            Instance.VerifyNoDiagnostic(@"
+            await VerifyNoDiagnosticAsync(@"
 using System.Collections.Generic;
 
 public class C
@@ -395,13 +398,13 @@ public class C
         }
     }
 }
-", Descriptor, Analyzer);
+");
         }
 
         [Fact]
-        public static void TestNoDiagnostic_LogicalAndExpression_ExpressionTree()
+        public async Task TestNoDiagnostic_LogicalAndExpression_ExpressionTree()
         {
-            Instance.VerifyNoDiagnostic(@"
+            await VerifyNoDiagnosticAsync(@"
 using System;
 using System.Linq.Expressions;
 
@@ -414,7 +417,7 @@ public class C
         M(() => s != null && s.GetHashCode() == 0);
     }
 }
-", Descriptor, Analyzer);
+");
         }
     }
 }

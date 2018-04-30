@@ -1,23 +1,26 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Roslynator.CSharp;
 using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
+using Roslynator.Tests.CSharp;
 using Xunit;
-using static Roslynator.Tests.CSharp.CSharpDiagnosticVerifier;
+
+#pragma warning disable RCS1090
 
 namespace Roslynator.Analyzers.Tests
 {
-    public static class RCS1104SimplifyConditionalExpressionTests
+    public class RCS1104SimplifyConditionalExpressionTests : CSharpCodeFixVerifier
     {
-        private static DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.SimplifyConditionalExpression;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.SimplifyConditionalExpression;
 
-        private static DiagnosticAnalyzer Analyzer { get; } = new SimplifyConditionalExpressionAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new SimplifyConditionalExpressionAnalyzer();
 
-        private static CodeFixProvider CodeFixProvider { get; } = new ConditionalExpressionCodeFixProvider();
+        public override CodeFixProvider FixProvider { get; } = new ConditionalExpressionCodeFixProvider();
 
         [Theory]
         [InlineData("f ? true : false", "f")]
@@ -36,9 +39,9 @@ namespace Roslynator.Analyzers.Tests
                                  /*e*/ : /*f*/ false|] /*g*/", @"f //a
               /*b*/  /*c*/  //d
                                  /*e*/  /*f*/  /*g*/")]
-        public static void TestDiagnosticWithCodeFix(string fixableCode, string fixedCode)
+        public async Task TestDiagnosticWithCodeFix(string fixableCode, string fixedCode)
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 class C
 {
     void M(bool f, bool g)
@@ -46,7 +49,7 @@ class C
         if ([||]) { }
 }
 }
-", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
+", fixableCode, fixedCode);
         }
 
         [Theory]
@@ -55,9 +58,9 @@ class C
             ? g
             : false|] /**/", @"f
             && g /**/")]
-        public static void TestDiagnosticWithCodeFix_LogicalAnd(string fixableCode, string fixedCode)
+        public async Task TestDiagnosticWithCodeFix_LogicalAnd(string fixableCode, string fixedCode)
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 class C
 {
     void M(bool f, bool g)
@@ -65,7 +68,7 @@ class C
         if ([||]) { }
     }
 }
-", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
+", fixableCode, fixedCode);
         }
 
         [Theory]
@@ -74,9 +77,9 @@ class C
             ? true
             : g|] /**/", @"f
             || g /**/")]
-        public static void TestDiagnosticWithCodeFix_LogicalOr(string fixableCode, string fixedCode)
+        public async Task TestDiagnosticWithCodeFix_LogicalOr(string fixableCode, string fixedCode)
         {
-            Instance.VerifyDiagnosticAndFix(@"
+            await VerifyDiagnosticAndFixAsync(@"
 class C
 {
     void M(bool f, bool g)
@@ -84,13 +87,13 @@ class C
         if ([||]) { }
     }
 }
-", fixableCode, fixedCode, Descriptor, Analyzer, CodeFixProvider);
+", fixableCode, fixedCode);
         }
 
         [Fact]
-        public static void TestNoDiagnostic()
+        public async Task TestNoDiagnostic()
         {
-            Instance.VerifyNoDiagnostic(@"
+            await VerifyNoDiagnosticAsync(@"
 class C
 {
     void M(bool f, bool g, bool h)
@@ -109,7 +112,7 @@ class C
 #endif
     }
 }
-", Descriptor, Analyzer);
+");
         }
     }
 }

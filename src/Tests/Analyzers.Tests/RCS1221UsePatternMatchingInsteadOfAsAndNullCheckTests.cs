@@ -1,29 +1,31 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Roslynator.CSharp;
 using Roslynator.CSharp.Analysis.UsePatternMatching;
 using Roslynator.CSharp.CodeFixes;
+using Roslynator.Tests.CSharp;
 using Xunit;
-using static Roslynator.Tests.CSharp.CSharpDiagnosticVerifier;
+
+#pragma warning disable RCS1090
 
 namespace Roslynator.Analyzers.Tests
 {
-    public static class RCS1221UsePatternMatchingInsteadOfAsAndNullCheckTests
+    public class RCS1221UsePatternMatchingInsteadOfAsAndNullCheckTests : CSharpCodeFixVerifier
     {
-        private static DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UsePatternMatchingInsteadOfAsAndNullCheck;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UsePatternMatchingInsteadOfAsAndNullCheck;
 
-        private static DiagnosticAnalyzer Analyzer { get; } = new UsePatternMatchingInsteadOfAsAndNullCheckAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new UsePatternMatchingInsteadOfAsAndNullCheckAnalyzer();
 
-        private static CodeFixProvider CodeFixProvider { get; } = new UsePatternMatchingInsteadOfAsAndNullCheckCodeFixProvider();
+        public override CodeFixProvider FixProvider { get; } = new UsePatternMatchingInsteadOfAsAndNullCheckCodeFixProvider();
 
         [Fact]
-        public static void TestDiagnosticWithFix_EqualsToNull()
+        public async Task TestDiagnosticWithFix_EqualsToNull()
         {
-            Instance.VerifyDiagnosticAndFix(
-@"
+            await VerifyDiagnosticAndFixAsync(@"
 class C
 {
     void M()
@@ -37,8 +39,7 @@ class C
         }
     }
 }
-",
-@"
+", @"
 class C
 {
     void M()
@@ -51,17 +52,13 @@ class C
         }
     }
 }
-",
-                descriptor: Descriptor,
-                analyzer: Analyzer,
-                fixProvider: CodeFixProvider);
+");
         }
 
         [Fact]
-        public static void TestDiagnosticWithFix_IsNull()
+        public async Task TestDiagnosticWithFix_IsNull()
         {
-            Instance.VerifyDiagnosticAndFix(
-@"
+            await VerifyDiagnosticAndFixAsync(@"
 class C
 {
     void M()
@@ -75,8 +72,7 @@ class C
         }
     }
 }
-",
-@"
+", @"
 class C
 {
     void M()
@@ -89,17 +85,13 @@ class C
         }
     }
 }
-",
-                descriptor: Descriptor,
-                analyzer: Analyzer,
-                fixProvider: CodeFixProvider);
+");
         }
 
         [Fact]
-        public static void TestNoDiagnostic()
+        public async Task TestNoDiagnostic()
         {
-            Instance.VerifyNoDiagnostic(
-@"
+            await VerifyNoDiagnosticAsync(@"
 class C
 {
     void M()
@@ -140,16 +132,13 @@ class C
         }
     }
 }
-",
-                descriptor: Descriptor,
-                analyzer: Analyzer);
+");
         }
 
         [Fact]
-        public static void TestNoDiagnostic_Directive()
+        public async Task TestNoDiagnostic_Directive()
         {
-            Instance.VerifyNoDiagnostic(
-@"
+            await VerifyNoDiagnosticAsync(@"
 class C
 {
     void M()
@@ -165,9 +154,7 @@ class C
         }
     }
 }
-",
-                descriptor: Descriptor,
-                analyzer: Analyzer);
+");
         }
     }
 }

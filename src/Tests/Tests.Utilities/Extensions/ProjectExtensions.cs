@@ -10,6 +10,7 @@ namespace Roslynator
 {
     public static class ProjectExtensions
     {
+        //TODO: del
         public static async Task<ImmutableArray<Diagnostic>> GetAnalyzerDiagnosticsAsync(
             this Project project,
             DiagnosticAnalyzer analyzer,
