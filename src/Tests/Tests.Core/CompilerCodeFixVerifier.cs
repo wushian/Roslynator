@@ -20,11 +20,11 @@ namespace Roslynator.Tests
 
         public async Task VerifyFixAsync(
             string theory,
-            string diagnosticData,
-            string fixData,
+            string sourceData,
+            string expectedData,
             string equivalenceKey)
         {
-            (string source, string expected, TextSpan span) = TextUtility.GetMarkedSpan(theory, diagnosticData, fixData);
+            (string source, string expected, TextSpan span) = TestSourceText.ReplaceSpan(theory, sourceData, expectedData);
 
             await VerifyFixAsync(
                 source: source,
@@ -40,7 +40,7 @@ namespace Roslynator.Tests
         {
             Assert.True(FixProvider.FixableDiagnosticIds.Contains(DiagnosticId), $"Code fix provider '{FixProvider.GetType().Name}' cannot fix diagnostic '{DiagnosticId}'.");
 
-            Document document = WorkspaceFactory.Document(source, Language);
+            Document document = WorkspaceFactory.Document(Language, source);
 
             SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
@@ -109,7 +109,7 @@ namespace Roslynator.Tests
             string equivalenceKey,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            Document document = WorkspaceFactory.Document(source, Language);
+            Document document = WorkspaceFactory.Document(Language, source);
 
             SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 

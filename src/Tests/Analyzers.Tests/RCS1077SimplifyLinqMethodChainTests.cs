@@ -14,7 +14,7 @@ using Xunit;
 
 namespace Roslynator.Analyzers.Tests
 {
-    public class RCS1077SimplifyLinqMethodChainTests : CSharpCodeFixVerifier
+    public class RCS1077SimplifyLinqMethodChainTests : AbstractCSharpCodeFixVerifier
     {
         public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.SimplifyLinqMethodChain;
 

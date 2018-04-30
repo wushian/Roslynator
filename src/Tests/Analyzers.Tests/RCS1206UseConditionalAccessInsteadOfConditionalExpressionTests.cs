@@ -14,7 +14,7 @@ using Xunit;
 
 namespace Roslynator.Analyzers.Tests
 {
-    public class RCS1206UseConditionalAccessInsteadOfConditionalExpressionTests : CSharpCodeFixVerifier
+    public class RCS1206UseConditionalAccessInsteadOfConditionalExpressionTests : AbstractCSharpCodeFixVerifier
     {
         public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UseConditionalAccessInsteadOfConditionalExpression;
 

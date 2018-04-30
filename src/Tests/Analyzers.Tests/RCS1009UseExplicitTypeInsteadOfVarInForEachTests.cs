@@ -14,7 +14,7 @@ using Xunit;
 
 namespace Roslynator.Analyzers.Tests
 {
-    public class RCS1009UseExplicitTypeInsteadOfVarInForEachTests : CSharpCodeFixVerifier
+    public class RCS1009UseExplicitTypeInsteadOfVarInForEachTests : AbstractCSharpCodeFixVerifier
     {
         public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UseExplicitTypeInsteadOfVarInForEach;
 

@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Roslynator.Refactorings.Tests
 {
-    public class RR0137ReplaceMethodGroupWithLambdaTests : RoslynatorCSharpCodeRefactoringVerifier
+    public class RR0137ReplaceMethodGroupWithLambdaTests : AbstractCSharpCodeRefactoringVerifier
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.ReplaceMethodGroupWithLambda;
 

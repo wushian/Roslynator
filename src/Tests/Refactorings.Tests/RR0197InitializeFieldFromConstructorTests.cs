@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Roslynator.Refactorings.Tests
 {
-    public class RR0197InitializeFieldFromConstructorTests : RoslynatorCSharpCodeRefactoringVerifier
+    public class RR0197InitializeFieldFromConstructorTests : AbstractCSharpCodeRefactoringVerifier
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.InitializeFieldFromConstructor;
 

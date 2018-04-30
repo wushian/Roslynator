@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Roslynator.CodeFixes.Tests
 {
-    public class CSTests : CSharpCompilerCodeFixVerifier
+    public class CSTests : AbstractCSharpCompilerCodeFixVerifier
     {
         public override string DiagnosticId { get; } = CompilerDiagnosticIdentifiers.OperatorCannotBeAppliedToOperands;
 

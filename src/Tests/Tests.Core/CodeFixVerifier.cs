@@ -23,13 +23,13 @@ namespace Roslynator.Tests
             string expected,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ParseResult result = TextUtility.GetSpans(source);
+            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(source);
 
-            IEnumerable<Diagnostic> diagnostics = result.Spans.Select(f => CreateDiagnostic(f.Span, f.LineSpan));
+            IEnumerable<Diagnostic> diagnostics = analysis.Spans.Select(f => CreateDiagnostic(f.Span, f.LineSpan));
 
-            await VerifyDiagnosticAsync(result.Source, diagnostics, cancellationToken).ConfigureAwait(false);
+            await VerifyDiagnosticAsync(analysis.Source, diagnostics, cancellationToken).ConfigureAwait(false);
 
-            await VerifyFixAsync(result.Source, expected, cancellationToken).ConfigureAwait(false);
+            await VerifyFixAsync(analysis.Source, expected, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task VerifyDiagnosticAndFixAsync(
@@ -38,33 +38,24 @@ namespace Roslynator.Tests
             string fixData,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            (string source, string expected, TextSpan span) = TextUtility.GetMarkedSpan(theory, diagnosticData, fixData);
+            (string source, string expected, TextSpan span) = TestSourceText.ReplaceSpan(theory, diagnosticData, fixData);
 
-            ParseResult result = TextUtility.GetSpans(source);
+            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(source);
 
-            if (result.Spans.Any())
+            if (analysis.Spans.Any())
             {
-                IEnumerable<Diagnostic> diagnostics = result.Spans.Select(f => CreateDiagnostic(f.Span, f.LineSpan));
+                IEnumerable<Diagnostic> diagnostics = analysis.Spans.Select(f => CreateDiagnostic(f.Span, f.LineSpan));
 
-                await VerifyDiagnosticAsync(result.Source, diagnostics, cancellationToken).ConfigureAwait(false);
+                await VerifyDiagnosticAsync(analysis.Source, diagnostics, cancellationToken).ConfigureAwait(false);
 
-                await VerifyFixAsync(result.Source, expected, cancellationToken).ConfigureAwait(false);
+                await VerifyFixAsync(analysis.Source, expected, cancellationToken).ConfigureAwait(false);
             }
             else
             {
-                await VerifyDiagnosticAndFixAsync(source, expected, span, cancellationToken).ConfigureAwait(false);
+                await VerifyDiagnosticAsync(source, span, cancellationToken).ConfigureAwait(false);
+
+                await VerifyFixAsync(source, expected, cancellationToken).ConfigureAwait(false);
             }
-        }
-
-        public async Task VerifyDiagnosticAndFixAsync(
-            string source,
-            string expected,
-            TextSpan span,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            await VerifyDiagnosticAsync(source, span, cancellationToken).ConfigureAwait(false);
-
-            await VerifyFixAsync(source, expected, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task VerifyFixAsync(
@@ -74,7 +65,7 @@ namespace Roslynator.Tests
         {
             Assert.True(FixProvider.CanFixAny(Analyzer.SupportedDiagnostics), $"Code fix provider '{FixProvider.GetType().Name}' cannot fix any diagnostic supported by analyzer '{Analyzer}'.");
 
-            Document document = WorkspaceFactory.Document(source, Language);
+            Document document = WorkspaceFactory.Document(Language, source);
 
             Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
@@ -147,7 +138,7 @@ namespace Roslynator.Tests
 
         public async Task VerifyNoFixAsync(string source, CancellationToken cancellationToken = default(CancellationToken))
         {
-            Document document = WorkspaceFactory.Document(source, Language);
+            Document document = WorkspaceFactory.Document(Language, source);
 
             Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 

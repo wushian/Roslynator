@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Roslynator.Refactorings.Tests
 {
-    public class RR0166UseConditionalExpressionInsteadOfIfTests : RoslynatorCSharpCodeRefactoringVerifier
+    public class RR0166UseConditionalExpressionInsteadOfIfTests : AbstractCSharpCodeRefactoringVerifier
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.UseConditionalExpressionInsteadOfIf;
 

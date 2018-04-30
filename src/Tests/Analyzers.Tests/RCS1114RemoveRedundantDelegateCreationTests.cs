@@ -14,7 +14,7 @@ using Xunit;
 
 namespace Roslynator.Analyzers.Tests
 {
-    public class RCS1114RemoveRedundantDelegateCreationTests : CSharpCodeFixVerifier
+    public class RCS1114RemoveRedundantDelegateCreationTests : AbstractCSharpCodeFixVerifier
     {
         public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.RemoveRedundantDelegateCreation;
 

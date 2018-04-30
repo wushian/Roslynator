@@ -14,7 +14,7 @@ using Xunit;
 
 namespace Roslynator.Analyzers.Tests
 {
-    public class RCS1104SimplifyConditionalExpressionTests : CSharpCodeFixVerifier
+    public class RCS1104SimplifyConditionalExpressionTests : AbstractCSharpCodeFixVerifier
     {
         public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.SimplifyConditionalExpression;
 

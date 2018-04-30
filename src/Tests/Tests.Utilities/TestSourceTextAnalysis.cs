@@ -4,10 +4,9 @@ using System.Collections.Immutable;
 
 namespace Roslynator.Tests
 {
-    //TODO: SpanAnalysisResult
-    public readonly struct ParseResult
+    public readonly struct TestSourceTextAnalysis
     {
-        public ParseResult(string originalSource, string source, ImmutableArray<LinePositionSpanInfo> spans)
+        public TestSourceTextAnalysis(string originalSource, string source, ImmutableArray<LinePositionSpanInfo> spans)
         {
             OriginalSource = originalSource;
             Source = source;
@@ -15,6 +14,7 @@ namespace Roslynator.Tests
         }
 
         public string OriginalSource { get; }
+
         public string Source { get; }
 
         public ImmutableArray<LinePositionSpanInfo> Spans { get; }

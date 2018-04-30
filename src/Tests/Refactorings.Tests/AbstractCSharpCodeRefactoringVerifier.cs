@@ -6,7 +6,7 @@ using Roslynator.Tests.CSharp;
 
 namespace Roslynator.Refactorings.Tests
 {
-    public abstract class RoslynatorCSharpCodeRefactoringVerifier : CSharpCodeRefactoringVerifier
+    public abstract class AbstractCSharpCodeRefactoringVerifier : CSharpCodeRefactoringVerifier
     {
         public override CodeRefactoringProvider RefactoringProvider { get; } = new RoslynatorCodeRefactoringProvider();
     }

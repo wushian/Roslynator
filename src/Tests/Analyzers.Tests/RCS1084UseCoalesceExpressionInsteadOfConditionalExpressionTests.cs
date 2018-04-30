@@ -14,7 +14,7 @@ using Xunit;
 
 namespace Roslynator.Analyzers.Tests
 {
-    public class RCS1084UseCoalesceExpressionInsteadOfConditionalExpressionTests : CSharpCodeFixVerifier
+    public class RCS1084UseCoalesceExpressionInsteadOfConditionalExpressionTests : AbstractCSharpCodeFixVerifier
     {
         public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UseCoalesceExpressionInsteadOfConditionalExpression;
 

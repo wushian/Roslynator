@@ -12,14 +12,9 @@ namespace Roslynator
     {
         public static Project EmptyCSharpProject { get; } = Project(LanguageNames.CSharp);
 
-        public static Document Document(string source, string language)
+        public static Document Document(string language, string source, params string[] additionalSources)
         {
-            return Project(source, language).Documents.First();
-        }
-
-        public static Document Document(string source, string[] additionalSources, string language)
-        {
-            Project project = Project(source, language);
+            Project project = Project(language, source);
 
             Document document = project.Documents.First();
 
@@ -29,7 +24,7 @@ namespace Roslynator
             return project.GetDocument(document.Id);
         }
 
-        public static Project Project(string source, string language)
+        public static Project Project(string language, string source)
         {
             Project project = (language == LanguageNames.CSharp) ? EmptyCSharpProject : Project(language);
 

@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Roslynator.Refactorings.Tests
 {
-    public class RR0127InlineConstantValueTests : RoslynatorCSharpCodeRefactoringVerifier
+    public class RR0127InlineConstantValueTests : AbstractCSharpCodeRefactoringVerifier
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.InlineConstantValue;
 

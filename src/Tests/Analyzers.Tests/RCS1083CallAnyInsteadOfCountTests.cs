@@ -14,7 +14,7 @@ using Xunit;
 
 namespace Roslynator.Analyzers.Tests
 {
-    public class RCS1083CallAnyInsteadOfCountTests : CSharpCodeFixVerifier
+    public class RCS1083CallAnyInsteadOfCountTests : AbstractCSharpCodeFixVerifier
     {
         public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.CallAnyInsteadOfCount;
 

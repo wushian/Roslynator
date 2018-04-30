@@ -14,7 +14,7 @@ using Roslynator.Tests.CSharp;
 
 namespace Roslynator.Analyzers.Tests
 {
-    public class RCS1032RemoveRedundantParenthesesTests : CSharpCodeFixVerifier
+    public class RCS1032RemoveRedundantParenthesesTests : AbstractCSharpCodeFixVerifier
     {
         public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.RemoveRedundantParentheses;
 

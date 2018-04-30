@@ -8,14 +8,14 @@ using Roslynator.Text;
 
 namespace Roslynator.Tests
 {
-    public static class TextUtility
+    public static class TestSourceText
     {
         internal const string OpenMarker = "[|";
         internal const string CloseMarker = "|]";
         internal const string OpenMarkerAndCloseMarker = OpenMarker + CloseMarker;
         internal static readonly int MarkersLength = OpenMarkerAndCloseMarker.Length;
 
-        public static (string result, TextSpan span) GetMarkedSpan(string s, string replacement)
+        public static (string result, TextSpan span) ReplaceSpan(string s, string replacement)
         {
             int index = s.IndexOf(OpenMarkerAndCloseMarker);
 
@@ -26,7 +26,7 @@ namespace Roslynator.Tests
             return (result, span);
         }
 
-        public static (string result1, string result2, TextSpan span) GetMarkedSpan(
+        public static (string result1, string result2, TextSpan span) ReplaceSpan(
             string s,
             string replacement1,
             string replacement2)
@@ -41,7 +41,7 @@ namespace Roslynator.Tests
             return (result1, result2, span);
         }
 
-        public static ParseResult GetSpans(string s)
+        public static TestSourceTextAnalysis GetSpans(string s, bool reverse = false)
         {
             StringBuilder sb = StringBuilderCache.GetInstance(s.Length - MarkersLength);
 
@@ -134,7 +134,13 @@ namespace Roslynator.Tests
 
             sb.Append(s, lastPos, s.Length - lastPos);
 
-            return new ParseResult(
+            if (spans != null
+                && reverse)
+            {
+                spans.Reverse();
+            }
+
+            return new TestSourceTextAnalysis(
                 s,
                 StringBuilderCache.GetStringAndFree(sb),
                 spans?.ToImmutableArray() ?? ImmutableArray<LinePositionSpanInfo>.Empty);

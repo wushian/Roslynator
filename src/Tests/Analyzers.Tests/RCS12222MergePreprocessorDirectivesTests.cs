@@ -14,7 +14,7 @@ using Xunit;
 
 namespace Roslynator.Analyzers.Tests
 {
-    public class RCS12222MergePreprocessorDirectivesTests : CSharpCodeFixVerifier
+    public class RCS12222MergePreprocessorDirectivesTests : AbstractCSharpCodeFixVerifier
     {
         public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.MergePreprocessorDirectives;
 
