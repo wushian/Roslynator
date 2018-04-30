@@ -16,7 +16,7 @@ namespace Roslynator.CodeFixes.Tests
         //[Fact]
         public static void TestCodeFix()
         {
-            VerifyFix(@"
+            Instance.VerifyFix(@"
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,13 +48,13 @@ class C
 }
 ";
 
-            VerifyFix(sourceTemplate, fixableCode, fixedCode, DiagnosticId, CodeFixProvider, EquivalenceKey.Create(DiagnosticId));
+            Instance.VerifyFix(sourceTemplate, fixableCode, fixedCode, DiagnosticId, CodeFixProvider, EquivalenceKey.Create(DiagnosticId));
         }
 
         //[Fact]
         public static void TestNoCodeFix()
         {
-            VerifyNoFix(
+            Instance.VerifyNoFix(
 @"
 using System;
 using System.Collections.Generic;

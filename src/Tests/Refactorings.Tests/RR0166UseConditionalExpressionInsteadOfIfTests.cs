@@ -2,6 +2,7 @@
 
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Roslynator.CSharp.Refactorings;
+using Roslynator.Tests.CSharp;
 using Xunit;
 using static Roslynator.Tests.CSharp.CSharpCodeRefactoringVerifier;
 
@@ -18,7 +19,7 @@ namespace Roslynator.Refactorings.Tests
         [InlineData("if (f) z = x; else z = y;", "z = (f) ? x : y;")]
         public static void TestRefactoring_IfElseToAssignmentWithConditionalExpression(string fixableCode, string fixedCode)
         {
-            VerifyRefactoring(@"
+            Instance.VerifyRefactoring(@"
 class C
 {
     void M(bool f, string x, string y, string z)
@@ -32,7 +33,7 @@ class C
         [Fact]
         public static void TestRefactoring_AssignmentAndIfElseToAssignmentWithConditionalExpression()
         {
-            VerifyRefactoring(@"
+            Instance.VerifyRefactoring(@"
 class C
 {
     void M(bool f, string x, string y, string z)
@@ -63,7 +64,7 @@ class C
         [Fact]
         public static void TestRefactoring_LocalDeclarationAndIfElseToAssignmentWithConditionalExpression()
         {
-            VerifyRefactoring(@"
+            Instance.VerifyRefactoring(@"
 class C
 {
     void M(bool f, string x, string y)
@@ -98,7 +99,7 @@ class C
         [InlineData("if (f) return x; return y;", "return (f) ? x : y;")]
         public static void TestRefactoring_IfToReturnWithConditionalExpression(string fixableCode, string fixedCode)
         {
-            VerifyRefactoring(@"
+            Instance.VerifyRefactoring(@"
 class C
 {
     string M(bool f, string x, string y, string z)
@@ -114,7 +115,7 @@ class C
         [InlineData("if (f) yield return x; else yield return y;", "yield return (f) ? x : y;")]
         public static void TestRefactoring_IfElseToYieldReturnWithConditionalExpression(string fixableCode, string fixedCode)
         {
-            VerifyRefactoring(@"
+            Instance.VerifyRefactoring(@"
 using System.Collections.Generic;
 
 class C
@@ -130,7 +131,7 @@ class C
         [Fact]
         public static void TestNoRefactoring_IfElseToAssignmentWithConditionalExpression()
         {
-            VerifyNoRefactoring(
+            Instance.VerifyNoRefactoring(
 @"
 class C
 {
@@ -153,7 +154,7 @@ class C
         [Fact]
         public static void TestNoRefactoring_LocalDeclarationAndIfElseAssignmentWithConditionalExpression()
         {
-            VerifyNoRefactoring(
+            Instance.VerifyNoRefactoring(
 @"
 class C
 {
@@ -176,7 +177,7 @@ class C
         [Fact]
         public static void TestNoRefactoring_AssignmentAndIfElseToAssignmentWithConditionalExpression()
         {
-            VerifyNoRefactoring(@"
+            Instance.VerifyNoRefactoring(@"
 class C
 {
     void M(bool f)
@@ -199,7 +200,7 @@ class C
         [Fact]
         public static void TestNoRefactoring_IfElseToYieldReturnWithConditionalExpression()
         {
-            VerifyNoRefactoring(@"
+            Instance.VerifyNoRefactoring(@"
 using System.Collections.Generic;
 
 class C
@@ -222,7 +223,7 @@ class C
         [Fact]
         public static void TestNoRefactoring_IfElseToReturnWithConditionalExpression()
         {
-            VerifyNoRefactoring(@"
+            Instance.VerifyNoRefactoring(@"
 class C
 {
     int? M(bool f)
@@ -243,7 +244,7 @@ class C
         [Fact]
         public static void TestNoRefactoring_IfReturnToReturnWithConditionalExpression()
         {
-            VerifyNoRefactoring(@"
+            Instance.VerifyNoRefactoring(@"
 class C
 {
     int? M(bool f)

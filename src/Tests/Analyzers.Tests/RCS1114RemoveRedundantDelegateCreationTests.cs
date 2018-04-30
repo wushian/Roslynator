@@ -22,7 +22,7 @@ namespace Roslynator.Analyzers.Tests
         [Fact]
         public static void TestDiagnosticWithCodeFix_EventHandler()
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System;
 
 class Foo
@@ -58,7 +58,7 @@ class Foo
         [Fact]
         public static void TestDiagnosticWithCodeFix_EventHandlerOfT()
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System;
 
 class Foo
@@ -102,7 +102,7 @@ class Foo
         [Fact]
         public static void TestDiagnosticWithCodeFix_CustomEventHandler()
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System;
 
 class Foo
@@ -150,7 +150,7 @@ class Foo
         [Fact]
         public static void TestDiagnosticWithCodeFix_TEventArgs()
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System;
 
 class Foo<TEventArgs>

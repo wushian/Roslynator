@@ -8,41 +8,37 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Text;
 using Xunit;
 
 namespace Roslynator.Tests
 {
-    public static class DiagnosticVerifier
+    public abstract class DiagnosticVerifier : CodeVerifier
     {
-        public static async Task VerifyDiagnosticAsync(
+        public async Task VerifyDiagnosticAsync(
             string source,
             DiagnosticAnalyzer analyzer,
-            string language,
             Diagnostic[] expectedDiagnostics,
-            CodeVerificationSettings settings = null,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            await VerifyDiagnosticAsync(new string[] { source }, analyzer, language, expectedDiagnostics, settings, cancellationToken).ConfigureAwait(false);
+            await VerifyDiagnosticAsync(
+                new string[] { source },
+                analyzer,
+                expectedDiagnostics,
+                options,
+                cancellationToken).ConfigureAwait(false);
         }
 
-        public static async Task VerifyDiagnosticAsync(
+        public async Task VerifyDiagnosticAsync(
             IEnumerable<string> sources,
             DiagnosticAnalyzer analyzer,
-            string language,
             Diagnostic[] expectedDiagnostics,
-            CodeVerificationSettings settings = null,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (expectedDiagnostics == null)
-                throw new ArgumentNullException(nameof(expectedDiagnostics));
-
-            if (settings == null)
-                settings = CodeVerificationSettings.Default;
+            if (options == null)
+                options = CodeVerificationOptions.Default;
 
             foreach (Diagnostic diagnostic in expectedDiagnostics)
             {
@@ -50,18 +46,18 @@ namespace Roslynator.Tests
                     $"Diagnostic \"{diagnostic.Descriptor.Id}\" is not supported by analyzer \"{analyzer.GetType().Name}\".");
             }
 
-            Project project = WorkspaceFactory.Project(sources, language);
+            Project project = WorkspaceFactory.Project(sources, Language);
 
             Compilation compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
             ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
 
-            VerifyDiagnostics(compilerDiagnostics, settings.MaxAllowedCompilerDiagnosticSeverity);
+            VerifyDiagnostics(compilerDiagnostics, options.MaxAllowedCompilerDiagnosticSeverity);
 
-            if (settings.EnableDiagnosticsDisabledByDefault)
+            if (options.EnableDiagnosticsDisabledByDefault)
                 compilation = compilation.EnableDiagnosticsDisabledByDefault(analyzer);
 
-            ImmutableArray<Diagnostic> diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(analyzer, cancellationToken).ConfigureAwait(false);
+            ImmutableArray<Diagnostic> diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);
 
             if (diagnostics.Length > 0
                 && analyzer.SupportedDiagnostics.Length > 1)
@@ -154,56 +150,46 @@ namespace Roslynator.Tests
                 $"Expected diagnostic to {name} at column {expectedCharacter}, actual: {actualCharacter}\r\n\r\nDiagnostic:\r\n{diagnostic}\r\n");
         }
 
-        public static async Task VerifyNoDiagnosticAsync(
+        public async Task VerifyNoDiagnosticAsync(
             string source,
             DiagnosticDescriptor descriptor,
             DiagnosticAnalyzer analyzer,
-            string language)
+            CodeVerificationOptions options = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            await VerifyNoDiagnosticAsync(new string[] { source }, descriptor, analyzer, language).ConfigureAwait(false);
+            await VerifyNoDiagnosticAsync(
+                new string[] { source },
+                descriptor,
+                analyzer,
+                options,
+                cancellationToken).ConfigureAwait(false);
         }
 
-        public static async Task VerifyNoDiagnosticAsync(
+        public async Task VerifyNoDiagnosticAsync(
             IEnumerable<string> sources,
             DiagnosticDescriptor descriptor,
             DiagnosticAnalyzer analyzer,
-            string language,
-            CodeVerificationSettings settings = null,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (sources == null)
-                throw new ArgumentNullException(nameof(sources));
-
-            if (descriptor == null)
-                throw new ArgumentNullException(nameof(descriptor));
-
-            if (analyzer == null)
-                throw new ArgumentNullException(nameof(analyzer));
-
-            if (language == null)
-                throw new ArgumentNullException(nameof(language));
-
-            if (settings == null)
-                settings = CodeVerificationSettings.Default;
+            if (options == null)
+                options = CodeVerificationOptions.Default;
 
             Assert.True(analyzer.Supports(descriptor),
                 $"Diagnostic \"{descriptor.Id}\" is not supported by analyzer \"{analyzer.GetType().Name}\".");
 
-            Project project = WorkspaceFactory.Project(sources, language);
+            Project project = WorkspaceFactory.Project(sources, Language);
 
             Compilation compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
             ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
 
-            VerifyDiagnostics(compilerDiagnostics, settings.MaxAllowedCompilerDiagnosticSeverity);
+            VerifyDiagnostics(compilerDiagnostics, options.MaxAllowedCompilerDiagnosticSeverity);
 
-            if (settings.EnableDiagnosticsDisabledByDefault)
+            if (options.EnableDiagnosticsDisabledByDefault)
                 compilation = compilation.EnableDiagnosticsDisabledByDefault(analyzer);
 
-            ImmutableArray<Diagnostic> analyzerDiagnostics = await compilation.GetAnalyzerDiagnosticsAsync(analyzer, cancellationToken).ConfigureAwait(false);
+            ImmutableArray<Diagnostic> analyzerDiagnostics = await compilation.GetAnalyzerDiagnosticsAsync(analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);
 
             Assert.True(analyzerDiagnostics.Length == 0 || analyzerDiagnostics.All(f => !string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)),
                     $"No diagnostic expected{analyzerDiagnostics.Where(f => string.Equals(f.Id, descriptor.Id, StringComparison.Ordinal)).ToDebugString()}");
@@ -215,57 +201,18 @@ namespace Roslynator.Tests
                 $"No compiler error expected{diagnostics.Where(f => f.Severity > maxAllowedSeverity).ToDebugString()}");
         }
 
-        public static async Task VerifyNoNewCompilerDiagnosticsAsync(
-            Document document,
+        public static void VerifyNoNewCompilerDiagnostics(
             ImmutableArray<Diagnostic> compilerDiagnostics,
-            ImmutableArray<Diagnostic> compilerDiagnostics2,
-            CancellationToken cancellationToken = default(CancellationToken))
+            ImmutableArray<Diagnostic> newCompilerDiagnostics)
         {
-            IEnumerable<Diagnostic> newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, compilerDiagnostics2);
+            IEnumerable<Diagnostic> diff = newCompilerDiagnostics
+                .Except(compilerDiagnostics, DiagnosticDeepEqualityComparer.Instance)
+                .ToImmutableArray();
 
-            if (!newCompilerDiagnostics.Any())
-                return;
-
-            SyntaxNode root = await document.GetSyntaxRootAsync().ConfigureAwait(false);
-
-            document = document.WithSyntaxRoot(Formatter.Format(root, Formatter.Annotation, document.Project.Solution.Workspace, cancellationToken: cancellationToken));
-
-            Assert.True(false,
-                $"Code fix introduced new compiler diagnostics{newCompilerDiagnostics.ToDebugString()}");
-        }
-
-        private static IEnumerable<Diagnostic> GetNewDiagnostics(
-            IEnumerable<Diagnostic> diagnostics,
-            IEnumerable<Diagnostic> diagnostics2)
-        {
-            using (IEnumerator<Diagnostic> en2 = GetEnumerator(diagnostics2))
-            using (IEnumerator<Diagnostic> en = GetEnumerator(diagnostics))
+            if (diff.Any())
             {
-                while (en2.MoveNext())
-                {
-                    if (en.MoveNext())
-                    {
-                        if (en.Current.Id != en2.Current.Id)
-                            yield return en2.Current;
-                    }
-                    else
-                    {
-                        yield return en2.Current;
-
-                        while (en2.MoveNext())
-                            yield return en2.Current;
-
-                        yield break;
-                    }
-                }
-            }
-
-            IEnumerator<Diagnostic> GetEnumerator(IEnumerable<Diagnostic> items)
-            {
-                return items
-                    .Where(f => f.Severity != DiagnosticSeverity.Hidden)
-                    .OrderBy(f => f, DiagnosticComparer.SpanStart)
-                    .GetEnumerator();
+                Assert.True(false,
+                    $"Code fix introduced new compiler diagnostics{diff.ToDebugString()}");
             }
         }
     }

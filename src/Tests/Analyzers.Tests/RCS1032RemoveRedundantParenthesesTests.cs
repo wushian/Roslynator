@@ -22,7 +22,7 @@ namespace Roslynator.Analyzers.Tests
         [Fact]
         public static void TestDiagnosticWithCodeFix_Argument()
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 class C
 {
     void M(object x)
@@ -44,7 +44,7 @@ class C
         [Fact]
         public static void TestDiagnosticWithCodeFix_AttributeArgument()
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System;
 
 [Obsolete([|(|]""""))]
@@ -64,7 +64,7 @@ class C
         [Fact]
         public static void TestDiagnosticWithCodeFix_ReturnExpression()
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 class C
 {
     object M()
@@ -86,7 +86,7 @@ class C
         [Fact]
         public static void TestDiagnosticWithCodeFix_YieldReturnExpression()
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System.Collections.Generic;
 
 class C
@@ -112,7 +112,7 @@ class C
         [Fact]
         public static void TestDiagnosticWithCodeFix_ExpressionBody()
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 class C
 {
     object M() => [|(|]null);
@@ -128,7 +128,7 @@ class C
         [Fact]
         public static void TestDiagnosticWithCodeFix_AwaitExpression()
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System.Threading.Tasks;
 
 class C
@@ -159,7 +159,7 @@ class C
         [InlineData("using ([|(|](IDisposable)null)) { }", "using ((IDisposable)null) { }")]
         [InlineData("lock ([|(|]s)) { }", "lock (s) { }")]
         [InlineData("if ([|(|]true)) { }", "if (true) { }")]
-        [InlineData("switch ([|(|]true)) { }", "switch (true) { }")]
+        [InlineData("switch ([|(|]true)) { default: break; }", "switch (true) { default: break; }")]
         [InlineData(@"M([|(|]""""));", @"M("""");")]
         [InlineData("var arr = new string[] { [|(|]null) };", "var arr = new string[] { null };")]
         [InlineData("var items = new List<string>() { [|(|]null) };", "var items = new List<string>() { null };")]
@@ -177,7 +177,7 @@ class C
         [InlineData("[|(|]i) >>= (0);", "i >>= (0);")]
         public static void TestDiagnosticWithCodeFix_Statement(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System;
 using System.Collections.Generic;
 
@@ -200,7 +200,7 @@ class C
         [InlineData("f = ![|(|]foo[0]);", "f = !foo[0];")]
         public static void TestDiagnosticWithCodeFix_LogicalNot(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 class Foo
 {
     void M()
@@ -225,7 +225,7 @@ class Foo
         [Fact]
         public static void TestNoDiagnostic_AssignmentInInitializer()
         {
-            VerifyNoDiagnostic(@"
+            Instance.VerifyNoDiagnostic(@"
 using System.Collections.Generic;
 
 class C
@@ -242,7 +242,7 @@ class C
         [Fact]
         public static void TestNoDiagnostic_ConditionalExpressionInInterpolatedString()
         {
-            VerifyNoDiagnostic(@"
+            Instance.VerifyNoDiagnostic(@"
 class C
 {
     void M()
@@ -256,7 +256,7 @@ class C
         [Fact]
         public static void TestNoDiagnostic_AssignmentInAwaitExpression()
         {
-            VerifyNoDiagnostic(@"
+            Instance.VerifyNoDiagnostic(@"
 using System;
 using System.Threading.Tasks;
 
@@ -270,7 +270,7 @@ class C
         [Fact]
         public static void TestNoDiagnostic_ForEach()
         {
-            VerifyNoDiagnostic(@"
+            Instance.VerifyNoDiagnostic(@"
 using System.Collections.Generic;
 using System.Linq;
 

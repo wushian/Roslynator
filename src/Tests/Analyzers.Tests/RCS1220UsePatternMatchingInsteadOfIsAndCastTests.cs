@@ -22,7 +22,7 @@ namespace Roslynator.Analyzers.Tests
         [Fact]
         public static void TestDiagnosticWithFix_LogicalAndExpression()
         {
-            VerifyDiagnosticAndFix(
+            Instance.VerifyDiagnosticAndFix(
 @"
 class C
 {
@@ -85,7 +85,7 @@ class C
         [Fact]
         public static void TestDiagnosticWithFix_IfStatement()
         {
-            VerifyDiagnosticAndFix(
+            Instance.VerifyDiagnosticAndFix(
 @"
 class C
 {
@@ -190,7 +190,7 @@ class C
         [Fact]
         public static void TestNoDiagnostic_LogicalAndExpression()
         {
-            VerifyNoDiagnostic(
+            Instance.VerifyNoDiagnostic(
 @"
 class C
 {
@@ -217,7 +217,7 @@ class C
         [Fact]
         public static void TestNoDiagnostic_IfStatement()
         {
-            VerifyNoDiagnostic(
+            Instance.VerifyNoDiagnostic(
 @"
 class C
 {

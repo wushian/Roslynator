@@ -30,7 +30,7 @@ namespace Roslynator.Analyzers.Tests
         [InlineData("i > items.Count()", "!items.Skip(i - 1).Any()")]
         public static void TestDiagnosticWithCodeFix(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System.Collections.Generic;
 using System.Linq;
 
@@ -52,7 +52,7 @@ class C
         [Fact]
         public static void TestNoDiagnostic()
         {
-            VerifyNoDiagnostic(@"
+            Instance.VerifyNoDiagnostic(@"
 using System.Collections.Generic;
 using System.Linq;
 

@@ -11,32 +11,31 @@ using Xunit;
 
 namespace Roslynator.Tests
 {
-    public static class CompilerCodeFixVerifier
+    public abstract class CompilerCodeFixVerifier : CodeVerifier
     {
-        public static async Task VerifyFixAsync(
+        public async Task VerifyFixAsync(
             string source,
             string expected,
             string diagnosticId,
             CodeFixProvider fixProvider,
-            string language,
             string equivalenceKey = null,
-            CodeVerificationSettings settings = null,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (settings == null)
-                settings = CodeVerificationSettings.Default;
+            if (options == null)
+                options = CodeVerificationOptions.Default;
 
             Assert.True(fixProvider.FixableDiagnosticIds.Contains(diagnosticId), $"Code fix provider '{fixProvider.GetType().Name}' cannot fix diagnostic '{diagnosticId}'.");
 
-            Document document = WorkspaceFactory.Document(source, language);
+            Document document = WorkspaceFactory.Document(source, Language);
 
             SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
-            ImmutableArray<Diagnostic> compilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
+            ImmutableArray<Diagnostic> diagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
 
-            while (compilerDiagnostics.Length > 0)
+            while (diagnostics.Length > 0)
             {
-                Diagnostic diagnostic = FindDiagnostic(compilerDiagnostics, diagnosticId);
+                Diagnostic diagnostic = FindDiagnostic();
 
                 if (diagnostic == null)
                     break;
@@ -46,14 +45,21 @@ namespace Roslynator.Tests
                 var context = new CodeFixContext(
                     document,
                     diagnostic,
-                    (a, _) =>
+                    (a, d) =>
                     {
-                        if (equivalenceKey == null
-                            || string.Equals(a.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
+                        if (action != null)
+                            return;
+
+                        if (!d.Contains(diagnostic))
+                            return;
+
+                        if (equivalenceKey != null
+                            && !string.Equals(a.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
                         {
-                            if (action == null)
-                                action = a;
+                            return;
                         }
+
+                        action = a;
                     },
                     CancellationToken.None);
 
@@ -66,56 +72,66 @@ namespace Roslynator.Tests
 
                 semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
-                compilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
+                diagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
             }
 
             string actual = await document.ToSimplifiedAndFormattedFullStringAsync().ConfigureAwait(false);
 
             Assert.Equal(expected, actual);
+
+            Diagnostic FindDiagnostic()
+            {
+                foreach (Diagnostic diagnostic in diagnostics)
+                {
+                    if (string.Equals(diagnostic.Id, diagnosticId, StringComparison.Ordinal))
+                        return diagnostic;
+                }
+
+                return null;
+            }
         }
 
-        //TODO: string diagnosticId
-        public static async Task VerifyNoFixAsync(
+        public async Task VerifyNoFixAsync(
             string source,
             CodeFixProvider fixProvider,
-            string language,
             string equivalenceKey = null,
-            CodeVerificationSettings settings = null,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (settings == null)
-                settings = CodeVerificationSettings.Default;
+            if (options == null)
+                options = CodeVerificationOptions.Default;
 
-            Document document = WorkspaceFactory.Document(source, language);
+            Document document = WorkspaceFactory.Document(source, Language);
 
             SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
+            ImmutableArray<string> fixableDiagnosticIds = fixProvider.FixableDiagnosticIds;
+
             foreach (Diagnostic diagnostic in semanticModel.GetDiagnostics(cancellationToken: cancellationToken))
             {
+                if (!fixableDiagnosticIds.Contains(diagnostic.Id))
+                    continue;
+
                 var context = new CodeFixContext(
                     document,
                     diagnostic,
-                    (a, _) =>
+                    (a, d) =>
                     {
-                        Assert.True(
-                            equivalenceKey != null && !string.Equals(a.EquivalenceKey, equivalenceKey, StringComparison.Ordinal),
-                            "Expected no code fix.");
+                        if (!d.Contains(diagnostic))
+                            return;
+
+                        if (equivalenceKey != null
+                            && !string.Equals(a.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
+                        {
+                            return;
+                        }
+
+                        Assert.True(false, "Expected no code fix.");
                     },
                     CancellationToken.None);
 
                 await fixProvider.RegisterCodeFixesAsync(context).ConfigureAwait(false);
             }
-        }
-
-        private static Diagnostic FindDiagnostic(ImmutableArray<Diagnostic> diagnostics, string diagnosticId)
-        {
-            foreach (Diagnostic diagnostic in diagnostics)
-            {
-                if (string.Equals(diagnostic.Id, diagnosticId, StringComparison.Ordinal))
-                    return diagnostic;
-            }
-
-            return null;
         }
     }
 }

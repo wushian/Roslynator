@@ -18,14 +18,20 @@ namespace Roslynator
             return Project(source, language).Documents.First();
         }
 
+        public static Document Document(string source, string[] additionalSources, string language)
+        {
+            Project project = Project(source, language);
+
+            Document document = project.Documents.First();
+
+            if (additionalSources.Length > 0)
+                project = AddDocuments(project, additionalSources, language, fileNumberingBase: 1);
+
+            return project.GetDocument(document.Id);
+        }
+
         public static Project Project(string source, string language)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            if (language == null)
-                throw new ArgumentNullException(nameof(language));
-
             Project project = (language == LanguageNames.CSharp) ? EmptyCSharpProject : Project(language);
 
             ProjectId projectId = project.Id;
@@ -42,17 +48,16 @@ namespace Roslynator
 
         public static Project Project(IEnumerable<string> sources, string language)
         {
-            if (sources == null)
-                throw new ArgumentNullException(nameof(sources));
-
-            if (language == null)
-                throw new ArgumentNullException(nameof(language));
-
             Project project = (language == LanguageNames.CSharp) ? EmptyCSharpProject : Project(language);
 
+            return AddDocuments(project, sources, language);
+        }
+
+        private static Project AddDocuments(Project project, IEnumerable<string> sources, string language, int fileNumberingBase = FileUtility.FileNumberingBase)
+        {
             Solution solution = project.Solution;
 
-            int count = FileUtility.FileNumberingBase;
+            int count = fileNumberingBase;
             foreach (string source in sources)
             {
                 string newFileName = FileUtility.CreateFileName(suffix: count, language: language);

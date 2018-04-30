@@ -16,7 +16,7 @@ namespace Roslynator.Refactorings.Tests
         [Fact]
         public static void TestCodeRefactoring_VariableDeclaration()
         {
-            VerifyRefactoring(@"
+            Instance.VerifyRefactoring(@"
 using System;
 
 public class C
@@ -74,7 +74,7 @@ public class C
         [Fact]
         public static void TestCodeRefactoring_SimpleAssignment()
         {
-            VerifyRefactoring(@"
+            Instance.VerifyRefactoring(@"
 using System;
 
 public class C
@@ -148,7 +148,7 @@ public class C
         [Fact]
         public static void TestCodeRefactoring_Argument()
         {
-            VerifyRefactoring(@"
+            Instance.VerifyRefactoring(@"
 using System;
 
 public class C

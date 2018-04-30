@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,40 +12,39 @@ using Xunit;
 
 namespace Roslynator.Tests
 {
-    public static class CodeFixVerifier
+    public abstract class CodeFixVerifier : CodeVerifier
     {
-        public static async Task VerifyFixAsync(
+        public async Task VerifyFixAsync(
             string source,
             string expected,
             DiagnosticAnalyzer analyzer,
             CodeFixProvider fixProvider,
-            string language,
-            CodeVerificationSettings settings = null,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (settings == null)
-                settings = CodeVerificationSettings.Default;
+            if (options == null)
+                options = CodeVerificationOptions.Default;
 
             Assert.True(fixProvider.CanFixAny(analyzer.SupportedDiagnostics), $"Code fix provider '{fixProvider.GetType().Name}' cannot fix any diagnostic supported by analyzer '{analyzer}'.");
 
-            Document document = WorkspaceFactory.Document(source, language);
+            Document document = WorkspaceFactory.Document(source, Language);
 
             Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
             ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
 
-            DiagnosticVerifier.VerifyDiagnostics(compilerDiagnostics, settings.MaxAllowedCompilerDiagnosticSeverity);
+            DiagnosticVerifier.VerifyDiagnostics(compilerDiagnostics, options.MaxAllowedCompilerDiagnosticSeverity);
 
-            if (settings.EnableDiagnosticsDisabledByDefault)
+            if (options.EnableDiagnosticsDisabledByDefault)
                 compilation = compilation.EnableDiagnosticsDisabledByDefault(analyzer);
 
-            ImmutableArray<Diagnostic> analyzerDiagnostics = await compilation.GetAnalyzerDiagnosticsAsync(analyzer, cancellationToken).ConfigureAwait(false);
+            ImmutableArray<Diagnostic> diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);
 
             ImmutableArray<string> fixableDiagnosticIds = fixProvider.FixableDiagnosticIds;
 
-            while (analyzerDiagnostics.Length > 0)
+            while (diagnostics.Length > 0)
             {
-                Diagnostic diagnostic = FindFirstFixableDiagnostic(analyzerDiagnostics, fixableDiagnosticIds);
+                Diagnostic diagnostic = FindFirstFixableDiagnostic();
 
                 if (diagnostic == null)
                     break;
@@ -54,9 +54,9 @@ namespace Roslynator.Tests
                 var context = new CodeFixContext(
                     document,
                     diagnostic,
-                    (a, diagnostics) =>
+                    (a, d) =>
                     {
-                        if (diagnostics.Contains(diagnostic)
+                        if (d.Contains(diagnostic)
                             && action == null)
                         {
                             action = a;
@@ -73,76 +73,77 @@ namespace Roslynator.Tests
 
                 compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
-                ImmutableArray<Diagnostic> compilerDiagnostics2 = compilation.GetDiagnostics(cancellationToken);
-
-                DiagnosticVerifier.VerifyDiagnostics(compilerDiagnostics2, settings.MaxAllowedCompilerDiagnosticSeverity);
-
-                if (!settings.AllowNewCompilerDiagnostics)
+                if (!options.AllowNewCompilerDiagnostics)
                 {
-                    await DiagnosticVerifier.VerifyNoNewCompilerDiagnosticsAsync(document, compilerDiagnostics, compilerDiagnostics2).ConfigureAwait(false);
+                    DiagnosticVerifier.VerifyNoNewCompilerDiagnostics(
+                        compilerDiagnostics,
+                        compilation.GetDiagnostics(cancellationToken));
                 }
 
-                analyzerDiagnostics = await compilation.GetAnalyzerDiagnosticsAsync(analyzer, cancellationToken).ConfigureAwait(false);
+                if (options.EnableDiagnosticsDisabledByDefault)
+                    compilation = compilation.EnableDiagnosticsDisabledByDefault(analyzer);
+
+                diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);
             }
 
             string actual = await document.ToSimplifiedAndFormattedFullStringAsync().ConfigureAwait(false);
 
             Assert.Equal(expected, actual);
+
+            Diagnostic FindFirstFixableDiagnostic()
+            {
+                foreach (Diagnostic diagnostic in diagnostics)
+                {
+                    if (fixableDiagnosticIds.Contains(diagnostic.Id))
+                        return diagnostic;
+                }
+
+                return null;
+            }
         }
 
-        //TODO: diagnosticId
-        public static async Task VerifyNoFixAsync(
+        public async Task VerifyNoFixAsync(
             string source,
+            string diagnosticId,
             DiagnosticAnalyzer analyzer,
             CodeFixProvider fixProvider,
-            string language,
-            CodeVerificationSettings settings = null,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (settings == null)
-                settings = CodeVerificationSettings.Default;
+            if (options == null)
+                options = CodeVerificationOptions.Default;
 
-            Document document = WorkspaceFactory.Document(source, language);
+            Document document = WorkspaceFactory.Document(source, Language);
 
             Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
             ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
 
-            DiagnosticVerifier.VerifyDiagnostics(compilerDiagnostics, settings.MaxAllowedCompilerDiagnosticSeverity);
+            DiagnosticVerifier.VerifyDiagnostics(compilerDiagnostics, options.MaxAllowedCompilerDiagnosticSeverity);
 
-            if (settings.EnableDiagnosticsDisabledByDefault)
+            if (options.EnableDiagnosticsDisabledByDefault)
                 compilation = compilation.EnableDiagnosticsDisabledByDefault(analyzer);
 
-            ImmutableArray<Diagnostic> analyzerDiagnostics = await compilation.GetAnalyzerDiagnosticsAsync(analyzer, cancellationToken).ConfigureAwait(false);
+            ImmutableArray<Diagnostic> diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);
 
             ImmutableArray<string> fixableDiagnosticIds = fixProvider.FixableDiagnosticIds;
 
-            foreach (Diagnostic diagnostic in await compilation.GetAnalyzerDiagnosticsAsync(analyzer, cancellationToken).ConfigureAwait(false))
+            foreach (Diagnostic diagnostic in diagnostics)
             {
+                if (!string.Equals(diagnostic.Id, diagnosticId, StringComparison.Ordinal))
+                    continue;
+
                 if (!fixableDiagnosticIds.Contains(diagnostic.Id))
-                    return;
+                    continue;
 
                 var context = new CodeFixContext(
                     document,
                     diagnostic,
-                    (_, __) => Assert.True(false, "Expected no code fix."),
+                    (_, d) => Assert.True(!d.Contains(diagnostic), "Expected no code fix."),
                     CancellationToken.None);
 
                 await fixProvider.RegisterCodeFixesAsync(context).ConfigureAwait(false);
             }
-        }
-
-        private static Diagnostic FindFirstFixableDiagnostic(ImmutableArray<Diagnostic> diagnostics, ImmutableArray<string> fixableDiagnosticIds)
-        {
-            foreach (Diagnostic diagnostic in diagnostics)
-            {
-                if (fixableDiagnosticIds.Contains(diagnostic.Id))
-                {
-                    return diagnostic;
-                }
-            }
-
-            return null;
         }
     }
 }

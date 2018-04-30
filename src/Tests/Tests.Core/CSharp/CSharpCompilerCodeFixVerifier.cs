@@ -1,14 +1,22 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Text;
 
 namespace Roslynator.Tests.CSharp
 {
-    public static class CSharpCompilerCodeFixVerifier
+    public class CSharpCompilerCodeFixVerifier : CompilerCodeFixVerifier
     {
-        public static void VerifyFix(
+        public static CSharpCompilerCodeFixVerifier Instance { get; } = new CSharpCompilerCodeFixVerifier();
+
+        public override string Language
+        {
+            get { return LanguageNames.CSharp; }
+        }
+
+        public void VerifyFix(
             string source,
             string fixableCode,
             string fixedCode,
@@ -26,32 +34,38 @@ namespace Roslynator.Tests.CSharp
                 equivalenceKey: equivalenceKey);
         }
 
-        public static void VerifyFix(
+        public void VerifyFix(
             string source,
             string expected,
             string diagnosticId,
             CodeFixProvider fixProvider,
-            string equivalenceKey = null)
+            string equivalenceKey = null,
+            CodeVerificationOptions options = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            CompilerCodeFixVerifier.VerifyFixAsync(
+            VerifyFixAsync(
                 source: source,
                 expected: expected,
                 diagnosticId: diagnosticId,
                 fixProvider: fixProvider,
-                language: LanguageNames.CSharp,
-                equivalenceKey: equivalenceKey).Wait();
+                equivalenceKey: equivalenceKey,
+                options: options,
+                cancellationToken: cancellationToken).Wait();
         }
 
-        public static void VerifyNoFix(
+        public void VerifyNoFix(
             string source,
             CodeFixProvider fixProvider,
-            string equivalenceKey = null)
+            string equivalenceKey = null,
+            CodeVerificationOptions options = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            CompilerCodeFixVerifier.VerifyNoFixAsync(
+            VerifyNoFixAsync(
                 source: source,
                 fixProvider: fixProvider,
-                language: LanguageNames.CSharp,
-                equivalenceKey: equivalenceKey).Wait();
+                equivalenceKey: equivalenceKey,
+                options: options,
+                cancellationToken: cancellationToken).Wait();
         }
     }
 }

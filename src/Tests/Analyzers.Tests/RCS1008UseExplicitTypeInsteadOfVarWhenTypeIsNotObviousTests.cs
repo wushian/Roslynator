@@ -22,7 +22,7 @@ namespace Roslynator.Analyzers.Tests
         [Fact]
         public static void TestDiagnosticWithCodeFix()
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System;
 
 class C
@@ -62,7 +62,7 @@ class C
         [Fact]
         public static void TestDiagnosticWithCodeFix_Tuple()
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System;
 using System.Collections.Generic;
 
@@ -94,7 +94,7 @@ class C
         [Fact]
         internal static void TestNoDiagnostic()
         {
-            VerifyNoDiagnostic(@"
+            Instance.VerifyNoDiagnostic(@"
 using System;
 
 class C

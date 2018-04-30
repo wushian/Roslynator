@@ -27,7 +27,7 @@ namespace Roslynator.Analyzers.Tests
         [InlineData("(s == null) ? (\"\") : (s)", "s ?? \"\"")]
         public static void TestDiagnosticWithCodeFix_ReferenceType(string fixableCode, string fixedCode)
         {
-        VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 class C
 {
     void M()
@@ -47,7 +47,7 @@ class C
         [InlineData("(!ni.HasValue) ? 1 : ni.Value", "ni ?? 1")]
         public static void TestDiagnosticWithCodeFix_ValuType(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 class C
 {
     void M()
@@ -64,7 +64,7 @@ class C
         [Fact]
         public static void TestNoDiagnostic()
         {
-            VerifyNoDiagnostic(@"
+            Instance.VerifyNoDiagnostic(@"
 class C
 {
     public unsafe void M()
@@ -81,7 +81,7 @@ class C
         [Fact]
         public static void TestNoDiagnostic_Pointer()
         {
-            VerifyNoDiagnostic(@"
+            Instance.VerifyNoDiagnostic(@"
 class C
 {
     public unsafe void M()

@@ -16,7 +16,7 @@ namespace Roslynator.Refactorings.Tests
         [Fact]
         public static void TestCodeRefactoring_Field()
         {
-            VerifyRefactoring(
+            Instance.VerifyRefactoring(
 @"
 namespace A.B
 {
@@ -63,7 +63,7 @@ namespace A.B
         [Fact]
         public static void TestCodeRefactoring_Field2()
         {
-            VerifyRefactoring(
+            Instance.VerifyRefactoring(
 @"
 class C
 {
@@ -102,7 +102,7 @@ class C
         [Fact]
         public static void TestCodeRefactoring_Local()
         {
-            VerifyRefactoring(
+            Instance.VerifyRefactoring(
 @"
 class C
 {
@@ -139,7 +139,7 @@ class C
         [Fact]
         public static void TestNoCodeRefactoring()
         {
-            VerifyNoRefactoring(
+            Instance.VerifyNoRefactoring(
 @"
 using System;
 

@@ -17,7 +17,7 @@ namespace Roslynator.Refactorings.Tests
         [Fact]
         public static void TestCodeRefactoring()
         {
-            VerifyRefactoring(@"
+            Instance.VerifyRefactoring(@"
 class C
 {
     public string M(bool f)
@@ -51,7 +51,7 @@ class C
         [Fact]
         public static void TestCodeRefactoring2()
         {
-            VerifyRefactoring(@"
+            Instance.VerifyRefactoring(@"
 class C
 {
     public string M(bool f)
@@ -79,7 +79,7 @@ class C
         [Fact]
         public static void TestCodeRefactoring3()
         {
-            VerifyRefactoring(@"
+            Instance.VerifyRefactoring(@"
 class C
 {
     public string M(bool f)
@@ -117,7 +117,7 @@ class C
         [Fact]
         public static void TestCodeRefactoring4()
         {
-            VerifyRefactoring(@"
+            Instance.VerifyRefactoring(@"
 using System;
 
 class C
@@ -193,7 +193,7 @@ class C
         [Fact]
         public static void TestNoCodeRefactoring()
         {
-            VerifyNoRefactoring(@"
+            Instance.VerifyNoRefactoring(@"
 class C
 {
     public string M(bool f)

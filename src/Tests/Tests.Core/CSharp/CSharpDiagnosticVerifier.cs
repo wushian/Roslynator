@@ -1,53 +1,62 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Collections.Generic;
+using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
-using static Roslynator.Tests.CSharp.CSharpCodeFixVerifier;
 
 namespace Roslynator.Tests.CSharp
 {
-    public static class CSharpDiagnosticVerifier
+    public class CSharpDiagnosticVerifier : DiagnosticVerifier
     {
-        public static void VerifyDiagnosticAndFix(
+        public static CSharpDiagnosticVerifier Instance { get; } = new CSharpDiagnosticVerifier();
+
+        public override string Language => LanguageNames.CSharp;
+
+        public void VerifyDiagnosticAndFix(
             string source,
             string expected,
             DiagnosticDescriptor descriptor,
             DiagnosticAnalyzer analyzer,
             CodeFixProvider fixProvider,
-            CodeVerificationSettings settings = null)
+            CodeVerificationOptions options = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             (string result, List<Diagnostic> diagnostics) = TextUtility.GetMarkedDiagnostics(source, descriptor, FileUtility.DefaultCSharpFileName);
 
             VerifyDiagnostic(result, analyzer, diagnostics.ToArray());
 
-            VerifyFix(result, expected, analyzer, fixProvider, settings);
+            //TODO: 
+            CSharpCodeFixVerifier.Instance.VerifyFix(result, expected, analyzer, fixProvider, options, cancellationToken);
         }
 
-        public static void VerifyDiagnosticAndFix(
+        public void VerifyDiagnosticAndFix(
             string source,
             string expected,
             TextSpan span,
             DiagnosticDescriptor descriptor,
             DiagnosticAnalyzer analyzer,
             CodeFixProvider fixProvider,
-            CodeVerificationSettings settings = null)
+            CodeVerificationOptions options = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             VerifyDiagnostic(source, span, analyzer, descriptor);
 
-            VerifyFix(source, expected, analyzer, fixProvider, settings);
+            //TODO: 
+            CSharpCodeFixVerifier.Instance.VerifyFix(source, expected, analyzer, fixProvider, options, cancellationToken);
         }
 
-        public static void VerifyDiagnosticAndFix(
+        public void VerifyDiagnosticAndFix(
             string source,
             string fixableCode,
             string fixedCode,
             DiagnosticDescriptor descriptor,
             DiagnosticAnalyzer analyzer,
             CodeFixProvider fixProvider,
-            CodeVerificationSettings settings = null)
+            CodeVerificationOptions options = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             (string result1, string result2, TextSpan span) = TextUtility.GetMarkedSpan(source, fixableCode, fixedCode);
 
@@ -61,63 +70,86 @@ namespace Roslynator.Tests.CSharp
 
             VerifyDiagnostic(result1, span, analyzer, descriptor);
 
-            VerifyFix(result1, result2, analyzer, fixProvider, settings);
+            //TODO: 
+            CSharpCodeFixVerifier.Instance.VerifyFix(result1, result2, analyzer, fixProvider, options, cancellationToken);
         }
 
-        public static void VerifyDiagnostic(
+        public void VerifyDiagnostic(
             string source,
             TextSpan span,
             DiagnosticAnalyzer analyzer,
-            DiagnosticDescriptor descriptor)
+            DiagnosticDescriptor descriptor,
+            CodeVerificationOptions options = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             Location location = Location.Create(FileUtility.DefaultCSharpFileName, span, span.ToLinePositionSpan(source));
 
             Diagnostic diagnostic = Diagnostic.Create(descriptor, location);
 
-            VerifyDiagnostic(source, analyzer, diagnostic);
+            VerifyDiagnostic(source, analyzer, diagnostic, options, cancellationToken);
         }
 
-        public static void VerifyDiagnostic(
+        public void VerifyDiagnostic(
             string source,
             DiagnosticAnalyzer analyzer,
-            params Diagnostic[] expectedDiagnostics)
+            Diagnostic diagnostic,
+            CodeVerificationOptions options = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            VerifyDiagnostic(new string[] { source }, analyzer, expectedDiagnostics);
+            VerifyDiagnostic(new string[] { source }, analyzer, new Diagnostic[] { diagnostic }, options, cancellationToken);
         }
 
-        public static void VerifyDiagnostic(
+        public void VerifyDiagnostic(
+            string source,
+            DiagnosticAnalyzer analyzer,
+            Diagnostic[] diagnostics,
+            CodeVerificationOptions options = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            VerifyDiagnostic(new string[] { source }, analyzer, diagnostics, options, cancellationToken);
+        }
+
+        public void VerifyDiagnostic(
             IEnumerable<string> sources,
             DiagnosticAnalyzer analyzer,
-            params Diagnostic[] expectedDiagnostics)
+            Diagnostic[] diagnostics,
+            CodeVerificationOptions options = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            DiagnosticVerifier.VerifyDiagnosticAsync(sources, analyzer, LanguageNames.CSharp, expectedDiagnostics).Wait();
+            VerifyDiagnosticAsync(sources, analyzer, diagnostics, options, cancellationToken).Wait();
         }
 
-        public static void VerifyNoDiagnostic(
+        public void VerifyNoDiagnostic(
             string source,
             string fixableCode,
             DiagnosticDescriptor descriptor,
-            DiagnosticAnalyzer analyzer)
+            DiagnosticAnalyzer analyzer,
+            CodeVerificationOptions options = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             (string result, TextSpan span) = TextUtility.GetMarkedSpan(source, fixableCode);
 
-            VerifyNoDiagnostic(fixableCode, descriptor, analyzer);
+            VerifyNoDiagnostic(result, descriptor, analyzer, options, cancellationToken);
         }
 
-        public static void VerifyNoDiagnostic(
+        public void VerifyNoDiagnostic(
             string source,
             DiagnosticDescriptor descriptor,
-            DiagnosticAnalyzer analyzer)
+            DiagnosticAnalyzer analyzer,
+            CodeVerificationOptions options = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            VerifyNoDiagnostic(new string[] { source }, descriptor, analyzer);
+            VerifyNoDiagnostic(new string[] { source }, descriptor, analyzer, options, cancellationToken);
         }
 
-        public static void VerifyNoDiagnostic(
+        public void VerifyNoDiagnostic(
             IEnumerable<string> sources,
             DiagnosticDescriptor descriptor,
-            DiagnosticAnalyzer analyzer)
+            DiagnosticAnalyzer analyzer,
+            CodeVerificationOptions options = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            DiagnosticVerifier.VerifyNoDiagnosticAsync(sources, descriptor, analyzer, LanguageNames.CSharp).Wait();
+            VerifyNoDiagnosticAsync(sources, descriptor, analyzer, options, cancellationToken).Wait();
         }
     }
 }

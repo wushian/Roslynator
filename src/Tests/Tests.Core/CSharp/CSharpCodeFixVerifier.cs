@@ -1,39 +1,54 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Roslynator.Tests.CSharp
 {
-    public static class CSharpCodeFixVerifier
+    public class CSharpCodeFixVerifier : CodeFixVerifier
     {
-        public static void VerifyFix(
+        public static CSharpCodeFixVerifier Instance { get; } = new CSharpCodeFixVerifier();
+
+        public override string Language
+        {
+            get { return LanguageNames.CSharp; }
+        }
+
+        //TODO: diagnosticId
+        public void VerifyFix(
             string source,
             string expected,
             DiagnosticAnalyzer analyzer,
             CodeFixProvider fixProvider,
-            CodeVerificationSettings settings = null)
+            CodeVerificationOptions options = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            CodeFixVerifier.VerifyFixAsync(
+            VerifyFixAsync(
                 source: source,
                 expected: expected,
                 analyzer: analyzer,
                 fixProvider: fixProvider,
-                language: LanguageNames.CSharp,
-                settings: settings).Wait();
+                options: options,
+                cancellationToken: cancellationToken).Wait();
         }
 
-        public static void VerifyNoFix(
+        public void VerifyNoFix(
             string source,
+            string diagnosticId,
             DiagnosticAnalyzer analyzer,
-            CodeFixProvider fixProvider)
+            CodeFixProvider fixProvider,
+            CodeVerificationOptions options = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            CodeFixVerifier.VerifyNoFixAsync(
+            VerifyNoFixAsync(
                 source: source,
+                diagnosticId: diagnosticId,
                 analyzer: analyzer,
                 fixProvider: fixProvider,
-                language: LanguageNames.CSharp).Wait();
+                options: options,
+                cancellationToken: cancellationToken).Wait();
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Roslynator.Analyzers.Tests
         [Fact]
         public static void TestDiagnosticWithCodeFix_IfStatement()
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 public class C
 {
     public void M()
@@ -84,7 +84,7 @@ public struct S
         [Fact]
         public static void TestDiagnosticWithCodeFix_LogicalAndExpression_ReferenceType()
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System.Collections.Generic;
 
 public class Foo
@@ -203,7 +203,7 @@ public class Foo
         [Fact]
         public static void TestDiagnosticWithCodeFix_LogicalAndExpression_NullableType()
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 public struct Foo
 {
     private const string NonNullConst = ""x"";
@@ -269,7 +269,7 @@ public struct Foo
         [Fact]
         public static void TestNoDiagnostic_LogicalAndExpression_ReferenceType()
         {
-            VerifyNoDiagnostic(@"
+            Instance.VerifyNoDiagnostic(@"
 public class Foo
 {
     private const string NullConst = null;
@@ -306,7 +306,7 @@ public class Foo
         [Fact]
         public static void TestNoDiagnostic_LogicalAndExpression_ValueType()
         {
-            VerifyNoDiagnostic(@"
+            Instance.VerifyNoDiagnostic(@"
 public struct Foo
 {
     public int Value { get; }
@@ -328,7 +328,7 @@ public struct Foo
         [Fact]
         public static void TestNoDiagnostic_LogicalAndExpression_NullableType()
         {
-            VerifyNoDiagnostic(@"
+            Instance.VerifyNoDiagnostic(@"
 public struct Foo
 {
     public void M()
@@ -376,7 +376,7 @@ public struct Foo
         [Fact]
         public static void TestNoDiagnostic_LogicalAndExpression_OutParameter()
         {
-            VerifyNoDiagnostic(@"
+            Instance.VerifyNoDiagnostic(@"
 using System.Collections.Generic;
 
 public class C
@@ -401,7 +401,7 @@ public class C
         [Fact]
         public static void TestNoDiagnostic_LogicalAndExpression_ExpressionTree()
         {
-            VerifyNoDiagnostic(@"
+            Instance.VerifyNoDiagnostic(@"
 using System;
 using System.Linq.Expressions;
 

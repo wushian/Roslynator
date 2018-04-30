@@ -16,7 +16,7 @@ namespace Roslynator.Refactorings.Tests
         //[Fact]
         public static void TestRefactoring()
         {
-            VerifyRefactoring(@"
+            Instance.VerifyRefactoring(@"
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +35,7 @@ class C
         //[InlineData("", "")]
         public static void TestRefactoring2(string fixableCode, string fixedCode)
         {
-            VerifyRefactoring(@"
+            Instance.VerifyRefactoring(@"
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,7 +52,7 @@ class C
         //[Fact]
         public static void TestNoRefactoring()
         {
-            VerifyNoRefactoring(@"
+            Instance.VerifyNoRefactoring(@"
 using System;
 using System.Collections.Generic;
 using System.Linq;

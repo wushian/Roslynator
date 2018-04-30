@@ -16,7 +16,7 @@ namespace Roslynator.Refactorings.Tests
         [Fact]
         public static void TestCodeRefactoring()
         {
-            VerifyRefactoring(
+            Instance.VerifyRefactoring(
 @"
 class Foo : FooBase
 {

@@ -38,7 +38,7 @@ namespace Roslynator.Analyzers.Tests
                                  /*e*/  /*f*/  /*g*/")]
         public static void TestDiagnosticWithCodeFix(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 class C
 {
     void M(bool f, bool g)
@@ -57,7 +57,7 @@ class C
             && g /**/")]
         public static void TestDiagnosticWithCodeFix_LogicalAnd(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 class C
 {
     void M(bool f, bool g)
@@ -76,7 +76,7 @@ class C
             || g /**/")]
         public static void TestDiagnosticWithCodeFix_LogicalOr(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 class C
 {
     void M(bool f, bool g)
@@ -90,7 +90,7 @@ class C
         [Fact]
         public static void TestNoDiagnostic()
         {
-            VerifyNoDiagnostic(@"
+            Instance.VerifyNoDiagnostic(@"
 class C
 {
     void M(bool f, bool g, bool h)

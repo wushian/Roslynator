@@ -30,7 +30,7 @@ namespace Roslynator.Analyzers.Tests
         [InlineData("Where(_ => true).Single()", "Single(_ => true)")]
         public static void TestDiagnosticWithCodeFix(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System.Collections.Generic;
 using System.Linq;
 
@@ -49,7 +49,7 @@ class C
         [Fact]
         public static void TestDiagnosticWithCodeFix_Multiline()
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System.Collections.Generic;
 using System.Linq;
 
@@ -92,7 +92,7 @@ class C
         [InlineData("Where(_ => true).Single()", "Single(_ => true)")]
         public static void TestDiagnosticWithCodeFix_ImmutableArray(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -117,7 +117,7 @@ class C
         }).Cast<object>()", "OfType<object>()")]
         public static void TestCallOfTypeInsteadOfWhereAndCast(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System.Collections.Generic;
 using System.Linq;
 
@@ -138,7 +138,7 @@ class C
         [InlineData(@"Where((f) => f.StartsWith(""a"")).Any(f => f.StartsWith(""b""))", @"Any((f) => f.StartsWith(""a"") && f.StartsWith(""b""))")]
         public static void TestCombineWhereAndAny(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System.Collections.Generic;
 using System.Linq;
 
@@ -159,7 +159,7 @@ class C
         [InlineData(@"Where((f) => f.StartsWith(""a"")).Any(f => f.StartsWith(""b""))", @"Any((f) => f.StartsWith(""a"") && f.StartsWith(""b""))")]
         public static void TestCombineWhereAndAny_ImmutableArray(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -181,7 +181,7 @@ class C
         [InlineData("items.FirstOrDefault(_ => true) is null", "!items.Any(_ => true)")]
         public static void TestNullCheckWithFirstOrDefault_IEnumerableOfReferenceType(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System.Collections.Generic;
 using System.Linq;
 
@@ -203,7 +203,7 @@ class C
         [InlineData("items.FirstOrDefault(_ => true) is null", "!items.Any(_ => true)")]
         public static void TestNullCheckWithFirstOrDefault_IEnumerableOfNullableType(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System.Collections.Generic;
 using System.Linq;
 
@@ -225,7 +225,7 @@ class C
         [InlineData("items.FirstOrDefault(_ => true) is null", "!items.Any(_ => true)")]
         public static void TestNullCheckWithFirstOrDefault_ImmutableArrayOfReferenceType(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -247,7 +247,7 @@ class C
         [InlineData("items.FirstOrDefault(_ => true) is null", "!items.Any(_ => true)")]
         public static void TestNullCheckWithFirstOrDefault_ImmutableArrayOfNullableType(string fixableCode, string fixedCode)
         {
-            VerifyDiagnosticAndFix(@"
+            Instance.VerifyDiagnosticAndFix(@"
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -266,7 +266,7 @@ class C
         [Fact]
         public static void TestNoDiagnostic_CallOfTypeInsteadOfWhereAndCast()
         {
-            VerifyNoDiagnostic(@"
+            Instance.VerifyNoDiagnostic(@"
 using System.Collections.Generic;
 using System.Linq;
 
@@ -285,7 +285,7 @@ class C
         [Fact]
         public static void TestNoDiagnostic_CombineWhereAndAny()
         {
-            VerifyNoDiagnostic(@"
+            Instance.VerifyNoDiagnostic(@"
 using System.Collections.Generic;
 using System.Linq;
 
@@ -304,7 +304,7 @@ class C
         [Fact]
         public static void TestNoDiagnostic_SimplifyNullCheckWithFirstOrDefault_ValueType()
         {
-            VerifyNoDiagnostic(@"
+            Instance.VerifyNoDiagnostic(@"
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;

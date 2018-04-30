@@ -13,49 +13,89 @@ using Xunit;
 
 namespace Roslynator.Tests
 {
-    public static class CodeRefactoringVerifier
+    public abstract class CodeRefactoringVerifier : CodeVerifier
     {
-        public static async Task VerifyRefactoringAsync(
+        public async Task VerifyRefactoringAsync(
             string source,
             string expected,
             TextSpan span,
             CodeRefactoringProvider refactoringProvider,
-            string language,
             string equivalenceKey = null,
-            CodeVerificationSettings settings = null,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             await VerifyRefactoringAsync(
                 source: source,
+                additionalSources: Array.Empty<string>(),
                 expected: expected,
-                spans: ImmutableArray.Create(span),
+                span: span,
                 refactoringProvider: refactoringProvider,
-                language: language,
                 equivalenceKey: equivalenceKey,
-                settings: settings,
+                options: options,
                 cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public static async Task VerifyRefactoringAsync(
+        public async Task VerifyRefactoringAsync(
+            string source,
+            string[] additionalSources,
+            string expected,
+            TextSpan span,
+            CodeRefactoringProvider refactoringProvider,
+            string equivalenceKey = null,
+            CodeVerificationOptions options = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await VerifyRefactoringAsync(
+                source: source,
+                additionalSources: additionalSources,
+                expected: expected,
+                spans: ImmutableArray.Create(span),
+                refactoringProvider: refactoringProvider,
+                equivalenceKey: equivalenceKey,
+                options: options,
+                cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task VerifyRefactoringAsync(
             string source,
             string expected,
             ImmutableArray<TextSpan> spans,
             CodeRefactoringProvider refactoringProvider,
-            string language,
             string equivalenceKey = null,
-            CodeVerificationSettings settings = null,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (settings == null)
-                settings = CodeVerificationSettings.Default;
+            await VerifyRefactoringAsync(
+                source: source,
+                additionalSources: Array.Empty<string>(),
+                expected: expected,
+                spans: spans,
+                refactoringProvider: refactoringProvider,
+                equivalenceKey: equivalenceKey,
+                options: options,
+                cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
 
-            Document document = WorkspaceFactory.Document(source, language);
+        public async Task VerifyRefactoringAsync(
+            string source,
+            string[] additionalSources,
+            string expected,
+            ImmutableArray<TextSpan> spans,
+            CodeRefactoringProvider refactoringProvider,
+            string equivalenceKey = null,
+            CodeVerificationOptions options = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (options == null)
+                options = CodeVerificationOptions.Default;
+
+            Document document = WorkspaceFactory.Document(source, additionalSources, Language);
 
             SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
             ImmutableArray<Diagnostic> compilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
 
-            DiagnosticVerifier.VerifyDiagnostics(compilerDiagnostics, settings.MaxAllowedCompilerDiagnosticSeverity);
+            DiagnosticVerifier.VerifyDiagnostics(compilerDiagnostics, options.MaxAllowedCompilerDiagnosticSeverity);
 
             spans = spans.Sort((x, y) => y.Start.CompareTo(x.Start));
 
@@ -71,15 +111,13 @@ namespace Roslynator.Tests
                         if (equivalenceKey == null
                             || string.Equals(a.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
                         {
-                            if (action != null)
-                            {
+                            if (action == null)
                                 action = a;
-                            }
                         }
                     },
                     CancellationToken.None);
 
-                refactoringProvider.ComputeRefactoringsAsync(context).Wait();
+                await refactoringProvider.ComputeRefactoringsAsync(context).ConfigureAwait(false);
 
                 Assert.True(action != null, "No code refactoring has been registered.");
 
@@ -87,14 +125,12 @@ namespace Roslynator.Tests
 
                 semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
-                ImmutableArray<Diagnostic> compilerDiagnostics2 = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
+                ImmutableArray<Diagnostic> newCompilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
 
-                DiagnosticVerifier.VerifyDiagnostics(compilerDiagnostics2, settings.MaxAllowedCompilerDiagnosticSeverity);
+                DiagnosticVerifier.VerifyDiagnostics(newCompilerDiagnostics, options.MaxAllowedCompilerDiagnosticSeverity);
 
-                if (!settings.AllowNewCompilerDiagnostics)
-                {
-                    await DiagnosticVerifier.VerifyNoNewCompilerDiagnosticsAsync(document, compilerDiagnostics, compilerDiagnostics2).ConfigureAwait(false);
-                }
+                if (!options.AllowNewCompilerDiagnostics)
+                    DiagnosticVerifier.VerifyNoNewCompilerDiagnostics(compilerDiagnostics, newCompilerDiagnostics);
             }
 
             string actual = await document.ToSimplifiedAndFormattedFullStringAsync().ConfigureAwait(false);
@@ -102,54 +138,51 @@ namespace Roslynator.Tests
             Assert.Equal(expected, actual);
         }
 
-        public static async Task VerifyNoRefactoringAsync(
+        public async Task VerifyNoRefactoringAsync(
             string source,
             TextSpan span,
             CodeRefactoringProvider refactoringProvider,
-            string language,
             string equivalenceKey = null,
-            CodeVerificationSettings settings = null,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             await VerifyNoRefactoringAsync(
                 source,
                 ImmutableArray.Create(span),
                 refactoringProvider,
-                language,
                 equivalenceKey,
-                settings,
+                options,
                 cancellationToken).ConfigureAwait(false);
         }
 
-        public static async Task VerifyNoRefactoringAsync(
+        public async Task VerifyNoRefactoringAsync(
             string source,
             IEnumerable<TextSpan> spans,
             CodeRefactoringProvider refactoringProvider,
-            string language,
             string equivalenceKey = null,
-            CodeVerificationSettings settings = null,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (settings == null)
-                settings = CodeVerificationSettings.Default;
+            if (options == null)
+                options = CodeVerificationOptions.Default;
 
-            Document document = WorkspaceFactory.Document(source, language);
+            Document document = WorkspaceFactory.Document(source, Language);
 
             SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
             ImmutableArray<Diagnostic> compilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
 
-            DiagnosticVerifier.VerifyDiagnostics(compilerDiagnostics, settings.MaxAllowedCompilerDiagnosticSeverity);
+            DiagnosticVerifier.VerifyDiagnostics(compilerDiagnostics, options.MaxAllowedCompilerDiagnosticSeverity);
 
             foreach (TextSpan span in spans)
             {
                 var context = new CodeRefactoringContext(
                     document,
                     span,
-                    codeAction =>
+                    a =>
                     {
                         if (equivalenceKey == null
-                            || string.Equals(codeAction.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
+                            || string.Equals(a.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
                         {
                             Assert.True(false, "Expected no code refactoring.");
                         }
