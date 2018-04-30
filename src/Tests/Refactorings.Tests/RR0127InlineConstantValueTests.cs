@@ -59,37 +59,103 @@ namespace A.B
         }
 
         [Fact]
-        public async Task TestCodeRefactoring_Field2()
+        public async Task TestCodeRefactoring_BoolField()
         {
             await VerifyRefactoringAsync(@"
 class C
 {
     public const bool KB = true;
-    public const char KC = '\n';
-    public const int KI = int.MaxValue;
-    public const long KL = 1;
 
-    void M(string s)
+    void M()
     {
         bool b = [|KB|];
-        char c = [|KC|];
-        int i = [|KI|];
-        long l = [|KL|];
     }
 }
 ", @"
 class C
 {
     public const bool KB = true;
-    public const char KC = '\n';
-    public const int KI = int.MaxValue;
-    public const long KL = 1;
 
-    void M(string s)
+    void M()
     {
         bool b = true;
+    }
+}
+", RefactoringId);
+        }
+
+        [Fact]
+        public async Task TestCodeRefactoring_CharFieldAsync()
+        {
+            await VerifyRefactoringAsync(@"
+class C
+{
+    public const char KC = '\n';
+
+    void M()
+    {
+        char c = [|KC|];
+    }
+}
+", @"
+class C
+{
+    public const char KC = '\n';
+
+    void M()
+    {
         char c = '\n';
+    }
+}
+", RefactoringId);
+        }
+
+        [Fact]
+        public async Task TestCodeRefactoring_IntFieldAsync()
+        {
+            await VerifyRefactoringAsync(@"
+class C
+{
+    public const int KI = int.MaxValue;
+
+    void M()
+    {
+        int i = [|KI|];
+    }
+}
+", @"
+class C
+{
+    public const int KI = int.MaxValue;
+
+    void M()
+    {
         int i = 2147483647;
+    }
+}
+", RefactoringId);
+        }
+
+        [Fact]
+        public async Task TestCodeRefactoring_LongFieldAsync()
+        {
+            await VerifyRefactoringAsync(@"
+class C
+{
+    public const long KL = 1;
+
+    void M()
+    {
+        long l = [|KL|];
+    }
+}
+", @"
+class C
+{
+    public const long KL = 1;
+
+    void M()
+    {
         long l = 1;
     }
 }
@@ -97,39 +163,52 @@ class C
         }
 
         [Fact]
-        public async Task TestCodeRefactoring_Local()
+        public async Task TestCodeRefactoring_MultipleDocumentsAsync()
         {
             await VerifyRefactoringAsync(@"
-class C
+namespace A.B
 {
-    string M(string s)
+    class C
     {
-        const string k = @""x"";
-        const string k2 = k;
-        const string k3 = k2;
+        public const string K = C2.K2;
 
-        s += [|k|];
-        s += [|k3|];
-
-        return k3;
+        void M(string s)
+        {
+            s = [|K|];
+        }
     }
 }
 ", @"
-class C
+namespace A.B
 {
-    string M(string s)
+    class C
     {
-        const string k = @""x"";
-        const string k2 = k;
-        const string k3 = k2;
+        public const string K = C2.K2;
 
-        s += @""x"";
-        s += @""x"";
-
-        return k3;
+        void M(string s)
+        {
+            s = @""x"";
+        }
     }
 }
-", RefactoringId);
+",
+RefactoringId, additionalSources: new string[] { @"
+namespace A.B
+{
+    class C2
+    {
+        public const string K2 = C3.K3;
+    }
+}
+", @"
+namespace A.B
+{
+    class C3
+    {
+        public const string K3 = @""x"";
+    }
+}
+", });
         }
 
         [Fact]
