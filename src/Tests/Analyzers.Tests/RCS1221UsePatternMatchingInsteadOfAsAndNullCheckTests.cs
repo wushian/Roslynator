@@ -4,15 +4,13 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Roslynator.CSharp;
 using Roslynator.CSharp.Analysis.UsePatternMatching;
 using Roslynator.CSharp.CodeFixes;
-using Roslynator.Tests.CSharp;
 using Xunit;
 
 #pragma warning disable RCS1090
 
-namespace Roslynator.Analyzers.Tests
+namespace Roslynator.CSharp.Analysis.Tests
 {
     public class RCS1221UsePatternMatchingInsteadOfAsAndNullCheckTests : AbstractCSharpCodeFixVerifier
     {
@@ -23,7 +21,7 @@ namespace Roslynator.Analyzers.Tests
         public override CodeFixProvider FixProvider { get; } = new UsePatternMatchingInsteadOfAsAndNullCheckCodeFixProvider();
 
         [Fact]
-        public async Task TestDiagnosticWithFix_EqualsToNull()
+        public async Task Test_EqualsToNull()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
@@ -56,7 +54,7 @@ class C
         }
 
         [Fact]
-        public async Task TestDiagnosticWithFix_IsNull()
+        public async Task Test_IsNull()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C

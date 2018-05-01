@@ -2,25 +2,24 @@
 
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CodeRefactorings;
-using Roslynator.CSharp.Refactorings;
-using Roslynator.Tests.CSharp;
 using Xunit;
 
 #pragma warning disable RCS1090
 
-namespace Roslynator.Refactorings.Tests
+namespace Roslynator.CSharp.Refactorings.Tests
 {
     public class RRTests : AbstractCSharpCodeRefactoringVerifier
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.AddBraces;
 
         //[Fact]
-        public async Task TestRefactoring()
+        public async Task Test()
         {
             await VerifyRefactoringAsync(@"
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 class C
 {
@@ -34,12 +33,13 @@ class C
 
         //[Theory]
         //[InlineData("", "")]
-        public async Task TestRefactoring2(string fixableCode, string fixedCode)
+        public async Task Test2(string fromData, string toData)
         {
             await VerifyRefactoringAsync(@"
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 class C
 {
@@ -47,7 +47,7 @@ class C
     {
     }
 }
-", fixableCode, fixedCode, RefactoringId);
+", fromData, toData, RefactoringId);
         }
 
         //[Fact]
@@ -57,6 +57,7 @@ class C
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 class C
 {

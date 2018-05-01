@@ -1,19 +1,18 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Threading.Tasks;
-using Roslynator.CSharp.Refactorings;
 using Xunit;
 
 #pragma warning disable RCS1090
 
-namespace Roslynator.Refactorings.Tests
+namespace Roslynator.CSharp.Refactorings.Tests
 {
     public class RR0173WrapInElseClauseTests : AbstractCSharpCodeRefactoringVerifier
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.WrapInElseClause;
 
         [Fact]
-        public async Task TestCodeRefactoring()
+        public async Task Test_IfWithBlock()
         {
             await VerifyRefactoringAsync(@"
 class C
@@ -47,7 +46,7 @@ class C
         }
 
         [Fact]
-        public async Task TestCodeRefactoring2()
+        public async Task Test_If_WithEmbeddedStatement()
         {
             await VerifyRefactoringAsync(@"
 class C
@@ -75,7 +74,7 @@ class C
         }
 
         [Fact]
-        public async Task TestCodeRefactoring3()
+        public async Task Test_IfWithBlock_MultipleStatements()
         {
             await VerifyRefactoringAsync(@"
 class C
@@ -113,7 +112,7 @@ class C
         }
 
         [Fact]
-        public async Task TestCodeRefactoring4()
+        public async Task Test_IfElseIf()
         {
             await VerifyRefactoringAsync(@"
 using System;
@@ -189,7 +188,7 @@ class C
         }
 
         [Fact]
-        public async Task TestNoCodeRefactoring()
+        public async Task TestNoRefactoring_IfWithoutJumpStatement()
         {
             await VerifyNoRefactoringAsync(@"
 class C
@@ -203,7 +202,16 @@ class C
 
 [|        return null;|]
     }
+}
+", RefactoringId);
+        }
 
+        [Fact]
+        public async Task TestNoRefactoring_IfElse()
+        {
+            await VerifyNoRefactoringAsync(@"
+class C
+{
     public string M2(bool f)
     {
         if (f)

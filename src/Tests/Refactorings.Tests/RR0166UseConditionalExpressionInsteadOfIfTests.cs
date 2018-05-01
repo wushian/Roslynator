@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Threading.Tasks;
-using Roslynator.CSharp.Refactorings;
 using Xunit;
 
 #pragma warning disable RCS1090
 
-namespace Roslynator.Refactorings.Tests
+namespace Roslynator.CSharp.Refactorings.Tests
 {
     public class RR0166UseConditionalExpressionInsteadOfIfTests : AbstractCSharpCodeRefactoringVerifier
     {
@@ -15,7 +14,7 @@ namespace Roslynator.Refactorings.Tests
         [Theory]
         [InlineData("if (f) { z = x; } else { z = y; }", "z = (f) ? x : y;")]
         [InlineData("if (f) z = x; else z = y;", "z = (f) ? x : y;")]
-        public async Task TestRefactoring_IfElseToAssignmentWithConditionalExpression(string fixableCode, string fixedCode)
+        public async Task Test_IfElseToAssignmentWithConditionalExpression(string fromData, string toData)
         {
             await VerifyRefactoringAsync(@"
 class C
@@ -25,11 +24,11 @@ class C
         [||]
     }
 }
-", fixableCode, fixedCode, RefactoringId);
+", fromData, toData, RefactoringId);
         }
 
         [Fact]
-        public async Task TestRefactoring_AssignmentAndIfElseToAssignmentWithConditionalExpression()
+        public async Task Test_AssignmentAndIfElseToAssignmentWithConditionalExpression()
         {
             await VerifyRefactoringAsync(@"
 class C
@@ -59,7 +58,7 @@ class C
         }
 
         [Fact]
-        public async Task TestRefactoring_LocalDeclarationAndIfElseToAssignmentWithConditionalExpression()
+        public async Task Test_LocalDeclarationAndIfElseToAssignmentWithConditionalExpression()
         {
             await VerifyRefactoringAsync(@"
 class C
@@ -93,7 +92,7 @@ class C
         [InlineData("if (f) return x; else return y;", "return (f) ? x : y;")]
         [InlineData("if (f) { return x; } return y;", "return (f) ? x : y;")]
         [InlineData("if (f) return x; return y;", "return (f) ? x : y;")]
-        public async Task TestRefactoring_IfToReturnWithConditionalExpression(string fixableCode, string fixedCode)
+        public async Task Test_IfToReturnWithConditionalExpression(string fromData, string toData)
         {
             await VerifyRefactoringAsync(@"
 class C
@@ -103,13 +102,13 @@ class C
         [||]
     }
 }
-", fixableCode, fixedCode, RefactoringId);
+", fromData, toData, RefactoringId);
         }
 
         [Theory]
         [InlineData("if (f) { yield return x; } else { yield return y; }", "yield return (f) ? x : y;")]
         [InlineData("if (f) yield return x; else yield return y;", "yield return (f) ? x : y;")]
-        public async Task TestRefactoring_IfElseToYieldReturnWithConditionalExpression(string fixableCode, string fixedCode)
+        public async Task Test_IfElseToYieldReturnWithConditionalExpression(string fromData, string toData)
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -121,7 +120,7 @@ class C
         [||]
     }
 }
-", fixableCode, fixedCode, RefactoringId);
+", fromData, toData, RefactoringId);
         }
 
         [Fact]

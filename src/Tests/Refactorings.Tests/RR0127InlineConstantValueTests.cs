@@ -1,19 +1,18 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Threading.Tasks;
-using Roslynator.CSharp.Refactorings;
 using Xunit;
 
 #pragma warning disable RCS1090
 
-namespace Roslynator.Refactorings.Tests
+namespace Roslynator.CSharp.Refactorings.Tests
 {
     public class RR0127InlineConstantValueTests : AbstractCSharpCodeRefactoringVerifier
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.InlineConstantValue;
 
         [Fact]
-        public async Task TestCodeRefactoring_Field()
+        public async Task Test_Field()
         {
             await VerifyRefactoringAsync(@"
 namespace A.B
@@ -59,7 +58,7 @@ namespace A.B
         }
 
         [Fact]
-        public async Task TestCodeRefactoring_BoolField()
+        public async Task Test_BoolField()
         {
             await VerifyRefactoringAsync(@"
 class C
@@ -85,7 +84,7 @@ class C
         }
 
         [Fact]
-        public async Task TestCodeRefactoring_CharFieldAsync()
+        public async Task Test_CharFieldAsync()
         {
             await VerifyRefactoringAsync(@"
 class C
@@ -111,7 +110,7 @@ class C
         }
 
         [Fact]
-        public async Task TestCodeRefactoring_IntFieldAsync()
+        public async Task Test_IntFieldAsync()
         {
             await VerifyRefactoringAsync(@"
 class C
@@ -137,7 +136,7 @@ class C
         }
 
         [Fact]
-        public async Task TestCodeRefactoring_LongFieldAsync()
+        public async Task Test_LongFieldAsync()
         {
             await VerifyRefactoringAsync(@"
 class C
@@ -163,7 +162,7 @@ class C
         }
 
         [Fact]
-        public async Task TestCodeRefactoring_MultipleDocumentsAsync()
+        public async Task Test_MultipleDocumentsAsync()
         {
             await VerifyRefactoringAsync(@"
 namespace A.B
@@ -212,7 +211,7 @@ namespace A.B
         }
 
         [Fact]
-        public async Task TestNoCodeRefactoring()
+        public async Task TestNoRefactoring()
         {
             await VerifyNoRefactoringAsync(@"
 using System;

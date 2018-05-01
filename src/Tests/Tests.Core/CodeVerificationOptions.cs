@@ -13,13 +13,11 @@ namespace Roslynator.Tests
         public CodeVerificationOptions(
             bool allowNewCompilerDiagnostics,
             bool enableDiagnosticsDisabledByDefault,
-            bool allowUnsafe,
             DiagnosticSeverity maxAllowedCompilerDiagnosticSeverity)
         {
             MaxAllowedCompilerDiagnosticSeverity = maxAllowedCompilerDiagnosticSeverity;
             EnableDiagnosticsDisabledByDefault = enableDiagnosticsDisabledByDefault;
             AllowNewCompilerDiagnostics = allowNewCompilerDiagnostics;
-            AllowUnsafe = allowUnsafe;
         }
 
         public static CodeVerificationOptions Default { get; } = new CodeVerificationOptions();
@@ -27,9 +25,6 @@ namespace Roslynator.Tests
         public bool AllowNewCompilerDiagnostics { get; }
 
         public bool EnableDiagnosticsDisabledByDefault { get; } = true;
-
-        //TODO: AllowUnsafe
-        public bool AllowUnsafe { get; } = true;
 
         public DiagnosticSeverity MaxAllowedCompilerDiagnosticSeverity { get; } = DiagnosticSeverity.Warning;
     }

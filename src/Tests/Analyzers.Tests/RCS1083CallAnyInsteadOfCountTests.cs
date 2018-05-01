@@ -4,15 +4,12 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Roslynator.CSharp;
-using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
-using Roslynator.Tests.CSharp;
 using Xunit;
 
 #pragma warning disable RCS1090
 
-namespace Roslynator.Analyzers.Tests
+namespace Roslynator.CSharp.Analysis.Tests
 {
     public class RCS1083CallAnyInsteadOfCountTests : AbstractCSharpCodeFixVerifier
     {
@@ -35,7 +32,7 @@ namespace Roslynator.Analyzers.Tests
         [InlineData("0 == items.Count()", "!items.Any()")]
         [InlineData("1 > items.Count()", "!items.Any()")]
         [InlineData("0 >= items.Count()", "!items.Any()")]
-        public async Task TestDiagnosticWithCodeFix(string fixableCode, string fixedCode)
+        public async Task TestDiagnostic(string fromData, string toData)
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System.Collections.Generic;
@@ -53,7 +50,7 @@ class C
         }
     }
 }
-", fixableCode, fixedCode);
+", fromData, toData);
         }
 
         [Fact]

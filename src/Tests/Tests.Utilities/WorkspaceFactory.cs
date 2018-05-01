@@ -19,7 +19,7 @@ namespace Roslynator
             Document document = project.Documents.First();
 
             if (additionalSources.Length > 0)
-                project = AddDocuments(project, additionalSources, language, fileNumberingBase: 1);
+                project = AddDocuments(project, language, additionalSources, fileNumberingBase: 1);
 
             return project.GetDocument(document.Id);
         }
@@ -40,21 +40,21 @@ namespace Roslynator
                 .GetProject(projectId);
         }
 
-        public static Project Project(IEnumerable<string> sources, string language)
+        public static Project Project(string language, IEnumerable<string> sources)
         {
             Project project = (language == LanguageNames.CSharp) ? EmptyCSharpProject : Project(language);
 
-            return AddDocuments(project, sources, language);
+            return AddDocuments(project, language, sources);
         }
 
-        private static Project AddDocuments(Project project, IEnumerable<string> sources, string language, int fileNumberingBase = FileUtility.FileNumberingBase)
+        private static Project AddDocuments(Project project, string language, IEnumerable<string> sources, int fileNumberingBase = FileUtility.FileNumberingBase)
         {
             Solution solution = project.Solution;
 
             int count = fileNumberingBase;
             foreach (string source in sources)
             {
-                string newFileName = FileUtility.CreateFileName(suffix: count, language: language);
+                string newFileName = FileUtility.CreateFileName(language, suffix: count);
                 DocumentId documentId = DocumentId.CreateNewId(project.Id, debugName: newFileName);
                 solution = solution.AddDocument(documentId, newFileName, SourceText.From(source));
                 count++;

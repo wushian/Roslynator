@@ -4,15 +4,12 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Roslynator.CSharp;
-using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
-using Roslynator.Tests.CSharp;
 using Xunit;
 
 #pragma warning disable RCS1090
 
-namespace Roslynator.Analyzers.Tests
+namespace Roslynator.CSharp.Analysis.Tests
 {
     public class RCSTests : AbstractCSharpCodeFixVerifier
     {
@@ -23,12 +20,13 @@ namespace Roslynator.Analyzers.Tests
         public override CodeFixProvider FixProvider { get; }
 
         //[Fact]
-        public async Task TestDiagnosticWithCodeFix()
+        public async Task Test()
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 class C
 {
@@ -42,12 +40,13 @@ class C
 
         //[Theory]
         //[InlineData("", "")]
-        public async Task TestDiagnosticWithCodeFix2(string fixableCode, string fixedCode)
+        public async Task Test2(string fromData, string toData)
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 class C
 {
@@ -55,7 +54,7 @@ class C
     {
     }
 }
-", fixableCode, fixedCode);
+", fromData, toData);
         }
 
         //[Fact]
@@ -65,6 +64,7 @@ class C
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 class C
 {
@@ -77,12 +77,13 @@ class C
 
         //[Theory]
         //[InlineData("")]
-        public async Task TestNoDiagnostic2(string fixableCode)
+        public async Task TestNoDiagnostic2(string fromData)
         {
             await VerifyNoDiagnosticAsync(@"
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 class C
 {
@@ -90,7 +91,7 @@ class C
     {
     }
 }
-", fixableCode);
+", fromData);
         }
     }
 }

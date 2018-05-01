@@ -1,19 +1,18 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Threading.Tasks;
-using Roslynator.CSharp.Refactorings;
 using Xunit;
 
 #pragma warning disable RCS1090
 
-namespace Roslynator.Refactorings.Tests
+namespace Roslynator.CSharp.Refactorings.Tests
 {
     public class RR0048FormatArgumentListTests : AbstractCSharpCodeRefactoringVerifier
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.FormatArgumentList;
 
         [Fact]
-        public async Task TestFormatArgumentListToMultiLine()
+        public async Task Test_ToMultiLine()
         {
             await VerifyRefactoringAsync(@"
 class C
@@ -38,7 +37,7 @@ class C
         }
 
         [Fact]
-        public async Task TestFormatArgumentListToMultiLine2()
+        public async Task Test_ToMultiLine2()
         {
             await VerifyRefactoringAsync(@"
 class C
@@ -63,7 +62,7 @@ class C
         }
 
         [Fact]
-        public async Task TestFormatArgumentListToSingleLine()
+        public async Task Test_ToSingleLine()
         {
             await VerifyRefactoringAsync(@"
 class C
@@ -88,7 +87,7 @@ class C
         }
 
         [Fact]
-        public async Task TestFormatArgumentListToSingleLine2()
+        public async Task Test_ToSingleLine2()
         {
             await VerifyRefactoringAsync(@"
 class C

@@ -20,11 +20,11 @@ namespace Roslynator.Tests
 
         public async Task VerifyFixAsync(
             string theory,
-            string sourceData,
-            string expectedData,
+            string fromData,
+            string toData,
             string equivalenceKey)
         {
-            (string source, string expected, TextSpan span) = TestSourceText.ReplaceSpan(theory, sourceData, expectedData);
+            (string source, string expected, TextSpan span) = TestSourceText.ReplaceSpan(theory, fromData, toData);
 
             await VerifyFixAsync(
                 source: source,
@@ -85,7 +85,12 @@ namespace Roslynator.Tests
 
                 semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
-                diagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
+                ImmutableArray<Diagnostic> newDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
+
+                if (!Options.AllowNewCompilerDiagnostics)
+                    DiagnosticVerifier.VerifyNoNewCompilerDiagnostics(diagnostics, newDiagnostics);
+
+                diagnostics = newDiagnostics;
             }
 
             string actual = await document.ToFullStringAsync(simplify: true, format: true).ConfigureAwait(false);

@@ -1,19 +1,18 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Threading.Tasks;
-using Roslynator.CSharp.Refactorings;
 using Xunit;
 
 #pragma warning disable RCS1090
 
-namespace Roslynator.Refactorings.Tests
+namespace Roslynator.CSharp.Refactorings.Tests
 {
     public class RR0197InitializeFieldFromConstructorTests : AbstractCSharpCodeRefactoringVerifier
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.InitializeFieldFromConstructor;
 
         [Fact]
-        public async Task TestCodeRefactoring()
+        public async Task TestRefactoring()
         {
             await VerifyRefactoringAsync(@"
 class Foo : FooBase

@@ -25,17 +25,18 @@ namespace Roslynator.Tests
         {
             TestSourceTextAnalysis analysis = TestSourceText.GetSpans(source);
 
-            IEnumerable<Diagnostic> diagnostics = analysis.Spans.Select(f => CreateDiagnostic(f.Span, f.LineSpan));
-
-            await VerifyDiagnosticAsync(analysis.Source, diagnostics, cancellationToken).ConfigureAwait(false);
+            await VerifyDiagnosticAsync(
+                analysis.Source,
+                analysis.Spans.Select(f => CreateDiagnostic(f.Span, f.LineSpan)),
+                cancellationToken).ConfigureAwait(false);
         }
 
         public async Task VerifyDiagnosticAsync(
             string theory,
-            string diagnosticData,
+            string fromData,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            (string source, TextSpan span) = TestSourceText.ReplaceSpan(theory, diagnosticData);
+            (string source, TextSpan span) = TestSourceText.ReplaceSpan(theory, fromData);
 
             TestSourceTextAnalysis analysis = TestSourceText.GetSpans(source);
 
@@ -54,9 +55,10 @@ namespace Roslynator.Tests
             TextSpan span,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            Diagnostic diagnostic = CreateDiagnostic(source, span);
-
-            await VerifyDiagnosticAsync(source, diagnostic, cancellationToken).ConfigureAwait(false);
+            await VerifyDiagnosticAsync(
+                source,
+                CreateDiagnostic(source, span),
+                cancellationToken).ConfigureAwait(false);
         }
 
         public async Task VerifyDiagnosticAsync(
@@ -64,9 +66,10 @@ namespace Roslynator.Tests
             IEnumerable<TextSpan> spans,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            IEnumerable<Diagnostic> diagnostics = spans.Select(span => CreateDiagnostic(source, span));
-
-            await VerifyDiagnosticAsync(source, diagnostics, cancellationToken).ConfigureAwait(false);
+            await VerifyDiagnosticAsync(
+                source,
+                spans.Select(span => CreateDiagnostic(source, span)),
+                cancellationToken).ConfigureAwait(false);
         }
 
         public async Task VerifyDiagnosticAsync(
@@ -74,7 +77,10 @@ namespace Roslynator.Tests
             Diagnostic diagnostic,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            await VerifyDiagnosticAsync(new string[] { source }, new Diagnostic[] { diagnostic }, cancellationToken).ConfigureAwait(false);
+            await VerifyDiagnosticAsync(
+                new string[] { source },
+                new Diagnostic[] { diagnostic },
+                cancellationToken).ConfigureAwait(false);
         }
 
         public async Task VerifyDiagnosticAsync(
@@ -93,7 +99,7 @@ namespace Roslynator.Tests
             IEnumerable<Diagnostic> expectedDiagnostics,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            Project project = WorkspaceFactory.Project(sources, Language);
+            Project project = WorkspaceFactory.Project(Language, sources);
 
             Compilation compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
@@ -104,27 +110,44 @@ namespace Roslynator.Tests
             if (Options.EnableDiagnosticsDisabledByDefault)
                 compilation = compilation.EnableDiagnosticsDisabledByDefault(Analyzer);
 
-            ImmutableArray<Diagnostic> analyzerDiagnostics = await compilation.GetAnalyzerDiagnosticsAsync(Analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);
+            ImmutableArray<Diagnostic> diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(Analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);
 
-            if (analyzerDiagnostics.Length > 0
+            if (diagnostics.Length > 0
                 && Analyzer.SupportedDiagnostics.Length > 1)
             {
-                VerifyDiagnostics(
-                    analyzerDiagnostics.Where(diagnostic => expectedDiagnostics.Any(expectedDiagnostic => DiagnosticComparer.Id.Equals(diagnostic, expectedDiagnostic))),
-                    expectedDiagnostics);
+                VerifyDiagnostics(FilterDiagnostics(), expectedDiagnostics);
             }
             else
             {
-                VerifyDiagnostics(analyzerDiagnostics, expectedDiagnostics);
+                VerifyDiagnostics(diagnostics, expectedDiagnostics);
+            }
+
+            IEnumerable<Diagnostic> FilterDiagnostics()
+            {
+                foreach (Diagnostic diagnostic in diagnostics)
+                {
+                    bool success = false;
+                    foreach (Diagnostic expectedDiagnostic in expectedDiagnostics)
+                    {
+                        if (DiagnosticComparer.Id.Equals(diagnostic, expectedDiagnostic))
+                        {
+                            success = true;
+                            break;
+                        }
+                    }
+
+                    if (success)
+                        yield return diagnostic;
+                }
             }
         }
 
         public async Task VerifyNoDiagnosticAsync(
             string theory,
-            string diagnosticData,
+            string fromData,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            (string source, TextSpan span) = TestSourceText.ReplaceSpan(theory, diagnosticData);
+            (string source, TextSpan span) = TestSourceText.ReplaceSpan(theory, fromData);
 
             await VerifyNoDiagnosticAsync(source, cancellationToken).ConfigureAwait(false);
         }
@@ -145,7 +168,7 @@ namespace Roslynator.Tests
             if (!Analyzer.Supports(Descriptor))
                 Assert.True(false, $"Diagnostic \"{Descriptor.Id}\" is not supported by analyzer \"{Analyzer.GetType().Name}\".");
 
-            Project project = WorkspaceFactory.Project(sources, Language);
+            Project project = WorkspaceFactory.Project(Language, sources);
 
             Compilation compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
@@ -162,20 +185,6 @@ namespace Roslynator.Tests
                 Assert.True(false, $"No diagnostic expected{analyzerDiagnostics.Where(f => string.Equals(f.Id, Descriptor.Id, StringComparison.Ordinal)).ToDebugString()}");
         }
 
-        private protected Diagnostic CreateDiagnostic(string source, TextSpan span)
-        {
-            LinePositionSpan lineSpan = span.ToLinePositionSpan(source);
-
-            return CreateDiagnostic(span, lineSpan);
-        }
-
-        private protected Diagnostic CreateDiagnostic(TextSpan span, LinePositionSpan lineSpan)
-        {
-            Location location = Location.Create(FileUtility.DefaultCSharpFileName, span, lineSpan);
-
-            return Diagnostic.Create(Descriptor, location);
-        }
-
         internal static void VerifyNoNewCompilerDiagnostics(
             ImmutableArray<Diagnostic> compilerDiagnostics,
             ImmutableArray<Diagnostic> newCompilerDiagnostics)
@@ -188,13 +197,13 @@ namespace Roslynator.Tests
                 Assert.True(false, $"Code fix introduced new compiler diagnostics{diff.ToDebugString()}");
         }
 
-        internal static void VerifyDiagnostics(ImmutableArray<Diagnostic> diagnostics, DiagnosticSeverity maxAllowedSeverity = DiagnosticSeverity.Info)
+        internal static void VerifyDiagnostics(ImmutableArray<Diagnostic> diagnostics, DiagnosticSeverity maxAllowedSeverity)
         {
             if (diagnostics.Any(f => f.Severity > maxAllowedSeverity))
                 Assert.True(false, $"No compiler diagnostics with severity higher than '{maxAllowedSeverity}' expected{diagnostics.Where(f => f.Severity > maxAllowedSeverity).ToDebugString()}");
         }
 
-        internal void VerifyDiagnostics(
+        private void VerifyDiagnostics(
             IEnumerable<Diagnostic> actual,
             IEnumerable<Diagnostic> expected,
             bool checkAdditionalLocations = false)
@@ -309,6 +318,20 @@ namespace Roslynator.Tests
             {
                 return $"\r\n\r\nExpected diagnostic:\r\n{expectedDiagnostic}\r\n\r\nActual diagnostic:\r\n{actualDiagnostic}\r\n";
             }
+        }
+
+        private protected Diagnostic CreateDiagnostic(string source, TextSpan span)
+        {
+            LinePositionSpan lineSpan = span.ToLinePositionSpan(source);
+
+            return CreateDiagnostic(span, lineSpan);
+        }
+
+        private protected Diagnostic CreateDiagnostic(TextSpan span, LinePositionSpan lineSpan)
+        {
+            Location location = Location.Create(FileUtility.DefaultCSharpFileName, span, lineSpan);
+
+            return Diagnostic.Create(Descriptor, location);
         }
     }
 }

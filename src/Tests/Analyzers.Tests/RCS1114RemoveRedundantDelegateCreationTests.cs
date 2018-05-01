@@ -4,15 +4,12 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Roslynator.CSharp;
-using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
-using Roslynator.Tests.CSharp;
 using Xunit;
 
 #pragma warning disable RCS1090
 
-namespace Roslynator.Analyzers.Tests
+namespace Roslynator.CSharp.Analysis.Tests
 {
     public class RCS1114RemoveRedundantDelegateCreationTests : AbstractCSharpCodeFixVerifier
     {
@@ -23,7 +20,7 @@ namespace Roslynator.Analyzers.Tests
         public override CodeFixProvider FixProvider { get; } = new AssignmentExpressionCodeFixProvider();
 
         [Fact]
-        public async Task TestDiagnosticWithCodeFix_EventHandler()
+        public async Task Test_EventHandler()
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System;
@@ -59,7 +56,7 @@ class Foo
         }
 
         [Fact]
-        public async Task TestDiagnosticWithCodeFix_EventHandlerOfT()
+        public async Task Test_EventHandlerOfT()
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System;
@@ -103,7 +100,7 @@ class Foo
         }
 
         [Fact]
-        public async Task TestDiagnosticWithCodeFix_CustomEventHandler()
+        public async Task Test_CustomEventHandler()
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System;
@@ -151,7 +148,7 @@ class Foo
         }
 
         [Fact]
-        public async Task TestDiagnosticWithCodeFix_TEventArgs()
+        public async Task Test_TEventArgs()
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System;

@@ -34,11 +34,11 @@ namespace Roslynator.Tests
 
         public async Task VerifyDiagnosticAndFixAsync(
             string theory,
-            string diagnosticData,
-            string fixData,
+            string fromData,
+            string toData,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            (string source, string expected, TextSpan span) = TestSourceText.ReplaceSpan(theory, diagnosticData, fixData);
+            (string source, string expected, TextSpan span) = TestSourceText.ReplaceSpan(theory, fromData, toData);
 
             TestSourceTextAnalysis analysis = TestSourceText.GetSpans(source);
 
@@ -111,8 +111,12 @@ namespace Roslynator.Tests
 
                 compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
+                ImmutableArray<Diagnostic> newCompilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
+
+                VerifyDiagnostics(newCompilerDiagnostics, Options.MaxAllowedCompilerDiagnosticSeverity);
+
                 if (!Options.AllowNewCompilerDiagnostics)
-                    VerifyNoNewCompilerDiagnostics(compilerDiagnostics, compilation.GetDiagnostics(cancellationToken));
+                    VerifyNoNewCompilerDiagnostics(compilerDiagnostics, newCompilerDiagnostics);
 
                 if (Options.EnableDiagnosticsDisabledByDefault)
                     compilation = compilation.EnableDiagnosticsDisabledByDefault(Analyzer);

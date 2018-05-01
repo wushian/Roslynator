@@ -4,15 +4,12 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Roslynator.CSharp;
-using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
-using Roslynator.Tests.CSharp;
 using Xunit;
 
 #pragma warning disable RCS1090
 
-namespace Roslynator.Analyzers.Tests
+namespace Roslynator.CSharp.Analysis.Tests
 {
     public class RCS1084UseCoalesceExpressionInsteadOfConditionalExpressionTests : AbstractCSharpCodeFixVerifier
     {
@@ -28,7 +25,7 @@ namespace Roslynator.Analyzers.Tests
 
         [InlineData("(s != null) ? (s) : (\"\")", "s ?? \"\"")]
         [InlineData("(s == null) ? (\"\") : (s)", "s ?? \"\"")]
-        public async Task TestDiagnosticWithCodeFix_ReferenceType(string fixableCode, string fixedCode)
+        public async Task Test_ReferenceType(string fromData, string toData)
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
@@ -40,7 +37,7 @@ class C
         s = [||];
     }
 }
-", fixableCode, fixedCode);
+", fromData, toData);
         }
 
         [Theory]
@@ -48,7 +45,7 @@ class C
         [InlineData("(ni == null) ? 1 : ni.Value", "ni ?? 1")]
         [InlineData("(ni.HasValue) ? ni.Value : 1", "ni ?? 1")]
         [InlineData("(!ni.HasValue) ? 1 : ni.Value", "ni ?? 1")]
-        public async Task TestDiagnosticWithCodeFix_ValuType(string fixableCode, string fixedCode)
+        public async Task Test_ValueType(string fromData, string toData)
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
@@ -61,7 +58,7 @@ class C
         i = [||];
     }
 }
-", fixableCode, fixedCode);
+", fromData, toData);
         }
 
         [Fact]

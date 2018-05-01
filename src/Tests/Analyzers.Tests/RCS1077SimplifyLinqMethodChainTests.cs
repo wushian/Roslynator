@@ -4,15 +4,12 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Roslynator.CSharp;
-using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
-using Roslynator.Tests.CSharp;
 using Xunit;
 
 #pragma warning disable RCS1090
 
-namespace Roslynator.Analyzers.Tests
+namespace Roslynator.CSharp.Analysis.Tests
 {
     public class RCS1077SimplifyLinqMethodChainTests : AbstractCSharpCodeFixVerifier
     {
@@ -31,7 +28,7 @@ namespace Roslynator.Analyzers.Tests
         [InlineData("Where(_ => true).LastOrDefault()", "LastOrDefault(_ => true)")]
         [InlineData("Where(_ => true).LongCount()", "LongCount(_ => true)")]
         [InlineData("Where(_ => true).Single()", "Single(_ => true)")]
-        public async Task TestDiagnosticWithCodeFix(string fixableCode, string fixedCode)
+        public async Task Test_Where(string fromData, string toData)
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System.Collections.Generic;
@@ -46,11 +43,11 @@ class C
         var x = items.[||];
     }
 }
-", fixableCode, fixedCode);
+", fromData, toData);
         }
 
         [Fact]
-        public async Task TestDiagnosticWithCodeFix_Multiline()
+        public async Task Test_Where_Multiline()
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System.Collections.Generic;
@@ -93,7 +90,7 @@ class C
         [InlineData("Where(_ => true).LastOrDefault()", "LastOrDefault(_ => true)")]
         [InlineData("Where(_ => true).LongCount()", "LongCount(_ => true)")]
         [InlineData("Where(_ => true).Single()", "Single(_ => true)")]
-        public async Task TestDiagnosticWithCodeFix_ImmutableArray(string fixableCode, string fixedCode)
+        public async Task Test_Where_ImmutableArray(string fromData, string toData)
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System.Collections.Immutable;
@@ -108,7 +105,7 @@ class C
         var x = items.[||];
     }
 }
-", fixableCode, fixedCode);
+", fromData, toData);
         }
 
         [Theory]
@@ -118,7 +115,7 @@ class C
         {
             return f is object;
         }).Cast<object>()", "OfType<object>()")]
-        public async Task TestCallOfTypeInsteadOfWhereAndCast(string fixableCode, string fixedCode)
+        public async Task Test_CallOfTypeInsteadOfWhereAndCast(string fromData, string toData)
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System.Collections.Generic;
@@ -133,13 +130,13 @@ class C
         IEnumerable<object> q = items.[||];
     }
 }
-", fixableCode, fixedCode);
+", fromData, toData);
         }
 
         [Theory]
         [InlineData(@"Where(f => f.StartsWith(""a"")).Any(f => f.StartsWith(""b""))", @"Any(f => f.StartsWith(""a"") && f.StartsWith(""b""))")]
         [InlineData(@"Where((f) => f.StartsWith(""a"")).Any(f => f.StartsWith(""b""))", @"Any((f) => f.StartsWith(""a"") && f.StartsWith(""b""))")]
-        public async Task TestCombineWhereAndAny(string fixableCode, string fixedCode)
+        public async Task Test_CombineWhereAndAny(string fromData, string toData)
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System.Collections.Generic;
@@ -154,13 +151,13 @@ class C
         if (items.[||]) { }
     }
 }
-", fixableCode, fixedCode);
+", fromData, toData);
         }
 
         [Theory]
         [InlineData(@"Where(f => f.StartsWith(""a"")).Any(f => f.StartsWith(""b""))", @"Any(f => f.StartsWith(""a"") && f.StartsWith(""b""))")]
         [InlineData(@"Where((f) => f.StartsWith(""a"")).Any(f => f.StartsWith(""b""))", @"Any((f) => f.StartsWith(""a"") && f.StartsWith(""b""))")]
-        public async Task TestCombineWhereAndAny_ImmutableArray(string fixableCode, string fixedCode)
+        public async Task Test_CombineWhereAndAny_ImmutableArray(string fromData, string toData)
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System.Collections.Immutable;
@@ -175,14 +172,14 @@ class C
         if (items.[||]) { }
     }
 }
-", fixableCode, fixedCode);
+", fromData, toData);
         }
 
         [Theory]
         [InlineData("items.FirstOrDefault(_ => true) != null", "items.Any(_ => true)")]
         [InlineData("items.FirstOrDefault(_ => true) == null", "!items.Any(_ => true)")]
         [InlineData("items.FirstOrDefault(_ => true) is null", "!items.Any(_ => true)")]
-        public async Task TestNullCheckWithFirstOrDefault_IEnumerableOfReferenceType(string fixableCode, string fixedCode)
+        public async Task Test_FirstOrDefault_IEnumerableOfReferenceType(string fromData, string toData)
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System.Collections.Generic;
@@ -197,14 +194,14 @@ class C
         if ([||]) { }
     }
 }
-", fixableCode, fixedCode);
+", fromData, toData);
         }
 
         [Theory]
         [InlineData("items.FirstOrDefault(_ => true) != null", "items.Any(_ => true)")]
         [InlineData("items.FirstOrDefault(_ => true) == null", "!items.Any(_ => true)")]
         [InlineData("items.FirstOrDefault(_ => true) is null", "!items.Any(_ => true)")]
-        public async Task TestNullCheckWithFirstOrDefault_IEnumerableOfNullableType(string fixableCode, string fixedCode)
+        public async Task Test_FirstOrDefault_IEnumerableOfNullableType(string fromData, string toData)
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System.Collections.Generic;
@@ -219,14 +216,14 @@ class C
         if ([||]) { }
     }
 }
-", fixableCode, fixedCode);
+", fromData, toData);
         }
 
         [Theory]
         [InlineData("items.FirstOrDefault(_ => true) != null", "items.Any(_ => true)")]
         [InlineData("items.FirstOrDefault(_ => true) == null", "!items.Any(_ => true)")]
         [InlineData("items.FirstOrDefault(_ => true) is null", "!items.Any(_ => true)")]
-        public async Task TestNullCheckWithFirstOrDefault_ImmutableArrayOfReferenceType(string fixableCode, string fixedCode)
+        public async Task Test_FirstOrDefault_ImmutableArrayOfReferenceType(string fromData, string toData)
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System.Collections.Immutable;
@@ -241,14 +238,14 @@ class C
         if ([||]) { }
     }
 }
-", fixableCode, fixedCode);
+", fromData, toData);
         }
 
         [Theory]
         [InlineData("items.FirstOrDefault(_ => true) != null", "items.Any(_ => true)")]
         [InlineData("items.FirstOrDefault(_ => true) == null", "!items.Any(_ => true)")]
         [InlineData("items.FirstOrDefault(_ => true) is null", "!items.Any(_ => true)")]
-        public async Task TestNullCheckWithFirstOrDefault_ImmutableArrayOfNullableType(string fixableCode, string fixedCode)
+        public async Task Test_FirstOrDefault_ImmutableArrayOfNullableType(string fromData, string toData)
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System.Collections.Immutable;
@@ -263,7 +260,7 @@ class C
         if ([||]) { }
     }
 }
-", fixableCode, fixedCode);
+", fromData, toData);
         }
 
         [Fact]
@@ -305,7 +302,7 @@ class C
         }
 
         [Fact]
-        public async Task TestNoDiagnostic_SimplifyNullCheckWithFirstOrDefault_ValueType()
+        public async Task TestNoDiagnostic_FirstOrDefault_ValueType()
         {
             await VerifyNoDiagnosticAsync(@"
 using System.Collections.Generic;

@@ -4,15 +4,12 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Roslynator.CSharp;
-using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
-using Roslynator.Tests.CSharp;
 using Xunit;
 
 #pragma warning disable RCS1090
 
-namespace Roslynator.Analyzers.Tests
+namespace Roslynator.CSharp.Analysis.Tests
 {
     public class RCS1146UseConditionalAccessTests : AbstractCSharpCodeFixVerifier
     {
@@ -23,7 +20,7 @@ namespace Roslynator.Analyzers.Tests
         public override CodeFixProvider FixProvider { get; } = new UseConditionalAccessCodeFixProvider();
 
         [Fact]
-        public async Task TestDiagnosticWithCodeFix_IfStatement()
+        public async Task Test_IfStatement()
         {
             await VerifyDiagnosticAndFixAsync(@"
 public class C
@@ -85,7 +82,7 @@ public struct S
         }
 
         [Fact]
-        public async Task TestDiagnosticWithCodeFix_LogicalAndExpression_ReferenceType()
+        public async Task Test_LogicalAnd_ReferenceType()
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System.Collections.Generic;
@@ -204,7 +201,7 @@ public class Foo
         }
 
         [Fact]
-        public async Task TestDiagnosticWithCodeFix_LogicalAndExpression_NullableType()
+        public async Task Test_LogicalAnd_NullableType()
         {
             await VerifyDiagnosticAndFixAsync(@"
 public struct Foo
@@ -270,7 +267,7 @@ public struct Foo
         }
 
         [Fact]
-        public async Task TestNoDiagnostic_LogicalAndExpression_ReferenceType()
+        public async Task TestNoDiagnostic_LogicalAnd_ReferenceType()
         {
             await VerifyNoDiagnosticAsync(@"
 public class Foo
@@ -307,7 +304,7 @@ public class Foo
         }
 
         [Fact]
-        public async Task TestNoDiagnostic_LogicalAndExpression_ValueType()
+        public async Task TestNoDiagnostic_LogicalAnd_ValueType()
         {
             await VerifyNoDiagnosticAsync(@"
 public struct Foo
@@ -329,7 +326,7 @@ public struct Foo
         }
 
         [Fact]
-        public async Task TestNoDiagnostic_LogicalAndExpression_NullableType()
+        public async Task TestNoDiagnostic_LogicalAnd_NullableType()
         {
             await VerifyNoDiagnosticAsync(@"
 public struct Foo
@@ -377,7 +374,7 @@ public struct Foo
         }
 
         [Fact]
-        public async Task TestNoDiagnostic_LogicalAndExpression_OutParameter()
+        public async Task TestNoDiagnostic_LogicalAnd_OutParameter()
         {
             await VerifyNoDiagnosticAsync(@"
 using System.Collections.Generic;
@@ -402,7 +399,7 @@ public class C
         }
 
         [Fact]
-        public async Task TestNoDiagnostic_LogicalAndExpression_ExpressionTree()
+        public async Task TestNoDiagnostic_LogicalAnd_ExpressionTree()
         {
             await VerifyNoDiagnosticAsync(@"
 using System;

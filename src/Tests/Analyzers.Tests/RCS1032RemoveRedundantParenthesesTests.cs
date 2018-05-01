@@ -3,16 +3,13 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Roslynator.CSharp;
-using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
 using Xunit;
 using System.Threading.Tasks;
-using Roslynator.Tests.CSharp;
 
 #pragma warning disable RCS1090
 
-namespace Roslynator.Analyzers.Tests
+namespace Roslynator.CSharp.Analysis.Tests
 {
     public class RCS1032RemoveRedundantParenthesesTests : AbstractCSharpCodeFixVerifier
     {
@@ -23,7 +20,7 @@ namespace Roslynator.Analyzers.Tests
         public override CodeFixProvider FixProvider { get; } = new RemoveRedundantParenthesesCodeFixProvider();
 
         [Fact]
-        public async Task TestDiagnosticWithCodeFix_Argument()
+        public async Task Test_Argument()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
@@ -45,7 +42,7 @@ class C
         }
 
         [Fact]
-        public async Task TestDiagnosticWithCodeFix_AttributeArgument()
+        public async Task Test_AttributeArgument()
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System;
@@ -65,7 +62,7 @@ class C
         }
 
         [Fact]
-        public async Task TestDiagnosticWithCodeFix_ReturnExpression()
+        public async Task Test_ReturnExpression()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
@@ -87,7 +84,7 @@ class C
         }
 
         [Fact]
-        public async Task TestDiagnosticWithCodeFix_YieldReturnExpression()
+        public async Task Test_YieldReturnExpression()
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System.Collections.Generic;
@@ -113,7 +110,7 @@ class C
         }
 
         [Fact]
-        public async Task TestDiagnosticWithCodeFix_ExpressionBody()
+        public async Task Test_ExpressionBody()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
@@ -129,7 +126,7 @@ class C
         }
 
         [Fact]
-        public async Task TestDiagnosticWithCodeFix_AwaitExpression()
+        public async Task Test_AwaitExpression()
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System.Threading.Tasks;
@@ -178,7 +175,7 @@ class C
         [InlineData("[|(|]i) |= (0);", "i |= (0);")]
         [InlineData("[|(|]i) <<= (0);", "i <<= (0);")]
         [InlineData("[|(|]i) >>= (0);", "i >>= (0);")]
-        public async Task TestDiagnosticWithCodeFix_Statement(string fixableCode, string fixedCode)
+        public async Task Test_Statement(string fromData, string toData)
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System;
@@ -193,7 +190,7 @@ class C
         [||]
     }
 }
-", fixableCode, fixedCode);
+", fromData, toData);
         }
 
         [Theory]
@@ -201,7 +198,7 @@ class C
         [InlineData(@"f = ![|(|]s.StartsWith(""""));", @"f = !s.StartsWith("""");")]
         [InlineData("f = ![|(|]foo.Value);", "f = !foo.Value;")]
         [InlineData("f = ![|(|]foo[0]);", "f = !foo[0];")]
-        public async Task TestDiagnosticWithCodeFix_LogicalNot(string fixableCode, string fixedCode)
+        public async Task Test_LogicalNot(string fromData, string toData)
         {
             await VerifyDiagnosticAndFixAsync(@"
 class Foo
@@ -222,7 +219,7 @@ class Foo
         get { return i == 0; }
     }
 }
-", fixableCode, fixedCode);
+", fromData, toData);
         }
 
         [Fact]

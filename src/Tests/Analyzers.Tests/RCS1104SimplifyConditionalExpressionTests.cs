@@ -4,15 +4,12 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Roslynator.CSharp;
-using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
-using Roslynator.Tests.CSharp;
 using Xunit;
 
 #pragma warning disable RCS1090
 
-namespace Roslynator.Analyzers.Tests
+namespace Roslynator.CSharp.Analysis.Tests
 {
     public class RCS1104SimplifyConditionalExpressionTests : AbstractCSharpCodeFixVerifier
     {
@@ -39,7 +36,7 @@ namespace Roslynator.Analyzers.Tests
                                  /*e*/ : /*f*/ false|] /*g*/", @"f //a
               /*b*/  /*c*/  //d
                                  /*e*/  /*f*/  /*g*/")]
-        public async Task TestDiagnosticWithCodeFix(string fixableCode, string fixedCode)
+        public async Task Test_TrueFalse(string fromData, string toData)
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
@@ -49,7 +46,7 @@ class C
         if ([||]) { }
 }
 }
-", fixableCode, fixedCode);
+", fromData, toData);
         }
 
         [Theory]
@@ -58,7 +55,7 @@ class C
             ? g
             : false|] /**/", @"f
             && g /**/")]
-        public async Task TestDiagnosticWithCodeFix_LogicalAnd(string fixableCode, string fixedCode)
+        public async Task Test_LogicalAnd(string fromData, string toData)
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
@@ -68,7 +65,7 @@ class C
         if ([||]) { }
     }
 }
-", fixableCode, fixedCode);
+", fromData, toData);
         }
 
         [Theory]
@@ -77,7 +74,7 @@ class C
             ? true
             : g|] /**/", @"f
             || g /**/")]
-        public async Task TestDiagnosticWithCodeFix_LogicalOr(string fixableCode, string fixedCode)
+        public async Task Test_LogicalOr(string fromData, string toData)
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
@@ -87,7 +84,7 @@ class C
         if ([||]) { }
     }
 }
-", fixableCode, fixedCode);
+", fromData, toData);
         }
 
         [Fact]

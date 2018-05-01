@@ -4,15 +4,12 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Roslynator.CSharp;
-using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
-using Roslynator.Tests.CSharp;
 using Xunit;
 
 #pragma warning disable RCS1090
 
-namespace Roslynator.Analyzers.Tests
+namespace Roslynator.CSharp.Analysis.Tests
 {
     public class RCS1008UseExplicitTypeInsteadOfVarWhenTypeIsNotObviousTests : AbstractCSharpCodeFixVerifier
     {
@@ -23,7 +20,31 @@ namespace Roslynator.Analyzers.Tests
         public override CodeFixProvider FixProvider { get; } = new UseExplicitTypeInsteadOfVarCodeFixProvider();
 
         [Fact]
-        public async Task TestDiagnosticWithCodeFix()
+        public async Task Test_LocalVariable()
+        {
+            await VerifyDiagnosticAndFixAsync(@"
+class C
+{
+    void M()
+    {
+        [|var|] a = ""a"";
+        [|var|] s = a;
+    }
+}
+", @"
+class C
+{
+    void M()
+    {
+        string a = ""a"";
+        string s = a;
+    }
+}
+");
+        }
+
+        [Fact]
+        public async Task Test_DeclarationExpression()
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System;
@@ -32,14 +53,8 @@ class C
 {
     void M()
     {
-        [|var|] a = ""a"";
-
-        [|var|] s = a;
-
         string value = null;
-        if (DateTime.TryParse(s, out [|var|] result))
-        {
-        }
+        if (DateTime.TryParse(value, out [|var|] result)) { }
     }
 }
 ", @"
@@ -49,21 +64,15 @@ class C
 {
     void M()
     {
-        string a = ""a"";
-
-        string s = a;
-
         string value = null;
-        if (DateTime.TryParse(s, out DateTime result))
-        {
-        }
+        if (DateTime.TryParse(value, out DateTime result)) { }
     }
 }
 ");
         }
 
         [Fact]
-        public async Task TestDiagnosticWithCodeFix_Tuple()
+        public async Task Test_Tuple()
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System;

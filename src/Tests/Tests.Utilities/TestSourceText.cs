@@ -141,7 +141,6 @@ namespace Roslynator.Tests
             }
 
             return new TestSourceTextAnalysis(
-                s,
                 StringBuilderCache.GetStringAndFree(sb),
                 spans?.ToImmutableArray() ?? ImmutableArray<LinePositionSpanInfo>.Empty);
         }

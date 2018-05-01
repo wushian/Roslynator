@@ -1,19 +1,18 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Threading.Tasks;
-using Roslynator.CSharp.Refactorings;
 using Xunit;
 
 #pragma warning disable RCS1090
 
-namespace Roslynator.Refactorings.Tests
+namespace Roslynator.CSharp.Refactorings.Tests
 {
     public class RR0137ReplaceMethodGroupWithLambdaTests : AbstractCSharpCodeRefactoringVerifier
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.ReplaceMethodGroupWithLambda;
 
         [Fact]
-        public async Task TestCodeRefactoring_VariableDeclaration()
+        public async Task Test_VariableDeclaration()
         {
             await VerifyRefactoringAsync(@"
 using System;
@@ -71,7 +70,7 @@ public class C
         }
 
         [Fact]
-        public async Task TestCodeRefactoring_SimpleAssignment()
+        public async Task Test_SimpleAssignment()
         {
             await VerifyRefactoringAsync(@"
 using System;
@@ -145,7 +144,7 @@ public class C
         }
 
         [Fact]
-        public async Task TestCodeRefactoring_Argument()
+        public async Task Test_Argument()
         {
             await VerifyRefactoringAsync(@"
 using System;

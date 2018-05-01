@@ -3,12 +3,11 @@
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Roslynator.CSharp;
-using Roslynator.Tests.CSharp;
 using Xunit;
 
 #pragma warning disable RCS1090
 
-namespace Roslynator.CodeFixes.Tests
+namespace Roslynator.CSharp.CodeFixes.Tests
 {
     public class CSTests : AbstractCSharpCompilerCodeFixVerifier
     {
@@ -17,12 +16,13 @@ namespace Roslynator.CodeFixes.Tests
         public override CodeFixProvider FixProvider { get; }
 
         //[Fact]
-        public async Task TestFix()
+        public async Task Test()
         {
             await VerifyFixAsync(@"
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 class C
 {
@@ -36,12 +36,13 @@ class C
 
         //[Theory]
         //[InlineData("", "")]
-        public async Task TestFix2(string fixableCode, string fixedCode)
+        public async Task Test(string fromData, string toData)
         {
             await VerifyFixAsync(@"
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 class C
 {
@@ -49,7 +50,7 @@ class C
     {
     }
 }
-", fixableCode, fixedCode, EquivalenceKey.Create(DiagnosticId));
+", fromData, toData, EquivalenceKey.Create(DiagnosticId));
         }
 
         //[Fact]
@@ -59,6 +60,7 @@ class C
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 class C
 {

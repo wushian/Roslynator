@@ -4,15 +4,12 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Roslynator.CSharp;
-using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeFixes;
-using Roslynator.Tests.CSharp;
 using Xunit;
 
 #pragma warning disable RCS1090
 
-namespace Roslynator.Analyzers.Tests
+namespace Roslynator.CSharp.Analysis.Tests
 {
     public class RCS12222MergePreprocessorDirectivesTests : AbstractCSharpCodeFixVerifier
     {
@@ -23,7 +20,7 @@ namespace Roslynator.Analyzers.Tests
         public override CodeFixProvider FixProvider { get; } = new DirectiveTriviaCodeFixProvider();
 
         [Fact]
-        public async Task TestDiagnosticWithFix_Disable()
+        public async Task Test_PragmaWarningDisable()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
@@ -50,7 +47,7 @@ class C
         }
 
         [Fact]
-        public async Task TestDiagnosticWithFix_Restore()
+        public async Task Test_PragmaWarningRestore()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
