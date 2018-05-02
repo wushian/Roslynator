@@ -2,7 +2,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Roslynator.CSharp;
+using Roslynator.Tests;
 using Xunit;
 
 #pragma warning disable RCS1090
@@ -14,6 +14,8 @@ namespace Roslynator.CSharp.CodeFixes.Tests
         public override string DiagnosticId { get; } = CompilerDiagnosticIdentifiers.OperatorCannotBeAppliedToOperands;
 
         public override CodeFixProvider FixProvider { get; }
+
+        public override CodeVerificationOptions Options { get; } = CodeVerificationOptions.Default;
 
         //[Fact]
         public async Task Test()

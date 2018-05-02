@@ -26,7 +26,7 @@ namespace Roslynator.CSharp.Analysis.Tests
             await VerifyDiagnosticAndFixAsync(@"
 class C
 {
-    private readonly object _f;
+    private readonly object _f = false;
 
     public void M()
     {
@@ -52,7 +52,7 @@ class C
 ", @"
 class C
 {
-    private readonly object _f;
+    private readonly object _f = false;
 
     public void M()
     {
@@ -84,7 +84,7 @@ class C
             await VerifyDiagnosticAndFixAsync(@"
 class C
 {
-    private readonly object _f;
+    private readonly object _f = false;
 
     public void M()
     {
@@ -131,7 +131,7 @@ class C
 ", @"
 class C
 {
-    private readonly object _f;
+    private readonly object _f = false;
 
     public void M()
     {
@@ -184,7 +184,7 @@ class C
             await VerifyNoDiagnosticAsync(@"
 class C
 {
-    private readonly object _f;
+    private readonly object _f = false;
 
     public void M()
     {
@@ -192,11 +192,11 @@ class C
         object x = null;
         object x2 = null;
 
-        if (x is string && ((string)x) == x) { }
+        if (x is string && ReferenceEquals(((string)x), x)) { }
 
-        if (x is string && ((string)x2) == s) { }
+        if (x is string && ReferenceEquals(((string)x2), s)) { }
 
-        if (x is string && x == s) { }
+        if (x is string && ReferenceEquals(x, s)) { }
     }
 }
 ");
@@ -208,7 +208,7 @@ class C
             await VerifyNoDiagnosticAsync(@"
 class C
 {
-    private readonly object _f;
+    private readonly object _f = false;
 
     public void M()
     {
@@ -218,7 +218,7 @@ class C
 
         if (x is string)
         {
-            if (((string)x) == x) { }
+            if (ReferenceEquals(((string)x), x)) { }
         }
 
         if (x is string)
@@ -228,7 +228,7 @@ class C
 
         if (x is string)
         {
-            if (x == s) { }
+            if (ReferenceEquals(x, s)) { }
         }
     }
 }

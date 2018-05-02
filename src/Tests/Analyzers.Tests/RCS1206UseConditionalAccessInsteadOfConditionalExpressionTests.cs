@@ -136,6 +136,7 @@ class C
         public async Task TestNoDiagnostic()
         {
             await VerifyNoDiagnosticAsync(@"
+
 class Foo
 {
     void M()
@@ -166,8 +167,10 @@ class Foo
         i = (ni.HasValue) ? ni.Value : 1;
         i = (!ni.HasValue) ? 1 : ni.Value;
 
+#pragma warning disable CS0472
         s = (i != null) ? i.ToString() : null;
         s = (i == null) ? null : i.ToString();
+#pragma warning restore CS0472
     }
 
     public int Value { get; }

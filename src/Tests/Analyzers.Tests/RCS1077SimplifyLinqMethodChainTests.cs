@@ -309,6 +309,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
+#pragma warning disable CS0472
+
 class C
 {
     void M()

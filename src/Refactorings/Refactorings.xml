@@ -24,13 +24,13 @@
     <Syntaxes>
       <Syntax>switch section</Syntax>
     </Syntaxes>
-    <Span>statements</Span>
+    <Span>case or default keyword</Span>
   </Refactoring>
   <Refactoring Id="RR0005" Identifier="AddBracesToSwitchSections" Title="Add braces to switch sections">
     <Syntaxes>
       <Syntax>switch statement</Syntax>
     </Syntaxes>
-    <Span>switch keyword</Span>
+    <Span>case or default keyword</Span>
   </Refactoring>
   <Refactoring Id="RR0006" Identifier="AddCastExpression" Title="Add cast expression">
     <Syntaxes>
@@ -680,13 +680,13 @@ if (y)
     <Syntaxes>
       <Syntax>switch section</Syntax>
     </Syntaxes>
-    <Span>block</Span>
+    <Span>case or default keyword</Span>
   </Refactoring>
   <Refactoring Id="RR0097" Identifier="RemoveBracesFromSwitchSections" Title="Remove braces from switch sections">
     <Syntaxes>
       <Syntax>switch statement</Syntax>
     </Syntaxes>
-    <Span>switch keyword</Span>
+    <Span>case or default keyword</Span>
   </Refactoring>
   <Refactoring Id="RR0098" Identifier="RemoveComment" Title="Remove comment">
     <Syntaxes>
@@ -842,6 +842,22 @@ if (y)
       <Syntax>return statement conditional expression</Syntax>
       <Syntax>yield statement conditional expression</Syntax>
     </Syntaxes>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[string s = (condition) ? "a" : "b";
+{
+}]]></Before>
+        <After><![CDATA[string s;
+if (condition)
+{
+    s = "a";
+}
+else
+{
+    s = "b";
+}]]></After>
+      </Sample>
+    </Samples>
   </Refactoring>
   <Refactoring Id="RR0121" Identifier="ReplaceConstantWithField" Title="Replace constant with field">
     <Syntaxes>
@@ -889,6 +905,22 @@ if (y)
     <Syntaxes>
       <Syntax>expression that has constant value</Syntax>
     </Syntaxes>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[public const string Value = "x";
+
+void Foo()
+{
+    string x = Value;
+}]]></Before>
+        <After><![CDATA[public const string Value = "x";
+
+void Foo()
+{
+    string x = "x";
+}]]></After>
+      </Sample>
+    </Samples>
   </Refactoring>
   <Refactoring Id="RR0128" Identifier="UseConstantInsteadOfField" Title="Use constant instead of field">
     <Syntaxes>
@@ -1040,6 +1072,16 @@ i--;]]></After>
       <Syntax>method invocation</Syntax>
     </Syntaxes>
     <Span>method name</Span>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[if (s.Contains("a"))
+{
+{]]></Before>
+        <After><![CDATA[if (s.IndexOf("a", StringComparison.OrdinalIgnoreCase) != -1)
+{
+{]]></After>
+      </Sample>
+    </Samples>
   </Refactoring>
   <Refactoring Id="RR0145" Identifier="ReplaceStringFormatWithInterpolatedString" Title="Replace string.Format with interpolated string">
     <Syntaxes>
@@ -1137,11 +1179,25 @@ i--;]]></After>
       <Image>SplitLocalDeclaration</Image>
     </Images>
   </Refactoring>
-  <Refactoring Id="RR0159" Identifier="SwapExpressionsInBinaryExpression" Title="Swap expressions in binary expression">
+  <Refactoring Id="RR0159" Identifier="SwapBinaryOperands" Title="Swap binary operands">
     <Syntaxes>
-      <Syntax>logical and/or expression</Syntax>
+      <Syntax>binary expression</Syntax>
     </Syntaxes>
     <Span>binary operator</Span>
+    <Samples>
+      <Sample>
+        <Before>
+          <![CDATA[if (x && y)
+{
+{]]>
+        </Before>
+        <After>
+          <![CDATA[if (y && x)
+{
+{]]>
+        </After>
+      </Sample>
+    </Samples>
   </Refactoring>
   <Refactoring Id="RR0160" Identifier="SwapExpressionsInConditionalExpression" Title="Swap expressions in conditional expression">
     <Syntaxes>

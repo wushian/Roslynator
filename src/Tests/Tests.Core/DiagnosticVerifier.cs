@@ -105,7 +105,7 @@ namespace Roslynator.Tests
 
             ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
 
-            VerifyDiagnostics(compilerDiagnostics, Options.MaxAllowedCompilerDiagnosticSeverity);
+            VerifyCompilerDiagnostics(compilerDiagnostics);
 
             if (Options.EnableDiagnosticsDisabledByDefault)
                 compilation = compilation.EnableDiagnosticsDisabledByDefault(Analyzer);
@@ -174,7 +174,7 @@ namespace Roslynator.Tests
 
             ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
 
-            VerifyDiagnostics(compilerDiagnostics, Options.MaxAllowedCompilerDiagnosticSeverity);
+            VerifyCompilerDiagnostics(compilerDiagnostics);
 
             if (Options.EnableDiagnosticsDisabledByDefault)
                 compilation = compilation.EnableDiagnosticsDisabledByDefault(Analyzer);
@@ -183,24 +183,6 @@ namespace Roslynator.Tests
 
             if (analyzerDiagnostics.Any(f => string.Equals(f.Id, Descriptor.Id, StringComparison.Ordinal)))
                 Assert.True(false, $"No diagnostic expected{analyzerDiagnostics.Where(f => string.Equals(f.Id, Descriptor.Id, StringComparison.Ordinal)).ToDebugString()}");
-        }
-
-        internal static void VerifyNoNewCompilerDiagnostics(
-            ImmutableArray<Diagnostic> compilerDiagnostics,
-            ImmutableArray<Diagnostic> newCompilerDiagnostics)
-        {
-            IEnumerable<Diagnostic> diff = newCompilerDiagnostics
-                .Except(compilerDiagnostics, DiagnosticDeepEqualityComparer.Instance)
-                .ToImmutableArray();
-
-            if (diff.Any())
-                Assert.True(false, $"Code fix introduced new compiler diagnostics{diff.ToDebugString()}");
-        }
-
-        internal static void VerifyDiagnostics(ImmutableArray<Diagnostic> diagnostics, DiagnosticSeverity maxAllowedSeverity)
-        {
-            if (diagnostics.Any(f => f.Severity > maxAllowedSeverity))
-                Assert.True(false, $"No compiler diagnostics with severity higher than '{maxAllowedSeverity}' expected{diagnostics.Where(f => f.Severity > maxAllowedSeverity).ToDebugString()}");
         }
 
         private void VerifyDiagnostics(

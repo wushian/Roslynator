@@ -71,7 +71,7 @@ namespace Roslynator.Tests
 
             ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
 
-            VerifyDiagnostics(compilerDiagnostics, Options.MaxAllowedCompilerDiagnosticSeverity);
+            VerifyCompilerDiagnostics(compilerDiagnostics);
 
             if (Options.EnableDiagnosticsDisabledByDefault)
                 compilation = compilation.EnableDiagnosticsDisabledByDefault(Analyzer);
@@ -113,7 +113,7 @@ namespace Roslynator.Tests
 
                 ImmutableArray<Diagnostic> newCompilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
 
-                VerifyDiagnostics(newCompilerDiagnostics, Options.MaxAllowedCompilerDiagnosticSeverity);
+                VerifyCompilerDiagnostics(newCompilerDiagnostics);
 
                 if (!Options.AllowNewCompilerDiagnostics)
                     VerifyNoNewCompilerDiagnostics(compilerDiagnostics, newCompilerDiagnostics);
@@ -148,7 +148,7 @@ namespace Roslynator.Tests
 
             ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
 
-            VerifyDiagnostics(compilerDiagnostics, Options.MaxAllowedCompilerDiagnosticSeverity);
+            VerifyCompilerDiagnostics(compilerDiagnostics);
 
             if (Options.EnableDiagnosticsDisabledByDefault)
                 compilation = compilation.EnableDiagnosticsDisabledByDefault(Analyzer);

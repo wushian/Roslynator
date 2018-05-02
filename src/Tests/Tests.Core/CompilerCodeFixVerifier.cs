@@ -42,9 +42,11 @@ namespace Roslynator.Tests
 
             Document document = WorkspaceFactory.Document(Language, source);
 
-            SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+            Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
-            ImmutableArray<Diagnostic> diagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
+            ImmutableArray<Diagnostic> diagnostics = compilation.GetDiagnostics(cancellationToken: cancellationToken);
+
+            diagnostics = diagnostics.Sort((x, y) => -DiagnosticComparer.SpanStart.Compare(x, y));
 
             while (diagnostics.Length > 0)
             {
@@ -83,12 +85,12 @@ namespace Roslynator.Tests
 
                 document = await document.ApplyCodeActionAsync(action).ConfigureAwait(false);
 
-                semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+                compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
-                ImmutableArray<Diagnostic> newDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
+                ImmutableArray<Diagnostic> newDiagnostics = compilation.GetDiagnostics(cancellationToken: cancellationToken);
 
                 if (!Options.AllowNewCompilerDiagnostics)
-                    DiagnosticVerifier.VerifyNoNewCompilerDiagnostics(diagnostics, newDiagnostics);
+                    VerifyNoNewCompilerDiagnostics(diagnostics, newDiagnostics);
 
                 diagnostics = newDiagnostics;
             }
@@ -116,11 +118,11 @@ namespace Roslynator.Tests
         {
             Document document = WorkspaceFactory.Document(Language, source);
 
-            SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+            Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
             ImmutableArray<string> fixableDiagnosticIds = FixProvider.FixableDiagnosticIds;
 
-            foreach (Diagnostic diagnostic in semanticModel.GetDiagnostics(cancellationToken: cancellationToken))
+            foreach (Diagnostic diagnostic in compilation.GetDiagnostics(cancellationToken: cancellationToken))
             {
                 if (!fixableDiagnosticIds.Contains(diagnostic.Id))
                     continue;

@@ -100,7 +100,7 @@ namespace Roslynator.Tests
 
             ImmutableArray<Diagnostic> compilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
 
-            DiagnosticVerifier.VerifyDiagnostics(compilerDiagnostics, Options.MaxAllowedCompilerDiagnosticSeverity);
+            VerifyCompilerDiagnostics(compilerDiagnostics);
 
             foreach (TextSpan span in spans)
             {
@@ -130,10 +130,10 @@ namespace Roslynator.Tests
 
                 ImmutableArray<Diagnostic> newCompilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
 
-                DiagnosticVerifier.VerifyDiagnostics(newCompilerDiagnostics, Options.MaxAllowedCompilerDiagnosticSeverity);
+                VerifyCompilerDiagnostics(newCompilerDiagnostics);
 
                 if (!Options.AllowNewCompilerDiagnostics)
-                    DiagnosticVerifier.VerifyNoNewCompilerDiagnostics(compilerDiagnostics, newCompilerDiagnostics);
+                    VerifyNoNewCompilerDiagnostics(compilerDiagnostics, newCompilerDiagnostics);
             }
 
             string actual = await document.ToFullStringAsync(simplify: true, format: true).ConfigureAwait(false);
@@ -180,7 +180,7 @@ namespace Roslynator.Tests
 
             ImmutableArray<Diagnostic> compilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
 
-            DiagnosticVerifier.VerifyDiagnostics(compilerDiagnostics, Options.MaxAllowedCompilerDiagnosticSeverity);
+            VerifyCompilerDiagnostics(compilerDiagnostics);
 
             foreach (TextSpan span in spans)
             {
