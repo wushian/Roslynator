@@ -29,7 +29,8 @@ namespace Roslynator.Tests
             "CS0169", // Field is never used
             "CS0219", // Variable is assigned but its value is never used
             "CS0660", // Type defines operator == or operator != but does not override Object.Equals(object o)
-            "CS0661" // Type defines operator == or operator != but does not override Object.GetHashCode()
+            "CS0661", // Type defines operator == or operator != but does not override Object.GetHashCode()
+            "CS8019" // Unnecessary using directive
         ));
 
         public bool AllowNewCompilerDiagnostics { get; }
@@ -40,12 +41,12 @@ namespace Roslynator.Tests
 
         public ImmutableArray<string> AllowedCompilerDiagnosticIds { get; }
 
-        public CodeVerificationOptions AddAllowedCompilerDiagnosticsId(string diagnosticId)
+        public CodeVerificationOptions AddAllowedCompilerDiagnosticId(string diagnosticId)
         {
             return new CodeVerificationOptions(allowedCompilerDiagnostics: AllowedCompilerDiagnosticIds.Add(diagnosticId));
         }
 
-        public CodeVerificationOptions AddAllowedCompilerDiagnosticsIds(IEnumerable<string> diagnosticIds)
+        public CodeVerificationOptions AddAllowedCompilerDiagnosticIds(IEnumerable<string> diagnosticIds)
         {
             return new CodeVerificationOptions(allowedCompilerDiagnostics: AllowedCompilerDiagnosticIds.AddRange(diagnosticIds));
         }
