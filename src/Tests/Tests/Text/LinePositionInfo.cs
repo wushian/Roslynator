@@ -3,7 +3,7 @@
 using System;
 using Microsoft.CodeAnalysis.Text;
 
-namespace Roslynator.Tests
+namespace Roslynator.Tests.Text
 {
     internal readonly struct LinePositionInfo : IEquatable<LinePositionInfo>
     {

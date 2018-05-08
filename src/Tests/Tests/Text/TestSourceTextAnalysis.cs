@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Immutable;
 
-namespace Roslynator.Tests
+namespace Roslynator.Tests.Text
 {
     internal readonly struct TestSourceTextAnalysis : IEquatable<TestSourceTextAnalysis>
     {
