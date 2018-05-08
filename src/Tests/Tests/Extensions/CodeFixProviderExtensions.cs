@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 
 namespace Roslynator
 {
-    public static class CodeFixProviderExtensions
+    internal static class CodeFixProviderExtensions
     {
         public static bool CanFixAny(this CodeFixProvider fixProvider, ImmutableArray<DiagnosticDescriptor> diagnosticDecriptors)
         {

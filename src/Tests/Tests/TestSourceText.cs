@@ -8,7 +8,7 @@ using Roslynator.Text;
 
 namespace Roslynator.Tests
 {
-    public static class TestSourceText
+    internal static class TestSourceText
     {
         internal const string OpenMarker = "[|";
         internal const string CloseMarker = "|]";

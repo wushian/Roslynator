@@ -7,21 +7,69 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator
 {
-    public abstract class DiagnosticDescriptorComparer : IComparer<DiagnosticDescriptor>, IEqualityComparer<DiagnosticDescriptor>, IComparer, IEqualityComparer
+    internal abstract class DiagnosticDescriptorComparer : IComparer<DiagnosticDescriptor>, IEqualityComparer<DiagnosticDescriptor>, IComparer, IEqualityComparer
     {
         public static DiagnosticDescriptorComparer Id { get; } = new DiagnosticDescriptorIdOrdinalComparer();
 
         public abstract int Compare(DiagnosticDescriptor x, DiagnosticDescriptor y);
 
-        public abstract int Compare(object x, object y);
-
         public abstract bool Equals(DiagnosticDescriptor x, DiagnosticDescriptor y);
-
-        new public abstract bool Equals(object x, object y);
 
         public abstract int GetHashCode(DiagnosticDescriptor obj);
 
-        public abstract int GetHashCode(object obj);
+        public int Compare(object x, object y)
+        {
+            if (x == y)
+                return 0;
+
+            if (x == null)
+                return -1;
+
+            if (y == null)
+                return 1;
+
+            if (x is DiagnosticDescriptor a
+                && y is DiagnosticDescriptor b)
+            {
+                return Compare(a, b);
+            }
+
+            if (x is IComparable comparable)
+                return comparable.CompareTo(y);
+
+            throw new ArgumentException("An object must implement IComparable.", nameof(x));
+        }
+
+        new public bool Equals(object x, object y)
+        {
+            if (x == y)
+                return true;
+
+            if (x == null)
+                return false;
+
+            if (y == null)
+                return false;
+
+            if (x is DiagnosticDescriptor a
+                && y is DiagnosticDescriptor b)
+            {
+                return Equals(a, b);
+            }
+
+            return x.Equals(y);
+        }
+
+        public int GetHashCode(object obj)
+        {
+            if (obj == null)
+                throw new ArgumentNullException(nameof(obj));
+
+            if (obj is DiagnosticDescriptor descriptor)
+                return GetHashCode(descriptor);
+
+            return obj.GetHashCode();
+        }
 
         private class DiagnosticDescriptorIdOrdinalComparer : DiagnosticDescriptorComparer
         {
@@ -39,11 +87,6 @@ namespace Roslynator
                 return string.Compare(x.Id, y.Id, StringComparison.Ordinal);
             }
 
-            public override int Compare(object x, object y)
-            {
-                return Compare(x as DiagnosticDescriptor, y as DiagnosticDescriptor);
-            }
-
             public override bool Equals(DiagnosticDescriptor x, DiagnosticDescriptor y)
             {
                 if (object.ReferenceEquals(x, y))
@@ -58,19 +101,9 @@ namespace Roslynator
                 return string.Equals(x.Id, y.Id, StringComparison.Ordinal);
             }
 
-            public override bool Equals(object x, object y)
-            {
-                return Equals(x as DiagnosticDescriptor, y as DiagnosticDescriptor);
-            }
-
             public override int GetHashCode(DiagnosticDescriptor obj)
             {
                 return StringComparer.Ordinal.GetHashCode(obj?.Id);
-            }
-
-            public override int GetHashCode(object obj)
-            {
-                return GetHashCode(obj as DiagnosticDescriptor);
             }
         }
     }

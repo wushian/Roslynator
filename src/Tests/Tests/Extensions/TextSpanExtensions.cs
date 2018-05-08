@@ -5,10 +5,9 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace Roslynator
 {
-    public static class TextSpanExtensions
+    internal static class TextSpanExtensions
     {
         //TODO: span starts or ends between \r and \n
-        //TODO: move to Roslynator.CSharp
         public static LinePositionSpan ToLinePositionSpan(this TextSpan span, string s)
         {
             if (s == null)

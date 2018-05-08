@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 
 namespace Roslynator.Tests
 {
-    public readonly struct TestSourceTextAnalysis : IEquatable<TestSourceTextAnalysis>
+    internal readonly struct TestSourceTextAnalysis : IEquatable<TestSourceTextAnalysis>
     {
         public TestSourceTextAnalysis(string source, ImmutableArray<LinePositionSpanInfo> spans)
         {

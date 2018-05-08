@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator
 {
-    public static class Extensions
+    internal static class EnumerableExtensions
     {
         public static string ToDebugString(this IEnumerable<Diagnostic> diagnostics)
         {

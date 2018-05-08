@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace Roslynator
 {
-    public static class WorkspaceFactory
+    internal static class WorkspaceFactory
     {
         public static Project EmptyCSharpProject { get; } = Project(LanguageNames.CSharp);
 

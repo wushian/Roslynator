@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator
 {
-    public static class RuntimeMetadataReference
+    internal static class RuntimeMetadataReference
     {
         internal static readonly MetadataReference CorLibReference = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
 

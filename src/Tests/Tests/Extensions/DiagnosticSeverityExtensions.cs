@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator
 {
-    public static class DiagnosticSeverityExtensions
+    internal static class DiagnosticSeverityExtensions
     {
         public static ReportDiagnostic ToReportDiagnostic(this DiagnosticSeverity severity)
         {

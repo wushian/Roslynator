@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Roslynator
 {
-    public static class CompilationExtensions
+    internal static class CompilationExtensions
     {
         public static Compilation EnableDiagnosticsDisabledByDefault(this Compilation compilation, DiagnosticAnalyzer analyzer)
         {

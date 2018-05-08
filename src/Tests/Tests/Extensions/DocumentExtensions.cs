@@ -11,7 +11,7 @@ using Microsoft.CodeAnalysis.Simplification;
 
 namespace Roslynator
 {
-    public static class DocumentExtensions
+    internal static class DocumentExtensions
     {
         public static async Task<string> ToFullStringAsync(this Document document, bool simplify = false, bool format = false)
         {

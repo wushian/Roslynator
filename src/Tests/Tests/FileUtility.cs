@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator
 {
-    public static class FileUtility
+    internal static class FileUtility
     {
         public const string TestFileName = "Test";
         public const string TestProjectName = "TestProject";

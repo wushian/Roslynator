@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Roslynator
 {
-    public static class DiagnosticAnalyzerExtensions
+    internal static class DiagnosticAnalyzerExtensions
     {
         public static bool Supports(this DiagnosticAnalyzer analyzer, DiagnosticDescriptor descriptor)
         {
