@@ -10,7 +10,12 @@ namespace Roslynator
     {
         public static string ToDebugString(this IEnumerable<Diagnostic> diagnostics)
         {
-            return $"\r\n\r\nDiagnostics:\r\n{string.Join("\r\n", diagnostics.Select(d => d.ToString()))}\r\n";
+            string s = string.Join("\r\n", diagnostics.Select(d => d.ToString()));
+
+            if (s.Length == 0)
+                s = "no diagnostic";
+
+            return $"\r\n\r\nDiagnostics:\r\n{s}\r\n";
         }
     }
 }
