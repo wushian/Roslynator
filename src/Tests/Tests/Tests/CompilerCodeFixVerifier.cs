@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -13,11 +14,18 @@ using Xunit;
 
 namespace Roslynator.Tests
 {
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public abstract class CompilerCodeFixVerifier : CodeVerifier
     {
         public abstract string DiagnosticId { get; }
 
         public abstract CodeFixProvider FixProvider { get; }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string DebuggerDisplay
+        {
+            get { return $"{DiagnosticId} {FixProvider.GetType().Name}"; }
+        }
 
         public async Task VerifyFixAsync(
             string theory,

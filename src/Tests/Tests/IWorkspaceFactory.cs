@@ -11,8 +11,6 @@ namespace Roslynator
 
         Document Document(string source, params string[] additionalSources);
 
-        Project Project();
-
         Project Project(string source);
 
         Project Project(IEnumerable<string> sources);

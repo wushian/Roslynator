@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,11 +15,18 @@ using Xunit;
 
 namespace Roslynator.Tests
 {
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public abstract class DiagnosticVerifier : CodeVerifier
     {
         public abstract DiagnosticDescriptor Descriptor { get; }
 
         public abstract DiagnosticAnalyzer Analyzer { get; }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string DebuggerDisplay
+        {
+            get { return $"{Descriptor.Id} {Analyzer.GetType().Name}"; }
+        }
 
         public async Task VerifyDiagnosticAsync(
             string source,
