@@ -66,7 +66,7 @@ namespace Roslynator.Tests
         {
             Assert.True(FixProvider.CanFixAny(Analyzer.SupportedDiagnostics), $"Code fix provider '{FixProvider.GetType().Name}' cannot fix any diagnostic supported by analyzer '{Analyzer}'.");
 
-            Document document = WorkspaceFactory.Document(Language, source);
+            Document document = WorkspaceFactory.Document(source);
 
             Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
@@ -143,7 +143,7 @@ namespace Roslynator.Tests
 
         public async Task VerifyNoFixAsync(string source, CancellationToken cancellationToken = default(CancellationToken))
         {
-            Document document = WorkspaceFactory.Document(Language, source);
+            Document document = WorkspaceFactory.Document(source);
 
             Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 

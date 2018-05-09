@@ -17,6 +17,8 @@ namespace Roslynator.Tests
 
         public abstract string Language { get; }
 
+        protected abstract IWorkspaceFactory WorkspaceFactory { get; }
+
         internal void VerifyCompilerDiagnostics(ImmutableArray<Diagnostic> diagnostics)
         {
             DiagnosticSeverity maxAllowedSeverity = Options.MaxAllowedCompilerDiagnosticSeverity;

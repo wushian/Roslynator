@@ -100,7 +100,7 @@ namespace Roslynator.Tests
             IEnumerable<Diagnostic> expectedDiagnostics,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            Project project = WorkspaceFactory.Project(Language, sources);
+            Project project = WorkspaceFactory.Project(sources);
 
             Compilation compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
@@ -169,7 +169,7 @@ namespace Roslynator.Tests
             if (!Analyzer.Supports(Descriptor))
                 Assert.True(false, $"Diagnostic \"{Descriptor.Id}\" is not supported by analyzer \"{Analyzer.GetType().Name}\".");
 
-            Project project = WorkspaceFactory.Project(Language, sources);
+            Project project = WorkspaceFactory.Project(sources);
 
             Compilation compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 

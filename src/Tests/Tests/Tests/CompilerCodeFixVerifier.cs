@@ -41,7 +41,7 @@ namespace Roslynator.Tests
         {
             Assert.True(FixProvider.FixableDiagnosticIds.Contains(DiagnosticId), $"Code fix provider '{FixProvider.GetType().Name}' cannot fix diagnostic '{DiagnosticId}'.");
 
-            Document document = WorkspaceFactory.Document(Language, source);
+            Document document = WorkspaceFactory.Document(source);
 
             Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
@@ -117,7 +117,7 @@ namespace Roslynator.Tests
             string equivalenceKey,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            Document document = WorkspaceFactory.Document(Language, source);
+            Document document = WorkspaceFactory.Document(source);
 
             Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
