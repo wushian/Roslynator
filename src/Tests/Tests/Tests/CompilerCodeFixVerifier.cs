@@ -57,6 +57,8 @@ namespace Roslynator.Tests
 
             diagnostics = diagnostics.Sort((x, y) => -DiagnosticComparer.SpanStart.Compare(x, y));
 
+            bool fixRegistered = false;
+
             while (diagnostics.Length > 0)
             {
                 Diagnostic diagnostic = FindDiagnostic();
@@ -92,6 +94,8 @@ namespace Roslynator.Tests
                 if (action == null)
                     break;
 
+                fixRegistered = true;
+
                 document = await document.ApplyCodeActionAsync(action).ConfigureAwait(false);
 
                 compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
@@ -103,6 +107,8 @@ namespace Roslynator.Tests
 
                 diagnostics = newDiagnostics;
             }
+
+            Assert.True(fixRegistered, "No code fix has been registered.");
 
             string actual = await document.ToFullStringAsync(simplify: true, format: true).ConfigureAwait(false);
 

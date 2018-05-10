@@ -13,6 +13,7 @@ namespace Roslynator
     /// Represents consecutive sequence of selected items in a collection.
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public abstract class Selection<T> : IReadOnlyList<T>
     {
         /// <summary>
@@ -60,6 +61,12 @@ namespace Roslynator
         public int Count
         {
             get { return LastIndex - FirstIndex + 1; }
+        }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string DebuggerDisplay
+        {
+            get { return $"Count = {Count} FirstIndex = {FirstIndex} LastIndex = {LastIndex}"; }
         }
 
         /// <summary>
