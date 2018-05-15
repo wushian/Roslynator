@@ -170,21 +170,21 @@ namespace Roslynator.Tests
 
             await VerifyNoDiagnosticAsync(
                 source: source,
-                additionalSource: null,
+                additionalSources: null,
                 options: options,
                 cancellationToken).ConfigureAwait(false);
         }
 
         public async Task VerifyNoDiagnosticAsync(
             string source,
-            string[] additionalSource = null,
+            string[] additionalSources = null,
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             if (!Analyzer.Supports(Descriptor))
                 Assert.True(false, $"Diagnostic \"{Descriptor.Id}\" is not supported by analyzer \"{Analyzer.GetType().Name}\".");
 
-            Document document = CreateDocument(source, additionalSource ?? Array.Empty<string>());
+            Document document = CreateDocument(source, additionalSources ?? Array.Empty<string>());
 
             Project project = document.Project;
 
