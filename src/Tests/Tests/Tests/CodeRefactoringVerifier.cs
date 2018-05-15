@@ -13,6 +13,7 @@ using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.Text;
 using Roslynator.Tests.Text;
 using Xunit;
+using static Roslynator.Tests.CompilerDiagnosticVerifier;
 
 namespace Roslynator.Tests
 {
@@ -34,6 +35,7 @@ namespace Roslynator.Tests
             string expected,
             string equivalenceKey,
             string[] additionalSources = null,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             TestSourceTextAnalysis analysis = TestSourceText.GetSpans(source, reverse: true);
@@ -44,6 +46,7 @@ namespace Roslynator.Tests
                 spans: analysis.Spans.Select(f => f.Span),
                 equivalenceKey: equivalenceKey,
                 additionalSources: additionalSources,
+                options: options,
                 cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
@@ -52,6 +55,7 @@ namespace Roslynator.Tests
             string beforeData,
             string afterData,
             string equivalenceKey,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             (string source, string expected, TextSpan span) = TestSourceText.ReplaceSpan(theory, beforeData, afterData);
@@ -65,6 +69,7 @@ namespace Roslynator.Tests
                     expected: expected,
                     spans: analysis.Spans.Select(f => f.Span),
                     equivalenceKey: equivalenceKey,
+                    options: options,
                     cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             else
@@ -74,6 +79,7 @@ namespace Roslynator.Tests
                     expected: expected,
                     span: span,
                     equivalenceKey: equivalenceKey,
+                    options: options,
                     cancellationToken: cancellationToken).ConfigureAwait(false);
             }
         }
@@ -84,6 +90,7 @@ namespace Roslynator.Tests
             TextSpan span,
             string equivalenceKey,
             string[] additionalSources = null,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             await VerifyRefactoringAsync(
@@ -92,6 +99,7 @@ namespace Roslynator.Tests
                 spans: ImmutableArray.Create(span),
                 equivalenceKey: equivalenceKey,
                 additionalSources: additionalSources,
+                options: options,
                 cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
@@ -101,6 +109,7 @@ namespace Roslynator.Tests
             IEnumerable<TextSpan> spans,
             string equivalenceKey,
             string[] additionalSources = null,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             Document document = CreateDocument(source, additionalSources ?? Array.Empty<string>());
@@ -109,7 +118,10 @@ namespace Roslynator.Tests
 
             ImmutableArray<Diagnostic> compilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
 
-            VerifyCompilerDiagnostics(compilerDiagnostics);
+            if (options == null)
+                options = Options;
+
+            VerifyCompilerDiagnostics(compilerDiagnostics, options);
 
             foreach (TextSpan span in spans)
             {
@@ -139,10 +151,10 @@ namespace Roslynator.Tests
 
                 ImmutableArray<Diagnostic> newCompilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
 
-                VerifyCompilerDiagnostics(newCompilerDiagnostics);
+                VerifyCompilerDiagnostics(newCompilerDiagnostics, options);
 
-                if (!Options.AllowNewCompilerDiagnostics)
-                    VerifyNoNewCompilerDiagnostics(compilerDiagnostics, newCompilerDiagnostics);
+                if (!options.AllowNewCompilerDiagnostics)
+                    VerifyNoNewCompilerDiagnostics(compilerDiagnostics, newCompilerDiagnostics, options);
             }
 
             string actual = await document.ToFullStringAsync(simplify: true, format: true).ConfigureAwait(false);
@@ -153,6 +165,7 @@ namespace Roslynator.Tests
         public async Task VerifyNoRefactoringAsync(
             string source,
             string equivalenceKey,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             TestSourceTextAnalysis analysis = TestSourceText.GetSpans(source, reverse: true);
@@ -161,6 +174,7 @@ namespace Roslynator.Tests
                 source: analysis.Source,
                 spans: analysis.Spans.Select(f => f.Span),
                 equivalenceKey: equivalenceKey,
+                options: options,
                 cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
@@ -168,12 +182,14 @@ namespace Roslynator.Tests
             string source,
             TextSpan span,
             string equivalenceKey,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             await VerifyNoRefactoringAsync(
                 source,
                 ImmutableArray.Create(span),
                 equivalenceKey,
+                options,
                 cancellationToken).ConfigureAwait(false);
         }
 
@@ -181,6 +197,7 @@ namespace Roslynator.Tests
             string source,
             IEnumerable<TextSpan> spans,
             string equivalenceKey,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             Document document = CreateDocument(source);
@@ -189,7 +206,10 @@ namespace Roslynator.Tests
 
             ImmutableArray<Diagnostic> compilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
 
-            VerifyCompilerDiagnostics(compilerDiagnostics);
+            if (options == null)
+                options = Options;
+
+            VerifyCompilerDiagnostics(compilerDiagnostics, options);
 
             foreach (TextSpan span in spans)
             {

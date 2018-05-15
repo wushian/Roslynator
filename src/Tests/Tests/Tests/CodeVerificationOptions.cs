@@ -12,18 +12,18 @@ namespace Roslynator.Tests
             bool allowNewCompilerDiagnostics = false,
             bool enableDiagnosticsDisabledByDefault = true,
             DiagnosticSeverity maxAllowedCompilerDiagnosticSeverity = DiagnosticSeverity.Info,
-            IEnumerable<string> allowedCompilerDiagnostics = null)
+            IEnumerable<string> allowedCompilerDiagnosticIds = null)
         {
             MaxAllowedCompilerDiagnosticSeverity = maxAllowedCompilerDiagnosticSeverity;
             EnableDiagnosticsDisabledByDefault = enableDiagnosticsDisabledByDefault;
             AllowNewCompilerDiagnostics = allowNewCompilerDiagnostics;
 
-            AllowedCompilerDiagnosticIds = (allowedCompilerDiagnostics != null)
-                ? ImmutableArray.CreateRange(allowedCompilerDiagnostics)
+            AllowedCompilerDiagnosticIds = (allowedCompilerDiagnosticIds != null)
+                ? ImmutableArray.CreateRange(allowedCompilerDiagnosticIds)
                 : ImmutableArray<string>.Empty;
         }
 
-        public static CodeVerificationOptions Default { get; } = new CodeVerificationOptions(allowedCompilerDiagnostics: ImmutableArray.Create(
+        public static CodeVerificationOptions Default { get; } = new CodeVerificationOptions(allowedCompilerDiagnosticIds: ImmutableArray.Create(
             "CS0067", // Event is never used
             "CS0168", // Variable is declared but never used
             "CS0169", // Field is never used
@@ -43,12 +43,12 @@ namespace Roslynator.Tests
 
         public CodeVerificationOptions AddAllowedCompilerDiagnosticId(string diagnosticId)
         {
-            return new CodeVerificationOptions(allowedCompilerDiagnostics: AllowedCompilerDiagnosticIds.Add(diagnosticId));
+            return new CodeVerificationOptions(allowedCompilerDiagnosticIds: AllowedCompilerDiagnosticIds.Add(diagnosticId));
         }
 
         public CodeVerificationOptions AddAllowedCompilerDiagnosticIds(IEnumerable<string> diagnosticIds)
         {
-            return new CodeVerificationOptions(allowedCompilerDiagnostics: AllowedCompilerDiagnosticIds.AddRange(diagnosticIds));
+            return new CodeVerificationOptions(allowedCompilerDiagnosticIds: AllowedCompilerDiagnosticIds.AddRange(diagnosticIds));
         }
     }
 }

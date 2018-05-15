@@ -13,6 +13,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Text;
 using Roslynator.Tests.Text;
 using Xunit;
+using static Roslynator.Tests.CompilerDiagnosticVerifier;
 
 namespace Roslynator.Tests
 {
@@ -30,21 +31,23 @@ namespace Roslynator.Tests
         public async Task VerifyDiagnosticAndFixAsync(
             string source,
             string expected,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             TestSourceTextAnalysis analysis = TestSourceText.GetSpans(source);
 
             IEnumerable<Diagnostic> diagnostics = analysis.Spans.Select(f => CreateDiagnostic(f.Span, f.LineSpan));
 
-            await VerifyDiagnosticAsync(analysis.Source, diagnostics, additionalSources: null, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await VerifyDiagnosticAsync(analysis.Source, diagnostics, additionalSources: null, options: options, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-            await VerifyFixAsync(analysis.Source, expected, cancellationToken).ConfigureAwait(false);
+            await VerifyFixAsync(analysis.Source, expected, options, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task VerifyDiagnosticAndFixAsync(
             string theory,
             string fromData,
             string toData,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             (string source, string expected, TextSpan span) = TestSourceText.ReplaceSpan(theory, fromData, toData);
@@ -55,24 +58,26 @@ namespace Roslynator.Tests
             {
                 IEnumerable<Diagnostic> diagnostics = analysis.Spans.Select(f => CreateDiagnostic(f.Span, f.LineSpan));
 
-                await VerifyDiagnosticAsync(analysis.Source, diagnostics, additionalSources: null, cancellationToken).ConfigureAwait(false);
+                await VerifyDiagnosticAsync(analysis.Source, diagnostics, additionalSources: null, options: options, cancellationToken).ConfigureAwait(false);
 
-                await VerifyFixAsync(analysis.Source, expected, cancellationToken).ConfigureAwait(false);
+                await VerifyFixAsync(analysis.Source, expected, options, cancellationToken).ConfigureAwait(false);
             }
             else
             {
-                await VerifyDiagnosticAsync(source, span, cancellationToken).ConfigureAwait(false);
+                await VerifyDiagnosticAsync(source, span, options, cancellationToken).ConfigureAwait(false);
 
-                await VerifyFixAsync(source, expected, cancellationToken).ConfigureAwait(false);
+                await VerifyFixAsync(source, expected, options, cancellationToken).ConfigureAwait(false);
             }
         }
 
         public async Task VerifyFixAsync(
             string source,
             string expected,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            Assert.True(FixProvider.CanFixAny(Analyzer.SupportedDiagnostics), $"Code fix provider '{FixProvider.GetType().Name}' cannot fix any diagnostic supported by analyzer '{Analyzer}'.");
+            if (!FixProvider.CanFixAny(Analyzer.SupportedDiagnostics))
+                Assert.True(false, $"Code fix provider '{FixProvider.GetType().Name}' cannot fix any diagnostic supported by analyzer '{Analyzer}'.");
 
             Document document = CreateDocument(source);
 
@@ -80,9 +85,12 @@ namespace Roslynator.Tests
 
             ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
 
-            VerifyCompilerDiagnostics(compilerDiagnostics);
+            if (options == null)
+                options = Options;
 
-            if (Options.EnableDiagnosticsDisabledByDefault)
+            VerifyCompilerDiagnostics(compilerDiagnostics, options);
+
+            if (options.EnableDiagnosticsDisabledByDefault)
                 compilation = compilation.EnableDiagnosticsDisabledByDefault(Analyzer);
 
             ImmutableArray<Diagnostic> diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(Analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);
@@ -126,12 +134,12 @@ namespace Roslynator.Tests
 
                 ImmutableArray<Diagnostic> newCompilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
 
-                VerifyCompilerDiagnostics(newCompilerDiagnostics);
+                VerifyCompilerDiagnostics(newCompilerDiagnostics, options);
 
-                if (!Options.AllowNewCompilerDiagnostics)
-                    VerifyNoNewCompilerDiagnostics(compilerDiagnostics, newCompilerDiagnostics);
+                if (!options.AllowNewCompilerDiagnostics)
+                    VerifyNoNewCompilerDiagnostics(compilerDiagnostics, newCompilerDiagnostics, options);
 
-                if (Options.EnableDiagnosticsDisabledByDefault)
+                if (options.EnableDiagnosticsDisabledByDefault)
                     compilation = compilation.EnableDiagnosticsDisabledByDefault(Analyzer);
 
                 diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(Analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);
@@ -155,7 +163,10 @@ namespace Roslynator.Tests
             }
         }
 
-        public async Task VerifyNoFixAsync(string source, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task VerifyNoFixAsync(
+            string source,
+            CodeVerificationOptions options = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             Document document = CreateDocument(source);
 
@@ -163,9 +174,12 @@ namespace Roslynator.Tests
 
             ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
 
-            VerifyCompilerDiagnostics(compilerDiagnostics);
+            if (options == null)
+                options = Options;
 
-            if (Options.EnableDiagnosticsDisabledByDefault)
+            VerifyCompilerDiagnostics(compilerDiagnostics, options);
+
+            if (options.EnableDiagnosticsDisabledByDefault)
                 compilation = compilation.EnableDiagnosticsDisabledByDefault(Analyzer);
 
             ImmutableArray<Diagnostic> diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(Analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);

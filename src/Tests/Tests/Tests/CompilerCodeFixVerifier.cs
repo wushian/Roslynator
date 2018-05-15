@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -11,6 +12,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Text;
 using Roslynator.Tests.Text;
 using Xunit;
+using static Roslynator.Tests.CompilerDiagnosticVerifier;
 
 namespace Roslynator.Tests
 {
@@ -31,23 +33,29 @@ namespace Roslynator.Tests
             string theory,
             string fromData,
             string toData,
-            string equivalenceKey)
+            string equivalenceKey,
+            CodeVerificationOptions options = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             (string source, string expected, TextSpan span) = TestSourceText.ReplaceSpan(theory, fromData, toData);
 
             await VerifyFixAsync(
                 source: source,
                 expected: expected,
-                equivalenceKey: equivalenceKey).ConfigureAwait(false);
+                equivalenceKey: equivalenceKey,
+                options: options,
+                cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         public async Task VerifyFixAsync(
             string source,
             string expected,
             string equivalenceKey,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            Assert.True(FixProvider.FixableDiagnosticIds.Contains(DiagnosticId), $"Code fix provider '{FixProvider.GetType().Name}' cannot fix diagnostic '{DiagnosticId}'.");
+            if (!FixProvider.FixableDiagnosticIds.Contains(DiagnosticId))
+                Assert.True(false, $"Code fix provider '{FixProvider.GetType().Name}' cannot fix diagnostic '{DiagnosticId}'.");
 
             Document document = CreateDocument(source);
 
@@ -102,8 +110,11 @@ namespace Roslynator.Tests
 
                 ImmutableArray<Diagnostic> newDiagnostics = compilation.GetDiagnostics(cancellationToken: cancellationToken);
 
-                if (!Options.AllowNewCompilerDiagnostics)
-                    VerifyNoNewCompilerDiagnostics(diagnostics, newDiagnostics);
+                if (options == null)
+                    options = Options;
+
+                if (!options.AllowNewCompilerDiagnostics)
+                    VerifyNoNewCompilerDiagnostics(diagnostics, newDiagnostics, options);
 
                 diagnostics = newDiagnostics;
             }
@@ -126,9 +137,11 @@ namespace Roslynator.Tests
             }
         }
 
+        [SuppressMessage("Redundancy", "RCS1163:Unused parameter.", Justification = "<Pending>")]
         public async Task VerifyNoFixAsync(
             string source,
             string equivalenceKey,
+            CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             Document document = CreateDocument(source);
