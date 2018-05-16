@@ -11,7 +11,7 @@ namespace Roslynator.CSharp.Refactorings.Tests
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.PromoteLocalToParameter;
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.PromoteLocalToParameter)]
         public async Task Test_MethodWithSingleLocalDeclaration()
         {
             await VerifyRefactoringAsync(@"
@@ -33,7 +33,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.PromoteLocalToParameter)]
         public async Task Test_LocalFunctionWithSingleLocalDeclaration()
         {
             await VerifyRefactoringAsync(@"
@@ -61,7 +61,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.PromoteLocalToParameter)]
         public async Task Test_MethodWithMultipleLocalDeclarationsWithoutInitialization()
         {
             await VerifyRefactoringAsync(@"
@@ -83,7 +83,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.PromoteLocalToParameter)]
         public async Task Test_MethodWithMultipleLocalDeclarationsWithInitialization()
         {
             await VerifyRefactoringAsync(@"
@@ -106,7 +106,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.PromoteLocalToParameter)]
         public async Task TestNoRefactoring_TypeDoesNotSupportExplicitDeclaration()
         {
             await VerifyNoRefactoringAsync(@"

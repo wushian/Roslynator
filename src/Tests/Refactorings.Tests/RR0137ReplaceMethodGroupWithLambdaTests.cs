@@ -11,7 +11,7 @@ namespace Roslynator.CSharp.Refactorings.Tests
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.ReplaceMethodGroupWithLambda;
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
         public async Task Test_VariableDeclaration_Action()
         {
             await VerifyRefactoringAsync(@"
@@ -37,7 +37,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
         public async Task Test_VariableDeclaration_Action1()
         {
             await VerifyRefactoringAsync(@"
@@ -63,7 +63,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
         public async Task Test_VariableDeclaration_Action2()
         {
             await VerifyRefactoringAsync(@"
@@ -89,7 +89,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
         public async Task Test_VariableDeclaration_Func()
         {
             await VerifyRefactoringAsync(@"
@@ -117,7 +117,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
         public async Task Test_VariableDeclaration_Func2()
         {
             await VerifyRefactoringAsync(@"
@@ -145,7 +145,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
         public async Task Test_VariableDeclaration_Func3()
         {
             await VerifyRefactoringAsync(@"
@@ -173,7 +173,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
         public async Task Test_SimpleAssignment_Action()
         {
             await VerifyRefactoringAsync(@"
@@ -203,7 +203,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
         public async Task Test_SimpleAssignment_Action1()
         {
             await VerifyRefactoringAsync(@"
@@ -233,7 +233,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
         public async Task Test_SimpleAssignment_Action2()
         {
             await VerifyRefactoringAsync(@"
@@ -263,7 +263,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
         public async Task Test_SimpleAssignment_Func()
         {
             await VerifyRefactoringAsync(@"
@@ -297,7 +297,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
         public async Task Test_SimpleAssignment_Func1()
         {
             await VerifyRefactoringAsync(@"
@@ -331,7 +331,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
         public async Task Test_SimpleAssignment_Func2()
         {
             await VerifyRefactoringAsync(@"
@@ -365,7 +365,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
         public async Task Test_Argument_Action()
         {
             await VerifyRefactoringAsync(@"
@@ -395,7 +395,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
         public async Task Test_Argument_Action1()
         {
             await VerifyRefactoringAsync(@"
@@ -425,7 +425,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
         public async Task Test_Argument_Action2()
         {
             await VerifyRefactoringAsync(@"
@@ -455,7 +455,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
         public async Task Test_Argument_Func()
         {
             await VerifyRefactoringAsync(@"
@@ -485,7 +485,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
         public async Task Test_Argument_Func1()
         {
             await VerifyRefactoringAsync(@"
@@ -515,7 +515,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
         public async Task Test_Argument_Func2()
         {
             await VerifyRefactoringAsync(@"

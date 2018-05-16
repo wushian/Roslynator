@@ -19,7 +19,7 @@ namespace Roslynator.CSharp.Analysis.Tests
 
         public override CodeFixProvider FixProvider { get; } = new MemberDeclarationCodeFixProvider();
 
-        [Fact]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.MakeMethodExtensionMethod)]
         public async Task Test_ImplictlyInternal()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -35,7 +35,7 @@ static class FooExtensions
 ");
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.MakeMethodExtensionMethod)]
         public async Task Test_Internal()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -51,7 +51,7 @@ internal static class FooExtensions
 ");
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.MakeMethodExtensionMethod)]
         public async Task Test_Public()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -67,7 +67,7 @@ public static class FooExtensions
 ");
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.MakeMethodExtensionMethod)]
         public async Task TestNoDiagnostic_NoSuffix()
         {
             await VerifyNoDiagnosticAsync(@"
@@ -78,7 +78,7 @@ public static class Foo
 ");
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.MakeMethodExtensionMethod)]
         public async Task TestNoDiagnostic_NotStatic()
         {
             await VerifyNoDiagnosticAsync(@"
@@ -89,7 +89,7 @@ public class FooExtensions
 ");
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.MakeMethodExtensionMethod)]
         public async Task TestNoDiagnostic_NestedClass()
         {
             await VerifyNoDiagnosticAsync(@"
@@ -103,7 +103,7 @@ public static class Foo
 ");
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.MakeMethodExtensionMethod)]
         public async Task TestNoDiagnostic_PrivateMethod()
         {
             await VerifyNoDiagnosticAsync(@"
@@ -114,7 +114,7 @@ public static class FooExtensions
 ");
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.MakeMethodExtensionMethod)]
         public async Task TestNoDiagnostic_ExtensionMethod()
         {
             await VerifyNoDiagnosticAsync(@"

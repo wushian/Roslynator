@@ -19,7 +19,7 @@ namespace Roslynator.CSharp.Refactorings.Tests
 
         public override CodeVerificationOptions Options { get; }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
         public async Task Test_Method()
         {
             await VerifyRefactoringAsync(@"
@@ -41,7 +41,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
         public async Task Test_Method_IEnumerableOfT()
         {
             await VerifyRefactoringAsync(@"
@@ -63,7 +63,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
         public async Task Test_LocalFunction()
         {
             await VerifyRefactoringAsync(@"
@@ -91,7 +91,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
         public async Task TestNoRefactoring_MethodWithReturn()
         {
             await VerifyNoRefactoringAsync(@"
@@ -105,7 +105,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
         public async Task TestNoRefactoring_VoidMethod()
         {
             await VerifyNoRefactoringAsync(@"
@@ -119,7 +119,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
         public async Task TestNoRefactoring_Iterator()
         {
             await VerifyNoRefactoringAsync(@"
@@ -135,7 +135,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
         public async Task TestNoRefactoring_Iterator_YieldBreak()
         {
             await VerifyNoRefactoringAsync(@"
@@ -151,7 +151,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
         public async Task TestNoRefactoring_ReturnsTask()
         {
             await VerifyNoRefactoringAsync(@"
@@ -167,7 +167,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
         public async Task TestNoRefactoring_Throws()
         {
             await VerifyNoRefactoringAsync(@"
@@ -183,7 +183,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
         public async Task TestNoRefactoring_InterfaceImplementation()
         {
             await VerifyNoRefactoringAsync(@"
@@ -202,7 +202,7 @@ class C : IFoo
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
         public async Task TestNoRefactoring_Override()
         {
             await VerifyNoRefactoringAsync(@"

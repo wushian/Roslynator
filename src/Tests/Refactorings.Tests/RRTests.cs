@@ -12,7 +12,7 @@ namespace Roslynator.CSharp.Refactorings.Tests
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.AddBraces;
 
-        //[Fact]
+        //[Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.AddBraces)]
         public async Task Test()
         {
             await VerifyRefactoringAsync(@"
@@ -31,7 +31,7 @@ class C
 ", RefactoringId);
         }
 
-        //[Theory]
+        //[Theory, Trait(Traits.Refactoring, RefactoringIdentifiers.AddBraces)]
         //[InlineData("", "")]
         public async Task Test2(string fromData, string toData)
         {
@@ -50,7 +50,7 @@ class C
 ", fromData, toData, RefactoringId);
         }
 
-        //[Fact]
+        //[Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.AddBraces)]
         public async Task TestNoRefactoring()
         {
             await VerifyNoRefactoringAsync(@"

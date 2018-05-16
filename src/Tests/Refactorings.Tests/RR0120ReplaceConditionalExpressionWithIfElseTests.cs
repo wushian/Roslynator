@@ -11,7 +11,7 @@ namespace Roslynator.CSharp.Refactorings.Tests
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.ReplaceConditionalExpressionWithIfElse;
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceConditionalExpressionWithIfElse)]
         public async Task Test_LocalDeclaration()
         {
             await VerifyRefactoringAsync(@"
@@ -41,7 +41,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceConditionalExpressionWithIfElse)]
         public async Task Test_LocalDeclaration_Multiline()
         {
             await VerifyRefactoringAsync(@"
@@ -73,7 +73,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceConditionalExpressionWithIfElse)]
         public async Task Test_SimpleAssignment()
         {
             await VerifyRefactoringAsync(@"
@@ -104,7 +104,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceConditionalExpressionWithIfElse)]
         public async Task Test_SimpleAssignment_Multiline()
         {
             await VerifyRefactoringAsync(@"
@@ -137,7 +137,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceConditionalExpressionWithIfElse)]
         public async Task Test_ReturnStatement()
         {
             await VerifyRefactoringAsync(@"
@@ -166,7 +166,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceConditionalExpressionWithIfElse)]
         public async Task Test_ReturnStatement_Multiline()
         {
             await VerifyRefactoringAsync(@"
@@ -197,7 +197,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceConditionalExpressionWithIfElse)]
         public async Task Test_YieldReturnStatement()
         {
             await VerifyRefactoringAsync(@"
@@ -230,7 +230,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceConditionalExpressionWithIfElse)]
         public async Task Test_YieldReturnStatement_Multiline()
         {
             await VerifyRefactoringAsync(@"

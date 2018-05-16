@@ -17,7 +17,7 @@ namespace Roslynator.CSharp.CodeFixes.Tests
 
         public override CodeVerificationOptions Options { get; } = CodeVerificationOptions.Default.AddAllowedCompilerDiagnosticId(CompilerDiagnosticIdentifiers.CannotImplicitlyConvertType);
 
-        [Fact]
+        [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.BodyCannotBeIteratorBlockBecauseTypeIsNotIteratorInterfaceType)]
         public async Task Test_Method_String()
         {
             await VerifyFixAsync(@"
@@ -47,7 +47,7 @@ class C
 ", EquivalenceKey.Create(DiagnosticId, "string"));
         }
 
-        [Fact]
+        [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.BodyCannotBeIteratorBlockBecauseTypeIsNotIteratorInterfaceType)]
         public async Task Test_LocalFunction_String()
         {
             await VerifyFixAsync(@"
@@ -83,7 +83,7 @@ class C
 ", EquivalenceKey.Create(DiagnosticId, "string"));
         }
 
-        [Fact]
+        [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.BodyCannotBeIteratorBlockBecauseTypeIsNotIteratorInterfaceType)]
         public async Task Test_Method_DateTime()
         {
             await VerifyFixAsync(@"
@@ -113,7 +113,7 @@ class C
 ", EquivalenceKey.Create(DiagnosticId, "DateTime"));
         }
 
-        [Fact]
+        [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.BodyCannotBeIteratorBlockBecauseTypeIsNotIteratorInterfaceType)]
         public async Task Test_LocalFunction_DateTime()
         {
             await VerifyFixAsync(@"
@@ -149,7 +149,7 @@ class C
 ", EquivalenceKey.Create(DiagnosticId, "DateTime"));
         }
 
-        [Fact]
+        [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.BodyCannotBeIteratorBlockBecauseTypeIsNotIteratorInterfaceType)]
         public async Task TestNoFix()
         {
             await VerifyNoFixAsync(@"

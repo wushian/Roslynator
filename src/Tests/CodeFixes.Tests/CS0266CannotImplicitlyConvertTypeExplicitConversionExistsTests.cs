@@ -14,7 +14,7 @@ namespace Roslynator.CSharp.CodeFixes.Tests
 
         public override CodeFixProvider FixProvider { get; } = new ExpressionCodeFixProvider();
 
-        [Fact]
+        [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.CannotImplicitlyConvertTypeExplicitConversionExists)]
         public async Task Test_ChangeTypeAccordingToInitializer()
         {
             await VerifyFixAsync(@"

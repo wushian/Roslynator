@@ -19,7 +19,7 @@ namespace Roslynator.CSharp.Analysis.Tests
 
         public override CodeFixProvider FixProvider { get; }
 
-        //[Fact]
+        //[Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddBracesWhenExpressionSpansOverMultipleLines)]
         public async Task Test()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -38,7 +38,7 @@ class C
 ");
         }
 
-        //[Theory]
+        //[Theory, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddBracesWhenExpressionSpansOverMultipleLines)]
         //[InlineData("", "")]
         public async Task Test2(string fromData, string toData)
         {
@@ -57,7 +57,7 @@ class C
 ", fromData, toData);
         }
 
-        //[Fact]
+        //[Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddBracesWhenExpressionSpansOverMultipleLines)]
         public async Task TestNoDiagnostic()
         {
             await VerifyNoDiagnosticAsync(@"
@@ -75,7 +75,7 @@ class C
 ");
         }
 
-        //[Theory]
+        //[Theory, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddBracesWhenExpressionSpansOverMultipleLines)]
         //[InlineData("")]
         public async Task TestNoDiagnostic2(string fromData)
         {

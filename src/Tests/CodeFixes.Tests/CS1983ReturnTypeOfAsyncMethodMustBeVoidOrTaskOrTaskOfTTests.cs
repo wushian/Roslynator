@@ -17,7 +17,7 @@ namespace Roslynator.CSharp.CodeFixes.Tests
 
         public override CodeVerificationOptions Options { get; } = CodeVerificationOptions.Default.AddAllowedCompilerDiagnosticId(CompilerDiagnosticIdentifiers.SinceMethodIsAsyncMethodThatReturnsTaskReturnKeywordMustNotBeFollowedByObjectExpression);
 
-        [Fact]
+        [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.ReturnTypeOfAsyncMethodMustBeVoidOrTaskOrTaskOfT)]
         public async Task Test_Task()
         {
             await VerifyFixAsync(@"
@@ -107,7 +107,7 @@ public class Foo
 ", EquivalenceKey.Create(DiagnosticId, "Task"));
         }
 
-        [Fact]
+        [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.ReturnTypeOfAsyncMethodMustBeVoidOrTaskOrTaskOfT)]
         public async Task Test_TaskOfT()
         {
             await VerifyFixAsync(@"
@@ -213,7 +213,7 @@ public class Foo
 ", EquivalenceKey.Create(DiagnosticId, "TaskOfT"));
         }
 
-        [Fact]
+        [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.ReturnTypeOfAsyncMethodMustBeVoidOrTaskOrTaskOfT)]
         public async Task TestNoFix()
         {
             const string source = @"

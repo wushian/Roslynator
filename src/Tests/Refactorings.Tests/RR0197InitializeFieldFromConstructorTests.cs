@@ -11,7 +11,7 @@ namespace Roslynator.CSharp.Refactorings.Tests
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.InitializeFieldFromConstructor;
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.InitializeFieldFromConstructor)]
         public async Task TestRefactoring()
         {
             await VerifyRefactoringAsync(@"

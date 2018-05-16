@@ -11,7 +11,7 @@ namespace Roslynator.CSharp.Refactorings.Tests
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.WrapInElseClause;
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.WrapInElseClause)]
         public async Task Test_IfWithBlock()
         {
             await VerifyRefactoringAsync(@"
@@ -45,7 +45,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.WrapInElseClause)]
         public async Task Test_If_WithEmbeddedStatement()
         {
             await VerifyRefactoringAsync(@"
@@ -73,7 +73,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.WrapInElseClause)]
         public async Task Test_IfWithBlock_MultipleStatements()
         {
             await VerifyRefactoringAsync(@"
@@ -111,7 +111,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.WrapInElseClause)]
         public async Task Test_IfElseIf()
         {
             await VerifyRefactoringAsync(@"
@@ -187,7 +187,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.WrapInElseClause)]
         public async Task TestNoRefactoring_IfWithoutJumpStatement()
         {
             await VerifyNoRefactoringAsync(@"
@@ -206,7 +206,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.WrapInElseClause)]
         public async Task TestNoRefactoring_IfElse()
         {
             await VerifyNoRefactoringAsync(@"

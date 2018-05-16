@@ -17,7 +17,7 @@ namespace Roslynator.CSharp.CodeFixes.Tests
 
         public override CodeVerificationOptions Options { get; } = CodeVerificationOptions.Default;
 
-        //[Fact]
+        //[Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.OperatorCannotBeAppliedToOperands)]
         public async Task Test()
         {
             await VerifyFixAsync(@"
@@ -36,7 +36,7 @@ class C
 ", EquivalenceKey.Create(DiagnosticId));
         }
 
-        //[Theory]
+        //[Theory, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.OperatorCannotBeAppliedToOperands)]
         //[InlineData("", "")]
         public async Task Test(string fromData, string toData)
         {
@@ -55,7 +55,7 @@ class C
 ", fromData, toData, EquivalenceKey.Create(DiagnosticId));
         }
 
-        //[Fact]
+        //[Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.OperatorCannotBeAppliedToOperands)]
         public async Task TestNoFix()
         {
             await VerifyNoFixAsync(@"

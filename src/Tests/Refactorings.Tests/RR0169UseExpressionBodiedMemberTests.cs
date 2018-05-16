@@ -11,7 +11,7 @@ namespace Roslynator.CSharp.Refactorings.Tests
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.UseExpressionBodiedMember;
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_Constructor()
         {
             await VerifyRefactoringAsync(@"
@@ -34,7 +34,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_Destructor()
         {
             await VerifyRefactoringAsync(@"
@@ -57,7 +57,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_Method()
         {
             await VerifyRefactoringAsync(@"
@@ -76,7 +76,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_VoidMethod()
         {
             await VerifyRefactoringAsync(@"
@@ -95,7 +95,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_LocalFunction()
         {
             await VerifyRefactoringAsync(@"
@@ -120,7 +120,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_VoidLocalFunction()
         {
             await VerifyRefactoringAsync(@"
@@ -145,7 +145,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_PropertyWithGetter()
         {
             await VerifyRefactoringAsync(@"
@@ -164,7 +164,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_PropertyWithGetterAndSetter_Getter()
         {
             await VerifyRefactoringAsync(@"
@@ -192,7 +192,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_PropertyWithGetterAndSetter_Setter()
         {
             await VerifyRefactoringAsync(@"
@@ -220,7 +220,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_IndexerWithGetter()
         {
             await VerifyRefactoringAsync(@"
@@ -239,7 +239,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_IndexerWithGetterAndSetter_Getter()
         {
             await VerifyRefactoringAsync(@"
@@ -267,7 +267,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_IndexerWithGetterAndSetter_Setter()
         {
             await VerifyRefactoringAsync(@"
@@ -295,7 +295,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_Operator()
         {
             await VerifyRefactoringAsync(@"
@@ -314,7 +314,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_ConversionOperator()
         {
             await VerifyRefactoringAsync(@"
@@ -333,7 +333,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_Constructor_Throw()
         {
             await VerifyRefactoringAsync(@"
@@ -356,7 +356,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_Destructor_Throw()
         {
             await VerifyRefactoringAsync(@"
@@ -375,7 +375,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_Method_Throw()
         {
             await VerifyRefactoringAsync(@"
@@ -394,7 +394,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_VoidMethod_Throw()
         {
             await VerifyRefactoringAsync(@"
@@ -413,7 +413,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_LocalFunction_Throw()
         {
             await VerifyRefactoringAsync(@"
@@ -438,7 +438,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_VoidLocalFunction_Throw()
         {
             await VerifyRefactoringAsync(@"
@@ -463,7 +463,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_PropertyWithGetter_Throw()
         {
             await VerifyRefactoringAsync(@"
@@ -482,7 +482,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_PropertyWithGetterAndSetter_Getter_Throw()
         {
             await VerifyRefactoringAsync(@"
@@ -510,7 +510,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_PropertyWithGetterAndSetter_Setter_Throw()
         {
             await VerifyRefactoringAsync(@"
@@ -538,7 +538,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_IndexerWithGetter_Throw()
         {
             await VerifyRefactoringAsync(@"
@@ -557,7 +557,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_IndexerWithGetterAndSetter_Getter_Throw()
         {
             await VerifyRefactoringAsync(@"
@@ -585,7 +585,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_IndexerWithGetterAndSetter_Setter_Throw()
         {
             await VerifyRefactoringAsync(@"
@@ -613,7 +613,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_Operator_Throw()
         {
             await VerifyRefactoringAsync(@"
@@ -632,7 +632,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task Test_ConversionOperator_Throw()
         {
             await VerifyRefactoringAsync(@"
@@ -651,7 +651,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task TestNoDiagnostic_MethodWithMultipleStatements()
         {
             await VerifyNoRefactoringAsync(@"
@@ -666,7 +666,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task TestNoDiagnostic_MethodWithLocalFunction()
         {
             await VerifyNoRefactoringAsync(@"
@@ -680,7 +680,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task TestNoDiagnostic_VoidMethodWithNoStatements()
         {
             await VerifyNoRefactoringAsync(@"
@@ -693,7 +693,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task TestNoDiagnostic_VoidMethodWithMultipleStatements()
         {
             await VerifyNoRefactoringAsync(@"
@@ -708,7 +708,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task TestNoDiagnostic_MethodWithMultilineStatement()
         {
             await VerifyNoRefactoringAsync(@"
@@ -723,7 +723,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task TestNoDiagnostic_PropertyWithMultipleStatement()
         {
             await VerifyNoRefactoringAsync(@"
@@ -743,7 +743,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task TestNoDiagnostic_AccessorWithAttribute()
         {
             await VerifyNoRefactoringAsync(@"
@@ -763,7 +763,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task TestNoDiagnostic_IndexerWithMultipleStatements()
         {
             await VerifyNoRefactoringAsync(@"
@@ -785,7 +785,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
         public async Task TestNoDiagnostic()
         {
             await VerifyNoRefactoringAsync(@"

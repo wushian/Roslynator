@@ -11,7 +11,7 @@ namespace Roslynator.CSharp.Refactorings.Tests
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.RemoveEnumMemberValue;
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.RemoveEnumMemberValue)]
         public async Task Test_SingleMember()
         {
             await VerifyRefactoringAsync(@"
@@ -31,7 +31,7 @@ enum E
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.RemoveEnumMemberValue)]
         public async Task Test_MultipleMembers()
         {
             await VerifyRefactoringAsync(@"
@@ -53,7 +53,7 @@ enum E
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.RemoveEnumMemberValue)]
         public async Task TestNoRefactoring_SingleMember()
         {
             await VerifyNoRefactoringAsync(@"
@@ -68,7 +68,7 @@ enum E
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.RemoveEnumMemberValue)]
         public async Task TestNoRefactoring_MultipleMembers()
         {
             await VerifyNoRefactoringAsync(@"

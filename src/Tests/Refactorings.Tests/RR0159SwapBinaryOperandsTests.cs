@@ -11,7 +11,7 @@ namespace Roslynator.CSharp.Refactorings.Tests
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.SwapBinaryOperands;
 
-        [Theory]
+        [Theory, Trait(Traits.Refactoring, RefactoringIdentifiers.SwapBinaryOperands)]
         [InlineData("f &[||]& f2", "f2 && f")]
         [InlineData("f |[||]| f2", "f2 || f")]
         [InlineData("i =[||]= j", "j == i")]
@@ -38,7 +38,7 @@ class C
 ", fromData, toData, RefactoringId);
         }
 
-        [Theory]
+        [Theory, Trait(Traits.Refactoring, RefactoringIdentifiers.SwapBinaryOperands)]
         [InlineData("i [||]+ j", "j + i")]
         [InlineData("i [||]* j", "j * i")]
         public async Task Test_AddMultiply(string fromData, string toData)
@@ -54,7 +54,7 @@ class C
 ", fromData, toData, RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.SwapBinaryOperands)]
         public async Task TestNoRefactoring()
         {
             await VerifyNoRefactoringAsync(@"

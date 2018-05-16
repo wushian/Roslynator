@@ -11,7 +11,7 @@ namespace Roslynator.CSharp.Refactorings.Tests
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.FormatArgumentList;
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.FormatArgumentList)]
         public async Task Test_ToMultiLine()
         {
             await VerifyRefactoringAsync(@"
@@ -36,7 +36,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.FormatArgumentList)]
         public async Task Test_ToMultiLine2()
         {
             await VerifyRefactoringAsync(@"
@@ -61,7 +61,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.FormatArgumentList)]
         public async Task Test_ToSingleLine()
         {
             await VerifyRefactoringAsync(@"
@@ -86,7 +86,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.FormatArgumentList)]
         public async Task Test_ToSingleLine2()
         {
             await VerifyRefactoringAsync(@"
@@ -111,7 +111,7 @@ class C
 ", RefactoringId);
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.FormatArgumentList)]
         public async Task TestNoRefactoring()
         {
             await VerifyNoRefactoringAsync(@"
