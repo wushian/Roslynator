@@ -3,7 +3,8 @@
 "C:\Program Files\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\msbuild" "..\src\Roslynator.sln" ^
  /t:Build ^
  /p:Configuration=DebugTests,RunCodeAnalysis=false ^
- /v:minimal
+ /v:minimal ^
+ /m
 
 if errorlevel 1 (
  pause
