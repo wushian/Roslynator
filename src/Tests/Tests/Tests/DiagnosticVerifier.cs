@@ -332,7 +332,7 @@ namespace Roslynator.Tests
 
         private protected Diagnostic CreateDiagnostic(TextSpan span, LinePositionSpan lineSpan)
         {
-            Location location = Location.Create(FileUtility.DefaultCSharpFileName, span, lineSpan);
+            Location location = Location.Create(CreateFileName(), span, lineSpan);
 
             return Diagnostic.Create(Descriptor, location);
         }

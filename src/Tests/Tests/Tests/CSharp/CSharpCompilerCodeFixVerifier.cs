@@ -15,5 +15,15 @@ namespace Roslynator.Tests.CSharp
         {
             get { return CSharpCodeVerificationOptions.Default; }
         }
+
+        public override string CreateFileName(int index = 0)
+        {
+            return CSharpCodeVerifierHelpers.CreateFileName(index);
+        }
+
+        protected override Project CreateProject()
+        {
+            return CSharpCodeVerifierHelpers.DefaultProject;
+        }
     }
 }

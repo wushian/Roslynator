@@ -2,6 +2,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CodeRefactorings;
+using Roslynator.Tests;
 using Xunit;
 
 #pragma warning disable RCS1090
@@ -10,7 +11,14 @@ namespace Roslynator.CSharp.Refactorings.Tests
 {
     public class RRTests : AbstractCSharpCodeRefactoringVerifier
     {
+        public RRTests()
+        {
+            Options = base.Options;
+        }
+
         public override string RefactoringId { get; } = RefactoringIdentifiers.AddBraces;
+
+        public override CodeVerificationOptions Options { get; }
 
         //[Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.AddBraces)]
         public async Task Test()

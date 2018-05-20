@@ -13,7 +13,7 @@ namespace Roslynator.CSharp.CodeFixes.Tests
     {
         public CS1624BodyCannotBeIteratorBlockBecauseTypeIsNotIteratorInterfaceTypeTests()
         {
-            Options = Options.AddAllowedCompilerDiagnosticId(CompilerDiagnosticIdentifiers.CannotImplicitlyConvertType);
+            Options = base.Options.AddAllowedCompilerDiagnosticId(CompilerDiagnosticIdentifiers.CannotImplicitlyConvertType);
         }
 
         public override string DiagnosticId { get; } = CompilerDiagnosticIdentifiers.BodyCannotBeIteratorBlockBecauseTypeIsNotIteratorInterfaceType;
