@@ -10,5 +10,10 @@ namespace Roslynator.Tests.CSharp
         {
             get { return LanguageNames.CSharp; }
         }
+
+        public override CodeVerificationOptions Options
+        {
+            get { return CSharpCodeVerificationOptions.Default; }
+        }
     }
 }

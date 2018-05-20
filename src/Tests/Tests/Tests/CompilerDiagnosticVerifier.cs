@@ -12,11 +12,8 @@ namespace Roslynator.Tests
     {
         public static void VerifyCompilerDiagnostics(
             ImmutableArray<Diagnostic> diagnostics,
-            CodeVerificationOptions options = null)
+            CodeVerificationOptions options)
         {
-            if (options == null)
-                options = CodeVerificationOptions.Default;
-
             DiagnosticSeverity maxAllowedSeverity = options.MaxAllowedCompilerDiagnosticSeverity;
 
             ImmutableArray<string> allowedDiagnosticIds = options.AllowedCompilerDiagnosticIds;
@@ -57,11 +54,8 @@ namespace Roslynator.Tests
         public static void VerifyNoNewCompilerDiagnostics(
             ImmutableArray<Diagnostic> diagnostics,
             ImmutableArray<Diagnostic> newDiagnostics,
-            CodeVerificationOptions options = null)
+            CodeVerificationOptions options)
         {
-            if (options == null)
-                options = CodeVerificationOptions.Default;
-
             ImmutableArray<string> allowedDiagnosticIds = options.AllowedCompilerDiagnosticIds;
 
             if (allowedDiagnosticIds.IsDefault)

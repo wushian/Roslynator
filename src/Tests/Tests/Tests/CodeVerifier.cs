@@ -1,19 +1,16 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Host.Mef;
 using Microsoft.CodeAnalysis.Text;
 
 namespace Roslynator.Tests
 {
     public abstract class CodeVerifier
     {
-        public virtual CodeVerificationOptions Options
-        {
-            get { return CodeVerificationOptions.Default; }
-        }
+        public abstract CodeVerificationOptions Options { get; }
 
         public abstract string Language { get; }
 
@@ -25,61 +22,78 @@ namespace Roslynator.Tests
             if (additionalSources == null)
                 throw new ArgumentNullException(nameof(additionalSources));
 
-            Project project = CreateProject();
+            ProjectBuilder projectBuilder = ProjectBuilder.Default;
+
+            OnProjectCreating(projectBuilder);
+
+            Project project = CreateProject(projectBuilder);
 
             ProjectId projectId = project.Id;
 
-            string newFileName = FileUtility.CreateDefaultFileName(language: Language);
+            string newFileName = projectBuilder.CreateFileName(projectBuilder.DocumentName, 0);
 
             DocumentId documentId = DocumentId.CreateNewId(projectId, debugName: newFileName);
 
-            project = project
-                .Solution
-                .AddDocument(documentId, newFileName, SourceText.From(source))
-                .GetProject(projectId);
+            Document document = project.AddDocument(newFileName, SourceText.From(source));
 
-            Document document = project.Documents.First();
+            project = document.Project;
 
             if (additionalSources.Length > 0)
             {
                 Solution solution = project.Solution;
 
-                int count = 1;
-                foreach (string additionalSource in additionalSources)
+                for (int i = 0; i < additionalSources.Length; i++)
                 {
-                    newFileName = FileUtility.CreateFileName(Language, suffix: count);
-                    documentId = DocumentId.CreateNewId(project.Id, debugName: newFileName);
-                    solution = solution.AddDocument(documentId, newFileName, SourceText.From(additionalSource));
-                    count++;
+                    newFileName = projectBuilder.CreateFileName(projectBuilder.DocumentName, i + 1);
+                    project = project.AddDocument(newFileName, SourceText.From(additionalSources[i])).Project;
                 }
-
-                project = solution.GetProject(project.Id);
             }
 
             return project.GetDocument(document.Id);
         }
 
-        protected virtual Project CreateProject()
+        protected virtual void OnDocumentCreating(DocumentBuilder documentBuilder)
         {
-            ProjectId projectId = ProjectId.CreateNewId(debugName: FileUtility.TestProjectName);
+        }
 
-            Project project = new AdhocWorkspace()
-                .CurrentSolution
-                .AddProject(projectId, FileUtility.TestProjectName, FileUtility.TestProjectName, Language)
-                .AddMetadataReferences(
-                    projectId,
-                    new MetadataReference[]
-                    {
-                        RuntimeMetadataReference.CorLibReference,
-                        RuntimeMetadataReference.CreateFromAssemblyName("System.Core.dll"),
-                        RuntimeMetadataReference.CreateFromAssemblyName("System.Linq.dll"),
-                        RuntimeMetadataReference.CreateFromAssemblyName("System.Linq.Expressions.dll"),
-                        RuntimeMetadataReference.CreateFromAssemblyName("System.Runtime.dll"),
-                        RuntimeMetadataReference.CreateFromAssemblyName("System.Collections.Immutable.dll"),
-                        RuntimeMetadataReference.CreateFromAssemblyName("Microsoft.CodeAnalysis.dll"),
-                        RuntimeMetadataReference.CreateFromAssemblyName("Microsoft.CodeAnalysis.CSharp.dll"),
-                    })
-                .GetProject(projectId);
+        protected virtual void OnProjectCreating(ProjectBuilder projectBuilder)
+        {
+        }
+
+        protected virtual void OnProjectCreated(Project project)
+        {
+        }
+
+        protected virtual void OnSolutionCreating(SolutionBuilder projectBuilder)
+        {
+        }
+
+        protected virtual void OnWorkspaceCreating(WorkspaceBuilder projectBuilder)
+        {
+        }
+
+        protected virtual Project CreateProject(ProjectBuilder projectBuilder)
+        {
+            var workspaceBuilder = new WorkspaceBuilder();
+
+            var workspace = new AdhocWorkspace(MefHostServices.DefaultHost, workspaceKind: "Test");
+
+            Solution solution = workspace.CurrentSolution;
+
+            Project project;
+
+            ProjectInfo projectInfo = projectBuilder.ProjectInfo;
+
+            if (projectInfo != null)
+            {
+                project = solution.AddProject(projectInfo).GetProject(projectInfo.Id);
+            }
+            else
+            {
+                project = solution
+                    .AddProject(projectBuilder.ProjectName, projectBuilder.AssemblyName ?? projectBuilder.ProjectName, Language)
+                    .WithMetadataReferences(projectBuilder.MetadataReferences);
+            }
 
             if (Language == LanguageNames.CSharp)
             {

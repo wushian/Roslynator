@@ -10,6 +10,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.VisualBasic;
 using Roslynator;
 using Roslynator.CSharp;
 using Roslynator.CSharp.Syntax;
@@ -21,6 +22,10 @@ namespace Roslynator.Tests
     {
         internal static async Task Main()
         {
+            VisualBasicParseOptions parsseOptions;
+
+            VisualBasicCompilationOptions compilationOptions;
+
             const string source = @"
 using System;
 using System.Collections.Generic;

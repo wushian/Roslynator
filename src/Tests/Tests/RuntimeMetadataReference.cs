@@ -11,6 +11,16 @@ namespace Roslynator
     {
         internal static readonly MetadataReference CorLibReference = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
 
+        internal static ImmutableArray<MetadataReference> DefaultReferences { get; } = ImmutableArray.Create(
+            CorLibReference,
+            CreateFromAssemblyName("System.Core.dll"),
+            CreateFromAssemblyName("System.Linq.dll"),
+            CreateFromAssemblyName("System.Linq.Expressions.dll"),
+            CreateFromAssemblyName("System.Runtime.dll"),
+            CreateFromAssemblyName("System.Collections.Immutable.dll"),
+            CreateFromAssemblyName("Microsoft.CodeAnalysis.dll"),
+            CreateFromAssemblyName("Microsoft.CodeAnalysis.CSharp.dll"));
+
         private static readonly ImmutableDictionary<string, string> _assemblyMap = GetTrustedPlatformAssemblies();
 
         private static ImmutableDictionary<string, string> GetTrustedPlatformAssemblies()
