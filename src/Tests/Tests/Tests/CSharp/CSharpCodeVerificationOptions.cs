@@ -28,7 +28,8 @@ namespace Roslynator.Tests.CSharp
             "CS0219", // Variable is assigned but its value is never used
             "CS0660", // Type defines operator == or operator != but does not override Object.Equals(object o)
             "CS0661", // Type defines operator == or operator != but does not override Object.GetHashCode()
-            "CS8019" // Unnecessary using directive
+            "CS8019", // Unnecessary using directive
+            "CS8321" // The local function is declared but never used
         ));
 
         public bool AllowUnsafe { get; }
