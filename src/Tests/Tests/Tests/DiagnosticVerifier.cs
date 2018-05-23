@@ -217,7 +217,10 @@ namespace Roslynator.Tests
             using (IEnumerator<Diagnostic> expectedEnumerator = expected.GetEnumerator())
             using (IEnumerator<Diagnostic> actualEnumerator = actual.GetEnumerator())
             {
-                while (expectedEnumerator.MoveNext())
+                if (!expectedEnumerator.MoveNext())
+                    Assert.True(false, "Expected diagnostics are empty.");
+
+                do
                 {
                     expectedCount++;
 
@@ -239,7 +242,8 @@ namespace Roslynator.Tests
 
                         Assert.True(false, $"Mismatch between number of diagnostics returned, expected: {expectedCount} actual: {actualCount}{actual.ToDebugString()}");
                     }
-                }
+
+                } while (expectedEnumerator.MoveNext());
 
                 if (actualEnumerator.MoveNext())
                 {
