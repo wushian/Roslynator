@@ -19,7 +19,7 @@ namespace Roslynator.CSharp.Analysis.Tests
 
         public override CodeFixProvider FixProvider { get; } = new InvocationExpressionCodeFixProvider();
 
-        [Fact]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseBitwiseOperationInsteadOfCallingHasFlag)]
         public async Task Test_HasFlag()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -49,7 +49,7 @@ class C
 ");
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseBitwiseOperationInsteadOfCallingHasFlag)]
         public async Task Test_NotHasFlag()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -79,7 +79,7 @@ class C
 ");
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseBitwiseOperationInsteadOfCallingHasFlag)]
         public async Task Test_HasFlag_EqualsTrue()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -109,7 +109,7 @@ class C
 ");
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseBitwiseOperationInsteadOfCallingHasFlag)]
         public async Task Test_HasFlag_EqualsFalse()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -139,7 +139,7 @@ class C
 ");
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseBitwiseOperationInsteadOfCallingHasFlag)]
         public async Task Test_HasFlag_WithTrivia()
         {
             await VerifyDiagnosticAndFixAsync(@"

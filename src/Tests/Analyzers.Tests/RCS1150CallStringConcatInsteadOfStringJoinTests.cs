@@ -19,7 +19,7 @@ namespace Roslynator.CSharp.Analysis.Tests
 
         public override CodeFixProvider FixProvider { get; } = new InvocationExpressionCodeFixProvider();
 
-        [Fact]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.CallStringConcatInsteadOfStringJoin)]
         public async Task Test_EmptyStringLiteral()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -41,7 +41,7 @@ class C
 ");
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.CallStringConcatInsteadOfStringJoin)]
         public async Task Test_EmptyStringLiteral2()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -63,7 +63,7 @@ class C
 ");
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.CallStringConcatInsteadOfStringJoin)]
         public async Task Test_StringEmpty()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -85,7 +85,7 @@ class C
 ");
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.CallStringConcatInsteadOfStringJoin)]
         public async Task Test_EmptyStringConstant()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -111,7 +111,7 @@ class C
 ");
         }
 
-        [Fact]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.CallStringConcatInsteadOfStringJoin)]
         public async Task TestNoDiagnostic_NonEmptySeparator()
         {
             await VerifyNoDiagnosticAsync(@"
