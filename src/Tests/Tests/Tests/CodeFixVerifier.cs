@@ -76,6 +76,8 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (!FixProvider.CanFixAny(Analyzer.SupportedDiagnostics))
                 Assert.True(false, $"Code fix provider '{FixProvider.GetType().Name}' cannot fix any diagnostic supported by analyzer '{Analyzer}'.");
 
@@ -101,6 +103,8 @@ namespace Roslynator.Tests
 
             while (diagnostics.Length > 0)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 Diagnostic diagnostic = FindFirstFixableDiagnostic();
 
                 if (diagnostic == null)
@@ -168,6 +172,8 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             Document document = CreateDocument(source);
 
             Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
@@ -188,6 +194,8 @@ namespace Roslynator.Tests
 
             foreach (Diagnostic diagnostic in diagnostics)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 if (!string.Equals(diagnostic.Id, Descriptor.Id, StringComparison.Ordinal))
                     continue;
 

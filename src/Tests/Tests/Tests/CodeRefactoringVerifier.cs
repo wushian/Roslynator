@@ -95,6 +95,8 @@ namespace Roslynator.Tests
         {
             foreach (TextSpan span in spans)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 await VerifyRefactoringAsync(
                     source: source,
                     expected: expected,
@@ -115,6 +117,8 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             Document document = CreateDocument(source, additionalSources ?? Array.Empty<string>());
 
             SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
@@ -199,6 +203,8 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             Document document = CreateDocument(source);
 
             SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
@@ -212,6 +218,8 @@ namespace Roslynator.Tests
 
             foreach (TextSpan span in spans)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 var context = new CodeRefactoringContext(
                     document,
                     span,

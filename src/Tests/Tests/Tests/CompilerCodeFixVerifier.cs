@@ -54,6 +54,8 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (!FixProvider.FixableDiagnosticIds.Contains(DiagnosticId))
                 Assert.True(false, $"Code fix provider '{FixProvider.GetType().Name}' cannot fix diagnostic '{DiagnosticId}'.");
 
@@ -69,6 +71,8 @@ namespace Roslynator.Tests
 
             while (diagnostics.Length > 0)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 Diagnostic diagnostic = FindDiagnostic();
 
                 if (diagnostic == null)
@@ -144,6 +148,8 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             Document document = CreateDocument(source);
 
             Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
@@ -152,6 +158,8 @@ namespace Roslynator.Tests
 
             foreach (Diagnostic diagnostic in compilation.GetDiagnostics(cancellationToken: cancellationToken))
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 if (!fixableDiagnosticIds.Contains(diagnostic.Id))
                     continue;
 
