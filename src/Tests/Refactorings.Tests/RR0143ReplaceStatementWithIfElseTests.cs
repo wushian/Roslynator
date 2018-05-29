@@ -37,7 +37,7 @@ class C
         }
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceStatementWithIfElse)]
@@ -66,7 +66,7 @@ class C
         }
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceStatementWithIfElse)]
@@ -99,7 +99,7 @@ class C
         }
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceStatementWithIfElse)]
@@ -132,7 +132,7 @@ class C
         }
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceStatementWithIfElse)]
@@ -146,7 +146,7 @@ class C
         [||]return s;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceStatementWithIfElse)]
@@ -160,7 +160,7 @@ class C
         [||]return true;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceStatementWithIfElse)]
@@ -174,7 +174,7 @@ class C
         [||]return false;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
     }
 }

@@ -36,7 +36,7 @@ class C
     }
 }
 ", @"
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         //[Theory, Trait(Traits.Refactoring, RefactoringIdentifiers.AddBraces)]
@@ -55,7 +55,7 @@ class C
     {
     }
 }
-", fromData, toData, RefactoringId);
+", fromData, toData, equivalenceKey: RefactoringId);
         }
 
         //[Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.AddBraces)]
@@ -73,7 +73,7 @@ class C
     {
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
     }
 }

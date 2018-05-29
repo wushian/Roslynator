@@ -24,7 +24,7 @@ class C
         [||]
     }
 }
-", fromData, toData, RefactoringId);
+", fromData, toData, equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseConditionalExpressionInsteadOfIf)]
@@ -54,7 +54,7 @@ class C
         z = (f) ? x : y;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseConditionalExpressionInsteadOfIf)]
@@ -84,7 +84,7 @@ class C
         string z = (f) ? x : y;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Theory, Trait(Traits.Refactoring, RefactoringIdentifiers.UseConditionalExpressionInsteadOfIf)]
@@ -102,7 +102,7 @@ class C
         [||]
     }
 }
-", fromData, toData, RefactoringId);
+", fromData, toData, equivalenceKey: RefactoringId);
         }
 
         [Theory, Trait(Traits.Refactoring, RefactoringIdentifiers.UseConditionalExpressionInsteadOfIf)]
@@ -120,7 +120,7 @@ class C
         [||]
     }
 }
-", fromData, toData, RefactoringId);
+", fromData, toData, equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseConditionalExpressionInsteadOfIf)]
@@ -142,7 +142,7 @@ class C
         }
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseConditionalExpressionInsteadOfIf)]
@@ -164,7 +164,7 @@ class C
         }|]
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseConditionalExpressionInsteadOfIf)]
@@ -187,7 +187,7 @@ class C
         }|]
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseConditionalExpressionInsteadOfIf)]
@@ -210,7 +210,7 @@ class C
         }|]
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseConditionalExpressionInsteadOfIf)]
@@ -231,7 +231,7 @@ class C
         }|]
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseConditionalExpressionInsteadOfIf)]
@@ -250,7 +250,7 @@ class C
         return 1;|]
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
     }
 }

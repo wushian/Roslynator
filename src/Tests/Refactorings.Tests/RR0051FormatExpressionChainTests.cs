@@ -72,7 +72,7 @@ namespace A.B
         public Foo this[int index] => null;
     }
 }
-", fixableCode, fixedCode, RefactoringId);
+", fixableCode, fixedCode, equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.FormatExpressionChain)]
@@ -113,7 +113,7 @@ namespace A.B
         public Foo this[int index] => null;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
     }
 }

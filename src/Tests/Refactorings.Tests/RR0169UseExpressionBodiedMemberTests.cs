@@ -31,7 +31,7 @@ class C
 
     void M() { }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -54,7 +54,7 @@ class C
 
     void M() { }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -73,7 +73,7 @@ class C
 {
     string M() => null;
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -92,7 +92,7 @@ class C
 {
     void M() => M();
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -117,7 +117,7 @@ class C
         string LF() => null;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -142,7 +142,7 @@ class C
         void LF() => M();
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -161,7 +161,7 @@ class C
 {
     string P => null;
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -189,7 +189,7 @@ class C
         set { _f = value; }
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -217,7 +217,7 @@ class C
         set => _f = value;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -236,7 +236,7 @@ class C
 {
     string this[int index] => null;
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -264,7 +264,7 @@ class C
         set { _f = value; }
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -292,7 +292,7 @@ class C
         set => _f = value;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -311,7 +311,7 @@ class C
 {
     public static C operator !(C value) => value;
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -330,7 +330,7 @@ class C
 {
     public static explicit operator C(string value) => new C();
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -353,7 +353,7 @@ class C
 
     void M() { }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -372,7 +372,7 @@ class C
 {
     ~C() => throw new System.NotImplementedException();
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -391,7 +391,7 @@ class C
 {
     string M() => throw new System.NotImplementedException();
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -410,7 +410,7 @@ class C
 {
     void M() => throw new System.NotImplementedException();
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -435,7 +435,7 @@ class C
         string LF() => throw new System.NotImplementedException();
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -460,7 +460,7 @@ class C
         void LF() => throw new System.NotImplementedException();
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -479,7 +479,7 @@ class C
 {
     string P => throw new System.NotImplementedException();
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -507,7 +507,7 @@ class C
         set { throw new System.NotImplementedException(); }
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -535,7 +535,7 @@ class C
         set => throw new System.NotImplementedException();
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -554,7 +554,7 @@ class C
 {
     string this[int index] => throw new System.NotImplementedException();
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -582,7 +582,7 @@ class C
         set { throw new System.NotImplementedException(); }
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -610,7 +610,7 @@ class C
         set => throw new System.NotImplementedException();
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -629,7 +629,7 @@ class C
 {
     public static C operator !(C value) => throw new System.NotImplementedException();
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -648,7 +648,7 @@ class C
 {
     public static explicit operator C(string value) => throw new System.NotImplementedException();
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -659,11 +659,11 @@ class C
 {
     string M()
     {
-        M();
+[||]        M();
         return null;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -674,10 +674,10 @@ class C
 {
     void M()
     {
-        void LF() { }
+[||]        void LF() { }
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -687,10 +687,10 @@ class C
 class C
 {
     void M()
-    {
+    {[||]
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -700,27 +700,12 @@ class C
 class C
 {
     void M()
-    {
+    {[||]
         M();
         M();
     }
 }
-", RefactoringId);
-        }
-
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
-        public async Task TestNoDiagnostic_MethodWithMultilineStatement()
-        {
-            await VerifyNoRefactoringAsync(@"
-class C
-{
-    string M()
-    {
-        return @""a
-            b"";
-    }
-}
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -733,14 +718,14 @@ class C
     {
         get
         {
-            M();
+[||]            M();
             return null;
         }
     }
 
     string M() => null;
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -753,14 +738,14 @@ class C
 {
     string P
     {
-            [DebuggerStepThrough]
+        [DebuggerStepThrough]
         get
         {
-            return null;
+[||]            return null;
         }
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
@@ -775,27 +760,14 @@ class C
     {
         get
         {
-            M();
+[||]            M();
             return null;
         }
     }
 
     string M() => null;
 }
-", RefactoringId);
-        }
-
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.UseExpressionBodiedMember)]
-        public async Task TestNoDiagnostic()
-        {
-            await VerifyNoRefactoringAsync(@"
-class C
-{
-    void M()
-    {
-    }
-}
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
     }
 }

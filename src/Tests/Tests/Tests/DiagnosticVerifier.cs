@@ -93,13 +93,13 @@ namespace Roslynator.Tests
 
         public async Task VerifyDiagnosticAsync(
             string source,
-            Diagnostic diagnostic,
+            Diagnostic expectedDiagnostic,
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             await VerifyDiagnosticAsync(
                 source,
-                new Diagnostic[] { diagnostic },
+                new Diagnostic[] { expectedDiagnostic },
                 additionalSources: null,
                 options: options,
                 cancellationToken).ConfigureAwait(false);
@@ -231,7 +231,7 @@ namespace Roslynator.Tests
             using (IEnumerator<Diagnostic> actualEnumerator = actual.GetEnumerator())
             {
                 if (!expectedEnumerator.MoveNext())
-                    Assert.True(false, "Expected diagnostics are empty.");
+                    throw new InvalidOperationException($"'{nameof(expected)}' contains no elements.");
 
                 do
                 {

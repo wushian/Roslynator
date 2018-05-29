@@ -87,7 +87,7 @@ public class Base
 public class FooEventArgs : EventArgs
 {
 }
-", EquivalenceKey.Create(DiagnosticId));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
     }
 }

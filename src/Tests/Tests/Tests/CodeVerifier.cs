@@ -14,7 +14,7 @@ namespace Roslynator.Tests
 
         protected abstract Project CreateProject();
 
-        public abstract string CreateFileName(int index = 0);
+        protected abstract string CreateFileName(int index = 0);
 
         protected virtual Document CreateDocument(string source, params string[] additionalSources)
         {

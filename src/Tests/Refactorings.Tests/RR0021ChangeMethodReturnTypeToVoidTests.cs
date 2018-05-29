@@ -38,7 +38,7 @@ class C
         M();
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
@@ -60,7 +60,7 @@ class C
         M();
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
@@ -88,7 +88,7 @@ class C
         }
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
@@ -102,7 +102,7 @@ class C
         return M();
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
@@ -116,7 +116,7 @@ class C
         M();
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
@@ -132,7 +132,7 @@ class C
         yield return null;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
@@ -148,7 +148,7 @@ class C
         yield break;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
@@ -164,7 +164,7 @@ class C
         string x = await Task.FromResult(default(string));
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
@@ -180,7 +180,7 @@ class C
         throw new InvalidOperationException();
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
@@ -199,7 +199,7 @@ class C : IFoo
         M();
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ChangeMethodReturnTypeToVoid)]
@@ -218,7 +218,7 @@ class C : B
         object x = null;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
     }
 }

@@ -30,7 +30,7 @@ class C
         value = new object();
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.PromoteLocalToParameter)]
@@ -58,7 +58,7 @@ class C
         }
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.PromoteLocalToParameter)]
@@ -80,7 +80,7 @@ class C
         string y;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.PromoteLocalToParameter)]
@@ -103,7 +103,7 @@ class C
         x = null;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.PromoteLocalToParameter)]
@@ -120,7 +120,7 @@ class C
         var [||]q2 = q;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
     }
 }

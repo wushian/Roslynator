@@ -33,7 +33,7 @@ class C
         p3 = null;
     }
 }
-", EquivalenceKey.Create(DiagnosticId));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
 
         [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.OutParameterMustBeAssignedToBeforeControlLeavesCurrentMethod)]
@@ -57,7 +57,7 @@ class C
         p3 = null;
     }
 }
-", EquivalenceKey.Create(DiagnosticId));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
 
         [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.OutParameterMustBeAssignedToBeforeControlLeavesCurrentMethod)]
@@ -81,7 +81,7 @@ class C
         return false;
     }
 }
-", EquivalenceKey.Create(DiagnosticId));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
 
         [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.OutParameterMustBeAssignedToBeforeControlLeavesCurrentMethod)]
@@ -108,7 +108,7 @@ class C
         return false;
     }
 }
-", EquivalenceKey.Create(DiagnosticId));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
 
         [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.OutParameterMustBeAssignedToBeforeControlLeavesCurrentMethod)]
@@ -142,7 +142,7 @@ class C
         return false;
     }
 }
-", EquivalenceKey.Create(DiagnosticId));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
 
         [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.OutParameterMustBeAssignedToBeforeControlLeavesCurrentMethod)]
@@ -163,7 +163,7 @@ class C
         return p1 = p2 = null;
     }
 }
-", EquivalenceKey.Create(DiagnosticId));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
 
         // Flow analysis APIs do not work with local functions: https://github.com/dotnet/roslyn/issues/14214
@@ -193,7 +193,7 @@ class C
         }
     }
 }
-", EquivalenceKey.Create(DiagnosticId));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
 
         //[Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.OutParameterMustBeAssignedToBeforeControlLeavesCurrentMethod)]
@@ -223,7 +223,7 @@ class C
         }
     }
 }
-", EquivalenceKey.Create(DiagnosticId));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
 
         //[Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.OutParameterMustBeAssignedToBeforeControlLeavesCurrentMethod)]
@@ -253,7 +253,7 @@ class C
         }
     }
 }
-", EquivalenceKey.Create(DiagnosticId));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
 
         //[Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.OutParameterMustBeAssignedToBeforeControlLeavesCurrentMethod)]
@@ -286,7 +286,7 @@ class C
         }
     }
 }
-", EquivalenceKey.Create(DiagnosticId));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
 
         //[Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.OutParameterMustBeAssignedToBeforeControlLeavesCurrentMethod)]
@@ -326,7 +326,7 @@ class C
         }
     }
 }
-", EquivalenceKey.Create(DiagnosticId));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
 
         //[Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.OutParameterMustBeAssignedToBeforeControlLeavesCurrentMethod)]
@@ -353,7 +353,7 @@ class C
         }
     }
 }
-", EquivalenceKey.Create(DiagnosticId));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
 #pragma warning restore xUnit1013
 
@@ -365,7 +365,7 @@ class C
 {
     void M(object p1, out object p2, out object p3)
 }
-", EquivalenceKey.Create(DiagnosticId));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
 
         [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.OutParameterMustBeAssignedToBeforeControlLeavesCurrentMethod)]
@@ -379,7 +379,7 @@ class C
         void LF(object p1, out object p2, out object p3)
     }
 }
-", EquivalenceKey.Create(DiagnosticId));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
     }
 }

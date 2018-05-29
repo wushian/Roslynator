@@ -34,7 +34,7 @@ class C
         s = null;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.InlineConstantValue)]
@@ -60,7 +60,7 @@ class C
         s = @""x"";
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.InlineConstantValue)]
@@ -90,7 +90,7 @@ class C
         s = @""x"";
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.InlineConstantValue)]
@@ -116,7 +116,7 @@ class C
         s = @""x"";
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.InlineConstantValue)]
@@ -148,7 +148,7 @@ namespace A.B
         }
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.InlineConstantValue)]
@@ -174,7 +174,7 @@ class C
         bool b = true;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.InlineConstantValue)]
@@ -200,7 +200,7 @@ class C
         char c = '\n';
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.InlineConstantValue)]
@@ -226,7 +226,7 @@ class C
         int i = 2147483647;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.InlineConstantValue)]
@@ -252,7 +252,7 @@ class C
         long l = 1;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.InlineConstantValue)]
@@ -280,7 +280,7 @@ class C
         string s = ""aa"";
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.InlineConstantValue)]
@@ -351,7 +351,7 @@ class C
         var options = [|StringSplitOptions.None|];
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace Roslynator.Tests
         public async Task VerifyRefactoringAsync(
             string source,
             string expected,
-            string equivalenceKey,
+            string equivalenceKey = null,
             string[] additionalSources = null,
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -52,13 +52,13 @@ namespace Roslynator.Tests
 
         public async Task VerifyRefactoringAsync(
             string theory,
-            string beforeData,
-            string afterData,
-            string equivalenceKey,
+            string fromData,
+            string toData,
+            string equivalenceKey = null,
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            (string source, string expected, TextSpan span) = TestSourceText.ReplaceSpan(theory, beforeData, afterData);
+            (string source, string expected, TextSpan span) = TestSourceText.ReplaceSpan(theory, fromData, toData);
 
             TestSourceTextAnalysis analysis = TestSourceText.GetSpans(source, reverse: true);
 
@@ -88,7 +88,7 @@ namespace Roslynator.Tests
             string source,
             string expected,
             IEnumerable<TextSpan> spans,
-            string equivalenceKey,
+            string equivalenceKey = null,
             string[] additionalSources = null,
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -112,7 +112,7 @@ namespace Roslynator.Tests
             string source,
             string expected,
             TextSpan span,
-            string equivalenceKey,
+            string equivalenceKey = null,
             string[] additionalSources = null,
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -167,7 +167,7 @@ namespace Roslynator.Tests
 
         public async Task VerifyNoRefactoringAsync(
             string source,
-            string equivalenceKey,
+            string equivalenceKey = null,
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -184,7 +184,7 @@ namespace Roslynator.Tests
         public async Task VerifyNoRefactoringAsync(
             string source,
             TextSpan span,
-            string equivalenceKey,
+            string equivalenceKey = null,
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -199,7 +199,7 @@ namespace Roslynator.Tests
         public async Task VerifyNoRefactoringAsync(
             string source,
             IEnumerable<TextSpan> spans,
-            string equivalenceKey,
+            string equivalenceKey = null,
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -216,24 +216,31 @@ namespace Roslynator.Tests
 
             VerifyCompilerDiagnostics(compilerDiagnostics, options);
 
-            foreach (TextSpan span in spans)
+            using (IEnumerator<TextSpan> en = spans.GetEnumerator())
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                if (!en.MoveNext())
+                    throw new InvalidOperationException($"'{nameof(spans)}' contains no elements.");
 
-                var context = new CodeRefactoringContext(
-                    document,
-                    span,
-                    a =>
-                    {
-                        if (equivalenceKey == null
-                            || string.Equals(a.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
+                do
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    var context = new CodeRefactoringContext(
+                        document,
+                        en.Current,
+                        a =>
                         {
-                            Assert.True(false, "Expected no code refactoring.");
-                        }
-                    },
-                    CancellationToken.None);
+                            if (equivalenceKey == null
+                                || string.Equals(a.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
+                            {
+                                Assert.True(false, "Expected no code refactoring.");
+                            }
+                        },
+                        CancellationToken.None);
 
-                await RefactoringProvider.ComputeRefactoringsAsync(context).ConfigureAwait(false);
+                    await RefactoringProvider.ComputeRefactoringsAsync(context).ConfigureAwait(false);
+
+                } while (en.MoveNext());
             }
         }
     }

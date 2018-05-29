@@ -35,7 +35,7 @@ class C
         if ([||]) { }
     }
 }
-", fromData, toData, RefactoringId);
+", fromData, toData, equivalenceKey: RefactoringId);
         }
 
         [Theory, Trait(Traits.Refactoring, RefactoringIdentifiers.SwapBinaryOperands)]
@@ -51,7 +51,7 @@ class C
         int k = [||];
     }
 }
-", fromData, toData, RefactoringId);
+", fromData, toData, equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.SwapBinaryOperands)]
@@ -68,7 +68,7 @@ class C
         if (f =[||]= true) { }
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
     }
 }

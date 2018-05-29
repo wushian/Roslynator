@@ -34,7 +34,7 @@ class C
         Action action = () => M();
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
@@ -60,7 +60,7 @@ class C
         Action<string> action = f => M(f);
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
@@ -86,7 +86,7 @@ class C
         Action<string, string> action = (f, g) => M(f, g);
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
@@ -114,7 +114,7 @@ class C
         return null;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
@@ -142,7 +142,7 @@ class C
         return null;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
@@ -170,7 +170,7 @@ class C
         return null;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
@@ -200,7 +200,7 @@ class C
         action = () => M();
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
@@ -230,7 +230,7 @@ class C
         action = f => M(f);
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
@@ -260,7 +260,7 @@ class C
         action = (f, g) => M(f, g);
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
@@ -294,7 +294,7 @@ class C
         return null;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
@@ -328,7 +328,7 @@ class C
         return null;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
@@ -362,7 +362,7 @@ class C
         return null;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
@@ -392,7 +392,7 @@ class C
 
     void M() { }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
@@ -422,7 +422,7 @@ class C
 
     void M2(string s) { }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
@@ -452,7 +452,7 @@ class C
 
     void M2(string s1, string s2) { }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
@@ -482,7 +482,7 @@ class C
 
     string M2() => null;
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
@@ -512,7 +512,7 @@ class C
 
     string M2(string s) => null;
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceMethodGroupWithLambda)]
@@ -542,7 +542,7 @@ class C
 
     string M2(string s1, string s2) => null;
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
     }
 }

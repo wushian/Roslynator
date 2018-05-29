@@ -49,7 +49,7 @@ class C
         yield return DateTime.Now;
     }
 }
-", EquivalenceKey.Create(DiagnosticId, "string"));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId, "string"));
         }
 
         [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.BodyCannotBeIteratorBlockBecauseTypeIsNotIteratorInterfaceType)]
@@ -85,7 +85,7 @@ class C
         }
     }
 }
-", EquivalenceKey.Create(DiagnosticId, "string"));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId, "string"));
         }
 
         [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.BodyCannotBeIteratorBlockBecauseTypeIsNotIteratorInterfaceType)]
@@ -115,7 +115,7 @@ class C
         yield return DateTime.Now;
     }
 }
-", EquivalenceKey.Create(DiagnosticId, "DateTime"));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId, "DateTime"));
         }
 
         [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.BodyCannotBeIteratorBlockBecauseTypeIsNotIteratorInterfaceType)]
@@ -151,7 +151,7 @@ class C
         }
     }
 }
-", EquivalenceKey.Create(DiagnosticId, "DateTime"));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId, "DateTime"));
         }
 
         [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.BodyCannotBeIteratorBlockBecauseTypeIsNotIteratorInterfaceType)]
@@ -180,7 +180,7 @@ class C
         }
     }
 }
-", EquivalenceKey.Create(DiagnosticId));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
     }
 }

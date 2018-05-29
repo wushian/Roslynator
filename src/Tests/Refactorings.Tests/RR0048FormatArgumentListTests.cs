@@ -33,7 +33,7 @@ class C
             p3);
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.FormatArgumentList)]
@@ -58,7 +58,7 @@ class C
             p3);
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.FormatArgumentList)]
@@ -83,7 +83,7 @@ class C
         M(p1, p2, p3);
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.FormatArgumentList)]
@@ -108,7 +108,7 @@ class C
         M(p1, p2, p3);
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.FormatArgumentList)]
@@ -125,7 +125,7 @@ class C
             p3|]);
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
     }
 }

@@ -35,7 +35,7 @@ class C
 
         void M()
         {
-            bool isMatch = Regex.IsMatch(_input, (""pattern""));
+            bool isMatch = Regex.[|IsMatch|](_input, (""pattern""));
         }
     }
 }
@@ -73,7 +73,7 @@ class C
 
     void M()
     {
-        bool isMatch = Regex.IsMatch(_input, _pattern);
+        bool isMatch = Regex.[|IsMatch|](_input, _pattern);
     }
 }
 ", @"
@@ -105,7 +105,7 @@ class C
 
     void M()
     {
-        bool isMatch = Regex.IsMatch(_input, ""pattern"", RegexOptions.Singleline);
+        bool isMatch = Regex.[|IsMatch|](_input, ""pattern"", RegexOptions.Singleline);
     }
 }
 ", @"
@@ -136,7 +136,7 @@ class C
 
     void M()
     {
-        bool isMatch = Regex.IsMatch(_input, ""pattern"", RegexOptions.Singleline | RegexOptions.Multiline);
+        bool isMatch = Regex.[|IsMatch|](_input, ""pattern"", RegexOptions.Singleline | RegexOptions.Multiline);
     }
 }
 ", @"
@@ -167,7 +167,7 @@ class C
 
     void M()
     {
-        Match match = Regex.Match(_input, ""pattern"");
+        Match match = Regex.[|Match|](_input, ""pattern"");
     }
 }
 ", @"
@@ -198,7 +198,7 @@ class C
 
     void M()
     {
-        Match match = Regex.Match(_input, ""pattern"", RegexOptions.None);
+        Match match = Regex.[|Match|](_input, ""pattern"", RegexOptions.None);
     }
 }
 ", @"
@@ -229,7 +229,7 @@ class C
 
     void M()
     {
-        MatchCollection matches = Regex.Matches(_input, ""pattern"");
+        MatchCollection matches = Regex.[|Matches|](_input, ""pattern"");
     }
 }
 ", @"
@@ -260,7 +260,7 @@ class C
 
     void M()
     {
-        MatchCollection matches = Regex.Matches(_input, ""pattern"", RegexOptions.None);
+        MatchCollection matches = Regex.[|Matches|](_input, ""pattern"", RegexOptions.None);
     }
 }
 ", @"
@@ -291,7 +291,7 @@ class C
 
     void M()
     {
-        var values = Regex.Split(_input, ""pattern"");
+        var values = Regex.[|Split|](_input, ""pattern"");
     }
 }
 ", @"
@@ -322,7 +322,7 @@ class C
 
     void M()
     {
-        var values = Regex.Split(_input, ""pattern"", RegexOptions.None);
+        var values = Regex.[|Split|](_input, ""pattern"", RegexOptions.None);
     }
 }
 ", @"
@@ -355,7 +355,7 @@ class C
 
     void M()
     {
-        string s = Regex.Replace(_input, _pattern, _replacement);
+        string s = Regex.[|Replace|](_input, _pattern, _replacement);
     }
 }
 ", @"
@@ -389,7 +389,7 @@ class C
 
     void M()
     {
-        string s = Regex.Replace(_input, ""pattern"", _replacement, RegexOptions.None);
+        string s = Regex.[|Replace|](_input, ""pattern"", _replacement, RegexOptions.None);
     }
 }
 ", @"
@@ -422,7 +422,7 @@ class C
 
     void M()
     {
-        string s = Regex.Replace(_input, ""pattern"", default(MatchEvaluator));
+        string s = Regex.[|Replace|](_input, ""pattern"", default(MatchEvaluator));
     }
 }
 ", @"
@@ -455,7 +455,7 @@ class C
 
     void M()
     {
-        string s = Regex.Replace(_input, ""pattern"", default(MatchEvaluator), RegexOptions.None);
+        string s = Regex.[|Replace|](_input, ""pattern"", default(MatchEvaluator), RegexOptions.None);
     }
 }
 ", @"
@@ -488,7 +488,7 @@ class C
 
     void M()
     {
-        Action<object> action = f => { Match match = Regex.Match(_input, ""pattern""); };
+        Action<object> action = f => { Match match = Regex.[|Match|](_input, ""pattern""); };
     }
 }
 ", @"
@@ -523,7 +523,7 @@ class C
     {
         get
         {
-            Match match = Regex.Match(_input, _pattern);
+            Match match = Regex.[|Match|](_input, _pattern);
             return null;
         }
     }

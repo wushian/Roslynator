@@ -109,7 +109,7 @@ public class Foo
         return Task.CompletedTask;
     }
 }
-", EquivalenceKey.Create(DiagnosticId, "Task"));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId, "Task"));
         }
 
         [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.ReturnTypeOfAsyncMethodMustBeVoidOrTaskOrTaskOfT)]
@@ -215,7 +215,7 @@ public class Foo
         return Task.CompletedTask;
     }
 }
-", EquivalenceKey.Create(DiagnosticId, "TaskOfT"));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId, "TaskOfT"));
         }
 
         [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.ReturnTypeOfAsyncMethodMustBeVoidOrTaskOrTaskOfT)]
@@ -258,9 +258,9 @@ public class Foo
     }
 }
 ";
-            await VerifyNoFixAsync(source, EquivalenceKey.Create(DiagnosticId, "Task"));
+            await VerifyNoFixAsync(source, equivalenceKey: EquivalenceKey.Create(DiagnosticId, "Task"));
 
-            await VerifyNoFixAsync(source, EquivalenceKey.Create(DiagnosticId, "TaskOfT"));
+            await VerifyNoFixAsync(source, equivalenceKey: EquivalenceKey.Create(DiagnosticId, "TaskOfT"));
         }
     }
 }

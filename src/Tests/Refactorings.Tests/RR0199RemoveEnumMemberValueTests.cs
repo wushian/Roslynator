@@ -28,7 +28,7 @@ enum E
     B = 1,
     C
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.RemoveEnumMemberValue)]
@@ -50,7 +50,7 @@ enum E
     C,
     D
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.RemoveEnumMemberValue)]
@@ -65,7 +65,7 @@ enum E
     D,
     E = 4
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.RemoveEnumMemberValue)]
@@ -80,7 +80,7 @@ enum E
     D,|]
     E = 4
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
     }
 }

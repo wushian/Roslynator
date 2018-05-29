@@ -98,7 +98,7 @@ class FooBase
     public FooBase() { }
     public FooBase(object parameter1, object bar) { }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
     }
 }

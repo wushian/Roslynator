@@ -42,7 +42,7 @@ class C
         }
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.WrapInElseClause)]
@@ -70,7 +70,7 @@ class C
             return null;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.WrapInElseClause)]
@@ -108,7 +108,7 @@ class C
         }
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.WrapInElseClause)]
@@ -184,7 +184,7 @@ class C
         return null;
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.WrapInElseClause)]
@@ -203,7 +203,7 @@ class C
 [|        return null;|]
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.WrapInElseClause)]
@@ -225,7 +225,7 @@ class C
 [|        return null;|]
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
     }
 }

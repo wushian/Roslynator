@@ -969,7 +969,7 @@ class C
         } while (f1);
     }
 }
-");
+", options: Options.AddAllowedCompilerDiagnosticId("CS1525"));
         }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.SimplifyCodeBranching)]

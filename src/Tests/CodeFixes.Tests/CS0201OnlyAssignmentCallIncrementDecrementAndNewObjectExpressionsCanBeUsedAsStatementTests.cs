@@ -33,7 +33,7 @@ class C
         M();
     }
 }
-", EquivalenceKey.Create(DiagnosticId));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId));
         }
 
         [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.OnlyAssignmentCallIncrementDecrementAndNewObjectExpressionsCanBeUsedAsStatement)]
@@ -59,7 +59,7 @@ class C
         var dateTime = DateTime.Now;
     }
 }
-", EquivalenceKey.Create(DiagnosticId, CodeFixIdentifiers.IntroduceLocalVariable));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId, CodeFixIdentifiers.IntroduceLocalVariable));
         }
 
         [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.OnlyAssignmentCallIncrementDecrementAndNewObjectExpressionsCanBeUsedAsStatement)]
@@ -87,7 +87,7 @@ class C
         _dateTime = DateTime.Now;
     }
 }
-", EquivalenceKey.Create(DiagnosticId, CodeFixIdentifiers.IntroduceField));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId, CodeFixIdentifiers.IntroduceField));
         }
 
         [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.OnlyAssignmentCallIncrementDecrementAndNewObjectExpressionsCanBeUsedAsStatement)]
@@ -115,7 +115,7 @@ class C
         _dateTime = DateTime.Now;
     }
 }
-", EquivalenceKey.Create(DiagnosticId, CodeFixIdentifiers.IntroduceField));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId, CodeFixIdentifiers.IntroduceField));
         }
 
         [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.OnlyAssignmentCallIncrementDecrementAndNewObjectExpressionsCanBeUsedAsStatement)]
@@ -143,7 +143,7 @@ class C
         x.M();
     }
 }
-", EquivalenceKey.Create(DiagnosticId, CodeFixIdentifiers.AddArgumentList));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId, CodeFixIdentifiers.AddArgumentList));
         }
 
         [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.OnlyAssignmentCallIncrementDecrementAndNewObjectExpressionsCanBeUsedAsStatement)]
@@ -182,7 +182,7 @@ class C
     {
     }
 }
-", EquivalenceKey.Create(DiagnosticId, CodeFixIdentifiers.ReplaceConditionalExpressionWithIfElse));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId, CodeFixIdentifiers.ReplaceConditionalExpressionWithIfElse));
         }
 
         [Fact, Trait(Traits.CodeFix, CompilerDiagnosticIdentifiers.OnlyAssignmentCallIncrementDecrementAndNewObjectExpressionsCanBeUsedAsStatement)]
@@ -206,7 +206,7 @@ class C
         s = """";
     }
 }
-", EquivalenceKey.Create(DiagnosticId, CodeFixIdentifiers.ReplaceComparisonWithAssignment));
+", equivalenceKey: EquivalenceKey.Create(DiagnosticId, CodeFixIdentifiers.ReplaceComparisonWithAssignment));
         }
     }
 }

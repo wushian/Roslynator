@@ -34,7 +34,7 @@ class C
             throw new ArgumentNullException(nameof(p));
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.CheckParameterForNull)]
@@ -60,7 +60,7 @@ class C
             throw new ArgumentNullException(nameof(p));
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.CheckParameterForNull)]
@@ -91,7 +91,7 @@ class C
             throw new ArgumentNullException(nameof(p2));
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.CheckParameterForNull)]
@@ -131,7 +131,7 @@ class C
             throw new ArgumentNullException(nameof(pi));
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.CheckParameterForNull)]
@@ -148,7 +148,7 @@ class C
             throw new ArgumentNullException(nameof(p));
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.CheckParameterForNull)]
@@ -168,7 +168,7 @@ class C
             throw new ArgumentNullException(nameof(p2));
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.CheckParameterForNull)]
@@ -181,7 +181,7 @@ class C
     {
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.CheckParameterForNull)]
@@ -194,7 +194,7 @@ class C
     {
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.CheckParameterForNull)]
@@ -207,7 +207,7 @@ class C
     {
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.CheckParameterForNull)]
@@ -220,7 +220,7 @@ class C
     {
     }
 }
-", RefactoringId);
+", equivalenceKey: RefactoringId);
         }
     }
 }

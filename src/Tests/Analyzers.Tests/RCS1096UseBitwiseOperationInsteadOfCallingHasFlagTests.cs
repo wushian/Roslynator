@@ -31,7 +31,7 @@ class C
     {
         var options = StringSplitOptions.None;
 
-        if (options.HasFlag(StringSplitOptions.RemoveEmptyEntries)) { }
+        if ([|options.HasFlag(StringSplitOptions.RemoveEmptyEntries)|]) { }
     }
 }
 ", @"
@@ -61,7 +61,7 @@ class C
     {
         var options = StringSplitOptions.None;
 
-        if (!options.HasFlag(StringSplitOptions.RemoveEmptyEntries)) { }
+        if (![|options.HasFlag(StringSplitOptions.RemoveEmptyEntries)|]) { }
     }
 }
 ", @"
@@ -91,7 +91,7 @@ class C
     {
         var options = StringSplitOptions.None;
 
-        if (options.HasFlag(StringSplitOptions.RemoveEmptyEntries) == true) { }
+        if ([|options.HasFlag(StringSplitOptions.RemoveEmptyEntries)|] == true) { }
     }
 }
 ", @"
@@ -121,7 +121,7 @@ class C
     {
         var options = StringSplitOptions.None;
 
-        if (options.HasFlag(StringSplitOptions.RemoveEmptyEntries) == false) { }
+        if ([|options.HasFlag(StringSplitOptions.RemoveEmptyEntries)|] == false) { }
     }
 }
 ", @"
@@ -151,7 +151,7 @@ class C
     {
         var options = StringSplitOptions.None;
 
-        if ( /*lt*/ options.HasFlag(StringSplitOptions.RemoveEmptyEntries /*tt*/ ).Equals(true)) { }
+        if ( /*lt*/ [|options.HasFlag(StringSplitOptions.RemoveEmptyEntries /*tt*/ )|].Equals(true)) { }
     }
 }
 ", @"

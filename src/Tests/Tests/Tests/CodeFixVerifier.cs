@@ -71,6 +71,22 @@ namespace Roslynator.Tests
         }
 
         public async Task VerifyFixAsync(
+            string theory,
+            string fromData,
+            string toData,
+            CodeVerificationOptions options = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            (string source, string expected, TextSpan span) = TestSourceText.ReplaceSpan(theory, fromData, toData);
+
+            await VerifyFixAsync(
+                source: source,
+                expected: expected,
+                options: options,
+                cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task VerifyFixAsync(
             string source,
             string expected,
             CodeVerificationOptions options = null,
