@@ -177,7 +177,7 @@ namespace Roslynator.Tests
                             return;
                         }
 
-                        Assert.True(false, "Expected no code fix.");
+                        Assert.True(false, "No code fix expected.");
                     },
                     CancellationToken.None);
 

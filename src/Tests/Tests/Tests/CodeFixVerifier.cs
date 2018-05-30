@@ -221,7 +221,7 @@ namespace Roslynator.Tests
                 var context = new CodeFixContext(
                     document,
                     diagnostic,
-                    (_, d) => Assert.True(!d.Contains(diagnostic), "Expected no code fix."),
+                    (_, d) => Assert.True(!d.Contains(diagnostic), "No code fix expected."),
                     CancellationToken.None);
 
                 await FixProvider.RegisterCodeFixesAsync(context).ConfigureAwait(false);

@@ -206,8 +206,11 @@ namespace Roslynator.Tests
 
             ImmutableArray<Diagnostic> analyzerDiagnostics = await compilation.GetAnalyzerDiagnosticsAsync(Analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);
 
-            if (analyzerDiagnostics.Any(f => string.Equals(f.Id, Descriptor.Id, StringComparison.Ordinal)))
-                Assert.True(false, $"No diagnostic expected{analyzerDiagnostics.Where(f => string.Equals(f.Id, Descriptor.Id, StringComparison.Ordinal)).ToDebugString()}");
+            foreach (Diagnostic diagnostic in analyzerDiagnostics)
+            {
+                if (string.Equals(diagnostic.Id, Descriptor.Id, StringComparison.Ordinal))
+                    Assert.True(false, $"No diagnostic expected{analyzerDiagnostics.Where(f => string.Equals(f.Id, Descriptor.Id, StringComparison.Ordinal)).ToDebugString()}");
+            }
         }
 
         private void VerifyDiagnostics(
@@ -277,8 +280,8 @@ namespace Roslynator.Tests
             Diagnostic expectedDiagnostic,
             bool checkAdditionalLocations = false)
         {
-            if (actualDiagnostic.Id != expectedDiagnostic.Descriptor.Id)
-                Assert.True(false, $"Expected diagnostic id to be \"{expectedDiagnostic.Descriptor.Id}\" was \"{actualDiagnostic.Id}\"{GetMessage()}");
+            if (actualDiagnostic.Id != expectedDiagnostic.Id)
+                Assert.True(false, $"Diagnostic id expected to be \"{expectedDiagnostic.Id}\", actual: \"{actualDiagnostic.Id}\"{GetMessage()}");
 
             VerifyLocation(actualDiagnostic.Location, expectedDiagnostic.Location);
 
@@ -300,7 +303,7 @@ namespace Roslynator.Tests
                 int expectedCount = expected.Count;
 
                 if (actualCount != expectedCount)
-                    Assert.True(false, $"Expected {expectedCount} additional location(s), actual: {actualCount}{GetMessage()}");
+                    Assert.True(false, $"{expectedCount} additional location(s) expected, actual: {actualCount}{GetMessage()}");
 
                 for (int j = 0; j < actualCount; j++)
                     VerifyLocation(actual[j], expected[j]);
@@ -311,7 +314,7 @@ namespace Roslynator.Tests
                 FileLinePositionSpan expected)
             {
                 if (actual.Path != expected.Path)
-                    Assert.True(false, $"Expected diagnostic to be in file \"{expected.Path}\", actual: \"{actual.Path}\"{GetMessage()}");
+                    Assert.True(false, $"Diagnostic expected to be in file \"{expected.Path}\", actual: \"{actual.Path}\"{GetMessage()}");
 
                 VerifyLinePosition(actual.StartLinePosition, expected.StartLinePosition, "start");
 
@@ -327,13 +330,13 @@ namespace Roslynator.Tests
                 int expectedLine = expected.Line;
 
                 if (actualLine != expectedLine)
-                    Assert.True(false, $"Expected diagnostic to {startOrEnd} on line {expectedLine}, actual: {actualLine}{GetMessage()}");
+                    Assert.True(false, $"Diagnostic expected to {startOrEnd} on line {expectedLine}, actual: {actualLine}{GetMessage()}");
 
                 int actualCharacter = actual.Character;
                 int expectedCharacter = expected.Character;
 
                 if (actualCharacter != expectedCharacter)
-                    Assert.True(false, $"Expected diagnostic to {startOrEnd} at column {expectedCharacter}, actual: {actualCharacter}{GetMessage()}");
+                    Assert.True(false, $"Diagnostic expected to {startOrEnd} at column {expectedCharacter}, actual: {actualCharacter}{GetMessage()}");
             }
 
             string GetMessage()

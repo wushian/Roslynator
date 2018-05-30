@@ -233,7 +233,7 @@ namespace Roslynator.Tests
                             if (equivalenceKey == null
                                 || string.Equals(a.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
                             {
-                                Assert.True(false, "Expected no code refactoring.");
+                                Assert.True(false, "No code refactoring expected.");
                             }
                         },
                         CancellationToken.None);
