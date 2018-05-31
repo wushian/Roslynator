@@ -258,5 +258,25 @@ class C
 }
 ");
         }
+
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseMethodGroupInsteadOfAnonymousFunction)]
+        public async Task TestNoDiagnostic_ReducedExtensionFromOtherClassInvokedOnLambdaParameter()
+        {
+            await VerifyNoDiagnosticAsync(@"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class C
+{
+    void M(Func<IEnumerable<string>, string> func)
+    {
+        M(f => f.First());
+        M((f) => f.First());
+        M(delegate (IEnumerable<string> p) { return p.First(); });
+    }
+}
+");
+        }
     }
 }
