@@ -175,6 +175,7 @@ class C
 ");
         }
 
+        [Theory, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveRedundantParentheses)]
         [InlineData("while ([|(|]true)) { }", "while (true) { }")]
         [InlineData("do { } while ([|(|]true));", "do { } while (true);")]
         [InlineData("using ([|(|](IDisposable)null)) { }", "using ((IDisposable)null) { }")]
@@ -341,6 +342,7 @@ class Foo
 ", fromData, toData);
         }
 
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveRedundantParentheses)]
         public async Task TestNoDiagnostic_AssignmentInInitializer()
         {
             await VerifyNoDiagnosticAsync(@"

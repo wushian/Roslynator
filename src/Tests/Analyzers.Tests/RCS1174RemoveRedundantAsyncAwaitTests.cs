@@ -15,18 +15,11 @@ namespace Roslynator.CSharp.Analysis.Tests
 {
     public class RCS1174RemoveRedundantAsyncAwaitTests : AbstractCSharpCodeFixVerifier
     {
-        public RCS1174RemoveRedundantAsyncAwaitTests()
-        {
-            Options = base.Options.AddAllowedCompilerDiagnosticIds(new string[] { "CS1998" });
-        }
-
         public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.RemoveRedundantAsyncAwait;
 
         public override DiagnosticAnalyzer Analyzer { get; } = new RemoveRedundantAsyncAwaitAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new RemoveRedundantAsyncAwaitCodeFixProvider();
-
-        public override CodeVerificationOptions Options { get; }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveRedundantAsyncAwait)]
         public async Task Test_Method_Body_ReturnAwait()
@@ -197,7 +190,7 @@ class C
         return GetAsync();
     }
 }
-");
+", options: Options.AddAllowedCompilerDiagnosticId("CS1998"));
         }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveRedundantAsyncAwait)]
@@ -229,7 +222,7 @@ class C
         return GetAsync();
     }
 }
-");
+", options: Options.AddAllowedCompilerDiagnosticId("CS1998"));
         }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveRedundantAsyncAwait)]
@@ -267,7 +260,7 @@ class C
         return GetAsync();
     }
 }
-");
+", options: Options.AddAllowedCompilerDiagnosticId("CS1998"));
         }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveRedundantAsyncAwait)]
@@ -299,7 +292,7 @@ class C
         return GetAsync();
     }
 }
-");
+", options: Options.AddAllowedCompilerDiagnosticId("CS1998"));
         }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveRedundantAsyncAwait)]
@@ -337,7 +330,7 @@ class C
         return GetAsync();
     }
 }
-");
+", options: Options.AddAllowedCompilerDiagnosticId("CS1998"));
         }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveRedundantAsyncAwait)]
@@ -726,22 +719,21 @@ class C
 ");
         }
 
-        //TODO: CS1997
-        //[Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveRedundantAsyncAwait)]
-//        public async Task TestNoDiagnostic_Method_ReturnsTask()
-//        {
-//            await VerifyNoDiagnosticAsync(@"
-//using System.Threading.Tasks;
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveRedundantAsyncAwait)]
+        public async Task TestNoDiagnostic_Method_ReturnsTask()
+        {
+            await VerifyNoDiagnosticAsync(@"
+using System.Threading.Tasks;
 
-//class C
-//{
-//    async Task DoAsync()
-//    {
-//        return await DoAsync();
-//    }
-//}
-//");
-//        }
+class C
+{
+    async Task DoAsync()
+    {
+        return await DoAsync();
+    }
+}
+", options: Options.AddAllowedCompilerDiagnosticId(CompilerDiagnosticIdentifiers.SinceMethodIsAsyncMethodThatReturnsTaskReturnKeywordMustNotBeFollowedByObjectExpression));
+        }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveRedundantAsyncAwait)]
         public async Task TestNoDiagnostic_ReturnTypeAndAwaitTypeDoNotEqual()
