@@ -25,6 +25,24 @@ namespace Roslynator.Tests
     {
         void M()
         {
+            var items = new List<string>();
+
+            bool x = items.Any(f => string.IsNullOrEmpty(f));
+        }
+
+        void M2()
+        {
+            var items = new List<string>();
+
+            bool x = false;
+            foreach (string item in items)
+            {
+                if (string.IsNullOrEmpty(item))
+                {
+                    x = true;
+                    break;
+                }
+            }
         }
     }
 }

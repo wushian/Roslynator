@@ -2,10 +2,11 @@
 
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.Refactorings.InlineDefinition;
+using Roslynator.CSharp.Refactorings.ReplaceLinqWithForEach;
+using Roslynator.CSharp.Syntax;
 
 namespace Roslynator.CSharp.Refactorings
 {
@@ -15,31 +16,35 @@ namespace Roslynator.CSharp.Refactorings
         {
             if (context.IsAnyRefactoringEnabled(
                 RefactoringIdentifiers.UseElementAccessInsteadOfEnumerableMethod,
+                RefactoringIdentifiers.ReplaceLinqWithForEach,
                 RefactoringIdentifiers.ReplaceAnyWithAllOrAllWithAny,
                 RefactoringIdentifiers.CallExtensionMethodAsInstanceMethod,
                 RefactoringIdentifiers.CallIndexOfInsteadOfContains))
             {
-                ExpressionSyntax expression = invocationExpression.Expression;
+                SimpleMemberInvocationExpressionInfo invocationInfo = SyntaxInfo.SimpleMemberInvocationExpressionInfo(invocationExpression);
 
-                if (expression != null
-                    && invocationExpression.ArgumentList != null)
+                if (invocationInfo.Success)
                 {
-                    if (expression.IsKind(SyntaxKind.SimpleMemberAccessExpression)
-                        && ((MemberAccessExpressionSyntax)expression).Name?.Span.Contains(context.Span) == true)
+                    if (context.Span.IsEmptyAndContainedInSpan(invocationInfo.Name))
                     {
+                        SemanticModel semanticModel = await context.GetSemanticModelAsync().ConfigureAwait(false);
+
                         if (context.IsRefactoringEnabled(RefactoringIdentifiers.UseElementAccessInsteadOfEnumerableMethod))
-                            await UseElementAccessRefactoring.ComputeRefactoringsAsync(context, invocationExpression).ConfigureAwait(false);
+                            UseElementAccessRefactoring.ComputeRefactorings(context, invocationInfo, semanticModel);
+
+                        if (context.IsRefactoringEnabled(RefactoringIdentifiers.ReplaceLinqWithForEach))
+                            ReplaceLinqWithForEachRefactoring.ComputeRefactorings(context, invocationInfo, semanticModel);
 
                         if (context.IsRefactoringEnabled(RefactoringIdentifiers.ReplaceAnyWithAllOrAllWithAny))
-                            await ReplaceAnyWithAllOrAllWithAnyRefactoring.ComputeRefactoringAsync(context, invocationExpression).ConfigureAwait(false);
+                            ReplaceAnyWithAllOrAllWithAnyRefactoring.ComputeRefactoring(context, invocationExpression, semanticModel);
 
                         if (context.IsRefactoringEnabled(RefactoringIdentifiers.CallIndexOfInsteadOfContains))
-                            await CallIndexOfInsteadOfContainsRefactoring.ComputeRefactoringAsync(context, invocationExpression).ConfigureAwait(false);
+                            CallIndexOfInsteadOfContainsRefactoring.ComputeRefactoring(context, invocationExpression, semanticModel);
                     }
 
                     if (context.IsRefactoringEnabled(RefactoringIdentifiers.CallExtensionMethodAsInstanceMethod))
                     {
-                        SyntaxNodeOrToken nodeOrToken = CallExtensionMethodAsInstanceMethodAnalysis.GetNodeOrToken(expression);
+                        SyntaxNodeOrToken nodeOrToken = CallExtensionMethodAsInstanceMethodAnalysis.GetNodeOrToken(invocationExpression.Expression);
 
                         if (nodeOrToken.Span.Contains(context.Span))
                         {

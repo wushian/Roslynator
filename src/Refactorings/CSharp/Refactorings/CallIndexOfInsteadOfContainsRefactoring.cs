@@ -12,10 +12,8 @@ namespace Roslynator.CSharp.Refactorings
 {
     internal static class CallIndexOfInsteadOfContainsRefactoring
     {
-        public static async Task ComputeRefactoringAsync(RefactoringContext context, InvocationExpressionSyntax invocation)
+        public static void ComputeRefactoring(RefactoringContext context, InvocationExpressionSyntax invocation, SemanticModel semanticModel)
         {
-            SemanticModel semanticModel = await context.GetSemanticModelAsync().ConfigureAwait(false);
-
             IMethodSymbol methodSymbol = semanticModel.GetMethodSymbol(invocation, context.CancellationToken);
 
             if (SymbolUtility.IsPublicInstanceNonGeneric(methodSymbol, "Contains")

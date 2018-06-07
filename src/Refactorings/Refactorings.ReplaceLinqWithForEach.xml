@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Refactorings>
+  <Refactoring Id="RRX002" Identifier="ReplaceLinqWithForEach" Title="Replace LINQ method call with foreach">
+    <Syntaxes>
+      <Syntax>LINQ method invocation</Syntax>
+    </Syntaxes>
+    <Span>method name</Span>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[]]></Before>
+        <After><![CDATA[]]></After>
+      </Sample>
+    </Samples>
+  </Refactoring>
+</Refactorings>
