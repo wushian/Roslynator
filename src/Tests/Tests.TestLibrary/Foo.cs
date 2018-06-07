@@ -45,4 +45,140 @@ namespace Roslynator.Tests
             }
         }
     }
+
+    class C_SimpleLambda_BlockBody
+    {
+        void M()
+        {
+            var items = new List<string>();
+
+            bool x = items.Any(f =>
+            {
+                object obj = null;
+
+                if (obj == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return string.IsNullOrEmpty(f);
+                }
+            });
+        }
+
+        void M2()
+        {
+            var items = new List<string>();
+
+            bool x = Any();
+
+            bool Any()
+            {
+                foreach (string f in items)
+                {
+                    object obj = null;
+
+                    if (obj == null)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return string.IsNullOrEmpty(f);
+                    }
+                }
+
+                return false;
+            }
+        }
+    }
+
+    class C_IfStatement
+    {
+        void M()
+        {
+            var items = new List<string>();
+
+            if (items.Any(f => string.IsNullOrEmpty(f)))
+            {
+            }
+        }
+
+        void M2()
+        {
+            var items = new List<string>();
+
+            bool x = false;
+            foreach (var item in items)
+            {
+                if (string.IsNullOrEmpty(item))
+                {
+                    x = true;
+                    break;
+                }
+            }
+
+            if (x)
+            {
+            }
+        }
+    }
+
+    class C_While
+    {
+        void M()
+        {
+            var items = new List<string>();
+
+            while (items.Any(f => string.IsNullOrEmpty(f)))
+            {
+            }
+        }
+
+        void M2()
+        {
+            var items = new List<string>();
+
+            bool x = false;
+            foreach (var item in items)
+            {
+                if (string.IsNullOrEmpty(item))
+                {
+                    x = true;
+                    break;
+                }
+            }
+
+            while (x)
+            {
+            }
+        }
+    }
+
+    class C_ConditionalExpression
+    {
+        void M()
+        {
+            var items = new List<string>();
+
+
+            string x = (items.Any(f => string.IsNullOrEmpty(f))) ? "true" : "false";
+        }
+
+        void M2()
+        {
+            var items = new List<string>();
+
+            string x = "false";
+            foreach (var item in items)
+            {
+                if (string.IsNullOrEmpty(item))
+                {
+                    x = "true";
+                    break;
+                }
+            }
+        }
+    }
 }
