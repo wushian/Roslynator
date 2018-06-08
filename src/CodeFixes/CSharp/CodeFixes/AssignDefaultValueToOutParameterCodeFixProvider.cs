@@ -153,7 +153,9 @@ namespace Roslynator.CSharp.CodeFixes
 
             if (bodyOrExpressionBody is ArrowExpressionClauseSyntax expressionBody)
             {
-                newNode = ExpandExpressionBodyRefactoring.Refactor(expressionBody, semanticModel, cancellationToken);
+                (SyntaxNode node2, BlockSyntax body) = ExpandExpressionBodyRefactoring.Refactor(expressionBody, semanticModel, cancellationToken);
+
+                newNode = node2;
 
                 newNode = InsertStatements(newNode, expressionStatements);
             }

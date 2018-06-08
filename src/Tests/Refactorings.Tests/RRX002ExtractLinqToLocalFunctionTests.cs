@@ -12,7 +12,7 @@ namespace Roslynator.CSharp.Refactorings.Tests
         public override string RefactoringId { get; } = RefactoringIdentifiers.ExtractLinqToLocalFunction;
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
-        public async Task Test_SimpleLambda_ToLocalFunction()
+        public async Task Test_SimpleLambda_AnyToLocalFunction()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -66,7 +66,7 @@ class C
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
-        public async Task Test_ParenthesizedLambda_ToLocalFunction()
+        public async Task Test_ParenthesizedLambda_AnyToLocalFunction()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -112,7 +112,7 @@ class C
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
-        public async Task Test_SimpleLambda_ToLocalFunction_BlockBody()
+        public async Task Test_SimpleLambda_AnyToLocalFunction_BlockBody()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -179,7 +179,7 @@ class C
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
-        public async Task Test_ParenthesizedLambda_ToLocalFunction_BlockBody()
+        public async Task Test_ParenthesizedLambda_AnyToLocalFunction_BlockBody()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -246,7 +246,7 @@ class C
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
-        public async Task Test_AnonymousMethod_ToLocalFunction_BlockBody()
+        public async Task Test_AnonymousMethod_AnyToLocalFunction_BlockBody()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -313,7 +313,7 @@ class C
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
-        public async Task Test_SimpleLambda_ToLocalFunction_ExpressionBody()
+        public async Task Test_SimpleLambda_AnyToLocalFunction_ExpressionBody()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -364,6 +364,60 @@ class C
                     return false;
                 }
             }
+        }
+    }
+}
+", equivalenceKey: RefactoringId);
+        }
+
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
+        public async Task Test_SimpleLambda_AllToLocalFunction()
+        {
+            await VerifyRefactoringAsync(@"
+using System.Collections.Generic;
+using System.Linq;
+
+class C
+{
+    void M()
+    {
+        string s = null;
+        var items = new List<string>();
+
+        if (true)
+        {
+            string s2 = null;
+            bool x = items.[||]All(f => f == s || f == s2);
+        }
+    }
+}
+", @"
+using System.Collections.Generic;
+using System.Linq;
+
+class C
+{
+    void M()
+    {
+        string s = null;
+        var items = new List<string>();
+
+        if (true)
+        {
+            string s2 = null;
+            bool x = All(s2);
+        }
+        bool All(string s2)
+        {
+            foreach (string f in items)
+            {
+                if (f != s && f != s2)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

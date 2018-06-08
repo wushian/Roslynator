@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System.Diagnostics;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -20,12 +20,14 @@ namespace Roslynator.CSharp.Refactorings
         {
             SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
-            SyntaxNode newNode = Refactor(arrowExpressionClause, semanticModel, cancellationToken).WithFormatterAnnotation();
+            (SyntaxNode newNode, BlockSyntax body) = Refactor(arrowExpressionClause, semanticModel, cancellationToken);
+
+            newNode = newNode.WithFormatterAnnotation();
 
             return await document.ReplaceNodeAsync(arrowExpressionClause.Parent, newNode, cancellationToken).ConfigureAwait(false);
         }
 
-        public static SyntaxNode Refactor(
+        public static (SyntaxNode node, BlockSyntax body) Refactor(
             ArrowExpressionClauseSyntax arrowExpressionClause,
             SemanticModel semanticModel,
             CancellationToken cancellationToken)
@@ -40,73 +42,105 @@ namespace Roslynator.CSharp.Refactorings
                     {
                         var method = (MethodDeclarationSyntax)node;
 
-                        return method
+                        BlockSyntax body = CreateBlock(method.ReturnType, expression, method.SemicolonToken, semanticModel, cancellationToken);
+
+                        MethodDeclarationSyntax newMethod = method
                             .WithExpressionBody(null)
                             .WithSemicolonToken(default(SyntaxToken))
-                            .WithBody(CreateBlock(method.ReturnType, expression, method.SemicolonToken, semanticModel, cancellationToken));
+                            .WithBody(body);
+
+                        return (newMethod, newMethod.Body);
                     }
                 case SyntaxKind.ConstructorDeclaration:
                     {
                         var constructor = (ConstructorDeclarationSyntax)node;
 
-                        return constructor
+                        BlockSyntax body = Block(ExpressionStatement(expression, constructor.SemicolonToken));
+
+                        ConstructorDeclarationSyntax newConstructor = constructor
                             .WithExpressionBody(null)
                             .WithSemicolonToken(default(SyntaxToken))
-                            .WithBody(Block(ExpressionStatement(expression, constructor.SemicolonToken)));
+                            .WithBody(body);
+
+                        return (newConstructor, newConstructor.Body);
                     }
                 case SyntaxKind.DestructorDeclaration:
                     {
                         var destructor = (DestructorDeclarationSyntax)node;
 
-                        return destructor
+                        BlockSyntax body = Block(ExpressionStatement(expression, destructor.SemicolonToken));
+
+                        DestructorDeclarationSyntax newDestructor = destructor
                             .WithExpressionBody(null)
                             .WithSemicolonToken(default(SyntaxToken))
-                            .WithBody(Block(ExpressionStatement(expression, destructor.SemicolonToken)));
+                            .WithBody(body);
+
+                        return (newDestructor, newDestructor.Body);
                     }
                 case SyntaxKind.OperatorDeclaration:
                     {
-                        var operatorDeclaration = (OperatorDeclarationSyntax)node;
+                        var @operator = (OperatorDeclarationSyntax)node;
 
-                        return operatorDeclaration
+                        BlockSyntax body = CreateBlock(expression, @operator.SemicolonToken);
+
+                        OperatorDeclarationSyntax newOperator = @operator
                             .WithExpressionBody(null)
                             .WithSemicolonToken(default(SyntaxToken))
-                            .WithBody(CreateBlock(expression, operatorDeclaration.SemicolonToken));
+                            .WithBody(body);
+
+                        return (newOperator, newOperator.Body);
                     }
                 case SyntaxKind.ConversionOperatorDeclaration:
                     {
-                        var conversionOperatorDeclaration = (ConversionOperatorDeclarationSyntax)node;
+                        var conversionOperator = (ConversionOperatorDeclarationSyntax)node;
 
-                        return conversionOperatorDeclaration
+                        BlockSyntax body = CreateBlock(expression, conversionOperator.SemicolonToken);
+
+                        ConversionOperatorDeclarationSyntax newConversionOperator = conversionOperator
                             .WithExpressionBody(null)
                             .WithSemicolonToken(default(SyntaxToken))
-                            .WithBody(CreateBlock(expression, conversionOperatorDeclaration.SemicolonToken));
+                            .WithBody(body);
+
+                        return (newConversionOperator, newConversionOperator.Body);
                     }
                 case SyntaxKind.PropertyDeclaration:
                     {
-                        var propertyDeclaration = (PropertyDeclarationSyntax)node;
+                        var property = (PropertyDeclarationSyntax)node;
 
-                        return propertyDeclaration
-                            .WithAccessorList(CreateAccessorList(expression, propertyDeclaration.SemicolonToken))
+                        AccessorListSyntax accessorList = CreateAccessorList(expression, property.SemicolonToken);
+
+                        PropertyDeclarationSyntax newProperty = property
+                            .WithAccessorList(accessorList)
                             .WithExpressionBody(null)
                             .WithSemicolonToken(default(SyntaxToken));
+
+                        return (newProperty, newProperty.AccessorList.Accessors[0].Body);
                     }
                 case SyntaxKind.IndexerDeclaration:
                     {
-                        var indexerDeclaration = (IndexerDeclarationSyntax)node;
+                        var indexer = (IndexerDeclarationSyntax)node;
 
-                        return indexerDeclaration
-                            .WithAccessorList(CreateAccessorList(expression, indexerDeclaration.SemicolonToken))
+                        AccessorListSyntax accessorList = CreateAccessorList(expression, indexer.SemicolonToken);
+
+                        IndexerDeclarationSyntax newIndexer = indexer
+                            .WithAccessorList(accessorList)
                             .WithExpressionBody(null)
                             .WithSemicolonToken(default(SyntaxToken));
+
+                        return (newIndexer, newIndexer.AccessorList.Accessors[0].Body);
                     }
                 case SyntaxKind.GetAccessorDeclaration:
                     {
                         var accessor = (AccessorDeclarationSyntax)node;
 
-                        return accessor
+                        BlockSyntax body = CreateBlock(expression, accessor.SemicolonToken);
+
+                        AccessorDeclarationSyntax newAccessor = accessor
                             .WithExpressionBody(null)
                             .WithSemicolonToken(default(SyntaxToken))
-                            .WithBody(CreateBlock(expression, accessor.SemicolonToken));
+                            .WithBody(body);
+
+                        return (newAccessor, newAccessor.Body);
                     }
                 case SyntaxKind.SetAccessorDeclaration:
                 case SyntaxKind.AddAccessorDeclaration:
@@ -114,24 +148,31 @@ namespace Roslynator.CSharp.Refactorings
                     {
                         var accessor = (AccessorDeclarationSyntax)node;
 
-                        return accessor
+                        BlockSyntax body = Block(ExpressionStatement(expression, accessor.SemicolonToken));
+
+                        AccessorDeclarationSyntax newAccessor = accessor
                             .WithExpressionBody(null)
                             .WithSemicolonToken(default(SyntaxToken))
-                            .WithBody(Block(ExpressionStatement(expression, accessor.SemicolonToken)));
+                            .WithBody(body);
+
+                        return (newAccessor, newAccessor.Body);
                     }
                 case SyntaxKind.LocalFunctionStatement:
                     {
                         var localFunction = (LocalFunctionStatementSyntax)node;
 
-                        return localFunction
+                        BlockSyntax body = CreateBlock(localFunction.ReturnType, expression, localFunction.SemicolonToken, semanticModel, cancellationToken);
+
+                        LocalFunctionStatementSyntax newLocalFunction = localFunction
                             .WithExpressionBody(null)
                             .WithSemicolonToken(default(SyntaxToken))
-                            .WithBody(CreateBlock(localFunction.ReturnType, expression, localFunction.SemicolonToken, semanticModel, cancellationToken));
+                            .WithBody(body);
+
+                        return (newLocalFunction, newLocalFunction.Body);
                     }
                 default:
                     {
-                        Debug.Fail(node.Kind().ToString());
-                        return node;
+                        throw new InvalidOperationException();
                     }
             }
         }
@@ -196,9 +237,9 @@ namespace Roslynator.CSharp.Refactorings
 
         private static AccessorListSyntax CreateAccessorList(ExpressionSyntax expression, SyntaxToken semicolon)
         {
-            BlockSyntax block = CreateBlock(expression, semicolon);
+            BlockSyntax body = CreateBlock(expression, semicolon);
 
-            AccessorListSyntax accessorList = AccessorList(GetAccessorDeclaration(block));
+            AccessorListSyntax accessorList = AccessorList(GetAccessorDeclaration(body));
 
             if (expression.IsSingleLine())
             {

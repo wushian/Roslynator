@@ -1,30 +1,48 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Roslynator.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Roslynator.CSharp.CSharpFactory;
+using static Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction.ExtractLinqToLocalFunctionHelpers;
 
 namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
 {
-    internal static class ExtractLinqToLocalFunctionRefactoring
+    internal abstract class ExtractLinqToLocalFunctionRefactoring
     {
+        public abstract string MethodName { get; }
+
+        protected abstract ReturnStatementSyntax GetFirstReturnStatement();
+
+        protected abstract ReturnStatementSyntax GetLastReturnStatement();
+
+        protected virtual ExpressionSyntax GetCondition(ExpressionSyntax expression, SemanticModel semanticModel, CancellationToken cancellationToken)
+        {
+            return expression;
+        }
+
         internal static void ComputeRefactorings(
             RefactoringContext context,
             in SimpleMemberInvocationExpressionInfo invocationInfo,
             SemanticModel semanticModel)
         {
-            if (invocationInfo.NameText != "Any")
-                return;
+            string methodName = invocationInfo.NameText;
+
+            switch (methodName)
+            {
+                case "Any":
+                case "All":
+                case "FirstOrDefault":
+                    break;
+                default:
+                    return;
+            }
 
             if (invocationInfo.Arguments.Count != 1)
                 return;
@@ -46,7 +64,7 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
             if (extensionMethodSymbolInfo.Symbol == null)
                 return;
 
-            if (!SymbolUtility.IsLinqExtensionOfIEnumerableOfTWithPredicate(extensionMethodSymbolInfo.Symbol, "Any", allowImmutableArrayExtension: true))
+            if (!SymbolUtility.IsLinqExtensionOfIEnumerableOfTWithPredicate(extensionMethodSymbolInfo.Symbol, methodName, allowImmutableArrayExtension: true))
                 return;
 
             AnonymousFunctionAnalysis analysis = AnonymousFunctionAnalysis.Create(argumentExpression, semanticModel);
@@ -55,12 +73,27 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
                 return;
 
             context.RegisterRefactoring(
-                "Extract 'Any' to local function",
-                ct => RefactorAsync(context.Document, invocationExpression, bodyOrExpressionBody, extensionMethodSymbolInfo.ReducedSymbol, semanticModel, ct),
+                $"Extract '{methodName}' to local function",
+                GetCreateChangedDocument(),
                 RefactoringIdentifiers.ExtractLinqToLocalFunction);
+
+            Func<CancellationToken, Task<Document>> GetCreateChangedDocument()
+            {
+                switch (methodName)
+                {
+                    case "Any":
+                        return ct => ExtractLinqToLocalFunctionRefactorings.ExtractAny.RefactorAsync(context.Document, invocationExpression, bodyOrExpressionBody, extensionMethodSymbolInfo.ReducedSymbol, semanticModel, ct);
+                    case "All":
+                        return ct => ExtractLinqToLocalFunctionRefactorings.ExtractAll.RefactorAsync(context.Document, invocationExpression, bodyOrExpressionBody, extensionMethodSymbolInfo.ReducedSymbol, semanticModel, ct);
+                    case "FirstOrDefault":
+                        return ct => ExtractLinqToLocalFunctionRefactorings.ExtractFirstOrDefault.RefactorAsync(context.Document, invocationExpression, bodyOrExpressionBody, extensionMethodSymbolInfo.ReducedSymbol, semanticModel, ct);
+                    default:
+                        throw new InvalidOperationException();
+                }
+            }
         }
 
-        private static Task<Document> RefactorAsync(
+        public Task<Document> RefactorAsync(
             Document document,
             InvocationExpressionSyntax invocationExpression,
             SyntaxNode bodyOrExpressionBody,
@@ -70,15 +103,22 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
         {
             SimpleMemberInvocationExpressionInfo invocationInfo = SyntaxInfo.SimpleMemberInvocationExpressionInfo(invocationExpression);
 
-            ExpressionSyntax argumentExpression = invocationInfo.Arguments.Single().Expression.WalkDownParentheses();
+            ExpressionSyntax argumentExpression = invocationInfo
+                .Arguments
+                .Single()
+                .Expression
+                .WalkDownParentheses();
 
             AnonymousFunctionAnalysis analysis = AnonymousFunctionAnalysis.Create(argumentExpression, semanticModel);
 
-            TypeSyntax elementType = methodSymbol.TypeArguments[0].ToTypeSyntax().WithSimplifierAnnotation();
+            TypeSyntax elementType = methodSymbol
+                .TypeArguments[0]
+                .ToTypeSyntax()
+                .WithSimplifierAnnotation();
 
             string parameterName = analysis.Parameter.Identifier.ValueText;
 
-            string functionName = "Any";
+            string functionName = MethodName;
 
             LocalFunctionStatementSyntax childLocalFunction = null;
 
@@ -100,9 +140,10 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
 
                 int offset = invocationExpression.FullSpan.Start - expressionBody.Expression.FullSpan.Start;
 
-                declaration = ExpandExpressionBodyRefactoring.Refactor(expressionBody, semanticModel, cancellationToken);
+                (SyntaxNode node, BlockSyntax body) result = ExpandExpressionBodyRefactoring.Refactor(expressionBody, semanticModel, cancellationToken);
 
-                body = GetBody(declaration);
+                declaration = result.node;
+                body = result.body;
 
                 var returnStatement = ((ReturnStatementSyntax)body.Statements.First());
 
@@ -147,15 +188,15 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
                 invocationInfo.Expression,
                 Block(
                     IfStatement(
-                        condition,
-                        Block(ReturnStatement(TrueLiteralExpression())))));
+                        GetCondition(condition, semanticModel, cancellationToken),
+                        Block(GetFirstReturnStatement()))));
 
             forEachStatement = forEachStatement.WithFormatterAnnotation();
 
             functionName = NameGenerator.Default.EnsureUniqueLocalName(functionName, semanticModel, position, cancellationToken: cancellationToken);
 
             (SeparatedSyntaxList<ParameterSyntax> parameters, SeparatedSyntaxList<ArgumentSyntax> arguments)
-                = analysis.GetArgumentsAndParameters(semanticModel, position);
+                = GetArgumentsAndParameters(analysis, semanticModel, position);
 
             LocalFunctionStatementSyntax newLocalFunction = LocalFunctionStatement(
                 default,
@@ -163,8 +204,8 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
                 Identifier(functionName).WithRenameAnnotation(),
                 ParameterList(parameters),
                 (childLocalFunction != null)
-                    ? Block(forEachStatement, ReturnStatement(FalseLiteralExpression()), childLocalFunction)
-                    : Block(forEachStatement, ReturnStatement(FalseLiteralExpression())));
+                    ? Block(forEachStatement, GetLastReturnStatement(), childLocalFunction)
+                    : Block(forEachStatement, GetLastReturnStatement()));
 
             newLocalFunction = newLocalFunction.WithFormatterAnnotation();
 
@@ -185,262 +226,67 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
                 return document.ReplaceNodeAsync(body, newBody, cancellationToken);
             }
         }
-
-        private static SyntaxNode FindContainingBodyOrExpressionBody(InvocationExpressionSyntax invocationExpression)
-        {
-            for (SyntaxNode node = invocationExpression.Parent; node != null; node = node.Parent)
-            {
-                switch (node.Kind())
-                {
-                    case SyntaxKind.Block:
-                    case SyntaxKind.ArrowExpressionClause:
-                        {
-                            SyntaxNode parent = node.Parent;
-
-                            switch (parent.Kind())
-                            {
-                                case SyntaxKind.MethodDeclaration:
-                                case SyntaxKind.OperatorDeclaration:
-                                case SyntaxKind.ConversionOperatorDeclaration:
-                                case SyntaxKind.ConstructorDeclaration:
-                                case SyntaxKind.DestructorDeclaration:
-                                case SyntaxKind.PropertyDeclaration:
-                                case SyntaxKind.EventDeclaration:
-                                case SyntaxKind.IndexerDeclaration:
-                                case SyntaxKind.GetAccessorDeclaration:
-                                case SyntaxKind.SetAccessorDeclaration:
-                                case SyntaxKind.AddAccessorDeclaration:
-                                case SyntaxKind.RemoveAccessorDeclaration:
-                                case SyntaxKind.UnknownAccessorDeclaration:
-                                case SyntaxKind.LocalFunctionStatement:
-                                    return node;
-                            }
-
-                            Debug.Assert(!node.IsKind(SyntaxKind.ArrowExpressionClause));
-                            Debug.Assert(!(parent is MemberDeclarationSyntax), parent.Kind().ToString());
-                            break;
-                        }
-                    case SyntaxKind.FieldDeclaration:
-                        {
-                            return null;
-                        }
-                    default:
-                        {
-                            Debug.Assert(!(node is MemberDeclarationSyntax), node.Kind().ToString());
-                            break;
-                        }
-                }
-            }
-
-            return null;
-        }
-
-        private static BlockSyntax GetBody(SyntaxNode node)
-        {
-            switch (node.Kind())
-            {
-                case SyntaxKind.MethodDeclaration:
-                    return ((MethodDeclarationSyntax)node).Body;
-                case SyntaxKind.OperatorDeclaration:
-                    return ((OperatorDeclarationSyntax)node).Body;
-                case SyntaxKind.ConversionOperatorDeclaration:
-                    return ((ConversionOperatorDeclarationSyntax)node).Body;
-                case SyntaxKind.ConstructorDeclaration:
-                    return ((ConstructorDeclarationSyntax)node).Body;
-                case SyntaxKind.DestructorDeclaration:
-                    return ((DestructorDeclarationSyntax)node).Body;
-                case SyntaxKind.PropertyDeclaration:
-                    return ((PropertyDeclarationSyntax)node).AccessorList.Accessors.First().Body;
-                case SyntaxKind.EventDeclaration:
-                    return ((EventDeclarationSyntax)node).AccessorList.Accessors.First().Body;
-                case SyntaxKind.IndexerDeclaration:
-                    return ((IndexerDeclarationSyntax)node).AccessorList.Accessors.First().Body;
-                case SyntaxKind.GetAccessorDeclaration:
-                case SyntaxKind.SetAccessorDeclaration:
-                case SyntaxKind.AddAccessorDeclaration:
-                case SyntaxKind.RemoveAccessorDeclaration:
-                case SyntaxKind.UnknownAccessorDeclaration:
-                    return ((AccessorDeclarationSyntax)node).Body;
-                case SyntaxKind.LocalFunctionStatement:
-                    return ((LocalFunctionStatementSyntax)node).Body;
-            }
-
-            throw new InvalidOperationException();
-        }
-
-        //TODO: del
-        //private static Task<Document> ReplaceAnyWithForEachAsync(
-        //    Document document,
-        //    InvocationExpressionSyntax invocationExpression,
-        //    IMethodSymbol methodSymbol,
-        //    CancellationToken cancellationToken)
-        //{
-        //    SimpleMemberInvocationExpressionInfo invocationInfo = SyntaxInfo.SimpleMemberInvocationExpressionInfo(invocationExpression);
-
-        //    ExpressionSyntax expression = invocationExpression.WalkUpParentheses();
-
-        //    var variableDeclarator = (VariableDeclaratorSyntax)expression.Parent.Parent;
-
-        //    var localDeclaration = (LocalDeclarationStatementSyntax)variableDeclarator.Parent.Parent;
-
-        //    LocalDeclarationStatementSyntax newLocalDeclaration = localDeclaration
-        //        .ReplaceNode(expression, FalseLiteralExpression())
-        //        .WithTrailingTrivia(NewLine());
-
-        //    string name = null;
-        //    ExpressionSyntax condition = null;
-
-        //    switch (invocationInfo.Arguments.Single().Expression.WalkDownParentheses())
-        //    {
-        //        case SimpleLambdaExpressionSyntax simpleLambda:
-        //            {
-        //                name = simpleLambda.Parameter.Identifier.ValueText;
-        //                condition = (ExpressionSyntax)simpleLambda.Body;
-        //                break;
-        //            }
-        //        case ParenthesizedLambdaExpressionSyntax parenthesizedLambda:
-        //            {
-        //                name = parenthesizedLambda.ParameterList.Parameters[0].Identifier.ValueText;
-        //                condition = (ExpressionSyntax)parenthesizedLambda.Body;
-        //                break;
-        //            }
-        //    }
-
-        //    IfStatementSyntax ifStatement = IfStatement(
-        //        condition,
-        //        Block(
-        //            SimpleAssignmentStatement(
-        //                IdentifierName(variableDeclarator.Identifier.WithoutTrivia()),
-        //                TrueLiteralExpression()),
-        //            BreakStatement()));
-
-        //    ForEachStatementSyntax forEachStatement = ForEachStatement(
-        //        methodSymbol.TypeArguments[0].ToTypeSyntax().WithSimplifierAnnotation(),
-        //        Identifier(name).WithRenameAnnotation(),
-        //        invocationInfo.Expression,
-        //        Block(ifStatement));
-
-        //    forEachStatement = forEachStatement
-        //        .WithTrailingTrivia(localDeclaration.GetTrailingTrivia())
-        //        .WithFormatterAnnotation();
-
-        //    return document.ReplaceNodeAsync(
-        //        localDeclaration,
-        //        new StatementSyntax[] { newLocalDeclaration, forEachStatement },
-        //        cancellationToken);
-        //}
-
-        private readonly struct AnonymousFunctionAnalysis
-        {
-            private AnonymousFunctionAnalysis(SyntaxKind kind, SyntaxNode body, ImmutableArray<ISymbol> captured)
-            {
-                Kind = kind;
-                Body = body;
-                Captured = captured;
-
-                Debug.Assert(Captured.All(f => f.IsKind(SymbolKind.Local, SymbolKind.Parameter)), Captured.FirstOrDefault(f => !f.IsKind(SymbolKind.Local, SymbolKind.Parameter))?.Kind.ToString());
-            }
-
-            public static AnonymousFunctionAnalysis Create(ExpressionSyntax expression, SemanticModel semanticModel)
-            {
-                switch (expression?.Kind())
-                {
-                    case SyntaxKind.SimpleLambdaExpression:
-                        {
-                            var simpleLambda = (SimpleLambdaExpressionSyntax)expression;
-
-                            return Create(SyntaxKind.SimpleLambdaExpression, simpleLambda.Body, semanticModel);
-                        }
-                    case SyntaxKind.ParenthesizedLambdaExpression:
-                        {
-                            var parenthesizedLambda = (ParenthesizedLambdaExpressionSyntax)expression;
-
-                            return Create(SyntaxKind.ParenthesizedLambdaExpression, parenthesizedLambda.Body, semanticModel);
-                        }
-                    case SyntaxKind.AnonymousMethodExpression:
-                        {
-                            var anonymousMethod = (AnonymousMethodExpressionSyntax)expression;
-
-                            return Create(SyntaxKind.AnonymousMethodExpression, anonymousMethod.Block, semanticModel);
-                        }
-                }
-
-                return default;
-            }
-
-            private static AnonymousFunctionAnalysis Create(SyntaxKind kind, SyntaxNode body, SemanticModel semanticModel)
-            {
-                if (body == null)
-                    return default;
-
-                return new AnonymousFunctionAnalysis(kind, body, semanticModel.AnalyzeDataFlow(body).Captured);
-            }
-
-            public SyntaxKind Kind { get; }
-
-            public SyntaxNode Body { get; }
-
-            public ImmutableArray<ISymbol> Captured { get; }
-
-            public ParameterSyntax Parameter
-            {
-                get
-                {
-                    switch (Kind)
-                    {
-                        case SyntaxKind.SimpleLambdaExpression:
-                            return ((SimpleLambdaExpressionSyntax)Body.Parent).Parameter;
-                        case SyntaxKind.ParenthesizedLambdaExpression:
-                            return ((ParenthesizedLambdaExpressionSyntax)Body.Parent).ParameterList?.Parameters.FirstOrDefault();
-                        case SyntaxKind.AnonymousMethodExpression:
-                            return ((AnonymousMethodExpressionSyntax)Body.Parent).ParameterList?.Parameters.FirstOrDefault();
-                        default:
-                            return null;
-                    }
-                }
-            }
-
-            public (SeparatedSyntaxList<ParameterSyntax> parameters, SeparatedSyntaxList<ArgumentSyntax> arguments) GetArgumentsAndParameters(
-                SemanticModel semanticModel,
-                int position)
-            {
-                if (Captured.IsDefault)
-                    return default;
-
-                SeparatedSyntaxList<ParameterSyntax> parameters = default;
-                SeparatedSyntaxList<ArgumentSyntax> arguments = default;
-
-                foreach (ISymbol symbol in Captured)
-                {
-                    if (symbol is ILocalSymbol localSymbol)
-                    {
-                        IdentifierNameSyntax identifierName = IdentifierName(symbol.Name);
-
-                        if (semanticModel
-                            .GetSpeculativeSymbolInfo(position, identifierName, SpeculativeBindingOption.BindAsExpression)
-                            .Symbol?
-                            .Equals(symbol) != true)
-                        {
-                            parameters = parameters.Add(Parameter(localSymbol.Type.ToTypeSyntax().WithSimplifierAnnotation(), localSymbol.Name));
-                            arguments = arguments.Add(Argument(identifierName));
-                        }
-                    }
-                    else if (symbol is IParameterSymbol parameterSymbol)
-                    {
-                        if (!semanticModel.IsAccessible(position, parameterSymbol))
-                        {
-                            parameters = parameters.Add(Parameter(parameterSymbol.Type.ToTypeSyntax().WithSimplifierAnnotation(), parameterSymbol.Name));
-                            arguments = arguments.Add(Argument(IdentifierName(parameterSymbol.Name)));
-                        }
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException();
-                    }
-                }
-
-                return (parameters, arguments);
-            }
-        }
     }
+
+    //TODO: del
+    //private static Task<Document> ReplaceAnyWithForEachAsync(
+    //    Document document,
+    //    InvocationExpressionSyntax invocationExpression,
+    //    IMethodSymbol methodSymbol,
+    //    CancellationToken cancellationToken)
+    //{
+    //    SimpleMemberInvocationExpressionInfo invocationInfo = SyntaxInfo.SimpleMemberInvocationExpressionInfo(invocationExpression);
+
+    //    ExpressionSyntax expression = invocationExpression.WalkUpParentheses();
+
+    //    var variableDeclarator = (VariableDeclaratorSyntax)expression.Parent.Parent;
+
+    //    var localDeclaration = (LocalDeclarationStatementSyntax)variableDeclarator.Parent.Parent;
+
+    //    LocalDeclarationStatementSyntax newLocalDeclaration = localDeclaration
+    //        .ReplaceNode(expression, FalseLiteralExpression())
+    //        .WithTrailingTrivia(NewLine());
+
+    //    string name = null;
+    //    ExpressionSyntax condition = null;
+
+    //    switch (invocationInfo.Arguments.Single().Expression.WalkDownParentheses())
+    //    {
+    //        case SimpleLambdaExpressionSyntax simpleLambda:
+    //            {
+    //                name = simpleLambda.Parameter.Identifier.ValueText;
+    //                condition = (ExpressionSyntax)simpleLambda.Body;
+    //                break;
+    //            }
+    //        case ParenthesizedLambdaExpressionSyntax parenthesizedLambda:
+    //            {
+    //                name = parenthesizedLambda.ParameterList.Parameters[0].Identifier.ValueText;
+    //                condition = (ExpressionSyntax)parenthesizedLambda.Body;
+    //                break;
+    //            }
+    //    }
+
+    //    IfStatementSyntax ifStatement = IfStatement(
+    //        condition,
+    //        Block(
+    //            SimpleAssignmentStatement(
+    //                IdentifierName(variableDeclarator.Identifier.WithoutTrivia()),
+    //                TrueLiteralExpression()),
+    //            BreakStatement()));
+
+    //    ForEachStatementSyntax forEachStatement = ForEachStatement(
+    //        methodSymbol.TypeArguments[0].ToTypeSyntax().WithSimplifierAnnotation(),
+    //        Identifier(name).WithRenameAnnotation(),
+    //        invocationInfo.Expression,
+    //        Block(ifStatement));
+
+    //    forEachStatement = forEachStatement
+    //        .WithTrailingTrivia(localDeclaration.GetTrailingTrivia())
+    //        .WithFormatterAnnotation();
+
+    //    return document.ReplaceNodeAsync(
+    //        localDeclaration,
+    //        new StatementSyntax[] { newLocalDeclaration, forEachStatement },
+    //        cancellationToken);
+    //}
 }
