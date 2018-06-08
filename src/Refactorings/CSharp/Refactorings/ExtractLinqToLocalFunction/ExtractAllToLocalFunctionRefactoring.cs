@@ -1,7 +1,5 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System.Threading;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Roslynator.CSharp.CSharpFactory;
@@ -15,19 +13,24 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
             get { return "All"; }
         }
 
-        protected override ExpressionSyntax GetCondition(ExpressionSyntax expression, SemanticModel semanticModel, CancellationToken cancellationToken)
+        protected override ExpressionSyntax GetCondition(in ExtractLinqToLocalFunctionRefactoringContext context, ExpressionSyntax expression)
         {
-            return Negator.LogicallyNegate(expression, semanticModel, cancellationToken);
+            return Negator.LogicallyNegate(expression, context.SemanticModel, context.CancellationToken);
         }
 
-        protected override ReturnStatementSyntax GetFirstReturnStatement()
+        protected override ReturnStatementSyntax GetFirstReturnStatement(in ExtractLinqToLocalFunctionRefactoringContext context)
         {
             return ReturnStatement(FalseLiteralExpression());
         }
 
-        protected override ReturnStatementSyntax GetLastReturnStatement()
+        protected override ReturnStatementSyntax GetLastReturnStatement(in ExtractLinqToLocalFunctionRefactoringContext context)
         {
             return ReturnStatement(TrueLiteralExpression());
+        }
+
+        protected override TypeSyntax GetReturnType(in ExtractLinqToLocalFunctionRefactoringContext context)
+        {
+            return CSharpTypeFactory.BoolType();
         }
     }
 }

@@ -18,11 +18,13 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
     {
         public abstract string MethodName { get; }
 
-        protected abstract ReturnStatementSyntax GetFirstReturnStatement();
+        protected abstract ReturnStatementSyntax GetFirstReturnStatement(in ExtractLinqToLocalFunctionRefactoringContext context);
 
-        protected abstract ReturnStatementSyntax GetLastReturnStatement();
+        protected abstract ReturnStatementSyntax GetLastReturnStatement(in ExtractLinqToLocalFunctionRefactoringContext context);
 
-        protected virtual ExpressionSyntax GetCondition(ExpressionSyntax expression, SemanticModel semanticModel, CancellationToken cancellationToken)
+        protected abstract TypeSyntax GetReturnType(in ExtractLinqToLocalFunctionRefactoringContext context);
+
+        protected virtual ExpressionSyntax GetCondition(in ExtractLinqToLocalFunctionRefactoringContext context, ExpressionSyntax expression)
         {
             return expression;
         }
@@ -116,7 +118,9 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
                 .ToTypeSyntax()
                 .WithSimplifierAnnotation();
 
-            string parameterName = analysis.Parameter.Identifier.ValueText;
+            ParameterSyntax parameter = analysis.Parameter;
+
+            string parameterName = parameter.Identifier.ValueText;
 
             string functionName = MethodName;
 
@@ -156,6 +160,13 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
                     getInnermostNodeForTie: true);
             }
 
+            var context = new ExtractLinqToLocalFunctionRefactoringContext(
+                parameter,
+                methodSymbol,
+                elementType,
+                semanticModel,
+                cancellationToken);
+
             ExpressionSyntax condition = null;
 
             if (analysis.Body is BlockSyntax block)
@@ -168,7 +179,7 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
 
                 childLocalFunction = LocalFunctionStatement(
                     default,
-                    CSharpTypeFactory.BoolType(),
+                    GetReturnType(context),
                     Identifier(functionName),
                     ParameterList(Parameter(elementType, parameterName)),
                     block);
@@ -188,8 +199,8 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
                 invocationInfo.Expression,
                 Block(
                     IfStatement(
-                        GetCondition(condition, semanticModel, cancellationToken),
-                        Block(GetFirstReturnStatement()))));
+                        GetCondition(context, condition),
+                        Block(GetFirstReturnStatement(context)))));
 
             forEachStatement = forEachStatement.WithFormatterAnnotation();
 
@@ -200,12 +211,12 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
 
             LocalFunctionStatementSyntax newLocalFunction = LocalFunctionStatement(
                 default,
-                CSharpTypeFactory.BoolType(),
+                GetReturnType(context),
                 Identifier(functionName).WithRenameAnnotation(),
                 ParameterList(parameters),
                 (childLocalFunction != null)
-                    ? Block(forEachStatement, GetLastReturnStatement(), childLocalFunction)
-                    : Block(forEachStatement, GetLastReturnStatement()));
+                    ? Block(forEachStatement, GetLastReturnStatement(context), childLocalFunction)
+                    : Block(forEachStatement, GetLastReturnStatement(context)));
 
             newLocalFunction = newLocalFunction.WithFormatterAnnotation();
 

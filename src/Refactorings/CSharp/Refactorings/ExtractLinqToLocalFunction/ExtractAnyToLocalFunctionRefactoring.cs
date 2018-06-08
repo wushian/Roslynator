@@ -13,14 +13,19 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
             get { return "Any"; }
         }
 
-        protected override ReturnStatementSyntax GetFirstReturnStatement()
+        protected override ReturnStatementSyntax GetFirstReturnStatement(in ExtractLinqToLocalFunctionRefactoringContext context)
         {
             return ReturnStatement(TrueLiteralExpression());
         }
 
-        protected override ReturnStatementSyntax GetLastReturnStatement()
+        protected override ReturnStatementSyntax GetLastReturnStatement(in ExtractLinqToLocalFunctionRefactoringContext context)
         {
             return ReturnStatement(FalseLiteralExpression());
+        }
+
+        protected override TypeSyntax GetReturnType(in ExtractLinqToLocalFunctionRefactoringContext context)
+        {
+            return CSharpTypeFactory.BoolType();
         }
     }
 }

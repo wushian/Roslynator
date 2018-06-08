@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
 {
@@ -9,17 +9,24 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
     {
         public override string MethodName
         {
-            get { throw new NotImplementedException(); }
+            get { return "FirstOrDefault"; }
         }
 
-        protected override ReturnStatementSyntax GetFirstReturnStatement()
+        protected override ReturnStatementSyntax GetFirstReturnStatement(in ExtractLinqToLocalFunctionRefactoringContext context)
         {
-            throw new NotImplementedException();
+            return ReturnStatement(IdentifierName(context.Parameter.Identifier.ValueText));
         }
 
-        protected override ReturnStatementSyntax GetLastReturnStatement()
+        protected override ReturnStatementSyntax GetLastReturnStatement(in ExtractLinqToLocalFunctionRefactoringContext context)
         {
-            throw new NotImplementedException();
+            ExpressionSyntax expression = context.ElementTypeSymbol.GetDefaultValueSyntax(context.ElementType);
+
+            return ReturnStatement(expression);
+        }
+
+        protected override TypeSyntax GetReturnType(in ExtractLinqToLocalFunctionRefactoringContext context)
+        {
+            return context.ElementType;
         }
     }
 }
