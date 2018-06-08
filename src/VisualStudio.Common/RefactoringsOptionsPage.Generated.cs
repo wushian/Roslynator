@@ -22,7 +22,7 @@ namespace Roslynator.VisualStudio
             get;
         }
 
-        = RefactoringIdentifiers.ReplaceLinqWithForEach;
+        = RefactoringIdentifiers.ExtractLinqToLocalFunction;
         internal static void SetRefactoringsDisabledByDefault(RefactoringSettings settings)
         {
             settings.DisableRefactoring(RefactoringIdentifiers.AddIdentifierToParameter);
@@ -231,7 +231,7 @@ namespace Roslynator.VisualStudio
             refactorings.Add(new BaseModel(RefactoringIdentifiers.ExtractEventHandlerMethod, "Extract event handler method", IsEnabled(RefactoringIdentifiers.ExtractEventHandlerMethod)));
             refactorings.Add(new BaseModel(RefactoringIdentifiers.GeneratePropertyForDebuggerDisplayAttribute, "Generate property for DebuggerDisplay attribute", IsEnabled(RefactoringIdentifiers.GeneratePropertyForDebuggerDisplayAttribute)));
             refactorings.Add(new BaseModel(RefactoringIdentifiers.AddEmptyLineBetweenDeclarations, "Add empty line between declarations", IsEnabled(RefactoringIdentifiers.AddEmptyLineBetweenDeclarations)));
-            refactorings.Add(new BaseModel(RefactoringIdentifiers.ReplaceLinqWithForEach, "Replace LINQ method call with foreach", IsEnabled(RefactoringIdentifiers.ReplaceLinqWithForEach)));
+            refactorings.Add(new BaseModel(RefactoringIdentifiers.ExtractLinqToLocalFunction, "Extract LINQ method call to local function", IsEnabled(RefactoringIdentifiers.ExtractLinqToLocalFunction)));
         }
     }
 }

@@ -7,95 +7,11 @@ using Xunit;
 
 namespace Roslynator.CSharp.Refactorings.Tests
 {
-    public class RRX002ReplaceLinqWithForEachTests : AbstractCSharpCodeRefactoringVerifier
+    public class RRX002ExtractLinqToLocalFunctionTests : AbstractCSharpCodeRefactoringVerifier
     {
-        public override string RefactoringId { get; } = RefactoringIdentifiers.ReplaceLinqWithForEach;
+        public override string RefactoringId { get; } = RefactoringIdentifiers.ExtractLinqToLocalFunction;
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
-        public async Task Test_SimpleLambda_ToForEach()
-        {
-            await VerifyRefactoringAsync(@"
-using System.Collections.Generic;
-using System.Linq;
-
-class C
-{
-    void M()
-    {
-        string s = null;
-        var items = new List<string>();
-
-        bool x = items.[||]Any(f => f == s);
-    }
-}
-", @"
-using System.Collections.Generic;
-using System.Linq;
-
-class C
-{
-    void M()
-    {
-        string s = null;
-        var items = new List<string>();
-
-        bool x = false;
-        foreach (string f in items)
-        {
-            if (f == s)
-            {
-                x = true;
-                break;
-            }
-        }
-    }
-}
-", equivalenceKey: RefactoringId);
-        }
-
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
-        public async Task Test_ParenthesizedLambda_ToForEach()
-        {
-            await VerifyRefactoringAsync(@"
-using System.Collections.Generic;
-using System.Linq;
-
-class C
-{
-    void M()
-    {
-        string s = null;
-        var items = new List<string>();
-
-        bool x = items.[||]Any((f) => f == s);
-    }
-}
-", @"
-using System.Collections.Generic;
-using System.Linq;
-
-class C
-{
-    void M()
-    {
-        string s = null;
-        var items = new List<string>();
-
-        bool x = false;
-        foreach (string f in items)
-        {
-            if (f == s)
-            {
-                x = true;
-                break;
-            }
-        }
-    }
-}
-", equivalenceKey: RefactoringId);
-        }
-
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
         public async Task Test_SimpleLambda_ToLocalFunction()
         {
             await VerifyRefactoringAsync(@"
@@ -146,10 +62,10 @@ class C
         }
     }
 }
-", equivalenceKey: EquivalenceKey.Join(RefactoringId, "LocalFunction"));
+", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
         public async Task Test_ParenthesizedLambda_ToLocalFunction()
         {
             await VerifyRefactoringAsync(@"
@@ -192,10 +108,10 @@ class C
         }
     }
 }
-", equivalenceKey: EquivalenceKey.Join(RefactoringId, "LocalFunction"));
+", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
         public async Task Test_SimpleLambda_ToLocalFunction_BlockBody()
         {
             await VerifyRefactoringAsync(@"
@@ -259,10 +175,10 @@ class C
         }
     }
 }
-", equivalenceKey: EquivalenceKey.Join(RefactoringId, "LocalFunction"));
+", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
         public async Task Test_ParenthesizedLambda_ToLocalFunction_BlockBody()
         {
             await VerifyRefactoringAsync(@"
@@ -326,10 +242,10 @@ class C
         }
     }
 }
-", equivalenceKey: EquivalenceKey.Join(RefactoringId, "LocalFunction"));
+", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
         public async Task Test_AnonymousMethod_ToLocalFunction_BlockBody()
         {
             await VerifyRefactoringAsync(@"
@@ -393,10 +309,68 @@ class C
         }
     }
 }
-", equivalenceKey: EquivalenceKey.Join(RefactoringId, "LocalFunction"));
+", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
+        public async Task Test_SimpleLambda_ToLocalFunction_ExpressionBody()
+        {
+            await VerifyRefactoringAsync(@"
+using System.Collections.Generic;
+using System.Linq;
+
+class C
+{
+    bool M(IEnumerable<string> items, string s) => items.[||]Any(f =>
+    {
+        if (f == s)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    });
+}
+", @"
+using System.Collections.Generic;
+using System.Linq;
+
+class C
+{
+    bool M(IEnumerable<string> items, string s)
+    {
+        return Any2();
+        bool Any2()
+        {
+            foreach (string f in items)
+            {
+                if (Any(f))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+            bool Any(string f)
+            {
+                if (f == s)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+    }
+}
+", equivalenceKey: RefactoringId);
+        }
+
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
         public async Task TestNoRefactoring_NoCapturedVariable()
         {
             await VerifyNoRefactoringAsync(@"
@@ -415,7 +389,7 @@ class C
 ", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
         public async Task TestNoRefactoring_BodyIsBlock()
         {
             await VerifyNoRefactoringAsync(@"
