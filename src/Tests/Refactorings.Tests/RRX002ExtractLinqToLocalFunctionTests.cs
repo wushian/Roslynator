@@ -66,6 +66,52 @@ class C
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
+        public async Task Test_Any_SimpleLambda_AnonymousType()
+        {
+            await VerifyRefactoringAsync(@"
+using System.Collections.Generic;
+using System.Linq;
+
+class C
+{
+    void M()
+    {
+        string s = null;
+        var items = new List<string>();
+
+        bool x = items.Select(f => new { P = f }).[||]Any(f => object.Equals(f, s));
+    }
+}
+", @"
+using System.Collections.Generic;
+using System.Linq;
+
+class C
+{
+    void M()
+    {
+        string s = null;
+        var items = new List<string>();
+
+        bool x = Any();
+        bool Any()
+        {
+            foreach (var f in items.Select(f => new { P = f }))
+            {
+                if (object.Equals(f, s))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+}
+", equivalenceKey: RefactoringId);
+        }
+
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
         public async Task Test_Any_ParenthesizedLambda()
         {
             await VerifyRefactoringAsync(@"
@@ -514,6 +560,43 @@ class C
         {
             return string.IsNullOrEmpty(f);
         });
+    }
+}
+", equivalenceKey: RefactoringId);
+        }
+
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
+        public async Task TestNoRefactoring_Any_BlockBody_TypeDoesNotSupportExplicitDeclaration()
+        {
+            await VerifyNoRefactoringAsync(@"
+using System.Linq;
+
+class C
+{
+    void M()
+    {
+        string s = null;
+        bool x = Enumerable.Empty<string>().Select(f => new { P = f }).[||]Any(f =>
+        {
+            return object.Equals(f, s);
+        });
+    }
+}
+", equivalenceKey: RefactoringId);
+        }
+
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
+        public async Task TestNoRefactoring_FirstOrDefault_TypeDoesNotSupportExplicitDeclaration()
+        {
+            await VerifyNoRefactoringAsync(@"
+using System.Linq;
+
+class C
+{
+    void M()
+    {
+        string s = null;
+        var x = Enumerable.Empty<string>().Select(f => new { P = f }).[||]FirstOrDefault(f => object.Equals(f, s));
     }
 }
 ", equivalenceKey: RefactoringId);

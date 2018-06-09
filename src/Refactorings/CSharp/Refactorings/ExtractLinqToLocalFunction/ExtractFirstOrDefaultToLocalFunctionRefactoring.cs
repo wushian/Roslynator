@@ -5,8 +5,14 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
 {
-    internal class ExtractFirstOrDefaultToLocalFunctionRefactoring : ExtractLinqToLocalFunctionRefactoring
+    internal sealed class ExtractFirstOrDefaultToLocalFunctionRefactoring : ExtractLinqToLocalFunctionRefactoring
     {
+        public static ExtractFirstOrDefaultToLocalFunctionRefactoring Instance { get; } = new ExtractFirstOrDefaultToLocalFunctionRefactoring();
+
+        private ExtractFirstOrDefaultToLocalFunctionRefactoring()
+        {
+        }
+
         public override string MethodName
         {
             get { return "FirstOrDefault"; }

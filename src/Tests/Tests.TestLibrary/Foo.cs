@@ -17,7 +17,7 @@ using Roslynator.CSharp;
 using Roslynator.CSharp.Syntax;
 #endregion usings
 
-#pragma warning disable RCS1018, RCS1213, CA1822
+#pragma warning disable RCS1018, RCS1118, RCS1213, CA1822
 
 namespace Roslynator.Tests
 {
@@ -179,6 +179,17 @@ namespace Roslynator.Tests
                     break;
                 }
             }
+        }
+    }
+
+    class C_FirstOrDefault
+    {
+        void M()
+        {
+            string s = null;
+            IEnumerable<string> items = Enumerable.Empty<string>();
+
+            var x = items.Select(f => new { P = f }).FirstOrDefault(f => object.Equals(f, s));
         }
     }
 }

@@ -10,27 +10,22 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
     {
         public ExtractLinqToLocalFunctionRefactoringContext(
             ParameterSyntax parameter,
-            IMethodSymbol methodSymbol,
+            ITypeSymbol elementTypeSymbol,
             TypeSyntax elementType,
             SemanticModel semanticModel,
             CancellationToken cancellationToken)
         {
             Parameter = parameter;
-            MethodSymbol = methodSymbol;
+            ElementTypeSymbol = elementTypeSymbol;
             ElementType = elementType;
             SemanticModel = semanticModel;
             CancellationToken = cancellationToken;
         }
 
         public ParameterSyntax Parameter { get; }
-        public IMethodSymbol MethodSymbol { get; }
+        public ITypeSymbol ElementTypeSymbol { get; }
         public TypeSyntax ElementType { get; }
         public SemanticModel SemanticModel { get; }
         public CancellationToken CancellationToken { get; }
-
-        public ITypeSymbol ElementTypeSymbol
-        {
-            get { return MethodSymbol.TypeArguments[0]; }
-        }
     }
 }

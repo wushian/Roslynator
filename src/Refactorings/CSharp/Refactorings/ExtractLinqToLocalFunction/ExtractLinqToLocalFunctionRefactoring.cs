@@ -11,6 +11,7 @@ using Roslynator.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Roslynator.CSharp.CSharpFactory;
 using static Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction.ExtractLinqToLocalFunctionHelpers;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
 {
@@ -63,13 +64,35 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
 
             ExtensionMethodSymbolInfo extensionMethodSymbolInfo = semanticModel.GetReducedExtensionMethodInfo(invocationExpression, context.CancellationToken);
 
-            if (extensionMethodSymbolInfo.Symbol == null)
+            IMethodSymbol reducedSymbol = extensionMethodSymbolInfo.ReducedSymbol;
+
+            if (reducedSymbol == null)
                 return;
+
+            ITypeSymbol typeArgument = reducedSymbol.TypeArguments[0];
+
+            bool? supportsExplicitDeclaration = null;
+
+            if (methodName == "FirstOrDefault")
+            {
+                supportsExplicitDeclaration = typeArgument.SupportsExplicitDeclaration();
+
+                if (supportsExplicitDeclaration == false)
+                    return;
+            }
 
             if (!SymbolUtility.IsLinqExtensionOfIEnumerableOfTWithPredicate(extensionMethodSymbolInfo.Symbol, methodName, allowImmutableArrayExtension: true))
                 return;
 
             AnonymousFunctionAnalysis analysis = AnonymousFunctionAnalysis.Create(argumentExpression, semanticModel);
+
+            if (analysis.Body.IsKind(SyntaxKind.Block))
+            {
+                supportsExplicitDeclaration = supportsExplicitDeclaration ?? typeArgument.SupportsExplicitDeclaration();
+
+                if (supportsExplicitDeclaration == false)
+                    return;
+            }
 
             if (analysis.Captured.IsDefaultOrEmpty)
                 return;
@@ -84,11 +107,11 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
                 switch (methodName)
                 {
                     case "Any":
-                        return ct => ExtractLinqToLocalFunctionRefactorings.ExtractAny.RefactorAsync(context.Document, invocationExpression, bodyOrExpressionBody, extensionMethodSymbolInfo.ReducedSymbol, semanticModel, ct);
+                        return ct => ExtractAnyToLocalFunctionRefactoring.Instance.RefactorAsync(context.Document, invocationExpression, bodyOrExpressionBody, typeArgument, semanticModel, ct);
                     case "All":
-                        return ct => ExtractLinqToLocalFunctionRefactorings.ExtractAll.RefactorAsync(context.Document, invocationExpression, bodyOrExpressionBody, extensionMethodSymbolInfo.ReducedSymbol, semanticModel, ct);
+                        return ct => ExtractAllToLocalFunctionRefactoring.Instance.RefactorAsync(context.Document, invocationExpression, bodyOrExpressionBody, typeArgument, semanticModel, ct);
                     case "FirstOrDefault":
-                        return ct => ExtractLinqToLocalFunctionRefactorings.ExtractFirstOrDefault.RefactorAsync(context.Document, invocationExpression, bodyOrExpressionBody, extensionMethodSymbolInfo.ReducedSymbol, semanticModel, ct);
+                        return ct => ExtractFirstOrDefaultToLocalFunctionRefactoring.Instance.RefactorAsync(context.Document, invocationExpression, bodyOrExpressionBody, typeArgument, semanticModel, ct);
                     default:
                         throw new InvalidOperationException();
                 }
@@ -99,7 +122,7 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
             Document document,
             InvocationExpressionSyntax invocationExpression,
             SyntaxNode bodyOrExpressionBody,
-            IMethodSymbol methodSymbol,
+            ITypeSymbol typeArgument,
             SemanticModel semanticModel,
             CancellationToken cancellationToken)
         {
@@ -113,10 +136,15 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
 
             AnonymousFunctionAnalysis analysis = AnonymousFunctionAnalysis.Create(argumentExpression, semanticModel);
 
-            TypeSyntax elementType = methodSymbol
-                .TypeArguments[0]
-                .ToTypeSyntax()
-                .WithSimplifierAnnotation();
+            TypeSyntax elementType;
+            if (typeArgument.SupportsExplicitDeclaration())
+            {
+                elementType = typeArgument.ToTypeSyntax().WithSimplifierAnnotation();
+            }
+            else
+            {
+                elementType = VarType();
+            }
 
             ParameterSyntax parameter = analysis.Parameter;
 
@@ -162,7 +190,7 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
 
             var context = new ExtractLinqToLocalFunctionRefactoringContext(
                 parameter,
-                methodSymbol,
+                typeArgument,
                 elementType,
                 semanticModel,
                 cancellationToken);

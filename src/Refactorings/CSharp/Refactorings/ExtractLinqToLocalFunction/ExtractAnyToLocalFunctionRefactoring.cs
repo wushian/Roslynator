@@ -6,8 +6,14 @@ using static Roslynator.CSharp.CSharpFactory;
 
 namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
 {
-    internal class ExtractAnyToLocalFunctionRefactoring : ExtractLinqToLocalFunctionRefactoring
+    internal sealed class ExtractAnyToLocalFunctionRefactoring : ExtractLinqToLocalFunctionRefactoring
     {
+        public static ExtractAnyToLocalFunctionRefactoring Instance { get; } = new ExtractAnyToLocalFunctionRefactoring();
+
+        private ExtractAnyToLocalFunctionRefactoring()
+        {
+        }
+
         public override string MethodName
         {
             get { return "Any"; }
