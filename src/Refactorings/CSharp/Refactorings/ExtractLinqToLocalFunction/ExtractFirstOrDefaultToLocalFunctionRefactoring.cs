@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
@@ -7,9 +9,14 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
 {
     internal sealed class ExtractFirstOrDefaultToLocalFunctionRefactoring : ExtractLinqToLocalFunctionRefactoring
     {
-        public static ExtractFirstOrDefaultToLocalFunctionRefactoring Instance { get; } = new ExtractFirstOrDefaultToLocalFunctionRefactoring();
-
-        private ExtractFirstOrDefaultToLocalFunctionRefactoring()
+        public ExtractFirstOrDefaultToLocalFunctionRefactoring(
+            Document document,
+            InvocationExpressionSyntax invocationExpression,
+            SyntaxNode body,
+            SyntaxNode containingBody,
+            ITypeSymbol elementTypeSymbol,
+            ImmutableArray<ISymbol> capturedSymbols,
+            SemanticModel semanticModel) : base(document, invocationExpression, body, containingBody, elementTypeSymbol, capturedSymbols, semanticModel)
         {
         }
 
@@ -18,21 +25,21 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
             get { return "FirstOrDefault"; }
         }
 
-        protected override ReturnStatementSyntax GetFirstReturnStatement(in ExtractLinqToLocalFunctionRefactoringContext context)
+        protected override ReturnStatementSyntax GetFirstReturnStatement()
         {
-            return ReturnStatement(IdentifierName(context.Parameter.Identifier.ValueText));
+            return ReturnStatement(IdentifierName(Parameter.Identifier.ValueText));
         }
 
-        protected override ReturnStatementSyntax GetLastReturnStatement(in ExtractLinqToLocalFunctionRefactoringContext context)
+        protected override ReturnStatementSyntax GetLastReturnStatement()
         {
-            ExpressionSyntax expression = context.ElementTypeSymbol.GetDefaultValueSyntax(context.ElementType);
+            ExpressionSyntax expression = ElementTypeSymbol.GetDefaultValueSyntax(ElementType);
 
             return ReturnStatement(expression);
         }
 
-        protected override TypeSyntax GetReturnType(in ExtractLinqToLocalFunctionRefactoringContext context)
+        protected override TypeSyntax GetReturnType()
         {
-            return context.ElementType;
+            return ElementType;
         }
     }
 }

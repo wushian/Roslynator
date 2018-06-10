@@ -1,6 +1,5 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
@@ -62,22 +61,9 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
 
         public ImmutableArray<ISymbol> Captured { get; }
 
-        public ParameterSyntax Parameter
+        public bool IsLambda
         {
-            get
-            {
-                switch (Kind)
-                {
-                    case SyntaxKind.SimpleLambdaExpression:
-                        return ((SimpleLambdaExpressionSyntax)Body.Parent).Parameter;
-                    case SyntaxKind.ParenthesizedLambdaExpression:
-                        return ((ParenthesizedLambdaExpressionSyntax)Body.Parent).ParameterList?.Parameters.FirstOrDefault();
-                    case SyntaxKind.AnonymousMethodExpression:
-                        return ((AnonymousMethodExpressionSyntax)Body.Parent).ParameterList?.Parameters.FirstOrDefault();
-                    default:
-                        throw new InvalidOperationException();
-                }
-            }
+            get { return Kind.Is(SyntaxKind.SimpleLambdaExpression, SyntaxKind.ParenthesizedLambdaExpression); }
         }
     }
 }

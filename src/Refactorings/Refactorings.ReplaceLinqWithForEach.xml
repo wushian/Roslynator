@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Refactorings>
-  <Refactoring Id="RRX002" Identifier="ExtractLinqToLocalFunction" Title="Extract LINQ method call to local function">
+  <Refactoring Id="RRX003" Identifier="ReplaceLinqWithForEach" Title="Replace LINQ method call with foreach">
     <Syntaxes>
       <Syntax>LINQ 'Any/All'FirstOrDefault' method invocation</Syntax>
     </Syntaxes>
@@ -18,19 +18,15 @@
 {
     bool M(IEnumerable<string> items, string s)
     {
-        return Any();
-        bool Any()
+        foreach (string f in items)
         {
-            foreach (string f in items)
+            if (f == s)
             {
-                if (f == s)
-                {
-                    return true;
-                }
+                return true;
             }
-
-            return false;
         }
+
+        return false;
     }
 }]]></After>
       </Sample>

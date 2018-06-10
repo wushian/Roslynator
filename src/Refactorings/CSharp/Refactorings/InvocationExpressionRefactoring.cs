@@ -14,12 +14,12 @@ namespace Roslynator.CSharp.Refactorings
     {
         public static async Task ComputeRefactoringsAsync(RefactoringContext context, InvocationExpressionSyntax invocationExpression)
         {
-            if (context.IsAnyRefactoringEnabled(
-                RefactoringIdentifiers.UseElementAccessInsteadOfEnumerableMethod,
-                RefactoringIdentifiers.ExtractLinqToLocalFunction,
-                RefactoringIdentifiers.ReplaceAnyWithAllOrAllWithAny,
-                RefactoringIdentifiers.CallExtensionMethodAsInstanceMethod,
-                RefactoringIdentifiers.CallIndexOfInsteadOfContains))
+            if (context.IsRefactoringEnabled(RefactoringIdentifiers.UseElementAccessInsteadOfEnumerableMethod)
+                || context.IsRefactoringEnabled(RefactoringIdentifiers.ExtractLinqToLocalFunction)
+                || context.IsRefactoringEnabled(RefactoringIdentifiers.ReplaceLinqWithForEach)
+                || context.IsRefactoringEnabled(RefactoringIdentifiers.ReplaceAnyWithAllOrAllWithAny)
+                || context.IsRefactoringEnabled(RefactoringIdentifiers.CallExtensionMethodAsInstanceMethod)
+                || context.IsRefactoringEnabled(RefactoringIdentifiers.CallIndexOfInsteadOfContains))
             {
                 SimpleMemberInvocationExpressionInfo invocationInfo = SyntaxInfo.SimpleMemberInvocationExpressionInfo(invocationExpression);
 
@@ -32,8 +32,12 @@ namespace Roslynator.CSharp.Refactorings
                         if (context.IsRefactoringEnabled(RefactoringIdentifiers.UseElementAccessInsteadOfEnumerableMethod))
                             UseElementAccessRefactoring.ComputeRefactorings(context, invocationInfo, semanticModel);
 
-                        if (context.IsRefactoringEnabled(RefactoringIdentifiers.ExtractLinqToLocalFunction))
+                        if (context.IsAnyRefactoringEnabled(
+                            RefactoringIdentifiers.ExtractLinqToLocalFunction,
+                            RefactoringIdentifiers.ReplaceLinqWithForEach))
+                        {
                             ExtractLinqToLocalFunctionRefactoring.ComputeRefactorings(context, invocationInfo, semanticModel);
+                        }
 
                         if (context.IsRefactoringEnabled(RefactoringIdentifiers.ReplaceAnyWithAllOrAllWithAny))
                             ReplaceAnyWithAllOrAllWithAnyRefactoring.ComputeRefactoring(context, invocationExpression, semanticModel);
