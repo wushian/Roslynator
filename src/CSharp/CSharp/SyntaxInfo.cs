@@ -286,6 +286,21 @@ namespace Roslynator.CSharp
                 allowMissing);
         }
 
+        internal static LambdaExpressionInfo LambdaExpressionInfo(
+            SyntaxNode node,
+            bool walkDownParentheses = true,
+            bool allowMissing = false)
+        {
+            return Syntax.LambdaExpressionInfo.Create(node, walkDownParentheses, allowMissing);
+        }
+
+        internal static LambdaExpressionInfo LambdaExpressionInfo(
+            LambdaExpressionSyntax lambdaExpression,
+            bool allowMissing = false)
+        {
+            return Syntax.LambdaExpressionInfo.Create(lambdaExpression, allowMissing);
+        }
+
         /// <summary>
         /// Creates a new <see cref="Syntax.LocalDeclarationStatementInfo"/> from the specified local declaration statement.
         /// </summary>

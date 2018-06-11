@@ -22,7 +22,7 @@ namespace Roslynator.VisualStudio
             get;
         }
 
-        = RefactoringIdentifiers.ReplaceLinqWithForEach;
+        = RefactoringIdentifiers.ExpandLinqOperation;
         internal static void SetRefactoringsDisabledByDefault(RefactoringSettings settings)
         {
             settings.DisableRefactoring(RefactoringIdentifiers.AddIdentifierToParameter);
@@ -233,6 +233,7 @@ namespace Roslynator.VisualStudio
             refactorings.Add(new BaseModel(RefactoringIdentifiers.AddEmptyLineBetweenDeclarations, "Add empty line between declarations", IsEnabled(RefactoringIdentifiers.AddEmptyLineBetweenDeclarations)));
             refactorings.Add(new BaseModel(RefactoringIdentifiers.ExtractLinqToLocalFunction, "Extract LINQ method call to local function", IsEnabled(RefactoringIdentifiers.ExtractLinqToLocalFunction)));
             refactorings.Add(new BaseModel(RefactoringIdentifiers.ReplaceLinqWithForEach, "Replace LINQ method call with foreach", IsEnabled(RefactoringIdentifiers.ReplaceLinqWithForEach)));
+            refactorings.Add(new BaseModel(RefactoringIdentifiers.ExpandLinqOperation, "Expand LINQ method operation", IsEnabled(RefactoringIdentifiers.ExpandLinqOperation)));
         }
     }
 }

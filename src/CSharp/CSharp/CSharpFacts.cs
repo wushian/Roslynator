@@ -920,5 +920,12 @@ namespace Roslynator.CSharp
                     return 0;
             }
         }
+
+        //TODO: make public
+        internal static bool IsForEachExpression(SyntaxNode node)
+        {
+            return node.IsParentKind(SyntaxKind.ForEachStatement, SyntaxKind.ForEachVariableStatement)
+                && node == ((ForEachStatementSyntax)node.Parent).Expression;
+        }
     }
 }

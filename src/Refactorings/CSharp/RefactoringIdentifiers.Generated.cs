@@ -47,6 +47,7 @@ namespace Roslynator.CSharp.Refactorings
         public const string ExpandExpressionBody = Prefix + "0037";
         public const string ExpandInitializer = Prefix + "0038";
         public const string ExpandLambdaExpressionBody = Prefix + "0039";
+        public const string ExpandLinqOperation = Prefix + "X004";
         public const string ExpandProperty = Prefix + "0040";
         public const string ExpandPropertyAndAddBackingField = Prefix + "0041";
         public const string ExtractEventHandlerMethod = Prefix + "0203";

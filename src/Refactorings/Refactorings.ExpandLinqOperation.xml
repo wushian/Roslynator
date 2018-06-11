@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Refactorings>
+  <Refactoring Id="RRX004" Identifier="ExpandLinqOperation" Title="Expand LINQ method operation">
+    <Syntaxes>
+      <Syntax>LINQ 'Any/All'FirstOrDefault' method invocation</Syntax>
+    </Syntaxes>
+    <Span>method name</Span>
+    <Samples>
+      <Sample>
+        <Before>
+          <![CDATA[class C
+{
+    bool M(IEnumerable<string> items, string s)
+    {
+        return items.[||]Any(f => f == s);
+    }
+}]]>
+        </Before>
+        <After>
+          <![CDATA[class C
+{
+    bool M(IEnumerable<string> items, string s)
+    {
+        foreach (string f in items)
+        {
+            if (f == s)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}]]>
+        </After>
+      </Sample>
+      <Sample>
+        <Before><![CDATA[void M(IEnumerable<string> items, string s)
+{
+    foreach (string item in items.Where(f => f == s))
+    {
+    }
+}]]></Before>
+        <After><![CDATA[void M(IEnumerable<string> items, string s)
+{
+    foreach (string item in items)
+    {
+        if (item == s)
+        {
+        }
+    }
+}]]></After>
+      </Sample>
+    </Samples>
+  </Refactoring>
+</Refactorings>

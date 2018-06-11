@@ -5,7 +5,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.Refactorings.InlineDefinition;
-using Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction;
 using Roslynator.CSharp.Syntax;
 
 namespace Roslynator.CSharp.Refactorings
@@ -18,6 +17,7 @@ namespace Roslynator.CSharp.Refactorings
                 || context.IsRefactoringEnabled(RefactoringIdentifiers.ExtractLinqToLocalFunction)
                 || context.IsRefactoringEnabled(RefactoringIdentifiers.ReplaceLinqWithForEach)
                 || context.IsRefactoringEnabled(RefactoringIdentifiers.ReplaceAnyWithAllOrAllWithAny)
+                || context.IsRefactoringEnabled(RefactoringIdentifiers.ExpandLinqOperation)
                 || context.IsRefactoringEnabled(RefactoringIdentifiers.CallExtensionMethodAsInstanceMethod)
                 || context.IsRefactoringEnabled(RefactoringIdentifiers.CallIndexOfInsteadOfContains))
             {
@@ -34,9 +34,10 @@ namespace Roslynator.CSharp.Refactorings
 
                         if (context.IsAnyRefactoringEnabled(
                             RefactoringIdentifiers.ExtractLinqToLocalFunction,
-                            RefactoringIdentifiers.ReplaceLinqWithForEach))
+                            RefactoringIdentifiers.ReplaceLinqWithForEach,
+                            RefactoringIdentifiers.ExpandLinqOperation))
                         {
-                            ExtractLinqToLocalFunctionRefactoring.ComputeRefactorings(context, invocationInfo, semanticModel);
+                            ExpandLinqOperationRefactoring.ComputeRefactorings(context, invocationInfo, semanticModel);
                         }
 
                         if (context.IsRefactoringEnabled(RefactoringIdentifiers.ReplaceAnyWithAllOrAllWithAny))
