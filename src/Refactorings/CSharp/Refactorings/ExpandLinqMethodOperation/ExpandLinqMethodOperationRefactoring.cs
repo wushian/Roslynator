@@ -2,22 +2,21 @@
 
 using System;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction;
 using Roslynator.CSharp.Syntax;
 using Roslynator.CSharp.SyntaxRewriters;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Roslynator.CSharp.CSharpFactory;
-using static Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction.ExtractLinqToLocalFunctionHelpers;
 
-namespace Roslynator.CSharp.Refactorings
+namespace Roslynator.CSharp.Refactorings.ExpandLinqMethodOperation
 {
-    internal static class ExpandLinqOperationRefactoring
+    internal static class ExpandLinqMethodOperationRefactoring
     {
         internal static void ComputeRefactorings(
             RefactoringContext context,
@@ -32,13 +31,6 @@ namespace Roslynator.CSharp.Refactorings
                 case "All":
                 case "FirstOrDefault":
                     {
-                        if (!context.IsAnyRefactoringEnabled(
-                            RefactoringIdentifiers.ExtractLinqToLocalFunction,
-                            RefactoringIdentifiers.ReplaceLinqWithForEach))
-                        {
-                            return;
-                        }
-
                         ExpressionSyntax argumentExpression = invocationInfo.Arguments.SingleOrDefault(shouldThrow: false).Expression?.WalkDownParentheses();
 
                         if (argumentExpression == null)
@@ -86,22 +78,21 @@ namespace Roslynator.CSharp.Refactorings
                         if (analysis.Captured.IsDefaultOrEmpty)
                             return;
 
-                        if (context.IsRefactoringEnabled(RefactoringIdentifiers.ReplaceLinqWithForEach)
-                            && !analysis.Body.IsKind(SyntaxKind.Block)
+                        if (!analysis.Body.IsKind(SyntaxKind.Block)
                             && analysis.IsLambda
                             && invocationExpression.WalkUpParentheses().IsParentKind(SyntaxKind.ReturnStatement, SyntaxKind.ArrowExpressionClause))
                         {
                             context.RegisterRefactoring(
                                 $"Replace '{methodName}' with foreach",
-                                ct => ReplaceLinqWithForEachRefactoring.RefactorAsync(context.Document, invocationExpression, reducedSymbol, semanticModel, ct),
-                                RefactoringIdentifiers.ReplaceLinqWithForEach);
+                                ct => ReplaceLinqWithForEachAsync(context.Document, invocationExpression, reducedSymbol, semanticModel, ct),
+                                RefactoringIdentifiers.ExpandLinqMethodOperation);
                         }
-                        else if (context.IsRefactoringEnabled(RefactoringIdentifiers.ExtractLinqToLocalFunction))
+                        else
                         {
                             context.RegisterRefactoring(
                                 $"Extract '{methodName}' to local function",
                                 ct => CreateRefactoring(invocationExpression, analysis.Body, containingBody, typeArgument, analysis.Captured).RefactorAsync(ct),
-                                RefactoringIdentifiers.ExtractLinqToLocalFunction);
+                                RefactoringIdentifiers.ExpandLinqMethodOperation);
                         }
 
                         break;
@@ -109,9 +100,6 @@ namespace Roslynator.CSharp.Refactorings
                 case "Select":
                 case "Where":
                     {
-                        if (!context.IsRefactoringEnabled(RefactoringIdentifiers.ExpandLinqOperation))
-                            return;
-
                         InvocationExpressionSyntax invocationExpression = invocationInfo.InvocationExpression;
 
                         ExpressionSyntax argumentExpression = invocationExpression.ArgumentList.Arguments.SingleOrDefault(shouldThrow: false)?.Expression;
@@ -120,6 +108,9 @@ namespace Roslynator.CSharp.Refactorings
                             return;
 
                         if (!CSharpFacts.IsForEachExpression(invocationExpression.WalkUpParentheses()))
+                            return;
+
+                        if (!(SyntaxInfo.LambdaExpressionInfo(argumentExpression).Body is ExpressionSyntax expressionBody))
                             return;
 
                         ExtensionMethodSymbolInfo extensionMethodSymbolInfo = semanticModel.GetReducedExtensionMethodInfo(invocationExpression, context.CancellationToken);
@@ -147,9 +138,6 @@ namespace Roslynator.CSharp.Refactorings
                                 }
                         }
 
-                        if (!(SyntaxInfo.LambdaExpressionInfo(argumentExpression).Body is ExpressionSyntax expressionBody))
-                            return;
-
                         ImmutableArray<ISymbol> captured = semanticModel.AnalyzeDataFlow(expressionBody).Captured;
 
                         if (captured.IsDefaultOrEmpty)
@@ -157,16 +145,13 @@ namespace Roslynator.CSharp.Refactorings
 
                         context.RegisterRefactoring(
                             $"Expand '{methodName}' operation",
-                            ct => RefactorAsync(context.Document, invocationExpression, reducedSymbol, semanticModel, ct),
-                            RefactoringIdentifiers.ExpandLinqOperation);
+                            ct => ExpandLinqOperationAsync(context.Document, invocationExpression, reducedSymbol, semanticModel, ct),
+                            RefactoringIdentifiers.ExpandLinqMethodOperation);
 
                         break;
                     }
                 case "OfType":
                     {
-                        if (!context.IsRefactoringEnabled(RefactoringIdentifiers.ExpandLinqOperation))
-                            return;
-
                         InvocationExpressionSyntax invocationExpression = invocationInfo.InvocationExpression;
 
                         if (invocationInfo.Arguments.Any())
@@ -198,8 +183,8 @@ namespace Roslynator.CSharp.Refactorings
 
                         context.RegisterRefactoring(
                             $"Expand '{methodName}' operation",
-                            ct => RefactorAsync(context.Document, invocationExpression, reducedSymbol, semanticModel, ct),
-                            RefactoringIdentifiers.ExpandLinqOperation);
+                            ct => ExpandLinqOperationAsync(context.Document, invocationExpression, reducedSymbol, semanticModel, ct),
+                            RefactoringIdentifiers.ExpandLinqMethodOperation);
 
                         break;
                     }
@@ -221,7 +206,7 @@ namespace Roslynator.CSharp.Refactorings
             }
         }
 
-        private static Task<Document> RefactorAsync(
+        private static Task<Document> ExpandLinqOperationAsync(
             Document document,
             InvocationExpressionSyntax invocationExpression,
             IMethodSymbol methodSymbol,
@@ -336,6 +321,168 @@ namespace Roslynator.CSharp.Refactorings
                 statement);
 
             return document.ReplaceNodeAsync(forEachStatement, newForEachStatement, cancellationToken);
+        }
+
+        private static Task<Document> ReplaceLinqWithForEachAsync(
+            Document document,
+            InvocationExpressionSyntax invocationExpression,
+            IMethodSymbol methodSymbol,
+            SemanticModel semanticModel,
+            CancellationToken cancellationToken)
+        {
+            SimpleMemberInvocationExpressionInfo invocationInfo = SyntaxInfo.SimpleMemberInvocationExpressionInfo(invocationExpression);
+
+            string name = null;
+            ExpressionSyntax condition = null;
+
+            switch (invocationInfo.Arguments.Single().Expression.WalkDownParentheses())
+            {
+                case SimpleLambdaExpressionSyntax simpleLambda:
+                    {
+                        name = simpleLambda.Parameter.Identifier.ValueText;
+                        condition = (ExpressionSyntax)simpleLambda.Body;
+                        break;
+                    }
+                case ParenthesizedLambdaExpressionSyntax parenthesizedLambda:
+                    {
+                        name = parenthesizedLambda.ParameterList.Parameters[0].Identifier.ValueText;
+                        condition = (ExpressionSyntax)parenthesizedLambda.Body;
+                        break;
+                    }
+                default:
+                    {
+                        throw new InvalidOperationException();
+                    }
+            }
+
+            if (methodSymbol.Name == "All")
+                condition = Negator.LogicallyNegate(condition, semanticModel, cancellationToken);
+
+            IfStatementSyntax ifStatement = IfStatement(
+                condition,
+                Block(ReturnStatement(GetFirstReturnExpression())));
+
+            ITypeSymbol typeArgument = methodSymbol.TypeArguments[0];
+
+            TypeSyntax elementType = (typeArgument.SupportsExplicitDeclaration())
+                    ? typeArgument.ToTypeSyntax().WithSimplifierAnnotation()
+                    : VarType();
+
+            ForEachStatementSyntax forEachStatement = ForEachStatement(
+                elementType,
+                Identifier(name).WithRenameAnnotation(),
+                invocationInfo.Expression,
+                Block(ifStatement));
+
+            forEachStatement = forEachStatement.WithFormatterAnnotation();
+
+            SyntaxNode parent = invocationExpression.WalkUpParentheses().Parent;
+
+            ReturnStatementSyntax lastReturnStatement = ReturnStatement(GetLastReturnExpression());
+
+            if (parent is ReturnStatementSyntax returnStatement)
+            {
+                forEachStatement = forEachStatement.WithLeadingTrivia(returnStatement.GetLeadingTrivia());
+                lastReturnStatement = lastReturnStatement.WithTrailingTrivia(returnStatement.GetTrailingTrivia());
+
+                return document.ReplaceNodeAsync(
+                    returnStatement,
+                    new StatementSyntax[] { forEachStatement, lastReturnStatement },
+                    cancellationToken);
+            }
+            else
+            {
+                var expressionBody = (ArrowExpressionClauseSyntax)parent;
+
+                (SyntaxNode node, BlockSyntax body) = ExpandExpressionBodyRefactoring.Refactor(expressionBody, semanticModel, cancellationToken);
+
+                returnStatement = (ReturnStatementSyntax)body.Statements.Single();
+
+                BlockSyntax newBody = body
+                    .ReplaceNode(returnStatement, new StatementSyntax[] { forEachStatement, lastReturnStatement })
+                    .WithFormatterAnnotation();
+
+                SyntaxNode newNode = node.ReplaceNode(body, newBody);
+
+                return document.ReplaceNodeAsync(expressionBody.Parent, newNode, cancellationToken);
+            }
+
+            ExpressionSyntax GetFirstReturnExpression()
+            {
+                switch (methodSymbol.Name)
+                {
+                    case "Any":
+                        return TrueLiteralExpression();
+                    case "All":
+                        return FalseLiteralExpression();
+                    case "FirstOrDefault":
+                        return IdentifierName(name);
+                    default:
+                        throw new InvalidOperationException();
+                }
+            }
+
+            ExpressionSyntax GetLastReturnExpression()
+            {
+                switch (methodSymbol.Name)
+                {
+                    case "Any":
+                        return FalseLiteralExpression();
+                    case "All":
+                        return TrueLiteralExpression();
+                    case "FirstOrDefault":
+                        return typeArgument.GetDefaultValueSyntax(elementType);
+                    default:
+                        throw new InvalidOperationException();
+                }
+            }
+        }
+
+        private static SyntaxNode FindContainingBodyOrExpressionBody(SyntaxNode node)
+        {
+            for (SyntaxNode parent = node.Parent; parent != null; parent = parent.Parent)
+            {
+                switch (parent.Kind())
+                {
+                    case SyntaxKind.Block:
+                    case SyntaxKind.ArrowExpressionClause:
+                        {
+                            switch (parent.Parent.Kind())
+                            {
+                                case SyntaxKind.MethodDeclaration:
+                                case SyntaxKind.OperatorDeclaration:
+                                case SyntaxKind.ConversionOperatorDeclaration:
+                                case SyntaxKind.ConstructorDeclaration:
+                                case SyntaxKind.DestructorDeclaration:
+                                case SyntaxKind.PropertyDeclaration:
+                                case SyntaxKind.EventDeclaration:
+                                case SyntaxKind.IndexerDeclaration:
+                                case SyntaxKind.GetAccessorDeclaration:
+                                case SyntaxKind.SetAccessorDeclaration:
+                                case SyntaxKind.AddAccessorDeclaration:
+                                case SyntaxKind.RemoveAccessorDeclaration:
+                                case SyntaxKind.UnknownAccessorDeclaration:
+                                case SyntaxKind.LocalFunctionStatement:
+                                    return parent;
+                            }
+
+                            Debug.Assert(!parent.IsKind(SyntaxKind.ArrowExpressionClause));
+                            Debug.Assert(!(parent.Parent is MemberDeclarationSyntax), parent.Parent.Kind().ToString());
+                            break;
+                        }
+                    case SyntaxKind.FieldDeclaration:
+                        {
+                            return null;
+                        }
+                    default:
+                        {
+                            Debug.Assert(!(parent is MemberDeclarationSyntax), parent.Kind().ToString());
+                            break;
+                        }
+                }
+            }
+
+            return null;
         }
     }
 }

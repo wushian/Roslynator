@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Refactorings>
+  <Refactoring Id="RRX002" Identifier="ExpandLinqMethodOperation" Title="Expand LINQ method operation">
+    <Syntaxes>
+      <Syntax>'Any/All/FirstOrDefault/Select/Where/OfType' LINQ method invocation</Syntax>
+    </Syntaxes>
+    <Span>method name</Span>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[void M(IEnumerable<string> items, string s)
+{
+    foreach (string item in items.Where(f => f == s))
+    {
+    }
+}]]></Before>
+        <After><![CDATA[void M(IEnumerable<string> items, string s)
+{
+    foreach (string item in items)
+    {
+        if (item == s)
+        {
+        }
+    }
+}]]></After>
+      </Sample>
+      <Sample>
+        <Before><![CDATA[class C
+{
+    bool M(IEnumerable<string> items, string s)
+    {
+        return items.[||]Any(f => f == s);
+    }
+}]]></Before>
+        <After><![CDATA[class C
+{
+    bool M(IEnumerable<string> items, string s)
+    {
+        foreach (string f in items)
+        {
+            if (f == s)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}]]></After>
+      </Sample>
+      <Sample>
+        <Before><![CDATA[class C
+{
+    bool M(IEnumerable<string> items, string s)
+    {
+        return items.[||]Any(f => f == s);
+    }
+}]]></Before>
+        <After><![CDATA[class C
+{
+    bool M(IEnumerable<string> items, string s)
+    {
+        return Any();
+        bool Any()
+        {
+            foreach (string f in items)
+            {
+                if (f == s)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+}]]></After>
+      </Sample>
+    </Samples>
+  </Refactoring>
+</Refactorings>

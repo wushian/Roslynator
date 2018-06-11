@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Roslynator.CSharp.Analysis;
+using Roslynator.CSharp.Refactorings.ExpandLinqMethodOperation;
 using Roslynator.CSharp.Refactorings.InlineDefinition;
 using Roslynator.CSharp.Syntax;
 
@@ -14,10 +15,8 @@ namespace Roslynator.CSharp.Refactorings
         public static async Task ComputeRefactoringsAsync(RefactoringContext context, InvocationExpressionSyntax invocationExpression)
         {
             if (context.IsRefactoringEnabled(RefactoringIdentifiers.UseElementAccessInsteadOfEnumerableMethod)
-                || context.IsRefactoringEnabled(RefactoringIdentifiers.ExtractLinqToLocalFunction)
-                || context.IsRefactoringEnabled(RefactoringIdentifiers.ReplaceLinqWithForEach)
+                || context.IsRefactoringEnabled(RefactoringIdentifiers.ExpandLinqMethodOperation)
                 || context.IsRefactoringEnabled(RefactoringIdentifiers.ReplaceAnyWithAllOrAllWithAny)
-                || context.IsRefactoringEnabled(RefactoringIdentifiers.ExpandLinqOperation)
                 || context.IsRefactoringEnabled(RefactoringIdentifiers.CallExtensionMethodAsInstanceMethod)
                 || context.IsRefactoringEnabled(RefactoringIdentifiers.CallIndexOfInsteadOfContains))
             {
@@ -32,13 +31,8 @@ namespace Roslynator.CSharp.Refactorings
                         if (context.IsRefactoringEnabled(RefactoringIdentifiers.UseElementAccessInsteadOfEnumerableMethod))
                             UseElementAccessRefactoring.ComputeRefactorings(context, invocationInfo, semanticModel);
 
-                        if (context.IsAnyRefactoringEnabled(
-                            RefactoringIdentifiers.ExtractLinqToLocalFunction,
-                            RefactoringIdentifiers.ReplaceLinqWithForEach,
-                            RefactoringIdentifiers.ExpandLinqOperation))
-                        {
-                            ExpandLinqOperationRefactoring.ComputeRefactorings(context, invocationInfo, semanticModel);
-                        }
+                        if (context.IsRefactoringEnabled(RefactoringIdentifiers.ExpandLinqMethodOperation))
+                            ExpandLinqMethodOperationRefactoring.ComputeRefactorings(context, invocationInfo, semanticModel);
 
                         if (context.IsRefactoringEnabled(RefactoringIdentifiers.ReplaceAnyWithAllOrAllWithAny))
                             ReplaceAnyWithAllOrAllWithAnyRefactoring.ComputeRefactoring(context, invocationExpression, semanticModel);

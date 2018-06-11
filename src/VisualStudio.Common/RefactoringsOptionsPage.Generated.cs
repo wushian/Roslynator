@@ -22,7 +22,7 @@ namespace Roslynator.VisualStudio
             get;
         }
 
-        = RefactoringIdentifiers.ExpandLinqOperation;
+        = RefactoringIdentifiers.ExpandLinqMethodOperation;
         internal static void SetRefactoringsDisabledByDefault(RefactoringSettings settings)
         {
             settings.DisableRefactoring(RefactoringIdentifiers.AddIdentifierToParameter);
@@ -231,9 +231,7 @@ namespace Roslynator.VisualStudio
             refactorings.Add(new BaseModel(RefactoringIdentifiers.ExtractEventHandlerMethod, "Extract event handler method", IsEnabled(RefactoringIdentifiers.ExtractEventHandlerMethod)));
             refactorings.Add(new BaseModel(RefactoringIdentifiers.GeneratePropertyForDebuggerDisplayAttribute, "Generate property for DebuggerDisplay attribute", IsEnabled(RefactoringIdentifiers.GeneratePropertyForDebuggerDisplayAttribute)));
             refactorings.Add(new BaseModel(RefactoringIdentifiers.AddEmptyLineBetweenDeclarations, "Add empty line between declarations", IsEnabled(RefactoringIdentifiers.AddEmptyLineBetweenDeclarations)));
-            refactorings.Add(new BaseModel(RefactoringIdentifiers.ExtractLinqToLocalFunction, "Extract LINQ method call to local function", IsEnabled(RefactoringIdentifiers.ExtractLinqToLocalFunction)));
-            refactorings.Add(new BaseModel(RefactoringIdentifiers.ReplaceLinqWithForEach, "Replace LINQ method call with foreach", IsEnabled(RefactoringIdentifiers.ReplaceLinqWithForEach)));
-            refactorings.Add(new BaseModel(RefactoringIdentifiers.ExpandLinqOperation, "Expand LINQ method operation", IsEnabled(RefactoringIdentifiers.ExpandLinqOperation)));
+            refactorings.Add(new BaseModel(RefactoringIdentifiers.ExpandLinqMethodOperation, "Expand LINQ method operation", IsEnabled(RefactoringIdentifiers.ExpandLinqMethodOperation)));
         }
     }
 }

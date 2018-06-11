@@ -6,11 +6,11 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Roslynator.CSharp.CSharpFactory;
 
-namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
+namespace Roslynator.CSharp.Refactorings.ExpandLinqMethodOperation
 {
-    internal sealed class ExtractAllToLocalFunctionRefactoring : ExtractLinqToLocalFunctionRefactoring
+    internal sealed class ExtractAnyToLocalFunctionRefactoring : ExtractLinqToLocalFunctionRefactoring
     {
-        public ExtractAllToLocalFunctionRefactoring(
+        public ExtractAnyToLocalFunctionRefactoring(
             Document document,
             InvocationExpressionSyntax invocationExpression,
             SyntaxNode body,
@@ -23,22 +23,17 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
 
         public override string MethodName
         {
-            get { return "All"; }
-        }
-
-        protected override ExpressionSyntax GetCondition(ExpressionSyntax expression)
-        {
-            return Negator.LogicallyNegate(expression, SemanticModel);
+            get { return "Any"; }
         }
 
         protected override ReturnStatementSyntax GetFirstReturnStatement()
         {
-            return ReturnStatement(FalseLiteralExpression());
+            return ReturnStatement(TrueLiteralExpression());
         }
 
         protected override ReturnStatementSyntax GetLastReturnStatement()
         {
-            return ReturnStatement(TrueLiteralExpression());
+            return ReturnStatement(FalseLiteralExpression());
         }
 
         protected override TypeSyntax GetReturnType()

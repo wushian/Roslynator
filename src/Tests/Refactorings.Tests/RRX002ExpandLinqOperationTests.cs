@@ -7,11 +7,11 @@ using Xunit;
 
 namespace Roslynator.CSharp.Refactorings.Tests
 {
-    public class RRX004ExpandLinqOperationTests : AbstractCSharpCodeRefactoringVerifier
+    public partial class RRX002ExpandLinqOperationTests : AbstractCSharpCodeRefactoringVerifier
     {
-        public override string RefactoringId { get; } = RefactoringIdentifiers.ExpandLinqOperation;
+        public override string RefactoringId { get; } = RefactoringIdentifiers.ExpandLinqMethodOperation;
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
         public async Task Test_Select_SimpleLambda()
         {
             await VerifyRefactoringAsync(@"
@@ -46,7 +46,7 @@ class C
 ", equivalenceKey: RefactoringId);
     }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
         public async Task Test_Where_SimpleLambda()
         {
             await VerifyRefactoringAsync(@"
@@ -83,7 +83,7 @@ class C
 ", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
         public async Task Test_OfType_SimpleLambda()
         {
             await VerifyRefactoringAsync(@"
@@ -114,6 +114,28 @@ class C
             {
                 string s2 = item;
             }
+        }
+    }
+}
+", equivalenceKey: RefactoringId);
+        }
+
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task TestNoRefactoring_Select_AnonymousMethod()
+        {
+            await VerifyNoRefactoringAsync(@"
+using System.Collections.Generic;
+using System.Linq;
+
+class C
+{
+    void M(IEnumerable<string> items, string s)
+    {
+        foreach (int item in items.[||]Select(f =>
+        {
+            return f.Length + s.Length;
+        }))
+        {
         }
     }
 }

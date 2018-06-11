@@ -7,12 +7,10 @@ using Xunit;
 
 namespace Roslynator.CSharp.Refactorings.Tests
 {
-    public class RRX002ExtractLinqToLocalFunctionTests : AbstractCSharpCodeRefactoringVerifier
+    public partial class RRX002ExpandLinqOperationTests : AbstractCSharpCodeRefactoringVerifier
     {
-        public override string RefactoringId { get; } = RefactoringIdentifiers.ExtractLinqToLocalFunction;
-
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
-        public async Task Test_Any_SimpleLambda()
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task Test_Any_ToLocalFunction_SimpleLambda()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -20,10 +18,9 @@ using System.Linq;
 
 class C
 {
-    void M()
+    void M(IEnumerable<string> items)
     {
         string s = null;
-        var items = new List<string>();
 
         if (true)
         {
@@ -38,10 +35,9 @@ using System.Linq;
 
 class C
 {
-    void M()
+    void M(IEnumerable<string> items)
     {
         string s = null;
-        var items = new List<string>();
 
         if (true)
         {
@@ -65,8 +61,8 @@ class C
 ", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
-        public async Task Test_Any_SimpleLambda_AnonymousType()
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task Test_Any_ToLocalFunction_SimpleLambda_AnonymousType()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -74,10 +70,9 @@ using System.Linq;
 
 class C
 {
-    void M()
+    void M(IEnumerable<string> items)
     {
         string s = null;
-        var items = new List<string>();
 
         bool x = items.Select(f => new { P = f }).[||]Any(f => object.Equals(f, s));
     }
@@ -88,10 +83,9 @@ using System.Linq;
 
 class C
 {
-    void M()
+    void M(IEnumerable<string> items)
     {
         string s = null;
-        var items = new List<string>();
 
         bool x = Any();
         bool Any()
@@ -111,8 +105,8 @@ class C
 ", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
-        public async Task Test_Any_ParenthesizedLambda()
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task Test_Any_ToLocalFunction_ParenthesizedLambda()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -120,10 +114,9 @@ using System.Linq;
 
 class C
 {
-    void M()
+    void M(IEnumerable<string> items)
     {
         string s = null;
-        var items = new List<string>();
 
         bool x = items.[||]Any((f) => f == s);
     }
@@ -134,10 +127,9 @@ using System.Linq;
 
 class C
 {
-    void M()
+    void M(IEnumerable<string> items)
     {
         string s = null;
-        var items = new List<string>();
 
         bool x = Any();
         bool Any()
@@ -157,8 +149,8 @@ class C
 ", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
-        public async Task Test_Any_SimpleLambda_BlockBody()
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task Test_Any_ToLocalFunction_SimpleLambda_BlockBody()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -166,10 +158,9 @@ using System.Linq;
 
 class C
 {
-    void M()
+    void M(IEnumerable<string> items)
     {
         string s = null;
-        var items = new List<string>();
 
         bool x = items.[||]Any(f =>
         {
@@ -190,10 +181,9 @@ using System.Linq;
 
 class C
 {
-    void M()
+    void M(IEnumerable<string> items)
     {
         string s = null;
-        var items = new List<string>();
 
         bool x = Any2();
         bool Any2()
@@ -224,8 +214,8 @@ class C
 ", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
-        public async Task Test_Any_ParenthesizedLambda_BlockBody()
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task Test_Any_ToLocalFunction_ParenthesizedLambda_BlockBody()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -233,10 +223,9 @@ using System.Linq;
 
 class C
 {
-    void M()
+    void M(IEnumerable<string> items)
     {
         string s = null;
-        var items = new List<string>();
 
         bool x = items.[||]Any((f) =>
         {
@@ -257,10 +246,9 @@ using System.Linq;
 
 class C
 {
-    void M()
+    void M(IEnumerable<string> items)
     {
         string s = null;
-        var items = new List<string>();
 
         bool x = Any2();
         bool Any2()
@@ -291,8 +279,8 @@ class C
 ", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
-        public async Task Test_Any_AnonymousMethod_BlockBody()
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task Test_Any_ToLocalFunction_AnonymousMethod_BlockBody()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -300,10 +288,9 @@ using System.Linq;
 
 class C
 {
-    void M()
+    void M(IEnumerable<string> items)
     {
         string s = null;
-        var items = new List<string>();
 
         bool x = items.[||]Any(delegate(string f)
         {
@@ -324,10 +311,9 @@ using System.Linq;
 
 class C
 {
-    void M()
+    void M(IEnumerable<string> items)
     {
         string s = null;
-        var items = new List<string>();
 
         bool x = Any2();
         bool Any2()
@@ -358,8 +344,8 @@ class C
 ", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
-        public async Task Test_Any_SimpleLambda_ExpressionBody()
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task Test_Any_ToLocalFunction_SimpleLambda_ExpressionBody()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -416,8 +402,8 @@ class C
 ", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
-        public async Task Test_All_SimpleLambda()
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task Test_All_ToLocalFunction_SimpleLambda()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -425,10 +411,9 @@ using System.Linq;
 
 class C
 {
-    void M()
+    void M(IEnumerable<string> items)
     {
         string s = null;
-        var items = new List<string>();
 
         if (true)
         {
@@ -443,10 +428,9 @@ using System.Linq;
 
 class C
 {
-    void M()
+    void M(IEnumerable<string> items)
     {
         string s = null;
-        var items = new List<string>();
 
         if (true)
         {
@@ -470,8 +454,8 @@ class C
 ", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
-        public async Task Test_FirstOrDefault_SimpleLambda()
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task Test_FirstOrDefault_ToLocalFunction_SimpleLambda()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -479,10 +463,9 @@ using System.Linq;
 
 class C
 {
-    void M()
+    void M(IEnumerable<string> items)
     {
         string s = null;
-        var items = new List<string>();
 
         if (true)
         {
@@ -497,10 +480,9 @@ using System.Linq;
 
 class C
 {
-    void M()
+    void M(IEnumerable<string> items)
     {
         string s = null;
-        var items = new List<string>();
 
         if (true)
         {
@@ -524,8 +506,8 @@ class C
 ", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
-        public async Task TestNoRefactoring_NoCapturedVariable()
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task TestNoRefactoring_Any_ToLocalFunction_NoCapturedVariable()
         {
             await VerifyNoRefactoringAsync(@"
 using System.Collections.Generic;
@@ -533,18 +515,16 @@ using System.Linq;
 
 class C
 {
-    void M()
+    void M(IEnumerable<string> items)
     {
-        var items = new List<string>();
-
         bool x = items.[||]Any(f => string.IsNullOrEmpty(f));
     }
 }
 ", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
-        public async Task TestNoRefactoring_BodyIsBlock()
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task TestNoRefactoring_Any_ToLocalFunction_BlockBody_TypeDoesNotSupportExplicitDeclaration()
         {
             await VerifyNoRefactoringAsync(@"
 using System.Collections.Generic;
@@ -552,31 +532,10 @@ using System.Linq;
 
 class C
 {
-    void M()
-    {
-        var items = new List<string>();
-
-        bool x = items.[||]Any(f =>
-        {
-            return string.IsNullOrEmpty(f);
-        });
-    }
-}
-", equivalenceKey: RefactoringId);
-        }
-
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
-        public async Task TestNoRefactoring_Any_BlockBody_TypeDoesNotSupportExplicitDeclaration()
-        {
-            await VerifyNoRefactoringAsync(@"
-using System.Linq;
-
-class C
-{
-    void M()
+    void M(IEnumerable<string> items)
     {
         string s = null;
-        bool x = Enumerable.Empty<string>().Select(f => new { P = f }).[||]Any(f =>
+        bool x = items.Select(f => new { P = f }).[||]Any(f =>
         {
             return object.Equals(f, s);
         });
@@ -585,18 +544,19 @@ class C
 ", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExtractLinqToLocalFunction)]
-        public async Task TestNoRefactoring_FirstOrDefault_TypeDoesNotSupportExplicitDeclaration()
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task TestNoRefactoring_FirstOrDefault_ToLocalFunction_TypeDoesNotSupportExplicitDeclaration()
         {
             await VerifyNoRefactoringAsync(@"
+using System.Collections.Generic;
 using System.Linq;
 
 class C
 {
-    void M()
+    void M(IEnumerable<string> items)
     {
         string s = null;
-        var x = Enumerable.Empty<string>().Select(f => new { P = f }).[||]FirstOrDefault(f => object.Equals(f, s));
+        var x = items.Select(f => new { P = f }).[||]FirstOrDefault(f => object.Equals(f, s));
     }
 }
 ", equivalenceKey: RefactoringId);

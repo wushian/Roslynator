@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
+namespace Roslynator.CSharp.Refactorings.ExpandLinqMethodOperation
 {
     internal readonly struct AnonymousFunctionAnalysis
     {

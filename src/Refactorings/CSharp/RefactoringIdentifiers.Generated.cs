@@ -47,13 +47,12 @@ namespace Roslynator.CSharp.Refactorings
         public const string ExpandExpressionBody = Prefix + "0037";
         public const string ExpandInitializer = Prefix + "0038";
         public const string ExpandLambdaExpressionBody = Prefix + "0039";
-        public const string ExpandLinqOperation = Prefix + "X004";
+        public const string ExpandLinqMethodOperation = Prefix + "X002";
         public const string ExpandProperty = Prefix + "0040";
         public const string ExpandPropertyAndAddBackingField = Prefix + "0041";
         public const string ExtractEventHandlerMethod = Prefix + "0203";
         public const string ExtractExpressionFromCondition = Prefix + "0043";
         public const string ExtractGenericType = Prefix + "0044";
-        public const string ExtractLinqToLocalFunction = Prefix + "X002";
         public const string ExtractStatement = Prefix + "0045";
         public const string ExtractTypeDeclarationToNewFile = Prefix + "0046";
         public const string FormatAccessorBraces = Prefix + "0047";
@@ -156,7 +155,6 @@ namespace Roslynator.CSharp.Refactorings
         public const string ReplaceInterpolatedStringWithInterpolationExpression = Prefix + "0135";
         public const string ReplaceInterpolatedStringWithStringFormat = Prefix + "0201";
         public const string ReplaceInterpolatedStringWithStringLiteral = Prefix + "0136";
-        public const string ReplaceLinqWithForEach = Prefix + "X003";
         public const string ReplaceMethodGroupWithLambda = Prefix + "0137";
         public const string ReplaceMethodWithProperty = Prefix + "0138";
         public const string ReplaceNullLiteralExpressionWithDefaultExpression = Prefix + "0139";

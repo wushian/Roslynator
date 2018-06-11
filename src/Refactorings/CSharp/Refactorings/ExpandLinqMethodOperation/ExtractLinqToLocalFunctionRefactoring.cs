@@ -12,9 +12,8 @@ using Microsoft.CodeAnalysis.Text;
 using Roslynator.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Roslynator.CSharp.CSharpFactory;
-using static Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction.ExtractLinqToLocalFunctionHelpers;
 
-namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
+namespace Roslynator.CSharp.Refactorings.ExpandLinqMethodOperation
 {
     internal abstract class ExtractLinqToLocalFunctionRefactoring
     {
@@ -234,6 +233,49 @@ namespace Roslynator.CSharp.Refactorings.ExtractLinqToLocalFunction
             {
                 return Document.ReplaceNodeAsync(body, newBody, cancellationToken);
             }
+        }
+
+        private static (SeparatedSyntaxList<ParameterSyntax> parameters, SeparatedSyntaxList<ArgumentSyntax> arguments) GetArgumentsAndParameters(
+            in AnonymousFunctionAnalysis analysis,
+            SemanticModel semanticModel,
+            int position)
+        {
+            if (analysis.Captured.IsDefault)
+                return default;
+
+            SeparatedSyntaxList<ParameterSyntax> parameters = default;
+            SeparatedSyntaxList<ArgumentSyntax> arguments = default;
+
+            foreach (ISymbol symbol in analysis.Captured)
+            {
+                if (symbol is ILocalSymbol localSymbol)
+                {
+                    IdentifierNameSyntax identifierName = IdentifierName(symbol.Name);
+
+                    if (semanticModel
+                        .GetSpeculativeSymbolInfo(position, identifierName, SpeculativeBindingOption.BindAsExpression)
+                        .Symbol?
+                        .Equals(symbol) != true)
+                    {
+                        parameters = parameters.Add(Parameter(localSymbol.Type.ToTypeSyntax().WithSimplifierAnnotation(), localSymbol.Name));
+                        arguments = arguments.Add(Argument(identifierName));
+                    }
+                }
+                else if (symbol is IParameterSymbol parameterSymbol)
+                {
+                    if (!semanticModel.IsAccessible(position, parameterSymbol))
+                    {
+                        parameters = parameters.Add(Parameter(parameterSymbol.Type.ToTypeSyntax().WithSimplifierAnnotation(), parameterSymbol.Name));
+                        arguments = arguments.Add(Argument(IdentifierName(parameterSymbol.Name)));
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+
+            return (parameters, arguments);
         }
     }
 }

@@ -7,12 +7,10 @@ using Xunit;
 
 namespace Roslynator.CSharp.Refactorings.Tests
 {
-    public class RRX003ReplaceLinqWithForEachTests : AbstractCSharpCodeRefactoringVerifier
+    public partial class RRX002ExpandLinqOperationTests : AbstractCSharpCodeRefactoringVerifier
     {
-        public override string RefactoringId { get; } = RefactoringIdentifiers.ReplaceLinqWithForEach;
-
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
-        public async Task Test_Any_SimpleLambda()
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task Test_Any_ToForEach_SimpleLambda()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -47,8 +45,8 @@ class C
 ", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
-        public async Task Test_Any_SimpleLambda_ExpressionBody()
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task Test_Any_ToForEach_SimpleLambda_ExpressionBody()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -80,8 +78,8 @@ class C
 ", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
-        public async Task Test_Any_SimpleLambda_AnonymousType()
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task Test_Any_ToForEach_SimpleLambda_AnonymousType()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -116,8 +114,8 @@ class C
 ", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
-        public async Task Test_Any_ParenthesizedLambda()
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task Test_Any_ToForEach_ParenthesizedLambda()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -152,8 +150,8 @@ class C
 ", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
-        public async Task Test_All_SimpleLambda()
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task Test_All_ToForEach_SimpleLambda()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -188,8 +186,8 @@ class C
 ", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
-        public async Task Test_FirstOrDefault_SimpleLambda()
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task Test_FirstOrDefault_ToForEach_SimpleLambda()
         {
             await VerifyRefactoringAsync(@"
 using System.Collections.Generic;
@@ -224,89 +222,8 @@ class C
 ", equivalenceKey: RefactoringId);
         }
 
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
-        public async Task TestNoRefactoring_Any_SimpleLambda_BlockBody()
-        {
-            await VerifyNoRefactoringAsync(@"
-using System.Collections.Generic;
-using System.Linq;
-
-class C
-{
-    bool M(IEnumerable<string> items, string s)
-    {
-        return items.[||]Any(f =>
-        {
-            if (f == s)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        });
-    }
-}
-", equivalenceKey: RefactoringId);
-        }
-
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
-        public async Task TestNoRefactoring_Any_ParenthesizedLambda_BlockBody()
-        {
-            await VerifyNoRefactoringAsync(@"
-using System.Collections.Generic;
-using System.Linq;
-
-class C
-{
-    bool M(IEnumerable<string> items, string s)
-    {
-        return items.[||]Any((f) =>
-        {
-            if (f == s)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        });
-    }
-}
-", equivalenceKey: RefactoringId);
-        }
-
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
-        public async Task TestNoRefactoring_Any_AnonymousMethod()
-        {
-            await VerifyNoRefactoringAsync(@"
-using System.Collections.Generic;
-using System.Linq;
-
-class C
-{
-    bool M(IEnumerable<string> items, string s)
-    {
-        return items.[||]Any(delegate(string f)
-        {
-            if (f == s)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        });
-    }
-}
-", equivalenceKey: RefactoringId);
-        }
-
-        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceLinqWithForEach)]
-        public async Task TestNoRefactoring_NoCapturedVariable()
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task TestNoRefactoring_Any_ToForEach_NoCapturedVariable()
         {
             await VerifyNoRefactoringAsync(@"
 using System.Collections.Generic;
