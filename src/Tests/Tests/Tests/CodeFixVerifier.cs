@@ -134,6 +134,27 @@ namespace Roslynator.Tests
                 document = project.GetDocument(document.Id);
             }
 
+            List<(DocumentId documentId, string expected)> additionalDocumentData = null;
+
+            if (additionalData != null)
+            {
+                Project project = document.Project;
+
+                additionalDocumentData = new List<(DocumentId documentId, string expected)>();
+
+                int i = 1;
+                foreach ((string source2, string expected2) in additionalData)
+                {
+                    Document newDocument = project.AddDocument(CreateFileName(i), SourceText.From(source2));
+                    additionalDocumentData.Add((newDocument.Id, expected2));
+                    project = newDocument.Project;
+
+                    i++;
+                }
+
+                document = project.GetDocument(document.Id);
+            }
+
             Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
             ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
