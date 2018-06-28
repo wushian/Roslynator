@@ -7,8 +7,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Roslynator.CSharp.CodeFixes;
 using Xunit;
 
-#pragma warning disable RCS1090
-
 namespace Roslynator.CSharp.Analysis.Tests
 {
     public class RCS1207UseMethodGroupInsteadOfAnonymousFunctionTests : AbstractCSharpCodeFixVerifier
@@ -274,6 +272,32 @@ class C
         M(f => f.First());
         M((f) => f.First());
         M(delegate (IEnumerable<string> p) { return p.First(); });
+    }
+}
+");
+        }
+
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseMethodGroupInsteadOfAnonymousFunction)]
+        public async Task TestNoDiagnostic_ConditionalAccess()
+        {
+            await VerifyNoDiagnosticAsync(@"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class C
+{
+    void M()
+    {
+    }
+
+    private static void M<TSource, TResult>(IEnumerable<TSource> items, Func<TSource, TResult> selector)
+    {
+        IEnumerable<TResult> x = null;
+
+        x = items?.Select(e => selector(e));
+        x = items?.Where(f => f != null).Select(e => selector(e));
+        x = items?.Where(f => f != null).Select(e => selector(e)).Distinct();
     }
 }
 ");

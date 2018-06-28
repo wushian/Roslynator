@@ -113,47 +113,9 @@ namespace Roslynator.CSharp
             }
         }
 
-        internal static bool ContainsYieldReturn(this BlockSyntax block, TextSpan? span = null)
+        internal static bool ContainsYield(this BlockSyntax block, bool yieldReturn = true, bool yieldBreak = true)
         {
-            return ContainsYieldWalker.ContainsYieldReturn(block, span);
-        }
-
-        internal static bool ContainsYieldBreak(this BlockSyntax block, TextSpan? span = null)
-        {
-            return ContainsYieldWalker.ContainsYieldBreak(block, span);
-        }
-
-        internal static bool ContainsYield(this BlockSyntax block, TextSpan? span = null, bool yieldReturn = true, bool yieldBreak = true)
-        {
-            return ContainsYieldWalker.ContainsYield(block, span, yieldReturn, yieldBreak);
-        }
-
-        internal static StatementSyntax LastStatementOrDefault(this BlockSyntax block, bool skipLocalFunction = false)
-        {
-            if (block == null)
-                throw new ArgumentNullException(nameof(block));
-
-            SyntaxList<StatementSyntax> statements = block.Statements;
-
-            if (!statements.Any())
-                return null;
-
-            if (!skipLocalFunction)
-                return statements.Last();
-
-            int i = statements.Count - 1;
-
-            while (i >= 0)
-            {
-                StatementSyntax statement = statements[i];
-
-                if (statement.Kind() != SyntaxKind.LocalFunctionStatement)
-                    return statement;
-
-                i--;
-            }
-
-            return null;
+            return ContainsYieldWalker.ContainsYield(block, yieldReturn, yieldBreak);
         }
         #endregion BlockSyntax
 
@@ -1689,6 +1651,48 @@ namespace Roslynator.CSharp
         {
             return ReplaceRange(list, index, count, Empty.ReadOnlyList<TNode>());
         }
+
+        //TODO: make public
+        internal static SeparatedSyntaxList<TNode> TrimTrivia<TNode>(this SeparatedSyntaxList<TNode> list) where TNode : SyntaxNode
+        {
+            int count = list.Count;
+
+            if (count == 0)
+                return list;
+
+            int separatorCount = list.SeparatorCount;
+
+            if (count == 1)
+            {
+                if (separatorCount == 0)
+                {
+                    return list.ReplaceAt(0, list[0].TrimTrivia());
+                }
+                else
+                {
+                    list = list.ReplaceAt(0, list[0].TrimLeadingTrivia());
+
+                    SyntaxToken separator = list.GetSeparator(0);
+
+                    return list.ReplaceSeparator(separator, separator.TrimTrailingTrivia());
+                }
+            }
+            else
+            {
+                list = list.ReplaceAt(0, list[0].TrimLeadingTrivia());
+
+                if (separatorCount == count - 1)
+                {
+                    return list.ReplaceAt(count - 1, list[count - 1].TrimTrailingTrivia());
+                }
+                else
+                {
+                    SyntaxToken separator = list.GetSeparator(separatorCount - 1);
+
+                    return list.ReplaceSeparator(separator, separator.TrimTrailingTrivia());
+                }
+            }
+        }
         #endregion SeparatedSyntaxList<T>
 
         #region StatementSyntax
@@ -1752,6 +1756,15 @@ namespace Roslynator.CSharp
             statements = SyntaxInfo.StatementListInfo(statement).Statements;
 
             return statements.Any();
+        }
+
+        //TODO: make public GetContainingList(StatementSyntax)
+        internal static SyntaxList<StatementSyntax> GetContainingList(this StatementSyntax statement)
+        {
+            if (!TryGetContainingList(statement, out SyntaxList<StatementSyntax> list))
+                throw new ArgumentException("Statement is not contained in a list.", nameof(statement));
+
+            return list;
         }
 
         internal static StatementSyntax SingleNonBlockStatementOrDefault(this StatementSyntax statement, bool recursive = false)
@@ -2145,6 +2158,42 @@ namespace Roslynator.CSharp
             int count) where TNode : SyntaxNode
         {
             return ReplaceRange(list, index, count, Empty.ReadOnlyList<TNode>());
+        }
+
+        internal static StatementSyntax LastOrDefault(this SyntaxList<StatementSyntax> statements, bool ignoreLocalFunction)
+        {
+            if (!ignoreLocalFunction)
+                return statements.LastOrDefault();
+
+            int i = statements.Count - 1;
+
+            while (i >= 0)
+            {
+                StatementSyntax statement = statements[i];
+
+                if (statement.Kind() != SyntaxKind.LocalFunctionStatement)
+                    return statement;
+
+                i--;
+            }
+
+            return null;
+        }
+
+        //TODO: make public
+        internal static SyntaxList<TNode> TrimTrivia<TNode>(this SyntaxList<TNode> list) where TNode : SyntaxNode
+        {
+            int count = list.Count;
+
+            if (count == 0)
+                return list;
+
+            if (count == 1)
+                return list.ReplaceAt(0, list[0].TrimTrivia());
+
+            return list
+                .ReplaceAt(0, list[0].TrimLeadingTrivia())
+                .ReplaceAt(count - 1, list[count - 1].TrimTrailingTrivia());
         }
         #endregion SyntaxList<T>
 
