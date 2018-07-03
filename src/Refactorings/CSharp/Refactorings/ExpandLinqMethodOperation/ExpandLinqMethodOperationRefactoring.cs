@@ -31,7 +31,7 @@ namespace Roslynator.CSharp.Refactorings.ExpandLinqMethodOperation
                 case "All":
                 case "FirstOrDefault":
                     {
-                        ExpressionSyntax argumentExpression = invocationInfo.Arguments.SingleOrDefault(shouldThrow: false).Expression?.WalkDownParentheses();
+                        ExpressionSyntax argumentExpression = invocationInfo.Arguments.SingleOrDefault(shouldThrow: false)?.Expression?.WalkDownParentheses();
 
                         if (argumentExpression == null)
                             return;
