@@ -10,7 +10,7 @@ namespace Roslynator.CSharp.Refactorings.Tests
         public override string RefactoringId { get; } = RefactoringIdentifiers.ReplaceForEachWithEnumerator;
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceForEachWithEnumerator)]
-        public async Task TestRefactoring_WithUsing()
+        public async Task TestCodeRefactoring_WithUsing()
         {
             await VerifyRefactoringAsync(
 @"
@@ -57,7 +57,50 @@ class C
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceForEachWithEnumerator)]
-        public async Task TestRefactoring_WithoutUsing()
+        public async Task TestCodeRefactoring_WithUsing_EmbeddedStatement()
+        {
+            await VerifyRefactoringAsync(
+@"
+using System.Linq;
+
+class C
+{
+    void M()
+    {
+        for[||]each (int item in Enumerable.Range(0, 1))
+            M(item);
+    }
+
+    int M(int value)
+    {
+        return value;
+    }
+}
+",
+@"
+using System.Linq;
+
+class C
+{
+    void M()
+    {
+        using (var en = Enumerable.Range(0, 1).GetEnumerator())
+        {
+            while (en.MoveNext())
+                M(en.Current);
+        }
+    }
+
+    int M(int value)
+    {
+        return value;
+    }
+}
+", equivalenceKey: RefactoringId);
+        }
+
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceForEachWithEnumerator)]
+        public async Task TestCodeRefactoring_WithoutUsing()
         {
             await VerifyRefactoringAsync(
 @"
@@ -96,7 +139,7 @@ class C
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ReplaceForEachWithEnumerator)]
-        public async Task TestNoRefactoring_InvalidSpan()
+        public async Task TestNoCodeRefactoring_InvalidSpan()
         {
             await VerifyNoRefactoringAsync(
 @"
