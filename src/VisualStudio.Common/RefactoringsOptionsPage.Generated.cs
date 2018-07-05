@@ -233,6 +233,7 @@ namespace Roslynator.VisualStudio
             refactorings.Add(new BaseModel(RefactoringIdentifiers.AddEmptyLineBetweenDeclarations, "Add empty line between declarations", IsEnabled(RefactoringIdentifiers.AddEmptyLineBetweenDeclarations)));
             refactorings.Add(new BaseModel(RefactoringIdentifiers.ReplaceForEachWithEnumerator, "Replace foreach with enumerator", IsEnabled(RefactoringIdentifiers.ReplaceForEachWithEnumerator)));
             refactorings.Add(new BaseModel(RefactoringIdentifiers.ExpandLinqMethodOperation, "Expand LINQ method operation", IsEnabled(RefactoringIdentifiers.ExpandLinqMethodOperation)));
+            refactorings.Add(new BaseModel(RefactoringIdentifiers.SortCaseLabels, "Sort case labels", IsEnabled(RefactoringIdentifiers.SortCaseLabels)));
         }
     }
 }
