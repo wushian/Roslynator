@@ -223,6 +223,23 @@ class C
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task TestNoRefactoring_FirstOrDefault_ToForEach_ConditionalAccess()
+        {
+            await VerifyNoRefactoringAsync(@"
+using System.Collections.Generic;
+using System.Linq;
+
+class C
+{
+    string M(IEnumerable<string> items, string s)
+    {
+        return items?.AsEnumerable().AsEnumerable().AsEnumerable().[||]FirstOrDefault(f => f == s);
+    }
+}
+", equivalenceKey: RefactoringId);
+        }
+
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
         public async Task TestNoRefactoring_Any_ToForEach_NoCapturedVariable()
         {
             await VerifyNoRefactoringAsync(@"

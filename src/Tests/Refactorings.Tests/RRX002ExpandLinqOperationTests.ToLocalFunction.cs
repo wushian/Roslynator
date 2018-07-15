@@ -507,6 +507,29 @@ class C
         }
 
         [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
+        public async Task TestNoRefactoring_FirstOrDefault_ToLocalFunction_ConditionalAccess()
+        {
+            await VerifyNoRefactoringAsync(@"
+using System.Collections.Generic;
+using System.Linq;
+
+class C
+{
+    void M(IEnumerable<string> items)
+    {
+        string s = null;
+
+        if (true)
+        {
+            string s2 = null;
+            string x = items?.AsEnumerable().[||]FirstOrDefault(f => f == s || f == s2);
+        }
+    }
+}
+", equivalenceKey: RefactoringId);
+        }
+
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.ExpandLinqMethodOperation)]
         public async Task TestNoRefactoring_Any_ToLocalFunction_NoCapturedVariable()
         {
             await VerifyNoRefactoringAsync(@"

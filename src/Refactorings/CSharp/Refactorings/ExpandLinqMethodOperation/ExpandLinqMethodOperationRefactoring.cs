@@ -38,6 +38,9 @@ namespace Roslynator.CSharp.Refactorings.ExpandLinqMethodOperation
 
                         InvocationExpressionSyntax invocationExpression = invocationInfo.InvocationExpression;
 
+                        if (invocationExpression.IsParentKind(SyntaxKind.ConditionalAccessExpression))
+                            return;
+
                         SyntaxNode containingBody = FindContainingBodyOrExpressionBody(invocationExpression);
 
                         if (containingBody == null)
