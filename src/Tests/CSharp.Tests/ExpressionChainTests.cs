@@ -35,7 +35,7 @@ class C
         string s = [|a + b + c|];
     }
 }";
-            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(s);
+            SpanParserResult analysis = SpanParser.Default.GetSpans(s);
 
             BinaryExpressionSyntax be = CSharpSyntaxTree.ParseText(analysis.Source).GetRoot().FirstDescendant<BinaryExpressionSyntax>();
             var be2 = (BinaryExpressionSyntax)be.Left;
@@ -59,7 +59,7 @@ class C
         string s = a + b + [|c + d|];
     }
 }";
-            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(s);
+            SpanParserResult analysis = SpanParser.Default.GetSpans(s);
 
             BinaryExpressionSyntax be = CSharpSyntaxTree.ParseText(analysis.Source).GetRoot().FirstDescendant<BinaryExpressionSyntax>();
             var be2 = (BinaryExpressionSyntax)be.Left;
@@ -82,7 +82,7 @@ class C
         string s = a + [|b + c|] + d;
     }
 }";
-            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(s);
+            SpanParserResult analysis = SpanParser.Default.GetSpans(s);
 
             BinaryExpressionSyntax be = CSharpSyntaxTree.ParseText(analysis.Source).GetRoot().FirstDescendant<BinaryExpressionSyntax>();
             be = (BinaryExpressionSyntax)be.Left;
@@ -106,7 +106,7 @@ class C
         string s = a + [|b|];
     }
 }";
-            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(s);
+            SpanParserResult analysis = SpanParser.Default.GetSpans(s);
 
             BinaryExpressionSyntax be = CSharpSyntaxTree.ParseText(analysis.Source).GetRoot().FirstDescendant<BinaryExpressionSyntax>();
 
@@ -127,7 +127,7 @@ class C
         string s = [|a|] + b;
     }
 }";
-            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(s);
+            SpanParserResult analysis = SpanParser.Default.GetSpans(s);
 
             BinaryExpressionSyntax be = CSharpSyntaxTree.ParseText(analysis.Source).GetRoot().FirstDescendant<BinaryExpressionSyntax>();
 
@@ -162,7 +162,7 @@ class C
         string s = [|a + b + c|];
     }
 }";
-            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(s);
+            SpanParserResult analysis = SpanParser.Default.GetSpans(s);
 
             BinaryExpressionSyntax be = CSharpSyntaxTree.ParseText(analysis.Source).GetRoot().FirstDescendant<BinaryExpressionSyntax>();
             var be2 = (BinaryExpressionSyntax)be.Left;
@@ -186,7 +186,7 @@ class C
         string s = a + b + [|c + d|];
     }
 }";
-            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(s);
+            SpanParserResult analysis = SpanParser.Default.GetSpans(s);
 
             BinaryExpressionSyntax be = CSharpSyntaxTree.ParseText(analysis.Source).GetRoot().FirstDescendant<BinaryExpressionSyntax>();
             var be2 = (BinaryExpressionSyntax)be.Left;
@@ -209,7 +209,7 @@ class C
         string s = a + [|b + c|] + d;
     }
 }";
-            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(s);
+            SpanParserResult analysis = SpanParser.Default.GetSpans(s);
 
             BinaryExpressionSyntax be = CSharpSyntaxTree.ParseText(analysis.Source).GetRoot().FirstDescendant<BinaryExpressionSyntax>();
             be = (BinaryExpressionSyntax)be.Left;
@@ -233,7 +233,7 @@ class C
         string s = a + [|b|];
     }
 }";
-            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(s);
+            SpanParserResult analysis = SpanParser.Default.GetSpans(s);
 
             BinaryExpressionSyntax be = CSharpSyntaxTree.ParseText(analysis.Source).GetRoot().FirstDescendant<BinaryExpressionSyntax>();
 
@@ -254,7 +254,7 @@ class C
         string s = [|a|] + b;
     }
 }";
-            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(s);
+            SpanParserResult analysis = SpanParser.Default.GetSpans(s);
 
             BinaryExpressionSyntax be = CSharpSyntaxTree.ParseText(analysis.Source).GetRoot().FirstDescendant<BinaryExpressionSyntax>();
 

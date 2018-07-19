@@ -35,7 +35,7 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(source);
+            SpanParserResult analysis = SpanParser.GetSpans(source);
 
             IEnumerable<Diagnostic> diagnostics = analysis.Spans.Select(f => CreateDiagnostic(f.Span, f.LineSpan));
 
@@ -63,9 +63,9 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            (string source, string expected, TextSpan span) = TestSourceText.ReplaceSpan(theory, fromData, toData);
+            (TextSpan span, string source, string expected) = SpanParser.ReplaceSpan(theory, fromData, toData);
 
-            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(source);
+            SpanParserResult analysis = SpanParser.GetSpans(source);
 
             if (analysis.Spans.Any())
             {
@@ -90,7 +90,7 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            (string source, string expected, TextSpan span) = TestSourceText.ReplaceSpan(theory, fromData, toData);
+            (TextSpan span, string source, string expected) = SpanParser.ReplaceSpan(theory, fromData, toData);
 
             await VerifyFixAsync(
                 source: source,
@@ -111,28 +111,7 @@ namespace Roslynator.Tests
             if (!FixProvider.CanFixAny(Analyzer.SupportedDiagnostics))
                 Assert.True(false, $"Code fix provider '{FixProvider.GetType().Name}' cannot fix any diagnostic supported by analyzer '{Analyzer}'.");
 
-            Document document = base.CreateDocument(source);
-
-            List<(DocumentId documentId, string expected)> additionalDocumentData = null;
-
-            if (additionalData != null)
-            {
-                Project project = document.Project;
-
-                additionalDocumentData = new List<(DocumentId documentId, string expected)>();
-
-                int i = 1;
-                foreach ((string source2, string expected2) in additionalData)
-                {
-                    Document newDocument = project.AddDocument(CreateFileName(i), SourceText.From(source2));
-                    additionalDocumentData.Add((newDocument.Id, expected2));
-                    project = newDocument.Project;
-
-                    i++;
-                }
-
-                document = project.GetDocument(document.Id);
-            }
+            Document document = CreateDocument(source);
 
             List<(DocumentId documentId, string expected)> additionalDocumentData = null;
 
@@ -253,15 +232,32 @@ namespace Roslynator.Tests
             }
         }
 
-        //TODO: additionalData
         public async Task VerifyNoFixAsync(
             string source,
+            IEnumerable<string> additionalSources = null,
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             Document document = CreateDocument(source);
+
+            if (additionalSources != null)
+            {
+                Project project = document.Project;
+
+                int i = 1;
+                foreach (string additionalSource in additionalSources)
+                {
+                    project = project
+                        .AddDocument(CreateFileName(i), SourceText.From(additionalSource))
+                        .Project;
+
+                    i++;
+                }
+
+                document = project.GetDocument(document.Id);
+            }
 
             Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 

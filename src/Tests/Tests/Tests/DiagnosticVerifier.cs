@@ -34,7 +34,7 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(source);
+            SpanParserResult analysis = SpanParser.GetSpans(source);
 
             await VerifyDiagnosticAsync(
                 analysis.Source,
@@ -50,9 +50,9 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            (string source, TextSpan span) = TestSourceText.ReplaceSpan(theory, fromData);
+            (TextSpan span, string result) = SpanParser.ReplaceSpan(theory, fromData);
 
-            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(source);
+            SpanParserResult analysis = SpanParser.GetSpans(result);
 
             if (analysis.Spans.Any())
             {
@@ -60,7 +60,7 @@ namespace Roslynator.Tests
             }
             else
             {
-                await VerifyDiagnosticAsync(source, span, options, cancellationToken).ConfigureAwait(false);
+                await VerifyDiagnosticAsync(result, span, options, cancellationToken).ConfigureAwait(false);
             }
         }
 
@@ -166,10 +166,10 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            (string source, TextSpan span) = TestSourceText.ReplaceSpan(theory, fromData);
+            (TextSpan span, string result) = SpanParser.ReplaceSpan(theory, fromData);
 
             await VerifyNoDiagnosticAsync(
-                source: source,
+                source: result,
                 additionalSources: null,
                 options: options,
                 cancellationToken).ConfigureAwait(false);

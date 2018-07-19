@@ -38,7 +38,7 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(source, reverse: true);
+            SpanParserResult analysis = SpanParser.GetSpans(source, reverse: true);
 
             await VerifyRefactoringAsync(
                 source: analysis.Source,
@@ -58,9 +58,9 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            (string source, string expected, TextSpan span) = TestSourceText.ReplaceSpan(theory, fromData, toData);
+            (TextSpan span, string source, string expected) = SpanParser.ReplaceSpan(theory, fromData, toData);
 
-            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(source, reverse: true);
+            SpanParserResult analysis = SpanParser.GetSpans(source, reverse: true);
 
             if (analysis.Spans.Any())
             {
@@ -178,7 +178,7 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(source, reverse: true);
+            SpanParserResult analysis = SpanParser.GetSpans(source, reverse: true);
 
             await VerifyNoRefactoringAsync(
                 source: analysis.Source,
