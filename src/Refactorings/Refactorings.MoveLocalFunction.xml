@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Refactorings>
+  <Refactoring Id="RRX005" Identifier="MoveLocalFunction" Title="Move local function after other statements">
+    <Syntaxes>
+      <Syntax>local function</Syntax>
+    </Syntaxes>
+    <Span>identifier</Span>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[public void Foo()
+{
+  void LocalFunction()
+  {
+  }
+
+  M1();
+  M2();
+  M3();
+}]]></Before>
+        <After><![CDATA[public void Foo()
+{
+  M1();
+  M2();
+  M3();
+
+  void LocalFunction()
+  {
+  }
+}]]></After>
+      </Sample>
+    </Samples>
+  </Refactoring>
+</Refactorings>

@@ -1,6 +1,9 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -12,6 +15,17 @@ namespace Roslynator.CSharp.Refactorings
         {
             if (localFunctionStatement.IsParentKind(SyntaxKind.Block))
             {
+                if (context.IsRefactoringEnabled(RefactoringIdentifiers.MoveLocalFunction)
+                    && context.Span.IsEmptyAndContainedInSpan(localFunctionStatement.Identifier)
+                    && localFunctionStatement.NextStatement()?.IsKind(SyntaxKind.LocalFunctionStatement) == false
+                    && !localFunctionStatement.ContainsDirectives)
+                {
+                    context.RegisterRefactoring(
+                        $"Move '{localFunctionStatement.Identifier}' down",
+                        ct => MoveLocalFunctionRefactoring.RefactorAsync(context.Document, localFunctionStatement, ct),
+                        RefactoringIdentifiers.MoveLocalFunction);
+                }
+
                 BlockSyntax body = localFunctionStatement.Body;
 
                 if (body != null)
