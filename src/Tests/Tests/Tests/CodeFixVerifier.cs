@@ -35,21 +35,21 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            SpanParserResult analysis = SpanParser.GetSpans(source);
+            SpanParserResult result = SpanParser.GetSpans(source);
 
-            IEnumerable<Diagnostic> diagnostics = analysis.Spans.Select(f => CreateDiagnostic(f.Span, f.LineSpan));
+            IEnumerable<Diagnostic> diagnostics = result.Spans.Select(f => CreateDiagnostic(f.Span, f.LineSpan));
 
             string[] additionalSources = additionalData?.Select(f => f.source).ToArray() ?? Array.Empty<string>();
 
             await VerifyDiagnosticAsync(
-                analysis.Source,
+                result.Text,
                 diagnostics,
                 additionalSources: additionalSources,
                 options: options,
                 cancellationToken: cancellationToken).ConfigureAwait(false);
 
             await VerifyFixAsync(
-                analysis.Source,
+                result.Text,
                 expected,
                 additionalData,
                 options,
@@ -65,15 +65,15 @@ namespace Roslynator.Tests
         {
             (TextSpan span, string source, string expected) = SpanParser.ReplaceSpan(theory, fromData, toData);
 
-            SpanParserResult analysis = SpanParser.GetSpans(source);
+            SpanParserResult result = SpanParser.GetSpans(source);
 
-            if (analysis.Spans.Any())
+            if (result.Spans.Any())
             {
-                IEnumerable<Diagnostic> diagnostics = analysis.Spans.Select(f => CreateDiagnostic(f.Span, f.LineSpan));
+                IEnumerable<Diagnostic> diagnostics = result.Spans.Select(f => CreateDiagnostic(f.Span, f.LineSpan));
 
-                await VerifyDiagnosticAsync(analysis.Source, diagnostics, additionalSources: null, options: options, cancellationToken).ConfigureAwait(false);
+                await VerifyDiagnosticAsync(result.Text, diagnostics, additionalSources: null, options: options, cancellationToken).ConfigureAwait(false);
 
-                await VerifyFixAsync(analysis.Source, expected, additionalData: null, options, cancellationToken).ConfigureAwait(false);
+                await VerifyFixAsync(result.Text, expected, additionalData: null, options, cancellationToken).ConfigureAwait(false);
             }
             else
             {
@@ -99,6 +99,7 @@ namespace Roslynator.Tests
                 cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
+        //TODO: add parameter equivalenceKey
         public async Task VerifyFixAsync(
             string source,
             string expected,

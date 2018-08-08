@@ -2483,5 +2483,29 @@ namespace Roslynator.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.ValidateArgumentsCorrectly}", 
             customTags:         Array.Empty<string>());
 
+        /// <summary>RCS1228</summary>
+        public static readonly DiagnosticDescriptor UnusedElementInDocumentationComment = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.UnusedElementInDocumentationComment, 
+            title:              "Unused element in documentation comment.", 
+            messageFormat:      "Unused element in documentation comment.", 
+            category:           DiagnosticCategories.Readability, 
+            defaultSeverity:    DiagnosticSeverity.Hidden, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UnusedElementInDocumentationComment}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS1229</summary>
+        public static readonly DiagnosticDescriptor UseAsyncAwait = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.UseAsyncAwait, 
+            title:              "Use async/await when necessary.", 
+            messageFormat:      "Use async/await when necessary.", 
+            category:           DiagnosticCategories.Usage, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseAsyncAwait}", 
+            customTags:         Array.Empty<string>());
+
     }
 }

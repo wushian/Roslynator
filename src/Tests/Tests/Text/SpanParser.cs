@@ -15,9 +15,9 @@ namespace Roslynator.Tests.Text
 
         public abstract SpanParserResult GetSpans(string s, bool reverse = false);
 
-        public abstract (TextSpan span, string result) ReplaceSpan(string s, string replacement);
+        public abstract (TextSpan span, string text) ReplaceSpan(string s, string replacement);
 
-        public abstract (TextSpan span, string result1, string result2) ReplaceSpan(string s, string replacement1, string replacement2);
+        public abstract (TextSpan span, string text1, string text2) ReplaceSpan(string s, string replacement1, string replacement2);
 
         private class DefaultSpanParser : SpanParser
         {
@@ -181,7 +181,7 @@ namespace Roslynator.Tests.Text
                 }
             }
 
-            public override (TextSpan span, string result) ReplaceSpan(string s, string replacement)
+            public override (TextSpan span, string text) ReplaceSpan(string s, string replacement)
             {
                 int index = s.IndexOf(OpenCloseTokens, StringComparison.Ordinal);
 
@@ -192,7 +192,7 @@ namespace Roslynator.Tests.Text
                 return (span, result);
             }
 
-            public override (TextSpan span, string result1, string result2) ReplaceSpan(string s, string replacement1, string replacement2)
+            public override (TextSpan span, string text1, string text2) ReplaceSpan(string s, string replacement1, string replacement2)
             {
                 int index = s.IndexOf(OpenCloseTokens, StringComparison.Ordinal);
 
