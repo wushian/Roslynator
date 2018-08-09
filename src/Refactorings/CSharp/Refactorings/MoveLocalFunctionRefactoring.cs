@@ -12,14 +12,14 @@ namespace Roslynator.CSharp.Refactorings
     {
         public static Task<Document> RefactorAsync(
             Document document,
-            LocalFunctionStatementSyntax localFunction,
+            LocalFunctionStatementSyntax localFunctionStatement,
             CancellationToken cancellationToken)
         {
-            var block = (BlockSyntax)localFunction.Parent;
+            var block = (BlockSyntax)localFunctionStatement.Parent;
 
             SyntaxList<StatementSyntax> statements = block.Statements;
 
-            int index = statements.IndexOf(localFunction);
+            int index = statements.IndexOf(localFunctionStatement);
 
             int newIndex = index + 1;
 
@@ -30,16 +30,12 @@ namespace Roslynator.CSharp.Refactorings
             }
 
             SyntaxList<StatementSyntax> newStatements = statements
-                .Insert(newIndex, localFunction)
+                .Insert(newIndex, localFunctionStatement)
                 .RemoveAt(index);
 
             BlockSyntax newBlock = block.WithStatements(newStatements).WithFormatterAnnotation();
 
-            LocalFunctionStatementSyntax newLocalFunction = localFunction
-                .WithBody(newBlock)
-                .WithNavigationAnnotation();
-
-            return document.ReplaceNodeAsync(localFunction, newLocalFunction, cancellationToken);
+            return document.ReplaceNodeAsync(block, newBlock, cancellationToken);
         }
     }
 }
