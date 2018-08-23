@@ -58,7 +58,7 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            (TextSpan span, string source, string expected) = SpanParser.ReplaceSpan(theory, fromData, toData);
+            (TextSpan span, string source, string expected) = SpanParser.ReplaceEmptySpan(theory, fromData, toData);
 
             SpanParserResult result = SpanParser.GetSpans(source, reverse: true);
 
