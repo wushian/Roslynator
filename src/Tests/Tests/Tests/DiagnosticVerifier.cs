@@ -34,7 +34,7 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            SpanParserResult result = SpanParser.GetSpans(source);
+            TextSpanParserResult result = SpanParser.GetSpans(source);
 
             await VerifyDiagnosticAsync(
                 result.Text,
@@ -52,7 +52,7 @@ namespace Roslynator.Tests
         {
             (TextSpan span, string text) = SpanParser.ReplaceEmptySpan(theory, fromData);
 
-            SpanParserResult result = SpanParser.GetSpans(text);
+            TextSpanParserResult result = SpanParser.GetSpans(text);
 
             if (result.Spans.Any())
             {

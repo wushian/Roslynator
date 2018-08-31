@@ -35,7 +35,7 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            SpanParserResult result = SpanParser.GetSpans(source);
+            TextSpanParserResult result = SpanParser.GetSpans(source);
 
             IEnumerable<Diagnostic> diagnostics = result.Spans.Select(f => CreateDiagnostic(f.Span, f.LineSpan));
 
@@ -65,7 +65,7 @@ namespace Roslynator.Tests
         {
             (TextSpan span, string source, string expected) = SpanParser.ReplaceEmptySpan(theory, fromData, toData);
 
-            SpanParserResult result = SpanParser.GetSpans(source);
+            TextSpanParserResult result = SpanParser.GetSpans(source);
 
             if (result.Spans.Any())
             {
