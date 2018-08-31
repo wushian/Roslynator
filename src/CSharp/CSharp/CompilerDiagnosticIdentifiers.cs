@@ -25,6 +25,7 @@ namespace Roslynator.CSharp
         public const string StaticMemberCannotBeMarkedOverrideVirtualOrAbstract = "CS0112";
         public const string MemberHidesInheritedMemberToMakeCurrentMethodOverrideThatImplementationAddOverrideKeyword = "CS0114";
         public const string NoSuitableMethodFoundToOverride = "CS0115";
+        public const string NameIsNotValidInGivenContext = "CS0119";
         public const string ObjectReferenceIsRequiredForNonStaticMember = "CS0120";
         public const string NoOverloadMatchesDelegate = "CS0123";
         public const string ObjectOfTypeConvertibleToTypeIsRequired = "CS0126";
@@ -152,6 +153,7 @@ namespace Roslynator.CSharp
         public const string OnlyAutoImplementedPropertiesCanHaveInitializers = "CS8050";
         public const string ControlCannotFallOutOfSwitchFromFinalCaseLabel = "CS8070";
         public const string LocalFunctionMustAlwaysHaveBody = "CS8112";
+        public const string CannotChangeTupleElementNameWhenOverridingInheritedMember = "CS8139";
         public const string InstanceFieldsOfReadOnlyStructsMustBeReadOnly = "CS8340";
     }
 }

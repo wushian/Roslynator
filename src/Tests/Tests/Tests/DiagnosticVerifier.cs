@@ -34,11 +34,11 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(source);
+            TextSpanParserResult result = SpanParser.GetSpans(source);
 
             await VerifyDiagnosticAsync(
-                analysis.Source,
-                analysis.Spans.Select(f => CreateDiagnostic(f.Span, f.LineSpan)),
+                result.Text,
+                result.Spans.Select(f => CreateDiagnostic(f.Span, f.LineSpan)),
                 additionalSources: null,
                 options: options,
                 cancellationToken).ConfigureAwait(false);
@@ -50,17 +50,17 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            (string source, TextSpan span) = TestSourceText.ReplaceSpan(theory, fromData);
+            (TextSpan span, string text) = SpanParser.ReplaceEmptySpan(theory, fromData);
 
-            TestSourceTextAnalysis analysis = TestSourceText.GetSpans(source);
+            TextSpanParserResult result = SpanParser.GetSpans(text);
 
-            if (analysis.Spans.Any())
+            if (result.Spans.Any())
             {
-                await VerifyDiagnosticAsync(analysis.Source, analysis.Spans.Select(f => f.Span), options, cancellationToken).ConfigureAwait(false);
+                await VerifyDiagnosticAsync(result.Text, result.Spans.Select(f => f.Span), options, cancellationToken).ConfigureAwait(false);
             }
             else
             {
-                await VerifyDiagnosticAsync(source, span, options, cancellationToken).ConfigureAwait(false);
+                await VerifyDiagnosticAsync(text, span, options, cancellationToken).ConfigureAwait(false);
             }
         }
 
@@ -166,10 +166,10 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            (string source, TextSpan span) = TestSourceText.ReplaceSpan(theory, fromData);
+            (TextSpan span, string text) = SpanParser.ReplaceEmptySpan(theory, fromData);
 
             await VerifyNoDiagnosticAsync(
-                source: source,
+                source: text,
                 additionalSources: null,
                 options: options,
                 cancellationToken).ConfigureAwait(false);
@@ -210,27 +210,27 @@ namespace Roslynator.Tests
         }
 
         private void VerifyDiagnostics(
-            IEnumerable<Diagnostic> actual,
-            IEnumerable<Diagnostic> expected,
+            IEnumerable<Diagnostic> actualDiagnostics,
+            IEnumerable<Diagnostic> expectedDiagnostics,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            VerifyDiagnostics(actual, expected, checkAdditionalLocations: false, cancellationToken: cancellationToken);
+            VerifyDiagnostics(actualDiagnostics, expectedDiagnostics, checkAdditionalLocations: false, cancellationToken: cancellationToken);
         }
 
         private void VerifyDiagnostics(
-            IEnumerable<Diagnostic> actual,
-            IEnumerable<Diagnostic> expected,
+            IEnumerable<Diagnostic> actualDiagnostics,
+            IEnumerable<Diagnostic> expectedDiagnostics,
             bool checkAdditionalLocations,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             int expectedCount = 0;
             int actualCount = 0;
 
-            using (IEnumerator<Diagnostic> expectedEnumerator = expected.GetEnumerator())
-            using (IEnumerator<Diagnostic> actualEnumerator = actual.GetEnumerator())
+            using (IEnumerator<Diagnostic> expectedEnumerator = expectedDiagnostics.GetEnumerator())
+            using (IEnumerator<Diagnostic> actualEnumerator = actualDiagnostics.GetEnumerator())
             {
                 if (!expectedEnumerator.MoveNext())
-                    throw new InvalidOperationException($"'{nameof(expected)}' contains no elements.");
+                    throw new InvalidOperationException($"'{nameof(expectedDiagnostics)}' contains no elements.");
 
                 do
                 {
@@ -254,7 +254,7 @@ namespace Roslynator.Tests
                         while (expectedEnumerator.MoveNext())
                             expectedCount++;
 
-                        Assert.True(false, $"Mismatch between number of diagnostics returned, expected: {expectedCount} actual: {actualCount}{actual.ToDebugString()}");
+                        Assert.True(false, $"Mismatch between number of diagnostics returned, expected: {expectedCount} actual: {actualCount}{actualDiagnostics.ToDebugString()}");
                     }
 
                 } while (expectedEnumerator.MoveNext());
@@ -266,7 +266,7 @@ namespace Roslynator.Tests
                     while (actualEnumerator.MoveNext())
                         actualCount++;
 
-                    Assert.True(false, $"Mismatch between number of diagnostics returned, expected: {expectedCount} actual: {actualCount}{actual.ToDebugString()}");
+                    Assert.True(false, $"Mismatch between number of diagnostics returned, expected: {expectedCount} actual: {actualCount}{actualDiagnostics.ToDebugString()}");
                 }
             }
         }

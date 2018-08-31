@@ -564,23 +564,23 @@ if (y)
       <Image>JoinStringLiteralsIntoMultilineStringLiteral</Image>
     </Images>
   </Refactoring>
-  <Refactoring Id="RR0079" Identifier="NegateBinaryExpression" Title="Negate binary expression">
+  <Refactoring Id="RR0079" Identifier="InvertBinaryExpression" Title="Invert binary expression">
     <Syntaxes>
       <Syntax>logical and/or expression</Syntax>
     </Syntaxes>
   </Refactoring>
-  <Refactoring Id="RR0080" Identifier="NegateBooleanLiteral" Title="Negate boolean literal">
+  <Refactoring Id="RR0080" Identifier="InvertBooleanLiteral" Title="Invert boolean literal">
     <Syntaxes>
       <Syntax>boolean literal</Syntax>
     </Syntaxes>
   </Refactoring>
-  <Refactoring Id="RR0081" Identifier="NegateIsExpression" Title="Negate is expression">
+  <Refactoring Id="RR0081" Identifier="InvertIsExpression" Title="Invert is expression">
     <Syntaxes>
       <Syntax>is expression</Syntax>
     </Syntaxes>
     <Span>operator</Span>
   </Refactoring>
-  <Refactoring Id="RR0082" Identifier="NegateOperator" Title="Negate operator">
+  <Refactoring Id="RR0082" Identifier="InvertOperator" Title="Invert operator">
     <Syntaxes>
       <Syntax>!=</Syntax>
       <Syntax>&amp;&amp;</Syntax>
@@ -1842,6 +1842,28 @@ private object z;]]></After>
         default:
             return false;
     }
+}]]></After>
+      </Sample>
+    </Samples>
+  </Refactoring>
+  <Refactoring Id="RR0208" Identifier="AddTagToDocumentationComment" Title="Add tag to documentation comment">
+    <Syntaxes>
+      <Syntax>selected word(s) in documentation comment</Syntax>
+    </Syntaxes>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[/// <summary>
+/// null
+/// </summary>
+public class Foo
+{
+}
+]]></Before>
+        <After><![CDATA[/// <summary>
+/// <c>null</c>
+/// </summary>
+public class Foo
+{
 }]]></After>
       </Sample>
     </Samples>

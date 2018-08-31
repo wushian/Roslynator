@@ -38,7 +38,8 @@ namespace Roslynator.CSharp.Analysis
                     DiagnosticDescriptors.UseNameOfOperator,
                     DiagnosticDescriptors.RemoveRedundantCast,
                     DiagnosticDescriptors.SimplifyLogicalNegation,
-                    DiagnosticDescriptors.CallStringConcatInsteadOfStringJoin);
+                    DiagnosticDescriptors.CallStringConcatInsteadOfStringJoin,
+                    DiagnosticDescriptors.UseCoalesceExpression);
            }
         }
 
@@ -178,6 +179,21 @@ namespace Roslynator.CSharp.Analysis
                                     OptimizeLinqMethodCallAnalysis.AnalyzeFirstOrDefault(context, invocationInfo);
                                     break;
                                 }
+                            case "GetValueOrDefault":
+                                {
+                                    if (invocationInfo.Name.IsKind(SyntaxKind.IdentifierName)
+                                        && !invocation.IsParentKind(SyntaxKind.InvocationExpression, SyntaxKind.SimpleMemberAccessExpression, SyntaxKind.ElementAccessExpression)
+                                        && context.SemanticModel
+                                            .GetMethodSymbol(invocationInfo.InvocationExpression, context.CancellationToken)?
+                                            .ContainingType
+                                            .OriginalDefinition
+                                            .SpecialType == SpecialType.System_Nullable_T)
+                                    {
+                                        context.ReportDiagnostic(DiagnosticDescriptors.UseCoalesceExpression, invocationInfo.Name);
+                                    }
+
+                                    break;
+                                }
                             case "Where":
                                 {
                                     CombineEnumerableWhereMethodChainAnalysis.Analyze(context, invocationInfo);
@@ -281,6 +297,7 @@ namespace Roslynator.CSharp.Analysis
                 case "ElementAtOrDefault":
                 case "FirstOrDefault":
                 case "LastOrDefault":
+                case "SingleOrDefault":
                     {
                         if (argumentCount == 0
                             || argumentCount == 1

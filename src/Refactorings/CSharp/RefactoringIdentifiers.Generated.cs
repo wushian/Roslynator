@@ -20,6 +20,7 @@ namespace Roslynator.CSharp.Refactorings
         public const string AddIdentifierToVariableDeclaration = Prefix + "0010";
         public const string AddMemberToInterface = Prefix + "0195";
         public const string AddParameterNameToArgument = Prefix + "0011";
+        public const string AddTagToDocumentationComment = Prefix + "0208";
         public const string AddTypeParameter = Prefix + "0178";
         public const string AddUsingDirective = Prefix + "0013";
         public const string AddUsingStaticDirective = Prefix + "0014";
@@ -85,9 +86,13 @@ namespace Roslynator.CSharp.Refactorings
         public const string IntroduceConstructor = Prefix + "0066";
         public const string IntroduceFieldToLockOn = Prefix + "0067";
         public const string IntroduceLocalVariable = Prefix + "0068";
+        public const string InvertBinaryExpression = Prefix + "0079";
+        public const string InvertBooleanLiteral = Prefix + "0080";
         public const string InvertConditionalExpression = Prefix + "0160";
         public const string InvertIf = Prefix + "0189";
         public const string InvertIfElse = Prefix + "0162";
+        public const string InvertIsExpression = Prefix + "0081";
+        public const string InvertOperator = Prefix + "0082";
         public const string InvertPrefixOrPostfixUnaryOperator = Prefix + "0134";
         public const string JoinStringExpressions = Prefix + "0078";
         public const string MakeMemberAbstract = Prefix + "0069";
@@ -98,10 +103,6 @@ namespace Roslynator.CSharp.Refactorings
         public const string MergeIfWithParentIf = Prefix + "0196";
         public const string MergeLocalDeclarations = Prefix + "0077";
         public const string MoveUnsafeContextToContainingDeclaration = Prefix + "0202";
-        public const string NegateBinaryExpression = Prefix + "0079";
-        public const string NegateBooleanLiteral = Prefix + "0080";
-        public const string NegateIsExpression = Prefix + "0081";
-        public const string NegateOperator = Prefix + "0082";
         public const string NotifyPropertyChanged = Prefix + "0083";
         public const string ParenthesizeExpression = Prefix + "0084";
         public const string PromoteLocalToParameter = Prefix + "0085";
