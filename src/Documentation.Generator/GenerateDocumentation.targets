@@ -1,0 +1,94 @@
+﻿<Project>
+
+  <Target Name="GenerateDocumentation" AfterTargets="RoslynatorInitialize" Condition=" '$(Configuration)' == 'Release'">
+
+    <PropertyGroup>
+      <RoslynatorAssemblies>Roslynator.CSharp.dll Roslynator.CSharp.Workspaces.dll Roslynator.Documentation.dll</RoslynatorAssemblies>
+      <RoslynatorAssemblyReferences>$(TargetDir)Roslynator.assemblyreferences</RoslynatorAssemblyReferences>
+    </PropertyGroup>
+
+    <WriteLinesToFile File="$(RoslynatorAssemblyReferences)" Lines="@(_ResolveAssemblyReferenceResolvedFiles)" Overwrite="true" Encoding="Unicode" />
+
+    <Exec Command="$(RoslynatorExe) generate-doc ^
+      -a $(RoslynatorAssemblies) ^
+      -r &quot;$(RoslynatorAssemblyReferences)&quot; ^
+      -o &quot;$(SolutionDir)..\docs\api&quot; ^
+      -h &quot;Roslynator API Reference&quot;" LogStandardErrorAsError="true" ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+    </Exec>
+
+    <Exec Command="$(RoslynatorExe) generate-declarations ^
+      -a $(RoslynatorAssemblies) ^
+      -r &quot;$(RoslynatorAssemblyReferences)&quot; ^
+      -o &quot;$(SolutionDir)..\docs\api.cs&quot;" LogStandardErrorAsError="true" ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+    </Exec>
+
+    <Exec Command="$(RoslynatorExe) generate-doc-root ^
+      -a Roslynator.Documentation.dll ^
+      -r &quot;$(RoslynatorAssemblyReferences)&quot; ^
+      -o &quot;$(SolutionDir)Documentation\README.md&quot; ^
+      -h &quot;Roslynator.Documentation&quot; ^
+      --root-directory-url &quot;../../docs/api/&quot;" LogStandardErrorAsError="true" ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+    </Exec>
+
+    <Exec Command="$(RoslynatorExe) generate-doc-root ^
+      -a Roslynator.CSharp.dll ^
+      -r &quot;$(RoslynatorAssemblyReferences)&quot; ^
+      -o &quot;$(SolutionDir)CSharp\README.md&quot; ^
+      -h &quot;Roslynator.CSharp&quot; ^
+      --root-directory-url &quot;../../docs/api/&quot;" LogStandardErrorAsError="true" ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+    </Exec>
+
+    <Exec Command="$(RoslynatorExe) generate-doc-root ^
+      -a Roslynator.CSharp.Workspaces.dll ^
+      -r &quot;$(RoslynatorAssemblyReferences)&quot; ^
+      -o &quot;$(SolutionDir)CSharp.Workspaces\README.md&quot; ^
+      -h &quot;Roslynator.CSharp.Workspaces&quot; ^
+      --root-directory-url &quot;../../docs/api/&quot;" LogStandardErrorAsError="true" ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+    </Exec>
+
+    <PropertyGroup>
+      <RoslynatorAssemblies>Roslynator.Documentation.TestProject</RoslynatorAssemblies>
+    </PropertyGroup>
+
+    <Exec Command="$(RoslynatorExe) generate-doc ^
+      -a $(RoslynatorAssemblies) ^
+      -r &quot;$(RoslynatorAssemblyReferences)&quot; ^
+      -o &quot;$(SolutionDir)..\docs\apitest&quot; ^
+      -h &quot;Foo API Reference&quot; ^
+      --include-inherited-interface-members ^
+      --additional-xml-documentation &quot;$(ProjectDir)test.xml&quot; ^
+      --ignored-names &quot;Roslynator.Documentation.Test2&quot;" LogStandardErrorAsError="true" ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+    </Exec>
+
+    <Exec Command="$(RoslynatorExe) generate-declarations ^
+      -a $(RoslynatorAssemblies) ^
+      -r &quot;$(RoslynatorAssemblyReferences)&quot; ^
+      -o &quot;$(SolutionDir)..\docs\apitest.cs&quot; ^
+      --ignored-names &quot;Roslynator.Documentation.Test2&quot;" LogStandardErrorAsError="true" ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+    </Exec>
+
+    <PropertyGroup>
+      <RoslynatorAssemblies>Roslynator.Documentation</RoslynatorAssemblies>
+    </PropertyGroup>
+
+    <Exec Command="$(RoslynatorExe) generate-declarations ^
+      -a $(RoslynatorAssemblies) ^
+      -r &quot;$(RoslynatorAssemblyReferences)&quot; ^
+      -o &quot;$(SolutionDir)..\docs\Roslynator.Documentation.cs&quot; ^
+      --indent-chars &quot;  &quot; ^
+      --empty-line-between-members ^
+      --nest-namespaces ^
+      --format-parameters" LogStandardErrorAsError="true" ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+    </Exec>
+
+  </Target>
+
+</Project>

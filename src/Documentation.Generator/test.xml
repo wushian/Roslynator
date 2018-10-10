@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<doc>
+    <members>
+        <member name="N:Roslynator.Documentation.Test">
+            <summary>
+            test summary
+            </summary>
+            <example>test example</example>
+            <remarks>test remarks</remarks>
+            <seealso cref="T:System.Object"/>
+        </member>
+    </members>
+</doc>
