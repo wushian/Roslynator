@@ -12,7 +12,7 @@
     <description>Command line tool for Roslynator</description>
     <summary>Command line tool for Roslynator</summary>
     <copyright>Copyright (c) 2017-2018 Josef Pihrt</copyright>
-    <tags>C# CSharp CLI Documentation</tags>
+    <tags>C# CSharp CLI Roslyn</tags>
     <developmentDependency>true</developmentDependency>
     <repository type="git" url="http://github.com/JosefPihrt/Roslynator.git" />
   </metadata>

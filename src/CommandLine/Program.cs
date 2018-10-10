@@ -109,7 +109,7 @@ namespace Roslynator.CommandLine
             {
                 workspace.WorkspaceFailed += (o, e) => WriteLine(e.Diagnostic.Message, ConsoleColor.Yellow);
 
-                string solutionPath = options.Solution;
+                string solutionPath = options.SolutionPath;
 
                 WriteLine($"Load solution '{solutionPath}'", ConsoleColor.Cyan);
 
@@ -145,7 +145,7 @@ namespace Roslynator.CommandLine
                         ignoredProjectNames: options.IgnoredProjects,
                         batchSize: options.BatchSize);
 
-                    var codeFixer = new CodeFixer(workspace, analyzerPaths: options.Analyzers, options: codeFixerOptions);
+                    var codeFixer = new CodeFixer(workspace, analyzerAssemblies: options.AnalyzerAssemblies, options: codeFixerOptions);
 
                     await codeFixer.FixAsync(cancellationToken);
                 }
