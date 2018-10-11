@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,35 +17,26 @@ namespace Roslynator.Documentation
     {
         private static readonly UTF8Encoding _utf8NoBom = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
 
-        [SuppressMessage("Redundancy", "RCS1163")]
         private static void Main(string[] args)
         {
             GenerateDocumentation(
                 @"..\..\..\..\..\docs\api",
                 "Roslynator API Reference",
                 "api.cs",
-                new string[] { "Roslynator.Documentation.dll", "Roslynator.CSharp.dll", "Roslynator.CSharp.Workspaces.dll" });
-
-            GenerateDocumentation(
-                @"..\..\..\..\..\docs\apitest",
-                "Foo API Reference",
-                "apitest.cs",
-                new string[] { "Roslynator.Documentation.TestProject.dll" },
-                inheritedInterfaceMembers: true);
+                new string[] { "Roslynator.CSharp.dll", "Roslynator.CSharp.Workspaces.dll" });
         }
 
         private static void GenerateDocumentation(
             string directoryPath,
             string heading,
-            string declarationListFileName,
-            string[] assemblyNames,
-            bool inheritedInterfaceMembers = false)
+            string declarationsFileName,
+            string[] assemblyNames)
         {
             DocumentationModel documentationModel = CreateFromTrustedPlatformAssemblies(assemblyNames);
 
             var ignoredNames = new string[] { "Roslynator.Documentation.Test2" };
 
-            var documentationOptions = new DocumentationOptions(ignoredNames: ignoredNames, includeInheritedInterfaceMembers: inheritedInterfaceMembers);
+            var documentationOptions = new DocumentationOptions(ignoredNames: ignoredNames);
 
             var generator = new MarkdownDocumentationGenerator(documentationModel, WellKnownUrlProviders.GitHub, documentationOptions);
 
@@ -65,7 +55,7 @@ namespace Roslynator.Documentation
 
             string declarationList = DeclarationListGenerator.GenerateAsync(documentationModel, declarationListOptions).Result;
 
-            FileHelper.WriteAllText(Path.Combine(Path.GetDirectoryName(directoryPath), declarationListFileName), declarationList, Encoding.UTF8, onlyIfChanges: true, fileMustExists: false);
+            FileHelper.WriteAllText(Path.Combine(Path.GetDirectoryName(directoryPath), declarationsFileName), declarationList, Encoding.UTF8, onlyIfChanges: true, fileMustExists: false);
         }
 
         internal static DocumentationModel CreateFromTrustedPlatformAssemblies(string[] assemblyNames)

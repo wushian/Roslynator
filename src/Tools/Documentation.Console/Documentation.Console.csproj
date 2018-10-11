@@ -15,12 +15,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Documentation.Generator.snk" />
+    <None Remove="Documentation.Console.snk" />
     <None Remove="test.xml" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Roslynator.CommandLine" Version="0.1.0-beta" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.8.0" />
   </ItemGroup>
 
@@ -30,7 +29,5 @@
     <ProjectReference Include="..\..\Documentation\Documentation.csproj" />
     <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
-
-  <Import Project="GenerateDocumentation.targets" />
 
 </Project>
