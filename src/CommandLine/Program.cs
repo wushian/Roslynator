@@ -35,14 +35,14 @@ namespace Roslynator.CommandLine
 
             Parser.Default.ParseArguments<FixCommandLineOptions, GenerateDocCommandLineOptions, GenerateDeclarationsCommandLineOptions, GenerateDocRootCommandLineOptions>(args)
                 .MapResult(
-                  (FixCommandLineOptions options) => ExecuteFixAsync(options).Result,
-                  (GenerateDocCommandLineOptions options) => ExecuteDoc(options),
-                  (GenerateDeclarationsCommandLineOptions options) => ExecuteDeclarations(options),
-                  (GenerateDocRootCommandLineOptions options) => ExecuteRoot(options),
+                  (FixCommandLineOptions options) => FixAsync(options).Result,
+                  (GenerateDocCommandLineOptions options) => GenerateDoc(options),
+                  (GenerateDeclarationsCommandLineOptions options) => GenerateDeclarations(options),
+                  (GenerateDocRootCommandLineOptions options) => GenerateDocRoot(options),
                   _ => 1);
         }
 
-        private static async Task<int> ExecuteFixAsync(FixCommandLineOptions options)
+        private static async Task<int> FixAsync(FixCommandLineOptions options)
         {
             var cts = new CancellationTokenSource();
             Console.CancelKeyPress += (sender, e) =>
@@ -158,7 +158,7 @@ namespace Roslynator.CommandLine
             return 0;
         }
 
-        private static int ExecuteDoc(GenerateDocCommandLineOptions options)
+        private static int GenerateDoc(GenerateDocCommandLineOptions options)
         {
             if (options.MaxDerivedTypes < 0)
             {
@@ -260,7 +260,7 @@ namespace Roslynator.CommandLine
             return 0;
         }
 
-        private static int ExecuteDeclarations(GenerateDeclarationsCommandLineOptions options)
+        private static int GenerateDeclarations(GenerateDeclarationsCommandLineOptions options)
         {
             if (!TryGetIgnoredDeclarationListParts(options.IgnoredParts, out DeclarationListParts ignoredParts))
                 return 1;
@@ -324,7 +324,7 @@ namespace Roslynator.CommandLine
             return 0;
         }
 
-        private static int ExecuteRoot(GenerateDocRootCommandLineOptions options)
+        private static int GenerateDocRoot(GenerateDocRootCommandLineOptions options)
         {
             if (!TryGetVisibility(options.Visibility, out DocumentationVisibility visibility))
                 return 1;
@@ -373,16 +373,17 @@ namespace Roslynator.CommandLine
             return 0;
         }
 
-        private static DocumentationModel CreateDocumentationModel(string assemblyReferencesValue, IEnumerable<string> assemblies, DocumentationVisibility visibility, IEnumerable<string> additionalXmlDocumentationPaths = null)
+        private static DocumentationModel CreateDocumentationModel(IEnumerable<string> assemblyReferences, IEnumerable<string> assemblies, DocumentationVisibility visibility, IEnumerable<string> additionalXmlDocumentationPaths = null)
         {
-            IEnumerable<string> assemblyReferences = GetAssemblyReferences(assemblyReferencesValue);
+            var references = new List<PortableExecutableReference>();
 
-            if (assemblyReferences == null)
-                return null;
+            foreach (string path in assemblyReferences.SelectMany(f => GetAssemblyReferences(f)))
+            {
+                if (path == null)
+                    return null;
 
-            List<PortableExecutableReference> references = assemblyReferences
-                .Select(f => MetadataReference.CreateFromFile(f))
-                .ToList();
+                references.Add(MetadataReference.CreateFromFile(path));
+            }
 
             foreach (string assemblyPath in assemblies)
             {
@@ -438,7 +439,7 @@ namespace Roslynator.CommandLine
 
                 if (string.Equals(extension, ".dll", StringComparison.OrdinalIgnoreCase))
                 {
-                    return assemblyReferences.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+                    return new string[] { path };
                 }
                 else
                 {

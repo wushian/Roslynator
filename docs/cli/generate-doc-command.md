@@ -56,9 +56,9 @@ Defines a heading of the root documentation file.
 
 Defines a path for the output directory.
 
-**`-r|--references`** `<ASSEMBLY-REFERENCES-OR-PATH-TO-FILE-WITH-ASSEMBLY-REFERENCES>`
+**`-r|--references`** `<ASSEMBLY-REFERENCES> <ASSEMBLY-REFERENCES-FILE>`
 
-Defines one of two following options:
+Defines one or more values where each value can be:
 
 * Semicolon separated list of assemblies necessary to compile a project.
 * Path to a file that contains a list of all assemblies necessary to compile a project. Each assembly must be on separate line.
