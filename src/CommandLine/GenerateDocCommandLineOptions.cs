@@ -13,14 +13,14 @@ namespace Roslynator.CommandLine
         [Option(longName: "assemblies", shortName: 'a', Required = true)]
         public IEnumerable<string> Assemblies { get; set; }
 
-        [Option(longName: "heading", shortName: 'h', Required = true)]
-        public string Heading { get; set; }
-
         [Option(longName: "output", shortName: 'o', Required = true)]
-        public string OutputDirectory { get; set; }
+        public string OutputPath { get; set; }
 
         [Option(longName: "references", shortName: 'r', Required = true)]
         public IEnumerable<string> References { get; set; }
+
+        [Option(longName: "heading", shortName: 'h', Required = true)]
+        public string Heading { get; set; }
 
         [Option(longName: "additional-xml-documentation")]
         public IEnumerable<string> AdditionalXmlDocumentation { get; set; }

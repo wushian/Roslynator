@@ -4,10 +4,11 @@
 
     <PropertyGroup>
       <RoslynatorAssemblies>&quot;$(TargetPath)&quot;</RoslynatorAssemblies>
-      <RoslynatorAssemblyReferences>$(TargetDir)Roslynator.assemblyreferences</RoslynatorAssemblyReferences>
+      <RoslynatorAssemblyReferencesFile>$(TargetDir)Roslynator.assemblyreferences</RoslynatorAssemblyReferencesFile>
+      <RoslynatorAssemblyReferences>&quot;$(RoslynatorAssemblyReferencesFile)&quot; &quot;$(TargetPath)&quot;</RoslynatorAssemblyReferences>
     </PropertyGroup>
 
-    <WriteLinesToFile File="$(RoslynatorAssemblyReferences)" Lines="@(_ResolveAssemblyReferenceResolvedFiles)" Overwrite="true" Encoding="Unicode" />
+    <WriteLinesToFile File="$(RoslynatorAssemblyReferencesFile)" Lines="@(_ResolveAssemblyReferenceResolvedFiles)" Overwrite="true" Encoding="Unicode" />
 
     <Exec Command="$(RoslynatorExe) generate-doc ^
       -a $(RoslynatorAssemblies) ^

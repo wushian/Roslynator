@@ -217,7 +217,7 @@ namespace Roslynator.CommandLine
 
             var generator = new MarkdownDocumentationGenerator(documentationModel, WellKnownUrlProviders.GitHub, documentationOptions);
 
-            string directoryPath = options.OutputDirectory;
+            string directoryPath = options.OutputPath;
 
             if (!options.NoDelete
                 && Directory.Exists(directoryPath))
@@ -241,7 +241,7 @@ namespace Roslynator.CommandLine
 
             CancellationToken cancellationToken = cts.Token;
 
-            WriteLine($"Documentation is being generated to '{options.OutputDirectory}'.");
+            WriteLine($"Documentation is being generated to '{options.OutputPath}'.");
 
             foreach (DocumentationGeneratorResult documentationFile in generator.Generate(heading: options.Heading, cancellationToken))
             {
@@ -255,7 +255,7 @@ namespace Roslynator.CommandLine
 #endif
             }
 
-            WriteLine($"Documentation successfully generated to '{options.OutputDirectory}'.");
+            WriteLine($"Documentation successfully generated to '{options.OutputPath}'.");
 
             return 0;
         }
@@ -419,32 +419,21 @@ namespace Roslynator.CommandLine
                 additionalXmlDocumentationPaths: additionalXmlDocumentationPaths);
         }
 
-        private static IEnumerable<string> GetAssemblyReferences(string assemblyReferences)
+        private static IEnumerable<string> GetAssemblyReferences(string path)
         {
-            if (assemblyReferences.Contains(";"))
+            if (!File.Exists(path))
             {
-                return assemblyReferences.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+                WriteLine($"File not found: '{path}'.");
+                return null;
+            }
+
+            if (string.Equals(Path.GetExtension(path), ".dll", StringComparison.OrdinalIgnoreCase))
+            {
+                return new string[] { path };
             }
             else
             {
-                string path = assemblyReferences;
-
-                if (!File.Exists(path))
-                {
-                    WriteLine($"File not found: '{path}'.");
-                    return null;
-                }
-
-                string extension = Path.GetExtension(path);
-
-                if (string.Equals(extension, ".dll", StringComparison.OrdinalIgnoreCase))
-                {
-                    return new string[] { path };
-                }
-                else
-                {
-                    return File.ReadLines(assemblyReferences).Where(f => !string.IsNullOrWhiteSpace(f));
-                }
+                return File.ReadLines(path).Where(f => !string.IsNullOrWhiteSpace(f));
             }
         }
 
