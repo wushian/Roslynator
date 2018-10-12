@@ -19,6 +19,7 @@ roslynator doc
 [--no-precedence-for-system]
 [--omit-containing-namespace]
 [--root-directory-url]
+[--scroll-to-content]
 [--visibility]
 ```
 
@@ -78,6 +79,10 @@ Indicates whether a containing namespace should be omitted when displaying type 
 **`[--root-directory-url]`**
 
 Defines a relative url to the documentation root directory.
+
+**`[--scroll-to-content]`**
+
+Indicates whether a link should lead to the top of the documentation content.
 
 **`[--visibility]`** `{publicly|publicly-or-internally|all}`
 

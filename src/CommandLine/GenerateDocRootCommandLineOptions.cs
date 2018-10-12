@@ -46,6 +46,9 @@ namespace Roslynator.CommandLine
         [Option(longName: "root-directory-url")]
         public string RootDirectoryUrl { get; set; }
 
+        [Option(longName: "scroll-to-content")]
+        public bool ScrollToContent { get; set; }
+
         [Option(longName: "visibility", Default = nameof(DocumentationVisibility.Publicly))]
         public string Visibility { get; set; }
     }

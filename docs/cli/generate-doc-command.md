@@ -37,6 +37,7 @@ roslynator doc
 [--omit-member-implements]
 [--omit-member-overrides]
 [--preferred-culture]
+[--scroll-to-content]
 [--visibility]
 ```
 
@@ -167,9 +168,13 @@ Indicates whether an interface member that is being implemented should be omitte
 
 Indicates whether an overridden member should be omitted.
 
-**`[--preferred-culture]`**
+**`[--preferred-culture]`** <CULTURE-NAME>
 
 Defines culture that should be used when searching for xml documentation files.
+
+**`[--scroll-to-content]`**
+
+Indicates whether a link should lead to the top of the documentation content.
 
 **`[--visibility]`** `{publicly|publicly-or-internally|all}`
 

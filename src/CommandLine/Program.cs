@@ -213,7 +213,8 @@ namespace Roslynator.CommandLine
                 ignoredNamespaceParts: ignoredNamespaceParts,
                 ignoredTypeParts: ignoredTypeParts,
                 ignoredMemberParts: ignoredMemberParts,
-                omitContainingNamespaceParts: omitContainingNamespaceParts);
+                omitContainingNamespaceParts: omitContainingNamespaceParts,
+                scrollToContent: options.ScrollToContent);
 
             var generator = new MarkdownDocumentationGenerator(documentationModel, WellKnownUrlProviders.GitHub, documentationOptions);
 
@@ -345,7 +346,8 @@ namespace Roslynator.CommandLine
                 markObsolete: !options.NoMarkObsolete,
                 depth: options.Depth,
                 ignoredRootParts: ignoredParts,
-                omitContainingNamespaceParts: (options.OmitContainingNamespace) ? OmitContainingNamespaceParts.Root : OmitContainingNamespaceParts.None);
+                omitContainingNamespaceParts: (options.OmitContainingNamespace) ? OmitContainingNamespaceParts.Root : OmitContainingNamespaceParts.None,
+                scrollToContent: options.ScrollToContent);
 
             var generator = new MarkdownDocumentationGenerator(documentationModel, WellKnownUrlProviders.GitHub, documentationOptions);
 

@@ -100,6 +100,9 @@ namespace Roslynator.CommandLine
         [Option(longName: "preferred-culture")]
         public string PreferredCulture { get; set; }
 
+        [Option(longName: "scroll-to-content")]
+        public bool ScrollToContent { get; set; }
+
         [Option(longName: "visibility", Default = nameof(DocumentationVisibility.Publicly))]
         public string Visibility { get; set; }
     }
