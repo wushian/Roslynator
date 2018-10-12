@@ -1,16 +1,14 @@
-<a name="_top"></a>
-
 # UsingDirectiveListInfo\.Replace\(UsingDirectiveSyntax, UsingDirectiveSyntax\) Method
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[UsingDirectiveListInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[UsingDirectiveListInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
 ## Summary
 
-Creates a new [UsingDirectiveListInfo](../README.md#_top) with the specified using directive replaced with the new using directive\.
+Creates a new [UsingDirectiveListInfo](../README.md) with the specified using directive replaced with the new using directive\.
 
 ```csharp
 public UsingDirectiveListInfo Replace(UsingDirectiveSyntax usingInLine, UsingDirectiveSyntax newUsingDirective)
@@ -24,5 +22,5 @@ public UsingDirectiveListInfo Replace(UsingDirectiveSyntax usingInLine, UsingDir
 
 ### Returns
 
-Roslynator\.CSharp\.Syntax\.[UsingDirectiveListInfo](../README.md#_top)
+Roslynator\.CSharp\.Syntax\.[UsingDirectiveListInfo](../README.md)
 

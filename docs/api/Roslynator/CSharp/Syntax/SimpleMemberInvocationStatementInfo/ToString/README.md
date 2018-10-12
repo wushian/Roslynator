@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SimpleMemberInvocationStatementInfo\.ToString\(\) Method
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[SimpleMemberInvocationStatementInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[SimpleMemberInvocationStatementInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

@@ -1,8 +1,6 @@
-<a name="_top"></a>
-
 # [SyntaxNodeAnalysisContext](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.diagnostics.syntaxnodeanalysiscontext) Struct Extensions
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
 | Extension Method | Summary |
 | ---------------- | ------- |

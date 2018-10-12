@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # StringLiteralExpressionInfo\.Equals Method
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[StringLiteralExpressionInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[StringLiteralExpressionInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

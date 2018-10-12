@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SymbolExtensions\.IsReducedExtensionMethod\(IMethodSymbol\) Method
 
-[Home](../../../README.md#_top)
+[Home](../../../README.md)
 
-**Containing Type**: Roslynator\.[SymbolExtensions](../README.md#_top)
+**Containing Type**: Roslynator\.[SymbolExtensions](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

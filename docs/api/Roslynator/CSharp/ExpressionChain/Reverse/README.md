@@ -1,16 +1,14 @@
-<a name="_top"></a>
-
 # ExpressionChain\.Reverse\(\) Method
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.[ExpressionChain](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.[ExpressionChain](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
 ## Summary
 
-Returns a chain which contains all expressions of [ExpressionChain](../README.md#_top) in reversed order\.
+Returns a chain which contains all expressions of [ExpressionChain](../README.md) in reversed order\.
 
 ```csharp
 public ExpressionChain.Reversed Reverse()
@@ -18,5 +16,5 @@ public ExpressionChain.Reversed Reverse()
 
 ### Returns
 
-Roslynator\.CSharp\.[ExpressionChain.Reversed](../Reversed/README.md#_top)
+Roslynator\.CSharp\.[ExpressionChain.Reversed](../Reversed/README.md)
 

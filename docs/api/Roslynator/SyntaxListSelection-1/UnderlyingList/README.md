@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SyntaxListSelection\<TNode>\.UnderlyingList Property
 
-[Home](../../../README.md#_top)
+[Home](../../../README.md)
 
-**Containing Type**: Roslynator\.[SyntaxListSelection\<TNode>](../README.md#_top)
+**Containing Type**: Roslynator\.[SyntaxListSelection\<TNode>](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SimpleMemberInvocationExpressionInfo\.Inequality\(SimpleMemberInvocationExpressionInfo, SimpleMemberInvocationExpressionInfo\) Operator
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[SimpleMemberInvocationExpressionInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[SimpleMemberInvocationExpressionInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

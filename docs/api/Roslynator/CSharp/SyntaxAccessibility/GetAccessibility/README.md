@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SyntaxAccessibility\.GetAccessibility\(SyntaxNode\) Method
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.[SyntaxAccessibility](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.[SyntaxAccessibility](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

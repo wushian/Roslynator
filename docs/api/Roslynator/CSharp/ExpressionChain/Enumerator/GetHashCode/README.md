@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # ExpressionChain\.Enumerator\.GetHashCode\(\) Method
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.[ExpressionChain.Enumerator](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.[ExpressionChain.Enumerator](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

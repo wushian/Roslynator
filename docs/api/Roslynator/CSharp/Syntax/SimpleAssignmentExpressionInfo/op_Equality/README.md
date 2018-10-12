@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SimpleAssignmentExpressionInfo\.Equality\(SimpleAssignmentExpressionInfo, SimpleAssignmentExpressionInfo\) Operator
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[SimpleAssignmentExpressionInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[SimpleAssignmentExpressionInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

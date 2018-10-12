@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # CSharpExtensions Class
 
-[Home](../../../README.md#_top) &#x2022; [Methods](#methods)
+[Home](../../../README.md) &#x2022; [Methods](#methods)
 
-**Namespace**: [Roslynator.CSharp](../README.md#_top)
+**Namespace**: [Roslynator.CSharp](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
@@ -22,9 +20,9 @@ public static class CSharpExtensions
 | ------ | ------- |
 | [DetermineParameter(SemanticModel, ArgumentSyntax, Boolean, Boolean, CancellationToken)](DetermineParameter/README.md#Roslynator_CSharp_CSharpExtensions_DetermineParameter_Microsoft_CodeAnalysis_SemanticModel_Microsoft_CodeAnalysis_CSharp_Syntax_ArgumentSyntax_System_Boolean_System_Boolean_System_Threading_CancellationToken_) | Determines a parameter symbol that matches to the specified argument\. Returns null if no matching parameter is found\. |
 | [DetermineParameter(SemanticModel, AttributeArgumentSyntax, Boolean, Boolean, CancellationToken)](DetermineParameter/README.md#Roslynator_CSharp_CSharpExtensions_DetermineParameter_Microsoft_CodeAnalysis_SemanticModel_Microsoft_CodeAnalysis_CSharp_Syntax_AttributeArgumentSyntax_System_Boolean_System_Boolean_System_Threading_CancellationToken_) | Determines a parameter symbol that matches to the specified attribute argument\. Returns null if not matching parameter is found\. |
-| [GetExtensionMethodInfo(SemanticModel, ExpressionSyntax, CancellationToken)](GetExtensionMethodInfo/README.md#_top) | Returns what extension method symbol, if any, the specified expression syntax bound to\. |
-| [GetMethodSymbol(SemanticModel, ExpressionSyntax, CancellationToken)](GetMethodSymbol/README.md#_top) | Returns method symbol, if any, the specified expression syntax bound to\. |
-| [GetReducedExtensionMethodInfo(SemanticModel, ExpressionSyntax, CancellationToken)](GetReducedExtensionMethodInfo/README.md#_top) | Returns what extension method symbol, if any, the specified expression syntax bound to\. |
+| [GetExtensionMethodInfo(SemanticModel, ExpressionSyntax, CancellationToken)](GetExtensionMethodInfo/README.md) | Returns what extension method symbol, if any, the specified expression syntax bound to\. |
+| [GetMethodSymbol(SemanticModel, ExpressionSyntax, CancellationToken)](GetMethodSymbol/README.md) | Returns method symbol, if any, the specified expression syntax bound to\. |
+| [GetReducedExtensionMethodInfo(SemanticModel, ExpressionSyntax, CancellationToken)](GetReducedExtensionMethodInfo/README.md) | Returns what extension method symbol, if any, the specified expression syntax bound to\. |
 | [GetSymbol(SemanticModel, AttributeSyntax, CancellationToken)](GetSymbol/README.md#Roslynator_CSharp_CSharpExtensions_GetSymbol_Microsoft_CodeAnalysis_SemanticModel_Microsoft_CodeAnalysis_CSharp_Syntax_AttributeSyntax_System_Threading_CancellationToken_) | Returns what symbol, if any, the specified attribute syntax bound to\. |
 | [GetSymbol(SemanticModel, ConstructorInitializerSyntax, CancellationToken)](GetSymbol/README.md#Roslynator_CSharp_CSharpExtensions_GetSymbol_Microsoft_CodeAnalysis_SemanticModel_Microsoft_CodeAnalysis_CSharp_Syntax_ConstructorInitializerSyntax_System_Threading_CancellationToken_) | Returns what symbol, if any, the specified constructor initializer syntax bound to\. |
 | [GetSymbol(SemanticModel, CrefSyntax, CancellationToken)](GetSymbol/README.md#Roslynator_CSharp_CSharpExtensions_GetSymbol_Microsoft_CodeAnalysis_SemanticModel_Microsoft_CodeAnalysis_CSharp_Syntax_CrefSyntax_System_Threading_CancellationToken_) | Returns what symbol, if any, the specified cref syntax bound to\. |
@@ -35,6 +33,6 @@ public static class CSharpExtensions
 | [GetTypeSymbol(SemanticModel, ConstructorInitializerSyntax, CancellationToken)](GetTypeSymbol/README.md#Roslynator_CSharp_CSharpExtensions_GetTypeSymbol_Microsoft_CodeAnalysis_SemanticModel_Microsoft_CodeAnalysis_CSharp_Syntax_ConstructorInitializerSyntax_System_Threading_CancellationToken_) | Returns type information about a constructor initializer syntax\. |
 | [GetTypeSymbol(SemanticModel, ExpressionSyntax, CancellationToken)](GetTypeSymbol/README.md#Roslynator_CSharp_CSharpExtensions_GetTypeSymbol_Microsoft_CodeAnalysis_SemanticModel_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_System_Threading_CancellationToken_) | Returns type information about an expression syntax\. |
 | [GetTypeSymbol(SemanticModel, SelectOrGroupClauseSyntax, CancellationToken)](GetTypeSymbol/README.md#Roslynator_CSharp_CSharpExtensions_GetTypeSymbol_Microsoft_CodeAnalysis_SemanticModel_Microsoft_CodeAnalysis_CSharp_Syntax_SelectOrGroupClauseSyntax_System_Threading_CancellationToken_) | Returns type information about a select or group clause\. |
-| [HasConstantValue(SemanticModel, ExpressionSyntax, CancellationToken)](HasConstantValue/README.md#_top) | Returns true if the specified node has a constant value\. |
-| [IsDefaultValue(SemanticModel, ITypeSymbol, ExpressionSyntax, CancellationToken)](IsDefaultValue/README.md#_top) | Returns true if the specified expression represents default value of the specified type\. |
+| [HasConstantValue(SemanticModel, ExpressionSyntax, CancellationToken)](HasConstantValue/README.md) | Returns true if the specified node has a constant value\. |
+| [IsDefaultValue(SemanticModel, ITypeSymbol, ExpressionSyntax, CancellationToken)](IsDefaultValue/README.md) | Returns true if the specified expression represents default value of the specified type\. |
 

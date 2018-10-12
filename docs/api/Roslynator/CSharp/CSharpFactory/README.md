@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # CSharpFactory Class
 
-[Home](../../../README.md#_top) &#x2022; [Methods](#methods)
+[Home](../../../README.md) &#x2022; [Methods](#methods)
 
-**Namespace**: [Roslynator.CSharp](../README.md#_top)
+**Namespace**: [Roslynator.CSharp](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
@@ -34,22 +32,22 @@ public static class CSharpFactory
 | [AddressOfExpression(ExpressionSyntax, SyntaxToken)](AddressOfExpression/README.md#Roslynator_CSharp_CSharpFactory_AddressOfExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_SyntaxToken_) | |
 | [AndAssignmentExpression(ExpressionSyntax, ExpressionSyntax)](AndAssignmentExpression/README.md#Roslynator_CSharp_CSharpFactory_AndAssignmentExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
 | [AndAssignmentExpression(ExpressionSyntax, SyntaxToken, ExpressionSyntax)](AndAssignmentExpression/README.md#Roslynator_CSharp_CSharpFactory_AndAssignmentExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
-| [Argument(NameColonSyntax, ExpressionSyntax)](Argument/README.md#_top) | |
+| [Argument(NameColonSyntax, ExpressionSyntax)](Argument/README.md) | |
 | [ArgumentList(ArgumentSyntax)](ArgumentList/README.md#Roslynator_CSharp_CSharpFactory_ArgumentList_Microsoft_CodeAnalysis_CSharp_Syntax_ArgumentSyntax_) | |
 | [ArgumentList(ArgumentSyntax\[\])](ArgumentList/README.md#Roslynator_CSharp_CSharpFactory_ArgumentList_Microsoft_CodeAnalysis_CSharp_Syntax_ArgumentSyntax___) | |
 | [ArrayInitializerExpression(SeparatedSyntaxList\<ExpressionSyntax>)](ArrayInitializerExpression/README.md#Roslynator_CSharp_CSharpFactory_ArrayInitializerExpression_Microsoft_CodeAnalysis_SeparatedSyntaxList_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax__) | |
 | [ArrayInitializerExpression(SyntaxToken, SeparatedSyntaxList\<ExpressionSyntax>, SyntaxToken)](ArrayInitializerExpression/README.md#Roslynator_CSharp_CSharpFactory_ArrayInitializerExpression_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_SeparatedSyntaxList_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax__Microsoft_CodeAnalysis_SyntaxToken_) | |
 | [AsExpression(ExpressionSyntax, ExpressionSyntax)](AsExpression/README.md#Roslynator_CSharp_CSharpFactory_AsExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
 | [AsExpression(ExpressionSyntax, SyntaxToken, ExpressionSyntax)](AsExpression/README.md#Roslynator_CSharp_CSharpFactory_AsExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
-| [Attribute(NameSyntax, AttributeArgumentSyntax)](Attribute/README.md#_top) | |
+| [Attribute(NameSyntax, AttributeArgumentSyntax)](Attribute/README.md) | |
 | [AttributeArgument(NameColonSyntax, ExpressionSyntax)](AttributeArgument/README.md#Roslynator_CSharp_CSharpFactory_AttributeArgument_Microsoft_CodeAnalysis_CSharp_Syntax_NameColonSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
 | [AttributeArgument(NameEqualsSyntax, ExpressionSyntax)](AttributeArgument/README.md#Roslynator_CSharp_CSharpFactory_AttributeArgument_Microsoft_CodeAnalysis_CSharp_Syntax_NameEqualsSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
 | [AttributeArgumentList(AttributeArgumentSyntax)](AttributeArgumentList/README.md#Roslynator_CSharp_CSharpFactory_AttributeArgumentList_Microsoft_CodeAnalysis_CSharp_Syntax_AttributeArgumentSyntax_) | |
 | [AttributeArgumentList(AttributeArgumentSyntax\[\])](AttributeArgumentList/README.md#Roslynator_CSharp_CSharpFactory_AttributeArgumentList_Microsoft_CodeAnalysis_CSharp_Syntax_AttributeArgumentSyntax___) | |
 | [AttributeList(AttributeSyntax)](AttributeList/README.md#Roslynator_CSharp_CSharpFactory_AttributeList_Microsoft_CodeAnalysis_CSharp_Syntax_AttributeSyntax_) | |
 | [AttributeList(AttributeSyntax\[\])](AttributeList/README.md#Roslynator_CSharp_CSharpFactory_AttributeList_Microsoft_CodeAnalysis_CSharp_Syntax_AttributeSyntax___) | |
-| [AutoGetAccessorDeclaration(SyntaxTokenList)](AutoGetAccessorDeclaration/README.md#_top) | |
-| [AutoSetAccessorDeclaration(SyntaxTokenList)](AutoSetAccessorDeclaration/README.md#_top) | |
+| [AutoGetAccessorDeclaration(SyntaxTokenList)](AutoGetAccessorDeclaration/README.md) | |
+| [AutoSetAccessorDeclaration(SyntaxTokenList)](AutoSetAccessorDeclaration/README.md) | |
 | [BaseConstructorInitializer(ArgumentListSyntax)](BaseConstructorInitializer/README.md#Roslynator_CSharp_CSharpFactory_BaseConstructorInitializer_Microsoft_CodeAnalysis_CSharp_Syntax_ArgumentListSyntax_) | |
 | [BaseConstructorInitializer(SyntaxToken, ArgumentListSyntax)](BaseConstructorInitializer/README.md#Roslynator_CSharp_CSharpFactory_BaseConstructorInitializer_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_ArgumentListSyntax_) | |
 | [BaseList(BaseTypeSyntax)](BaseList/README.md#Roslynator_CSharp_CSharpFactory_BaseList_Microsoft_CodeAnalysis_CSharp_Syntax_BaseTypeSyntax_) | |
@@ -64,12 +62,12 @@ public static class CSharpFactory
 | [BitwiseOrExpression(ExpressionSyntax, SyntaxToken, ExpressionSyntax)](BitwiseOrExpression/README.md#Roslynator_CSharp_CSharpFactory_BitwiseOrExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
 | [Block(StatementSyntax)](Block/README.md#Roslynator_CSharp_CSharpFactory_Block_Microsoft_CodeAnalysis_CSharp_Syntax_StatementSyntax_) | |
 | [Block(SyntaxToken, StatementSyntax, SyntaxToken)](Block/README.md#Roslynator_CSharp_CSharpFactory_Block_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_StatementSyntax_Microsoft_CodeAnalysis_SyntaxToken_) | |
-| [BooleanLiteralExpression(Boolean)](BooleanLiteralExpression/README.md#_top) | |
+| [BooleanLiteralExpression(Boolean)](BooleanLiteralExpression/README.md) | |
 | [BracketedArgumentList(ArgumentSyntax)](BracketedArgumentList/README.md#Roslynator_CSharp_CSharpFactory_BracketedArgumentList_Microsoft_CodeAnalysis_CSharp_Syntax_ArgumentSyntax_) | |
 | [BracketedArgumentList(ArgumentSyntax\[\])](BracketedArgumentList/README.md#Roslynator_CSharp_CSharpFactory_BracketedArgumentList_Microsoft_CodeAnalysis_CSharp_Syntax_ArgumentSyntax___) | |
 | [BracketedParameterList(ParameterSyntax)](BracketedParameterList/README.md#Roslynator_CSharp_CSharpFactory_BracketedParameterList_Microsoft_CodeAnalysis_CSharp_Syntax_ParameterSyntax_) | |
 | [BracketedParameterList(ParameterSyntax\[\])](BracketedParameterList/README.md#Roslynator_CSharp_CSharpFactory_BracketedParameterList_Microsoft_CodeAnalysis_CSharp_Syntax_ParameterSyntax___) | |
-| [ClassConstraint()](ClassConstraint/README.md#_top) | |
+| [ClassConstraint()](ClassConstraint/README.md) | |
 | [ClassDeclaration(SyntaxTokenList, String, SyntaxList\<MemberDeclarationSyntax>)](ClassDeclaration/README.md#Roslynator_CSharp_CSharpFactory_ClassDeclaration_Microsoft_CodeAnalysis_SyntaxTokenList_System_String_Microsoft_CodeAnalysis_SyntaxList_Microsoft_CodeAnalysis_CSharp_Syntax_MemberDeclarationSyntax__) | |
 | [ClassDeclaration(SyntaxTokenList, SyntaxToken, SyntaxList\<MemberDeclarationSyntax>)](ClassDeclaration/README.md#Roslynator_CSharp_CSharpFactory_ClassDeclaration_Microsoft_CodeAnalysis_SyntaxTokenList_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_SyntaxList_Microsoft_CodeAnalysis_CSharp_Syntax_MemberDeclarationSyntax__) | |
 | [CoalesceExpression(ExpressionSyntax, ExpressionSyntax)](CoalesceExpression/README.md#Roslynator_CSharp_CSharpFactory_CoalesceExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
@@ -83,7 +81,7 @@ public static class CSharpFactory
 | [ComplexElementInitializerExpression(SyntaxToken, SeparatedSyntaxList\<ExpressionSyntax>, SyntaxToken)](ComplexElementInitializerExpression/README.md#Roslynator_CSharp_CSharpFactory_ComplexElementInitializerExpression_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_SeparatedSyntaxList_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax__Microsoft_CodeAnalysis_SyntaxToken_) | |
 | [ConstructorDeclaration(SyntaxTokenList, SyntaxToken, ParameterListSyntax, ArrowExpressionClauseSyntax)](ConstructorDeclaration/README.md#Roslynator_CSharp_CSharpFactory_ConstructorDeclaration_Microsoft_CodeAnalysis_SyntaxTokenList_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_ParameterListSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_ArrowExpressionClauseSyntax_) | |
 | [ConstructorDeclaration(SyntaxTokenList, SyntaxToken, ParameterListSyntax, BlockSyntax)](ConstructorDeclaration/README.md#Roslynator_CSharp_CSharpFactory_ConstructorDeclaration_Microsoft_CodeAnalysis_SyntaxTokenList_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_ParameterListSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_BlockSyntax_) | |
-| [DefaultLiteralExpression()](DefaultLiteralExpression/README.md#_top) | |
+| [DefaultLiteralExpression()](DefaultLiteralExpression/README.md) | |
 | [DefaultSwitchSection(StatementSyntax)](DefaultSwitchSection/README.md#Roslynator_CSharp_CSharpFactory_DefaultSwitchSection_Microsoft_CodeAnalysis_CSharp_Syntax_StatementSyntax_) | |
 | [DefaultSwitchSection(SyntaxList\<StatementSyntax>)](DefaultSwitchSection/README.md#Roslynator_CSharp_CSharpFactory_DefaultSwitchSection_Microsoft_CodeAnalysis_SyntaxList_Microsoft_CodeAnalysis_CSharp_Syntax_StatementSyntax__) | |
 | [DelegateDeclaration(SyntaxTokenList, TypeSyntax, String, ParameterListSyntax)](DelegateDeclaration/README.md#Roslynator_CSharp_CSharpFactory_DelegateDeclaration_Microsoft_CodeAnalysis_SyntaxTokenList_Microsoft_CodeAnalysis_CSharp_Syntax_TypeSyntax_System_String_Microsoft_CodeAnalysis_CSharp_Syntax_ParameterListSyntax_) | |
@@ -92,8 +90,8 @@ public static class CSharpFactory
 | [DivideAssignmentExpression(ExpressionSyntax, SyntaxToken, ExpressionSyntax)](DivideAssignmentExpression/README.md#Roslynator_CSharp_CSharpFactory_DivideAssignmentExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
 | [DivideExpression(ExpressionSyntax, ExpressionSyntax)](DivideExpression/README.md#Roslynator_CSharp_CSharpFactory_DivideExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
 | [DivideExpression(ExpressionSyntax, SyntaxToken, ExpressionSyntax)](DivideExpression/README.md#Roslynator_CSharp_CSharpFactory_DivideExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
-| [EmptyWhitespace()](EmptyWhitespace/README.md#_top) | |
-| [EnumDeclaration(SyntaxTokenList, SyntaxToken, SeparatedSyntaxList\<EnumMemberDeclarationSyntax>)](EnumDeclaration/README.md#_top) | |
+| [EmptyWhitespace()](EmptyWhitespace/README.md) | |
+| [EnumDeclaration(SyntaxTokenList, SyntaxToken, SeparatedSyntaxList\<EnumMemberDeclarationSyntax>)](EnumDeclaration/README.md) | |
 | [EnumMemberDeclaration(String, EqualsValueClauseSyntax)](EnumMemberDeclaration/README.md#Roslynator_CSharp_CSharpFactory_EnumMemberDeclaration_System_String_Microsoft_CodeAnalysis_CSharp_Syntax_EqualsValueClauseSyntax_) | |
 | [EnumMemberDeclaration(String, ExpressionSyntax)](EnumMemberDeclaration/README.md#Roslynator_CSharp_CSharpFactory_EnumMemberDeclaration_System_String_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
 | [EnumMemberDeclaration(SyntaxToken, EqualsValueClauseSyntax)](EnumMemberDeclaration/README.md#Roslynator_CSharp_CSharpFactory_EnumMemberDeclaration_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_EqualsValueClauseSyntax_) | |
@@ -110,7 +108,7 @@ public static class CSharpFactory
 | [ExclusiveOrExpression(ExpressionSyntax, SyntaxToken, ExpressionSyntax)](ExclusiveOrExpression/README.md#Roslynator_CSharp_CSharpFactory_ExclusiveOrExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
 | [ExplicitConversionOperatorDeclaration(SyntaxTokenList, TypeSyntax, ParameterListSyntax, ArrowExpressionClauseSyntax)](ExplicitConversionOperatorDeclaration/README.md#Roslynator_CSharp_CSharpFactory_ExplicitConversionOperatorDeclaration_Microsoft_CodeAnalysis_SyntaxTokenList_Microsoft_CodeAnalysis_CSharp_Syntax_TypeSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_ParameterListSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_ArrowExpressionClauseSyntax_) | |
 | [ExplicitConversionOperatorDeclaration(SyntaxTokenList, TypeSyntax, ParameterListSyntax, BlockSyntax)](ExplicitConversionOperatorDeclaration/README.md#Roslynator_CSharp_CSharpFactory_ExplicitConversionOperatorDeclaration_Microsoft_CodeAnalysis_SyntaxTokenList_Microsoft_CodeAnalysis_CSharp_Syntax_TypeSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_ParameterListSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_BlockSyntax_) | |
-| [FalseLiteralExpression()](FalseLiteralExpression/README.md#_top) | |
+| [FalseLiteralExpression()](FalseLiteralExpression/README.md) | |
 | [FieldDeclaration(SyntaxTokenList, TypeSyntax, String, EqualsValueClauseSyntax)](FieldDeclaration/README.md#Roslynator_CSharp_CSharpFactory_FieldDeclaration_Microsoft_CodeAnalysis_SyntaxTokenList_Microsoft_CodeAnalysis_CSharp_Syntax_TypeSyntax_System_String_Microsoft_CodeAnalysis_CSharp_Syntax_EqualsValueClauseSyntax_) | |
 | [FieldDeclaration(SyntaxTokenList, TypeSyntax, String, ExpressionSyntax)](FieldDeclaration/README.md#Roslynator_CSharp_CSharpFactory_FieldDeclaration_Microsoft_CodeAnalysis_SyntaxTokenList_Microsoft_CodeAnalysis_CSharp_Syntax_TypeSyntax_System_String_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
 | [FieldDeclaration(SyntaxTokenList, TypeSyntax, SyntaxToken, EqualsValueClauseSyntax)](FieldDeclaration/README.md#Roslynator_CSharp_CSharpFactory_FieldDeclaration_Microsoft_CodeAnalysis_SyntaxTokenList_Microsoft_CodeAnalysis_CSharp_Syntax_TypeSyntax_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_EqualsValueClauseSyntax_) | |
@@ -125,7 +123,7 @@ public static class CSharpFactory
 | [GreaterThanExpression(ExpressionSyntax, SyntaxToken, ExpressionSyntax)](GreaterThanExpression/README.md#Roslynator_CSharp_CSharpFactory_GreaterThanExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
 | [GreaterThanOrEqualExpression(ExpressionSyntax, ExpressionSyntax)](GreaterThanOrEqualExpression/README.md#Roslynator_CSharp_CSharpFactory_GreaterThanOrEqualExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
 | [GreaterThanOrEqualExpression(ExpressionSyntax, SyntaxToken, ExpressionSyntax)](GreaterThanOrEqualExpression/README.md#Roslynator_CSharp_CSharpFactory_GreaterThanOrEqualExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
-| [CharacterLiteralExpression(Char)](CharacterLiteralExpression/README.md#_top) | |
+| [CharacterLiteralExpression(Char)](CharacterLiteralExpression/README.md) | |
 | [CheckedExpression(ExpressionSyntax)](CheckedExpression/README.md#Roslynator_CSharp_CSharpFactory_CheckedExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
 | [CheckedExpression(SyntaxToken, ExpressionSyntax, SyntaxToken)](CheckedExpression/README.md#Roslynator_CSharp_CSharpFactory_CheckedExpression_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_SyntaxToken_) | |
 | [ImplicitConversionOperatorDeclaration(SyntaxTokenList, TypeSyntax, ParameterListSyntax, ArrowExpressionClauseSyntax)](ImplicitConversionOperatorDeclaration/README.md#Roslynator_CSharp_CSharpFactory_ImplicitConversionOperatorDeclaration_Microsoft_CodeAnalysis_SyntaxTokenList_Microsoft_CodeAnalysis_CSharp_Syntax_TypeSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_ParameterListSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_ArrowExpressionClauseSyntax_) | |
@@ -144,7 +142,7 @@ public static class CSharpFactory
 | [LessThanExpression(ExpressionSyntax, SyntaxToken, ExpressionSyntax)](LessThanExpression/README.md#Roslynator_CSharp_CSharpFactory_LessThanExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
 | [LessThanOrEqualExpression(ExpressionSyntax, ExpressionSyntax)](LessThanOrEqualExpression/README.md#Roslynator_CSharp_CSharpFactory_LessThanOrEqualExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
 | [LessThanOrEqualExpression(ExpressionSyntax, SyntaxToken, ExpressionSyntax)](LessThanOrEqualExpression/README.md#Roslynator_CSharp_CSharpFactory_LessThanOrEqualExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
-| [LiteralExpression(Object)](LiteralExpression/README.md#_top) | |
+| [LiteralExpression(Object)](LiteralExpression/README.md) | |
 | [LocalDeclarationStatement(TypeSyntax, String, EqualsValueClauseSyntax)](LocalDeclarationStatement/README.md#Roslynator_CSharp_CSharpFactory_LocalDeclarationStatement_Microsoft_CodeAnalysis_CSharp_Syntax_TypeSyntax_System_String_Microsoft_CodeAnalysis_CSharp_Syntax_EqualsValueClauseSyntax_) | |
 | [LocalDeclarationStatement(TypeSyntax, String, ExpressionSyntax)](LocalDeclarationStatement/README.md#Roslynator_CSharp_CSharpFactory_LocalDeclarationStatement_Microsoft_CodeAnalysis_CSharp_Syntax_TypeSyntax_System_String_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
 | [LocalDeclarationStatement(TypeSyntax, SyntaxToken, EqualsValueClauseSyntax)](LocalDeclarationStatement/README.md#Roslynator_CSharp_CSharpFactory_LocalDeclarationStatement_Microsoft_CodeAnalysis_CSharp_Syntax_TypeSyntax_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_EqualsValueClauseSyntax_) | |
@@ -171,10 +169,10 @@ public static class CSharpFactory
 | [NameOfExpression(String)](NameOfExpression/README.md#Roslynator_CSharp_CSharpFactory_NameOfExpression_System_String_) | |
 | [NamespaceDeclaration(NameSyntax, MemberDeclarationSyntax)](NamespaceDeclaration/README.md#Roslynator_CSharp_CSharpFactory_NamespaceDeclaration_Microsoft_CodeAnalysis_CSharp_Syntax_NameSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_MemberDeclarationSyntax_) | |
 | [NamespaceDeclaration(NameSyntax, SyntaxList\<MemberDeclarationSyntax>)](NamespaceDeclaration/README.md#Roslynator_CSharp_CSharpFactory_NamespaceDeclaration_Microsoft_CodeAnalysis_CSharp_Syntax_NameSyntax_Microsoft_CodeAnalysis_SyntaxList_Microsoft_CodeAnalysis_CSharp_Syntax_MemberDeclarationSyntax__) | |
-| [NewLine()](NewLine/README.md#_top) | |
+| [NewLine()](NewLine/README.md) | |
 | [NotEqualsExpression(ExpressionSyntax, ExpressionSyntax)](NotEqualsExpression/README.md#Roslynator_CSharp_CSharpFactory_NotEqualsExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
 | [NotEqualsExpression(ExpressionSyntax, SyntaxToken, ExpressionSyntax)](NotEqualsExpression/README.md#Roslynator_CSharp_CSharpFactory_NotEqualsExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
-| [NullLiteralExpression()](NullLiteralExpression/README.md#_top) | |
+| [NullLiteralExpression()](NullLiteralExpression/README.md) | |
 | [NumericLiteralExpression(Decimal)](NumericLiteralExpression/README.md#Roslynator_CSharp_CSharpFactory_NumericLiteralExpression_System_Decimal_) | |
 | [NumericLiteralExpression(Double)](NumericLiteralExpression/README.md#Roslynator_CSharp_CSharpFactory_NumericLiteralExpression_System_Double_) | |
 | [NumericLiteralExpression(Int32)](NumericLiteralExpression/README.md#Roslynator_CSharp_CSharpFactory_NumericLiteralExpression_System_Int32_) | |
@@ -183,7 +181,7 @@ public static class CSharpFactory
 | [NumericLiteralExpression(Single)](NumericLiteralExpression/README.md#Roslynator_CSharp_CSharpFactory_NumericLiteralExpression_System_Single_) | |
 | [NumericLiteralExpression(UInt32)](NumericLiteralExpression/README.md#Roslynator_CSharp_CSharpFactory_NumericLiteralExpression_System_UInt32_) | |
 | [NumericLiteralExpression(UInt64)](NumericLiteralExpression/README.md#Roslynator_CSharp_CSharpFactory_NumericLiteralExpression_System_UInt64_) | |
-| [ObjectCreationExpression(TypeSyntax, ArgumentListSyntax)](ObjectCreationExpression/README.md#_top) | |
+| [ObjectCreationExpression(TypeSyntax, ArgumentListSyntax)](ObjectCreationExpression/README.md) | |
 | [ObjectInitializerExpression(SeparatedSyntaxList\<ExpressionSyntax>)](ObjectInitializerExpression/README.md#Roslynator_CSharp_CSharpFactory_ObjectInitializerExpression_Microsoft_CodeAnalysis_SeparatedSyntaxList_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax__) | |
 | [ObjectInitializerExpression(SyntaxToken, SeparatedSyntaxList\<ExpressionSyntax>, SyntaxToken)](ObjectInitializerExpression/README.md#Roslynator_CSharp_CSharpFactory_ObjectInitializerExpression_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_SeparatedSyntaxList_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax__Microsoft_CodeAnalysis_SyntaxToken_) | |
 | [OperatorDeclaration(SyntaxTokenList, TypeSyntax, SyntaxToken, ParameterListSyntax, ArrowExpressionClauseSyntax)](OperatorDeclaration/README.md#Roslynator_CSharp_CSharpFactory_OperatorDeclaration_Microsoft_CodeAnalysis_SyntaxTokenList_Microsoft_CodeAnalysis_CSharp_Syntax_TypeSyntax_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_ParameterListSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_ArrowExpressionClauseSyntax_) | |
@@ -203,21 +201,21 @@ public static class CSharpFactory
 | [PostIncrementExpression(ExpressionSyntax, SyntaxToken)](PostIncrementExpression/README.md#Roslynator_CSharp_CSharpFactory_PostIncrementExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_SyntaxToken_) | |
 | [PreDecrementExpression(ExpressionSyntax)](PreDecrementExpression/README.md#Roslynator_CSharp_CSharpFactory_PreDecrementExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
 | [PreDecrementExpression(ExpressionSyntax, SyntaxToken)](PreDecrementExpression/README.md#Roslynator_CSharp_CSharpFactory_PreDecrementExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_SyntaxToken_) | |
-| [PredefinedBoolType()](PredefinedBoolType/README.md#_top) | |
-| [PredefinedByteType()](PredefinedByteType/README.md#_top) | |
-| [PredefinedDecimalType()](PredefinedDecimalType/README.md#_top) | |
-| [PredefinedDoubleType()](PredefinedDoubleType/README.md#_top) | |
-| [PredefinedFloatType()](PredefinedFloatType/README.md#_top) | |
-| [PredefinedCharType()](PredefinedCharType/README.md#_top) | |
-| [PredefinedIntType()](PredefinedIntType/README.md#_top) | |
-| [PredefinedLongType()](PredefinedLongType/README.md#_top) | |
-| [PredefinedObjectType()](PredefinedObjectType/README.md#_top) | |
-| [PredefinedSByteType()](PredefinedSByteType/README.md#_top) | |
-| [PredefinedShortType()](PredefinedShortType/README.md#_top) | |
-| [PredefinedStringType()](PredefinedStringType/README.md#_top) | |
-| [PredefinedUIntType()](PredefinedUIntType/README.md#_top) | |
-| [PredefinedULongType()](PredefinedULongType/README.md#_top) | |
-| [PredefinedUShortType()](PredefinedUShortType/README.md#_top) | |
+| [PredefinedBoolType()](PredefinedBoolType/README.md) | |
+| [PredefinedByteType()](PredefinedByteType/README.md) | |
+| [PredefinedDecimalType()](PredefinedDecimalType/README.md) | |
+| [PredefinedDoubleType()](PredefinedDoubleType/README.md) | |
+| [PredefinedFloatType()](PredefinedFloatType/README.md) | |
+| [PredefinedCharType()](PredefinedCharType/README.md) | |
+| [PredefinedIntType()](PredefinedIntType/README.md) | |
+| [PredefinedLongType()](PredefinedLongType/README.md) | |
+| [PredefinedObjectType()](PredefinedObjectType/README.md) | |
+| [PredefinedSByteType()](PredefinedSByteType/README.md) | |
+| [PredefinedShortType()](PredefinedShortType/README.md) | |
+| [PredefinedStringType()](PredefinedStringType/README.md) | |
+| [PredefinedUIntType()](PredefinedUIntType/README.md) | |
+| [PredefinedULongType()](PredefinedULongType/README.md) | |
+| [PredefinedUShortType()](PredefinedUShortType/README.md) | |
 | [PreIncrementExpression(ExpressionSyntax)](PreIncrementExpression/README.md#Roslynator_CSharp_CSharpFactory_PreIncrementExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
 | [PreIncrementExpression(ExpressionSyntax, SyntaxToken)](PreIncrementExpression/README.md#Roslynator_CSharp_CSharpFactory_PreIncrementExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_SyntaxToken_) | |
 | [PropertyDeclaration(SyntaxTokenList, TypeSyntax, SyntaxToken, AccessorListSyntax, ExpressionSyntax)](PropertyDeclaration/README.md#Roslynator_CSharp_CSharpFactory_PropertyDeclaration_Microsoft_CodeAnalysis_SyntaxTokenList_Microsoft_CodeAnalysis_CSharp_Syntax_TypeSyntax_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_AccessorListSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
@@ -243,8 +241,8 @@ public static class CSharpFactory
 | [SimpleMemberInvocationExpression(ExpressionSyntax, SimpleNameSyntax)](SimpleMemberInvocationExpression/README.md#Roslynator_CSharp_CSharpFactory_SimpleMemberInvocationExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_SimpleNameSyntax_) | |
 | [SimpleMemberInvocationExpression(ExpressionSyntax, SimpleNameSyntax, ArgumentListSyntax)](SimpleMemberInvocationExpression/README.md#Roslynator_CSharp_CSharpFactory_SimpleMemberInvocationExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_SimpleNameSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_ArgumentListSyntax_) | |
 | [SimpleMemberInvocationExpression(ExpressionSyntax, SimpleNameSyntax, ArgumentSyntax)](SimpleMemberInvocationExpression/README.md#Roslynator_CSharp_CSharpFactory_SimpleMemberInvocationExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_SimpleNameSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_ArgumentSyntax_) | |
-| [StringLiteralExpression(String)](StringLiteralExpression/README.md#_top) | |
-| [StructConstraint()](StructConstraint/README.md#_top) | |
+| [StringLiteralExpression(String)](StringLiteralExpression/README.md) | |
+| [StructConstraint()](StructConstraint/README.md) | |
 | [StructDeclaration(SyntaxTokenList, String, SyntaxList\<MemberDeclarationSyntax>)](StructDeclaration/README.md#Roslynator_CSharp_CSharpFactory_StructDeclaration_Microsoft_CodeAnalysis_SyntaxTokenList_System_String_Microsoft_CodeAnalysis_SyntaxList_Microsoft_CodeAnalysis_CSharp_Syntax_MemberDeclarationSyntax__) | |
 | [StructDeclaration(SyntaxTokenList, SyntaxToken, SyntaxList\<MemberDeclarationSyntax>)](StructDeclaration/README.md#Roslynator_CSharp_CSharpFactory_StructDeclaration_Microsoft_CodeAnalysis_SyntaxTokenList_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_SyntaxList_Microsoft_CodeAnalysis_CSharp_Syntax_MemberDeclarationSyntax__) | |
 | [SubtractAssignmentExpression(ExpressionSyntax, ExpressionSyntax)](SubtractAssignmentExpression/README.md#Roslynator_CSharp_CSharpFactory_SubtractAssignmentExpression_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_ExpressionSyntax_) | |
@@ -260,8 +258,8 @@ public static class CSharpFactory
 | [TokenList(SyntaxKind)](TokenList/README.md#Roslynator_CSharp_CSharpFactory_TokenList_Microsoft_CodeAnalysis_CSharp_SyntaxKind_) | |
 | [TokenList(SyntaxKind, SyntaxKind)](TokenList/README.md#Roslynator_CSharp_CSharpFactory_TokenList_Microsoft_CodeAnalysis_CSharp_SyntaxKind_Microsoft_CodeAnalysis_CSharp_SyntaxKind_) | |
 | [TokenList(SyntaxKind, SyntaxKind, SyntaxKind)](TokenList/README.md#Roslynator_CSharp_CSharpFactory_TokenList_Microsoft_CodeAnalysis_CSharp_SyntaxKind_Microsoft_CodeAnalysis_CSharp_SyntaxKind_Microsoft_CodeAnalysis_CSharp_SyntaxKind_) | |
-| [TrueLiteralExpression()](TrueLiteralExpression/README.md#_top) | |
-| [TryStatement(BlockSyntax, CatchClauseSyntax, FinallyClauseSyntax)](TryStatement/README.md#_top) | |
+| [TrueLiteralExpression()](TrueLiteralExpression/README.md) | |
+| [TryStatement(BlockSyntax, CatchClauseSyntax, FinallyClauseSyntax)](TryStatement/README.md) | |
 | [TypeArgumentList(TypeSyntax)](TypeArgumentList/README.md#Roslynator_CSharp_CSharpFactory_TypeArgumentList_Microsoft_CodeAnalysis_CSharp_Syntax_TypeSyntax_) | |
 | [TypeArgumentList(TypeSyntax\[\])](TypeArgumentList/README.md#Roslynator_CSharp_CSharpFactory_TypeArgumentList_Microsoft_CodeAnalysis_CSharp_Syntax_TypeSyntax___) | |
 | [TypeParameterConstraintClause(IdentifierNameSyntax, TypeParameterConstraintSyntax)](TypeParameterConstraintClause/README.md#Roslynator_CSharp_CSharpFactory_TypeParameterConstraintClause_Microsoft_CodeAnalysis_CSharp_Syntax_IdentifierNameSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_TypeParameterConstraintSyntax_) | |
@@ -282,8 +280,8 @@ public static class CSharpFactory
 | [VariableDeclaration(TypeSyntax, VariableDeclaratorSyntax)](VariableDeclaration/README.md#Roslynator_CSharp_CSharpFactory_VariableDeclaration_Microsoft_CodeAnalysis_CSharp_Syntax_TypeSyntax_Microsoft_CodeAnalysis_CSharp_Syntax_VariableDeclaratorSyntax_) | |
 | [VariableDeclarator(String, EqualsValueClauseSyntax)](VariableDeclarator/README.md#Roslynator_CSharp_CSharpFactory_VariableDeclarator_System_String_Microsoft_CodeAnalysis_CSharp_Syntax_EqualsValueClauseSyntax_) | |
 | [VariableDeclarator(SyntaxToken, EqualsValueClauseSyntax)](VariableDeclarator/README.md#Roslynator_CSharp_CSharpFactory_VariableDeclarator_Microsoft_CodeAnalysis_SyntaxToken_Microsoft_CodeAnalysis_CSharp_Syntax_EqualsValueClauseSyntax_) | |
-| [VarType()](VarType/README.md#_top) | |
-| [VoidType()](VoidType/README.md#_top) | |
-| [YieldBreakStatement()](YieldBreakStatement/README.md#_top) | |
-| [YieldReturnStatement(ExpressionSyntax)](YieldReturnStatement/README.md#_top) | |
+| [VarType()](VarType/README.md) | |
+| [VoidType()](VoidType/README.md) | |
+| [YieldBreakStatement()](YieldBreakStatement/README.md) | |
+| [YieldReturnStatement(ExpressionSyntax)](YieldReturnStatement/README.md) | |
 

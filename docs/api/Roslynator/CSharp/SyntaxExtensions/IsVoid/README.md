@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SyntaxExtensions\.IsVoid\(TypeSyntax\) Method
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.[SyntaxExtensions](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.[SyntaxExtensions](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

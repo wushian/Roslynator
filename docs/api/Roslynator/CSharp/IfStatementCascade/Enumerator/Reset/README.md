@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # IfStatementCascade\.Enumerator\.Reset\(\) Method
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.[IfStatementCascade.Enumerator](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.[IfStatementCascade.Enumerator](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

@@ -1,8 +1,6 @@
-<a name="_top"></a>
-
 # [SeparatedSyntaxList\<TNode>](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.separatedsyntaxlist-1) Struct Extensions
 
-[Home](../../../README.md#_top)
+[Home](../../../README.md)
 
 | Extension Method | Summary |
 | ---------------- | ------- |

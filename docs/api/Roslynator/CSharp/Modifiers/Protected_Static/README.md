@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # Modifiers\.Protected\_Static\(\) Method
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.[Modifiers](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.[Modifiers](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

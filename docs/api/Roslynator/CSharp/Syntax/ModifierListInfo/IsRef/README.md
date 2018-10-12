@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # ModifierListInfo\.IsRef Property
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[ModifierListInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[ModifierListInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

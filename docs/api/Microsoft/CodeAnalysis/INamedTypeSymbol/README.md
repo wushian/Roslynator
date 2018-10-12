@@ -1,8 +1,6 @@
-<a name="_top"></a>
-
 # [INamedTypeSymbol](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.inamedtypesymbol) Interface Extensions
 
-[Home](../../../README.md#_top)
+[Home](../../../README.md)
 
 | Extension Method | Summary |
 | ---------------- | ------- |

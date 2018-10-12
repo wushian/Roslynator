@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # ExtensionMethodSymbolInfo\.Inequality\(ExtensionMethodSymbolInfo, ExtensionMethodSymbolInfo\) Operator
 
-[Home](../../../README.md#_top)
+[Home](../../../README.md)
 
-**Containing Type**: Roslynator\.[ExtensionMethodSymbolInfo](../README.md#_top)
+**Containing Type**: Roslynator\.[ExtensionMethodSymbolInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

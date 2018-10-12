@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # NullCheckExpressionInfo\.Style Property
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[NullCheckExpressionInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[NullCheckExpressionInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
@@ -18,5 +16,5 @@ public NullCheckStyles Style { get; }
 
 ### Property Value
 
-Roslynator\.CSharp\.[NullCheckStyles](../../../NullCheckStyles/README.md#_top)
+Roslynator\.CSharp\.[NullCheckStyles](../../../NullCheckStyles/README.md)
 

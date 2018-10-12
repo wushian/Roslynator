@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # ExpressionChain\.ToString\(\) Method
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.[ExpressionChain](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.[ExpressionChain](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

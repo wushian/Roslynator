@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # StringConcatenationExpressionInfo\.GetHashCode\(\) Method
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[StringConcatenationExpressionInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[StringConcatenationExpressionInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

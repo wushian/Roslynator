@@ -1,16 +1,14 @@
-<a name="_top"></a>
-
 # UsingDirectiveListInfo\.ReplaceNode\(SyntaxNode, SyntaxNode\) Method
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[UsingDirectiveListInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[UsingDirectiveListInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
 ## Summary
 
-Creates a new [UsingDirectiveListInfo](../README.md#_top) with the specified old node replaced with a new node\.
+Creates a new [UsingDirectiveListInfo](../README.md) with the specified old node replaced with a new node\.
 
 ```csharp
 public UsingDirectiveListInfo ReplaceNode(SyntaxNode oldNode, SyntaxNode newNode)
@@ -24,5 +22,5 @@ public UsingDirectiveListInfo ReplaceNode(SyntaxNode oldNode, SyntaxNode newNode
 
 ### Returns
 
-Roslynator\.CSharp\.Syntax\.[UsingDirectiveListInfo](../README.md#_top)
+Roslynator\.CSharp\.Syntax\.[UsingDirectiveListInfo](../README.md)
 

@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # ModifierList\.GetInsertIndex Method
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.[ModifierList](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.[ModifierList](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

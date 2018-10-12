@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SingleLocalDeclarationStatementInfo\.Type Property
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[SingleLocalDeclarationStatementInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[SingleLocalDeclarationStatementInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

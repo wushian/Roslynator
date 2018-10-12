@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SyntaxListSelection\<TNode>\.Enumerator\.Equals\(Object\) Method
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.[SyntaxListSelection\<TNode>.Enumerator](../README.md#_top)
+**Containing Type**: Roslynator\.[SyntaxListSelection\<TNode>.Enumerator](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

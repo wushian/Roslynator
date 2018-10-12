@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SyntaxTreeExtensions\.GetStartLine\(SyntaxTree, TextSpan, CancellationToken\) Method
 
-[Home](../../../README.md#_top)
+[Home](../../../README.md)
 
-**Containing Type**: Roslynator\.[SyntaxTreeExtensions](../README.md#_top)
+**Containing Type**: Roslynator\.[SyntaxTreeExtensions](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

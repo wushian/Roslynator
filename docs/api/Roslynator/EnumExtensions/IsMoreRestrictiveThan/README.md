@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # EnumExtensions\.IsMoreRestrictiveThan\(Accessibility, Accessibility\) Method
 
-[Home](../../../README.md#_top)
+[Home](../../../README.md)
 
-**Containing Type**: Roslynator\.[EnumExtensions](../README.md#_top)
+**Containing Type**: Roslynator\.[EnumExtensions](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

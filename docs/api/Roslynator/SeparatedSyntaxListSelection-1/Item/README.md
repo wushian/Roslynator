@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SeparatedSyntaxListSelection\<TNode>\.Item\[Int32\] Indexer
 
-[Home](../../../README.md#_top)
+[Home](../../../README.md)
 
-**Containing Type**: Roslynator\.[SeparatedSyntaxListSelection\<TNode>](../README.md#_top)
+**Containing Type**: Roslynator\.[SeparatedSyntaxListSelection\<TNode>](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

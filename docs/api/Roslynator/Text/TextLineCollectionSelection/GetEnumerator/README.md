@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # TextLineCollectionSelection\.GetEnumerator\(\) Method
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.Text\.[TextLineCollectionSelection](../README.md#_top)
+**Containing Type**: Roslynator\.Text\.[TextLineCollectionSelection](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
@@ -18,5 +16,5 @@ public TextLineCollectionSelection.Enumerator GetEnumerator()
 
 ### Returns
 
-Roslynator\.Text\.[TextLineCollectionSelection.Enumerator](../Enumerator/README.md#_top)
+Roslynator\.Text\.[TextLineCollectionSelection.Enumerator](../Enumerator/README.md)
 

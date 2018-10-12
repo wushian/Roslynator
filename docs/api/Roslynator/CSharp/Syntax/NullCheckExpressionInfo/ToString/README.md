@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # NullCheckExpressionInfo\.ToString\(\) Method
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[NullCheckExpressionInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[NullCheckExpressionInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

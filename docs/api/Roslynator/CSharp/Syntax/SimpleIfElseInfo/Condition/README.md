@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SimpleIfElseInfo\.Condition Property
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[SimpleIfElseInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[SimpleIfElseInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

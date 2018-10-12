@@ -1,16 +1,14 @@
-<a name="_top"></a>
-
 # SyntaxListSelection\(SyntaxList\<TNode>, TextSpan, Int32, Int32\) Constructor
 
-[Home](../../../README.md#_top)
+[Home](../../../README.md)
 
-**Containing Type**: Roslynator\.[SyntaxListSelection\<TNode>](../README.md#_top)
+**Containing Type**: Roslynator\.[SyntaxListSelection\<TNode>](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
 ## Summary
 
-Initializes a new instance of the [SyntaxListSelection\<TNode>](../README.md#_top)\.
+Initializes a new instance of the [SyntaxListSelection\<TNode>](../README.md)\.
 
 ```csharp
 protected SyntaxListSelection(SyntaxList<TNode> list, TextSpan span, int firstIndex, int lastIndex)

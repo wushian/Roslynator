@@ -1,16 +1,14 @@
-<a name="_top"></a>
-
 # IfStatementOrElseClause\.IsIf Property
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.[IfStatementOrElseClause](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.[IfStatementOrElseClause](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
 ## Summary
 
-Determines whether this [IfStatementOrElseClause](../README.md#_top) is wrapping an if statement\.
+Determines whether this [IfStatementOrElseClause](../README.md) is wrapping an if statement\.
 
 ```csharp
 public bool IsIf { get; }

@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SeparatedSyntaxListSelection\<TNode>\.Enumerator\.Reset\(\) Method
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.[SeparatedSyntaxListSelection\<TNode>.Enumerator](../README.md#_top)
+**Containing Type**: Roslynator\.[SeparatedSyntaxListSelection\<TNode>.Enumerator](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

@@ -1,16 +1,14 @@
-<a name="_top"></a>
-
 # MemberDeclarationListInfo\.ReplaceRange\(MemberDeclarationSyntax, IEnumerable\<MemberDeclarationSyntax>\) Method
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[MemberDeclarationListInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[MemberDeclarationListInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
 ## Summary
 
-Creates a new [MemberDeclarationListInfo](../README.md#_top) with the specified member replaced with new members\.
+Creates a new [MemberDeclarationListInfo](../README.md) with the specified member replaced with new members\.
 
 ```csharp
 public MemberDeclarationListInfo ReplaceRange(MemberDeclarationSyntax memberInList, IEnumerable<MemberDeclarationSyntax> newMembers)
@@ -24,5 +22,5 @@ public MemberDeclarationListInfo ReplaceRange(MemberDeclarationSyntax memberInLi
 
 ### Returns
 
-Roslynator\.CSharp\.Syntax\.[MemberDeclarationListInfo](../README.md#_top)
+Roslynator\.CSharp\.Syntax\.[MemberDeclarationListInfo](../README.md)
 

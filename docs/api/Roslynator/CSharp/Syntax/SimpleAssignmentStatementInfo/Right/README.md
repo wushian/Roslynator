@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SimpleAssignmentStatementInfo\.Right Property
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[SimpleAssignmentStatementInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[SimpleAssignmentStatementInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

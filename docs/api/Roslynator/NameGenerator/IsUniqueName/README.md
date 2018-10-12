@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # NameGenerator\.IsUniqueName Method
 
-[Home](../../../README.md#_top)
+[Home](../../../README.md)
 
-**Containing Type**: Roslynator\.[NameGenerator](../README.md#_top)
+**Containing Type**: Roslynator\.[NameGenerator](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

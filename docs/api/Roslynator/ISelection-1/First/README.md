@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # ISelection\<T>\.First\(\) Method
 
-[Home](../../../README.md#_top)
+[Home](../../../README.md)
 
-**Containing Type**: Roslynator\.[ISelection\<T>](../README.md#_top)
+**Containing Type**: Roslynator\.[ISelection\<T>](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

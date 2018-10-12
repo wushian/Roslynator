@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # StringLiteralExpressionInfo\.Success Property
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[StringLiteralExpressionInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[StringLiteralExpressionInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

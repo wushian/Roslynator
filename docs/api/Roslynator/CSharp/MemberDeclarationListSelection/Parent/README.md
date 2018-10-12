@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # MemberDeclarationListSelection\.Parent Property
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.[MemberDeclarationListSelection](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.[MemberDeclarationListSelection](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

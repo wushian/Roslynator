@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SingleParameterLambdaExpressionInfo\.IsParenthesizedLambda Property
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[SingleParameterLambdaExpressionInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[SingleParameterLambdaExpressionInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

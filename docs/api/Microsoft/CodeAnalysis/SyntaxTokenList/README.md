@@ -1,8 +1,6 @@
-<a name="_top"></a>
-
 # [SyntaxTokenList](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxtokenlist) Struct Extensions
 
-[Home](../../../README.md#_top)
+[Home](../../../README.md)
 
 | Extension Method | Summary |
 | ---------------- | ------- |

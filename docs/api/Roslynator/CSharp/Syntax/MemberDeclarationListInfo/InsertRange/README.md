@@ -1,16 +1,14 @@
-<a name="_top"></a>
-
 # MemberDeclarationListInfo\.InsertRange\(Int32, IEnumerable\<MemberDeclarationSyntax>\) Method
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[MemberDeclarationListInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[MemberDeclarationListInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
 ## Summary
 
-Creates a new [MemberDeclarationListInfo](../README.md#_top) with the specified members inserted at the index\.
+Creates a new [MemberDeclarationListInfo](../README.md) with the specified members inserted at the index\.
 
 ```csharp
 public MemberDeclarationListInfo InsertRange(int index, IEnumerable<MemberDeclarationSyntax> members)
@@ -24,5 +22,5 @@ public MemberDeclarationListInfo InsertRange(int index, IEnumerable<MemberDeclar
 
 ### Returns
 
-Roslynator\.CSharp\.Syntax\.[MemberDeclarationListInfo](../README.md#_top)
+Roslynator\.CSharp\.Syntax\.[MemberDeclarationListInfo](../README.md)
 

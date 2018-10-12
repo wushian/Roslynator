@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # BinaryExpressionInfo\.Equality\(BinaryExpressionInfo, BinaryExpressionInfo\) Operator
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[BinaryExpressionInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[BinaryExpressionInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

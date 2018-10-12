@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # IfStatementCascade\.GetHashCode\(\) Method
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.[IfStatementCascade](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.[IfStatementCascade](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SymbolExtensions Class
 
-[Home](../../../README.md#_top) &#x2022; [Methods](#methods)
+[Home](../../../README.md) &#x2022; [Methods](#methods)
 
-**Namespace**: [Roslynator.CSharp](../README.md#_top)
+**Namespace**: [Roslynator.CSharp](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
@@ -22,7 +20,7 @@ public static class SymbolExtensions
 | ------ | ------- |
 | [GetDefaultValueSyntax(ITypeSymbol, SemanticModel, Int32, SymbolDisplayFormat)](GetDefaultValueSyntax/README.md#Roslynator_CSharp_SymbolExtensions_GetDefaultValueSyntax_Microsoft_CodeAnalysis_ITypeSymbol_Microsoft_CodeAnalysis_SemanticModel_System_Int32_Microsoft_CodeAnalysis_SymbolDisplayFormat_) | Creates a new [ExpressionSyntax](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.expressionsyntax) that represents default value of the specified type symbol\. |
 | [GetDefaultValueSyntax(ITypeSymbol, TypeSyntax)](GetDefaultValueSyntax/README.md#Roslynator_CSharp_SymbolExtensions_GetDefaultValueSyntax_Microsoft_CodeAnalysis_ITypeSymbol_Microsoft_CodeAnalysis_CSharp_Syntax_TypeSyntax_) | Creates a new [ExpressionSyntax](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.expressionsyntax) that represents default value of the specified type symbol\. |
-| [SupportsConstantValue(ITypeSymbol)](SupportsConstantValue/README.md#_top) | Returns true if the specified type can be used to declare constant value\. |
+| [SupportsConstantValue(ITypeSymbol)](SupportsConstantValue/README.md) | Returns true if the specified type can be used to declare constant value\. |
 | [ToMinimalTypeSyntax(INamespaceOrTypeSymbol, SemanticModel, Int32, SymbolDisplayFormat)](ToMinimalTypeSyntax/README.md#Roslynator_CSharp_SymbolExtensions_ToMinimalTypeSyntax_Microsoft_CodeAnalysis_INamespaceOrTypeSymbol_Microsoft_CodeAnalysis_SemanticModel_System_Int32_Microsoft_CodeAnalysis_SymbolDisplayFormat_) | Creates a new [TypeSyntax](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.typesyntax) based on the specified namespace or type symbol |
 | [ToMinimalTypeSyntax(INamespaceSymbol, SemanticModel, Int32, SymbolDisplayFormat)](ToMinimalTypeSyntax/README.md#Roslynator_CSharp_SymbolExtensions_ToMinimalTypeSyntax_Microsoft_CodeAnalysis_INamespaceSymbol_Microsoft_CodeAnalysis_SemanticModel_System_Int32_Microsoft_CodeAnalysis_SymbolDisplayFormat_) | Creates a new [TypeSyntax](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.typesyntax) based on the specified namespace symbol\. |
 | [ToMinimalTypeSyntax(ITypeSymbol, SemanticModel, Int32, SymbolDisplayFormat)](ToMinimalTypeSyntax/README.md#Roslynator_CSharp_SymbolExtensions_ToMinimalTypeSyntax_Microsoft_CodeAnalysis_ITypeSymbol_Microsoft_CodeAnalysis_SemanticModel_System_Int32_Microsoft_CodeAnalysis_SymbolDisplayFormat_) | Creates a new [TypeSyntax](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.typesyntax) based on the specified type symbol\. |

@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # AssignmentExpressionInfo\.OperatorToken Property
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[AssignmentExpressionInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[AssignmentExpressionInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

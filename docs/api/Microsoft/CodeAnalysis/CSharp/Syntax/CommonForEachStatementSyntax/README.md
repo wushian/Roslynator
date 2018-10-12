@@ -1,8 +1,6 @@
-<a name="_top"></a>
-
 # [CommonForEachStatementSyntax](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.commonforeachstatementsyntax) Class Extensions
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
 | Extension Method | Summary |
 | ---------------- | ------- |

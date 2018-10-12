@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # PreprocessorDirectiveKinds Enum
 
-[Home](../../../README.md#_top) &#x2022; [Fields](#fields)
+[Home](../../../README.md) &#x2022; [Fields](#fields)
 
-**Namespace**: [Roslynator.CSharp](../README.md#_top)
+**Namespace**: [Roslynator.CSharp](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

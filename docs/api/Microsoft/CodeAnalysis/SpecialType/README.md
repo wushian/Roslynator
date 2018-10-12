@@ -1,8 +1,6 @@
-<a name="_top"></a>
-
 # [SpecialType](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.specialtype) Enum Extensions
 
-[Home](../../../README.md#_top)
+[Home](../../../README.md)
 
 | Extension Method | Summary |
 | ---------------- | ------- |

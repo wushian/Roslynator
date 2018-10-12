@@ -1,8 +1,6 @@
-<a name="_top"></a>
-
 # [LocalFunctionStatementSyntax](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.localfunctionstatementsyntax) Class Extensions
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
 | Extension Method | Summary |
 | ---------------- | ------- |

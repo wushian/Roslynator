@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # EnumExtensions Class
 
-[Home](../../README.md#_top) &#x2022; [Methods](#methods)
+[Home](../../README.md) &#x2022; [Methods](#methods)
 
-**Namespace**: [Roslynator](../README.md#_top)
+**Namespace**: [Roslynator](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
@@ -36,5 +34,5 @@ public static class EnumExtensions
 | [Is(TypeKind, TypeKind, TypeKind, TypeKind)](Is/README.md#Roslynator_EnumExtensions_Is_Microsoft_CodeAnalysis_TypeKind_Microsoft_CodeAnalysis_TypeKind_Microsoft_CodeAnalysis_TypeKind_Microsoft_CodeAnalysis_TypeKind_) | Returns true if the type kind is one of the specified type kinds\. |
 | [Is(TypeKind, TypeKind, TypeKind, TypeKind, TypeKind)](Is/README.md#Roslynator_EnumExtensions_Is_Microsoft_CodeAnalysis_TypeKind_Microsoft_CodeAnalysis_TypeKind_Microsoft_CodeAnalysis_TypeKind_Microsoft_CodeAnalysis_TypeKind_Microsoft_CodeAnalysis_TypeKind_) | Returns true if the type kind is one of the specified type kinds\. |
 | [Is(TypeKind, TypeKind, TypeKind, TypeKind, TypeKind, TypeKind)](Is/README.md#Roslynator_EnumExtensions_Is_Microsoft_CodeAnalysis_TypeKind_Microsoft_CodeAnalysis_TypeKind_Microsoft_CodeAnalysis_TypeKind_Microsoft_CodeAnalysis_TypeKind_Microsoft_CodeAnalysis_TypeKind_Microsoft_CodeAnalysis_TypeKind_) | Returns true if the type kind is one of the specified type kinds\. |
-| [IsMoreRestrictiveThan(Accessibility, Accessibility)](IsMoreRestrictiveThan/README.md#_top) | Returns true if the accessibility if more restrictrive than the other accessibility\. |
+| [IsMoreRestrictiveThan(Accessibility, Accessibility)](IsMoreRestrictiveThan/README.md) | Returns true if the accessibility if more restrictrive than the other accessibility\. |
 

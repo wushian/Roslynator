@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # LocalDeclarationStatementInfo\.Equality\(LocalDeclarationStatementInfo, LocalDeclarationStatementInfo\) Operator
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[LocalDeclarationStatementInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[LocalDeclarationStatementInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

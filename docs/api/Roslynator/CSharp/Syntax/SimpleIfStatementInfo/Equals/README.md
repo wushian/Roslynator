@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SimpleIfStatementInfo\.Equals Method
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[SimpleIfStatementInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[SimpleIfStatementInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

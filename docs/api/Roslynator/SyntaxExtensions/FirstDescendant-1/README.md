@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SyntaxExtensions\.FirstDescendant Method
 
-[Home](../../../README.md#_top)
+[Home](../../../README.md)
 
-**Containing Type**: Roslynator\.[SyntaxExtensions](../README.md#_top)
+**Containing Type**: Roslynator\.[SyntaxExtensions](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

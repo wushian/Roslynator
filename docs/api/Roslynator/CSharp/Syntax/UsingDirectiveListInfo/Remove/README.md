@@ -1,16 +1,14 @@
-<a name="_top"></a>
-
 # UsingDirectiveListInfo\.Remove\(UsingDirectiveSyntax\) Method
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[UsingDirectiveListInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[UsingDirectiveListInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
 ## Summary
 
-Creates a new [UsingDirectiveListInfo](../README.md#_top) with the specified using directive removed\.
+Creates a new [UsingDirectiveListInfo](../README.md) with the specified using directive removed\.
 
 ```csharp
 public UsingDirectiveListInfo Remove(UsingDirectiveSyntax usingDirective)
@@ -22,5 +20,5 @@ public UsingDirectiveListInfo Remove(UsingDirectiveSyntax usingDirective)
 
 ### Returns
 
-Roslynator\.CSharp\.Syntax\.[UsingDirectiveListInfo](../README.md#_top)
+Roslynator\.CSharp\.Syntax\.[UsingDirectiveListInfo](../README.md)
 

@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # ModifierList Class
 
-[Home](../../../README.md#_top) &#x2022; [Methods](#methods)
+[Home](../../../README.md) &#x2022; [Methods](#methods)
 
-**Namespace**: [Roslynator.CSharp](../README.md#_top)
+**Namespace**: [Roslynator.CSharp](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
@@ -30,5 +28,5 @@ public static class ModifierList
 | [Remove\<TNode>(TNode, SyntaxToken)](Remove-1/README.md#Roslynator_CSharp_ModifierList_Remove__1___0_Microsoft_CodeAnalysis_SyntaxToken_) | Creates a new node with the specified modifier removed\. |
 | [RemoveAll\<TNode>(TNode)](RemoveAll-1/README.md#Roslynator_CSharp_ModifierList_RemoveAll__1___0_) | Creates a new node with all modifiers removed\. |
 | [RemoveAll\<TNode>(TNode, Func\<SyntaxToken, Boolean>)](RemoveAll-1/README.md#Roslynator_CSharp_ModifierList_RemoveAll__1___0_System_Func_Microsoft_CodeAnalysis_SyntaxToken_System_Boolean__) | Creates a new node with modifiers that matches the predicate removed\. |
-| [RemoveAt\<TNode>(TNode, Int32)](RemoveAt-1/README.md#_top) | Creates a new node with a modifier at the specified index removed\. |
+| [RemoveAt\<TNode>(TNode, Int32)](RemoveAt-1/README.md) | Creates a new node with a modifier at the specified index removed\. |
 

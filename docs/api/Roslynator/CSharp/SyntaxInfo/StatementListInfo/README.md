@@ -1,16 +1,14 @@
-<a name="_top"></a>
-
 # SyntaxInfo\.StatementListInfo\(StatementSyntax\) Method
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.[SyntaxInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.[SyntaxInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
 ## Summary
 
-Creates a new [StatementListInfo](../../Syntax/StatementListInfo/README.md#_top) from the specified statement\.
+Creates a new [StatementListInfo](../../Syntax/StatementListInfo/README.md) from the specified statement\.
 
 ```csharp
 public static StatementListInfo StatementListInfo(StatementSyntax statement)
@@ -22,5 +20,5 @@ public static StatementListInfo StatementListInfo(StatementSyntax statement)
 
 ### Returns
 
-Roslynator\.CSharp\.Syntax\.[StatementListInfo](../../Syntax/StatementListInfo/README.md#_top)
+Roslynator\.CSharp\.Syntax\.[StatementListInfo](../../Syntax/StatementListInfo/README.md)
 

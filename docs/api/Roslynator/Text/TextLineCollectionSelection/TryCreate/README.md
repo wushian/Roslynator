@@ -1,16 +1,14 @@
-<a name="_top"></a>
-
 # TextLineCollectionSelection\.TryCreate\(TextLineCollection, TextSpan, TextLineCollectionSelection\) Method
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.Text\.[TextLineCollectionSelection](../README.md#_top)
+**Containing Type**: Roslynator\.Text\.[TextLineCollectionSelection](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
 ## Summary
 
-Creates a new [TextLineCollectionSelection](../README.md#_top) based on the specified list and span\.
+Creates a new [TextLineCollectionSelection](../README.md) based on the specified list and span\.
 
 ```csharp
 public static bool TryCreate(TextLineCollection lines, TextSpan span, out TextLineCollectionSelection selectedLines)

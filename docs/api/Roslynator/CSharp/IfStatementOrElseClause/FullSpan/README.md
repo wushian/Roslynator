@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # IfStatementOrElseClause\.FullSpan Property
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.[IfStatementOrElseClause](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.[IfStatementOrElseClause](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

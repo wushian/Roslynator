@@ -1,16 +1,14 @@
-<a name="_top"></a>
-
 # StatementListInfo\.Remove\(StatementSyntax\) Method
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[StatementListInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[StatementListInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
 ## Summary
 
-Creates a new [StatementListInfo](../README.md#_top) with the specified statement removed\.
+Creates a new [StatementListInfo](../README.md) with the specified statement removed\.
 
 ```csharp
 public StatementListInfo Remove(StatementSyntax statement)
@@ -22,5 +20,5 @@ public StatementListInfo Remove(StatementSyntax statement)
 
 ### Returns
 
-Roslynator\.CSharp\.Syntax\.[StatementListInfo](../README.md#_top)
+Roslynator\.CSharp\.Syntax\.[StatementListInfo](../README.md)
 

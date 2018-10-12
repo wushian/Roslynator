@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # RegionInfo\.Span Property
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[RegionInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[RegionInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

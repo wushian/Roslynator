@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # ExpressionChain\.Reversed\.Inequality\(ExpressionChain\.Reversed, ExpressionChain\.Reversed\) Operator
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.[ExpressionChain.Reversed](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.[ExpressionChain.Reversed](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

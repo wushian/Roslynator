@@ -1,16 +1,14 @@
-<a name="_top"></a>
-
 # ModifierListInfo\.WithModifiers\(SyntaxTokenList\) Method
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[ModifierListInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[ModifierListInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
 ## Summary
 
-Creates a new [ModifierListInfo](../README.md#_top) with the specified modifiers updated\.
+Creates a new [ModifierListInfo](../README.md) with the specified modifiers updated\.
 
 ```csharp
 public ModifierListInfo WithModifiers(SyntaxTokenList modifiers)
@@ -22,5 +20,5 @@ public ModifierListInfo WithModifiers(SyntaxTokenList modifiers)
 
 ### Returns
 
-Roslynator\.CSharp\.Syntax\.[ModifierListInfo](../README.md#_top)
+Roslynator\.CSharp\.Syntax\.[ModifierListInfo](../README.md)
 

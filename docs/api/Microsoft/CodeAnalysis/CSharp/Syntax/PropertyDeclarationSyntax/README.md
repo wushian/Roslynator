@@ -1,8 +1,6 @@
-<a name="_top"></a>
-
 # [PropertyDeclarationSyntax](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.propertydeclarationsyntax) Class Extensions
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
 | Extension Method | Summary |
 | ---------------- | ------- |

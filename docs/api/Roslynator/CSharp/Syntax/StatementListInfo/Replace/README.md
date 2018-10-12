@@ -1,16 +1,14 @@
-<a name="_top"></a>
-
 # StatementListInfo\.Replace\(StatementSyntax, StatementSyntax\) Method
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[StatementListInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[StatementListInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
 ## Summary
 
-Creates a new [StatementListInfo](../README.md#_top) with the specified statement replaced with the new statement\.
+Creates a new [StatementListInfo](../README.md) with the specified statement replaced with the new statement\.
 
 ```csharp
 public StatementListInfo Replace(StatementSyntax statementInList, StatementSyntax newStatement)
@@ -24,5 +22,5 @@ public StatementListInfo Replace(StatementSyntax statementInList, StatementSynta
 
 ### Returns
 
-Roslynator\.CSharp\.Syntax\.[StatementListInfo](../README.md#_top)
+Roslynator\.CSharp\.Syntax\.[StatementListInfo](../README.md)
 

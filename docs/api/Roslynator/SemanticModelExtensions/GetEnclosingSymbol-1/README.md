@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SemanticModelExtensions\.GetEnclosingSymbol\<TSymbol>\(SemanticModel, Int32, CancellationToken\) Method
 
-[Home](../../../README.md#_top)
+[Home](../../../README.md)
 
-**Containing Type**: Roslynator\.[SemanticModelExtensions](../README.md#_top)
+**Containing Type**: Roslynator\.[SemanticModelExtensions](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # TextLineCollectionSelection\.FirstIndex Property
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.Text\.[TextLineCollectionSelection](../README.md#_top)
+**Containing Type**: Roslynator\.Text\.[TextLineCollectionSelection](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
@@ -22,4 +20,4 @@ System\.[Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)
 
 ### Implements
 
-* Roslynator\.[ISelection\<TextLine>.FirstIndex](../../../ISelection-1/FirstIndex/README.md#_top)
+* Roslynator\.[ISelection\<TextLine>.FirstIndex](../../../ISelection-1/FirstIndex/README.md)

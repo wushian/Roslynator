@@ -1,16 +1,14 @@
-<a name="_top"></a>
-
 # UsingDirectiveListInfo\.RemoveNode\(SyntaxNode, SyntaxRemoveOptions\) Method
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[UsingDirectiveListInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[UsingDirectiveListInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
 ## Summary
 
-Creates a new [UsingDirectiveListInfo](../README.md#_top) with the specified node removed\.
+Creates a new [UsingDirectiveListInfo](../README.md) with the specified node removed\.
 
 ```csharp
 public UsingDirectiveListInfo RemoveNode(SyntaxNode node, SyntaxRemoveOptions options)
@@ -24,5 +22,5 @@ public UsingDirectiveListInfo RemoveNode(SyntaxNode node, SyntaxRemoveOptions op
 
 ### Returns
 
-Roslynator\.CSharp\.Syntax\.[UsingDirectiveListInfo](../README.md#_top)
+Roslynator\.CSharp\.Syntax\.[UsingDirectiveListInfo](../README.md)
 

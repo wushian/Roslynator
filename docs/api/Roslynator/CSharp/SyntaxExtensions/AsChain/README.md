@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SyntaxExtensions\.AsChain\(BinaryExpressionSyntax, TextSpan?\) Method
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.[SyntaxExtensions](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.[SyntaxExtensions](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
@@ -20,5 +18,5 @@ public static ExpressionChain AsChain(this BinaryExpressionSyntax binaryExpressi
 
 ### Returns
 
-Roslynator\.CSharp\.[ExpressionChain](../../ExpressionChain/README.md#_top)
+Roslynator\.CSharp\.[ExpressionChain](../../ExpressionChain/README.md)
 

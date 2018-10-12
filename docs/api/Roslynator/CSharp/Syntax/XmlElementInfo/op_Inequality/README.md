@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # XmlElementInfo\.Inequality\(XmlElementInfo, XmlElementInfo\) Operator
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[XmlElementInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[XmlElementInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

@@ -1,16 +1,14 @@
-<a name="_top"></a>
-
 # GenericInfo\.RemoveAllConstraintClauses\(\) Method
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.Syntax\.[GenericInfo](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.Syntax\.[GenericInfo](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
 ## Summary
 
-Creates a new [GenericInfo](../README.md#_top) with all constraint clauses removed\.
+Creates a new [GenericInfo](../README.md) with all constraint clauses removed\.
 
 ```csharp
 public GenericInfo RemoveAllConstraintClauses()
@@ -18,5 +16,5 @@ public GenericInfo RemoveAllConstraintClauses()
 
 ### Returns
 
-Roslynator\.CSharp\.Syntax\.[GenericInfo](../README.md#_top)
+Roslynator\.CSharp\.Syntax\.[GenericInfo](../README.md)
 

@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # ISelection\<T> Interface
 
-[Home](../../README.md#_top) &#x2022; [Properties](#properties) &#x2022; [Methods](#methods)
+[Home](../../README.md) &#x2022; [Properties](#properties) &#x2022; [Methods](#methods)
 
-**Namespace**: [Roslynator](../README.md#_top)
+**Namespace**: [Roslynator](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
@@ -24,9 +22,9 @@ public interface ISelection<T> : System.Collections.Generic.IEnumerable<T>,
 
 ### Derived
 
-* Roslynator\.[SeparatedSyntaxListSelection\<TNode>](../SeparatedSyntaxListSelection-1/README.md#_top)
-* Roslynator\.[SyntaxListSelection\<TNode>](../SyntaxListSelection-1/README.md#_top)
-* Roslynator\.Text\.[TextLineCollectionSelection](../Text/TextLineCollectionSelection/README.md#_top)
+* Roslynator\.[SeparatedSyntaxListSelection\<TNode>](../SeparatedSyntaxListSelection-1/README.md)
+* Roslynator\.[SyntaxListSelection\<TNode>](../SyntaxListSelection-1/README.md)
+* Roslynator\.Text\.[TextLineCollectionSelection](../Text/TextLineCollectionSelection/README.md)
 
 ### Implements
 
@@ -38,13 +36,13 @@ public interface ISelection<T> : System.Collections.Generic.IEnumerable<T>,
 
 | Property | Summary |
 | -------- | ------- |
-| [FirstIndex](FirstIndex/README.md#_top) | Gets an index of the first selected item\. |
-| [LastIndex](LastIndex/README.md#_top) | Gets an index of the last selected item\. |
+| [FirstIndex](FirstIndex/README.md) | Gets an index of the first selected item\. |
+| [LastIndex](LastIndex/README.md) | Gets an index of the last selected item\. |
 
 ## Methods
 
 | Method | Summary |
 | ------ | ------- |
-| [First()](First/README.md#_top) | Gets the first selected item\. |
-| [Last()](Last/README.md#_top) | Gets the last selected item\. |
+| [First()](First/README.md) | Gets the first selected item\. |
+| [Last()](Last/README.md) | Gets the last selected item\. |
 

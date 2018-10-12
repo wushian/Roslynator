@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # SyntaxListSelection\<TNode>\.First\(\) Method
 
-[Home](../../../README.md#_top)
+[Home](../../../README.md)
 
-**Containing Type**: Roslynator\.[SyntaxListSelection\<TNode>](../README.md#_top)
+**Containing Type**: Roslynator\.[SyntaxListSelection\<TNode>](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
@@ -22,4 +20,4 @@ TNode
 
 ### Implements
 
-* Roslynator\.[ISelection\<TNode>.First](../../ISelection-1/First/README.md#_top)
+* Roslynator\.[ISelection\<TNode>.First](../../ISelection-1/First/README.md)

@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # TextLineCollectionSelection\.Enumerator\.MoveNext\(\) Method
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
-**Containing Type**: Roslynator\.Text\.[TextLineCollectionSelection.Enumerator](../README.md#_top)
+**Containing Type**: Roslynator\.Text\.[TextLineCollectionSelection.Enumerator](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

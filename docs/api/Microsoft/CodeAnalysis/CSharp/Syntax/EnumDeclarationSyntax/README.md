@@ -1,8 +1,6 @@
-<a name="_top"></a>
-
 # [EnumDeclarationSyntax](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.enumdeclarationsyntax) Class Extensions
 
-[Home](../../../../../README.md#_top)
+[Home](../../../../../README.md)
 
 | Extension Method | Summary |
 | ---------------- | ------- |

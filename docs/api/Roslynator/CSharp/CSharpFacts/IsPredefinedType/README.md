@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # CSharpFacts\.IsPredefinedType\(SpecialType\) Method
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.[CSharpFacts](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.[CSharpFacts](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

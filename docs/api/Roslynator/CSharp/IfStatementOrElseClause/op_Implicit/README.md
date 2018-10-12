@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # IfStatementOrElseClause\.Implicit Operator
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.[IfStatementOrElseClause](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.[IfStatementOrElseClause](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
@@ -29,7 +27,7 @@ public static implicit operator IfStatementOrElseClause(ElseClauseSyntax elseCla
 
 ### Returns
 
-Roslynator\.CSharp\.[IfStatementOrElseClause](../README.md#_top)
+Roslynator\.CSharp\.[IfStatementOrElseClause](../README.md)
 
 ## Implicit\(IfStatementOrElseClause to ElseClauseSyntax\) <a name="Roslynator_CSharp_IfStatementOrElseClause_op_Implicit_Roslynator_CSharp_IfStatementOrElseClause___Microsoft_CodeAnalysis_CSharp_Syntax_ElseClauseSyntax"></a>
 
@@ -71,5 +69,5 @@ public static implicit operator IfStatementOrElseClause(IfStatementSyntax ifStat
 
 ### Returns
 
-Roslynator\.CSharp\.[IfStatementOrElseClause](../README.md#_top)
+Roslynator\.CSharp\.[IfStatementOrElseClause](../README.md)
 

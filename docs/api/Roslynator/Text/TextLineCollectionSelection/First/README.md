@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # TextLineCollectionSelection\.First\(\) Method
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.Text\.[TextLineCollectionSelection](../README.md#_top)
+**Containing Type**: Roslynator\.Text\.[TextLineCollectionSelection](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
@@ -22,4 +20,4 @@ Microsoft\.CodeAnalysis\.Text\.[TextLine](https://docs.microsoft.com/en-us/dotne
 
 ### Implements
 
-* Roslynator\.[ISelection\<TextLine>.First](../../../ISelection-1/First/README.md#_top)
+* Roslynator\.[ISelection\<TextLine>.First](../../../ISelection-1/First/README.md)

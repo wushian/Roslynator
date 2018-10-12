@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # ModifierList\<TNode> Class
 
-[Home](../../../README.md#_top) &#x2022; [Properties](#properties) &#x2022; [Methods](#methods)
+[Home](../../../README.md) &#x2022; [Properties](#properties) &#x2022; [Methods](#methods)
 
-**Namespace**: [Roslynator.CSharp](../README.md#_top)
+**Namespace**: [Roslynator.CSharp](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
@@ -28,7 +26,7 @@ public abstract class ModifierList<TNode> where TNode : Microsoft.CodeAnalysis.S
 
 | Property | Summary |
 | -------- | ------- |
-| [Instance](Instance/README.md#_top) | Gets an instance of the [ModifierList\<TNode>](#_top) for a syntax specified by the generic argument\. |
+| [Instance](Instance/README.md) | Gets an instance of the [ModifierList\<TNode>](./README.md) for a syntax specified by the generic argument\. |
 
 ## Methods
 
@@ -44,6 +42,6 @@ public abstract class ModifierList<TNode> where TNode : Microsoft.CodeAnalysis.S
 | [Remove(TNode, SyntaxToken)](Remove/README.md#Roslynator_CSharp_ModifierList_1_Remove__0_Microsoft_CodeAnalysis_SyntaxToken_) | Creates a new node with the specified modifier removed\. |
 | [RemoveAll(TNode)](RemoveAll/README.md#Roslynator_CSharp_ModifierList_1_RemoveAll__0_) | Creates a new node with all modifiers removed\. |
 | [RemoveAll(TNode, Func\<SyntaxToken, Boolean>)](RemoveAll/README.md#Roslynator_CSharp_ModifierList_1_RemoveAll__0_System_Func_Microsoft_CodeAnalysis_SyntaxToken_System_Boolean__) | Creates a new node with modifiers that matches the predicate removed\. |
-| [RemoveAt(TNode, Int32)](RemoveAt/README.md#_top) | Creates a new node with a modifier at the specified index removed\. |
+| [RemoveAt(TNode, Int32)](RemoveAt/README.md) | Creates a new node with a modifier at the specified index removed\. |
 | [ToString()](https://docs.microsoft.com/en-us/dotnet/api/system.object.tostring) |  \(Inherited from [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object)\) |
 

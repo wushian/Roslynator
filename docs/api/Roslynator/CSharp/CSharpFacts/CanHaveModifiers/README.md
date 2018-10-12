@@ -1,10 +1,8 @@
-<a name="_top"></a>
-
 # CSharpFacts\.CanHaveModifiers\(SyntaxKind\) Method
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.[CSharpFacts](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.[CSharpFacts](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 

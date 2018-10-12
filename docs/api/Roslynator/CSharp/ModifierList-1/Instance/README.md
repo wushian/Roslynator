@@ -1,16 +1,14 @@
-<a name="_top"></a>
-
 # ModifierList\<TNode>\.Instance Property
 
-[Home](../../../../README.md#_top)
+[Home](../../../../README.md)
 
-**Containing Type**: Roslynator\.CSharp\.[ModifierList\<TNode>](../README.md#_top)
+**Containing Type**: Roslynator\.CSharp\.[ModifierList\<TNode>](../README.md)
 
 **Assembly**: Roslynator\.CSharp\.dll
 
 ## Summary
 
-Gets an instance of the [ModifierList\<TNode>](../README.md#_top) for a syntax specified by the generic argument\.
+Gets an instance of the [ModifierList\<TNode>](../README.md) for a syntax specified by the generic argument\.
 
 ```csharp
 public static ModifierList<TNode> Instance { get; }
@@ -18,5 +16,5 @@ public static ModifierList<TNode> Instance { get; }
 
 ### Property Value
 
-Roslynator\.CSharp\.[ModifierList\<TNode>](../README.md#_top)
+Roslynator\.CSharp\.[ModifierList\<TNode>](../README.md)
 

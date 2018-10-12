@@ -1,8 +1,6 @@
-<a name="_top"></a>
-
 # [TypeKind](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.typekind) Enum Extensions
 
-[Home](../../../README.md#_top)
+[Home](../../../README.md)
 
 | Extension Method | Summary |
 | ---------------- | ------- |
