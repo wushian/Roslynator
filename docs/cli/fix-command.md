@@ -6,8 +6,7 @@ Fixes all diagnostics in the specified solution.
 ## Synopsis
 
 ```
-roslynator fix
-<SOLUTION>
+roslynator fix <SOLUTION>
 [-a|--analyzer-assemblies]
 [--batch-size]
 [--ignore-analyzer-references]
