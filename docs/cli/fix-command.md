@@ -61,7 +61,8 @@ Defines project names that should not be fixed.
 **`--msbuild-path`**
 
 Defines a path to MSBuild.
-If the path to MSBuild is not specified and there are installed multiple instances of MSBuild the instance with the highest version will be used.
+
+*Note: If the path to MSBuild is not specified and there are installed multiple instances of MSBuild the instance with the highest version will be used.*
 
 **`-p|--properties`** `<NAME=VALUE>`
 
