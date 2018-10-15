@@ -29,8 +29,7 @@
     -r $(RoslynatorAssemblyReferences) ^
     -o &quot;$(SolutionDir)docs&quot; ^
     -h &quot;API Reference&quot;"
-        LogStandardErrorAsError="true"
-        ConsoleToMSBuild="true">
+        LogStandardErrorAsError="true" ConsoleToMSBuild="true">
     <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
   </Exec>
 
@@ -39,8 +38,7 @@
     -a $(RoslynatorAssemblies) ^
     -r $(RoslynatorAssemblyReferences) ^
     -o &quot;$(SolutionDir)docs\api.cs&quot;"
-        LogStandardErrorAsError="true"
-        ConsoleToMSBuild="true">
+        LogStandardErrorAsError="true" ConsoleToMSBuild="true">
     <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
   </Exec>
 

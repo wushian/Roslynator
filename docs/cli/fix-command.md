@@ -9,14 +9,14 @@ Fixes all diagnostics in the specified solution.
 roslynator fix
 <SOLUTION>
 [-a|--analyzer-assemblies]
-[-p|--properties]
-[--msbuild-path]
+[--batch-size]
 [--ignore-analyzer-references]
 [--ignore-compiler-errors]
-[--ignored-diagnostics]
 [--ignored-compiler-diagnostics]
+[--ignored-diagnostics]
 [--ignored-projects]
-[--batch-size]
+[--msbuild-path]
+[-p|--properties]
 ```
 
 ## Arguments
@@ -34,37 +34,38 @@ Defines one or more paths to:
 * analyzer assembly
 * directory that should be searched recursively for analyzer assemblies
 
-**`-p|--properties`** `<NAME=VALUE>`
+**`--batch-size`**
 
-Defines one or more MSBuild properties.
-
-**`--msbuild-path`**
-
-Defines a path to MSBuild. If there are installed multiple instances of MSBuild the instance with the highest version will be used.
-
-**`--ignore-compiler-errors`**
-
-Indicates whether fixing should continue even if compilation has errors.
+Defines maximum number of diagnostics that can be fixed in one batch.
 
 **`--ignore-analyzer-references`**
 
 Indicates whether Roslynator should ignore analyzers that are referenced in projects.
 
-**`--ignored-diagnostics`**
+**`--ignore-compiler-errors`**
 
-Defines diagnostic identifiers that should not be fixed.
+Indicates whether fixing should continue even if compilation has errors.
 
 **`--ignored-compiler-diagnostics`**
 
-Defines compiler diagnostic identifiers that should be ignored even if **`--ignore-compiler-errors`** is set to `false`.
+Defines compiler diagnostic identifiers that should be ignored even if `--ignore-compiler-errors` is not set.
+
+**`--ignored-diagnostics`**
+
+Defines diagnostic identifiers that should not be fixed.
 
 **`--ignored-projects`**
 
 Defines project names that should not be fixed.
 
-**`--batch-size`**
+**`--msbuild-path`**
 
-Defines maximum number of diagnostics that can be fixed in one batch.
+Defines a path to MSBuild.
+If the path to MSBuild is not specified and there are installed multiple instances of MSBuild the instance with the highest version will be used.
+
+**`-p|--properties`** `<NAME=VALUE>`
+
+Defines one or more MSBuild properties.
 
 ## See Also
 
