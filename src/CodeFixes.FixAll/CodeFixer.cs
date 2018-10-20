@@ -19,11 +19,11 @@ namespace Roslynator.CodeFixes
     //TODO: fix compiler diagnostics
     public class CodeFixer
     {
-        private readonly AnalyzerFileCache _analyzerFiles;
+        private readonly AnalyzerAssemblyCache _analyzerAssemblies;
 
-        private readonly AnalyzerFileCache _analyzerFileCache = new AnalyzerFileCache();
+        private readonly AnalyzerAssemblyCache _analyzerAssemblyCache = new AnalyzerAssemblyCache();
 
-        private static CompilationWithAnalyzersOptions DefaultCompilationWithAnalyzersOptions { get; } = new CompilationWithAnalyzersOptions(
+        private static readonly CompilationWithAnalyzersOptions _defaultCompilationWithAnalyzersOptions = new CompilationWithAnalyzersOptions(
             options: default(AnalyzerOptions),
             onAnalyzerException: null,
             concurrentAnalysis: true,
@@ -35,10 +35,10 @@ namespace Roslynator.CodeFixes
             Workspace = workspace;
             Options = options ?? CodeFixerOptions.Default;
 
-            _analyzerFiles = new AnalyzerFileCache();
+            _analyzerAssemblies = new AnalyzerAssemblyCache();
 
             if (analyzerAssemblies != null)
-                _analyzerFiles.LoadFrom(analyzerAssemblies);
+                _analyzerAssemblies.LoadFrom(analyzerAssemblies);
         }
 
         public Workspace Workspace { get; }
@@ -55,13 +55,13 @@ namespace Roslynator.CodeFixes
                 .ToImmutableArray();
 
             foreach (string projectName in Options.IgnoredProjectNames.OrderBy(f => f))
-                WriteLine($"Project '{projectName}' will be ignored");
+                WriteLine($"Ignore project '{projectName}'");
 
             foreach (string id in Options.IgnoredDiagnosticIds.OrderBy(f => f))
-                WriteLine($"Diagnostic '{id}' will be ignored");
+                WriteLine($"Ignore diagnostic '{id}'");
 
             foreach (string id in Options.IgnoredCompilerDiagnosticIds.OrderBy(f => f))
-                WriteLine($"Compiler diagnostic '{id}' will be ignored");
+                WriteLine($"Ignore compiler diagnostic '{id}'");
 
             Stopwatch stopwatch = Stopwatch.StartNew();
 
@@ -120,22 +120,28 @@ namespace Roslynator.CodeFixes
                 .Distinct()
                 .OfType<AnalyzerFileReference>()
                 .Select(f => f.GetAssembly())
-                .Where(f => !_analyzerFiles.Contains(f.FullName))
+                .Where(f => !_analyzerAssemblies.Contains(f.FullName))
                 .ToImmutableArray();
 
-            ImmutableArray<DiagnosticAnalyzer> analyzers = _analyzerFiles
+            ImmutableArray<DiagnosticAnalyzer> analyzers = _analyzerAssemblies
                 .GetAnalyzers(language)
-                .AddRange(_analyzerFileCache.GetAnalyzers(assemblies, language));
+                .AddRange(_analyzerAssemblyCache.GetAnalyzers(assemblies, language));
 
             if (!analyzers.Any())
+            {
+                WriteLine($"  No analyzers found to analyze '{project.Name}'", ConsoleColor.DarkYellow);
                 return FixResult.NoAnalyzers;
+            }
 
-            ImmutableArray<CodeFixProvider> fixers = _analyzerFiles
+            ImmutableArray<CodeFixProvider> fixers = _analyzerAssemblies
                 .GetFixers(language)
-                .AddRange(_analyzerFileCache.GetFixers(assemblies, language));
+                .AddRange(_analyzerAssemblyCache.GetFixers(assemblies, language));
 
             if (!fixers.Any())
+            {
+                WriteLine($"  No fixers found to fix '{project.Name}'", ConsoleColor.DarkYellow);
                 return FixResult.NoFixers;
+            }
 
             Dictionary<string, ImmutableArray<DiagnosticAnalyzer>> analyzersById = analyzers
                 .SelectMany(f => f.SupportedDiagnostics.Select(id => (id.Id, analyzer: f)))
@@ -165,7 +171,7 @@ namespace Roslynator.CodeFixes
                 if (!VerifyCompilerDiagnostics(compilation, cancellationToken))
                     return FixResult.CompilerError;
 
-                var compilationWithAnalyzers = new CompilationWithAnalyzers(compilation, analyzers, DefaultCompilationWithAnalyzersOptions);
+                var compilationWithAnalyzers = new CompilationWithAnalyzers(compilation, analyzers, _defaultCompilationWithAnalyzersOptions);
 
                 WriteLine($"  Analyze '{project.Name}'");
 
@@ -240,7 +246,7 @@ namespace Roslynator.CodeFixes
                 if (!VerifyCompilerDiagnostics(compilation, cancellationToken))
                     return FixResult.CompilerError;
 
-                var compilationWithAnalyzers = new CompilationWithAnalyzers(compilation, analyzers, DefaultCompilationWithAnalyzersOptions);
+                var compilationWithAnalyzers = new CompilationWithAnalyzers(compilation, analyzers, _defaultCompilationWithAnalyzersOptions);
 
                 ImmutableArray<Diagnostic> diagnostics = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
 

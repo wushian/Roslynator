@@ -9,7 +9,7 @@ namespace Roslynator.CommandLine
     public class LocCommandLineOptions
     {
         [Value(index: 0, Required = true)]
-        public string Solution { get; set; }
+        public string SolutionPath { get; set; }
 
         [Option(longName: "ignore-block-boundary")]
         public bool IgnoreBlockBoundary { get; set; }

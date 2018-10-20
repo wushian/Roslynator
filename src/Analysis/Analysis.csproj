@@ -6,10 +6,10 @@
 
   <PropertyGroup>
     <Version>0.1.0.0</Version>
-    <AssemblyName>Roslynator.CodeFixes.FixAll</AssemblyName>
+    <AssemblyName>Roslynator.Analysis</AssemblyName>
     <RootNamespace>Roslynator.CodeFixes</RootNamespace>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>CodeFixes.FixAll.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Analysis.snk</AssemblyOriginatorKeyFile>
     <CodeAnalysisRuleSet>..\global.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
     <IsPackable>false</IsPackable>
@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Analysis\Analysis.csproj" />
     <ProjectReference Include="..\CSharp\CSharp.csproj" />
   </ItemGroup>
 

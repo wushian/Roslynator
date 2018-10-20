@@ -11,15 +11,16 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
-using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.MSBuild;
+using Microsoft.CodeAnalysis.Diagnostics;
 using Roslynator.CodeFixes;
 using Roslynator.Documentation;
 using Roslynator.Documentation.Markdown;
-using Roslynator.Metrics;
 using static Roslynator.CodeFixes.ConsoleHelpers;
+using static Roslynator.CommandLine.CommandLineHelpers;
+using static Roslynator.CommandLine.DocumentationHelpers;
 
 #pragma warning disable RCS1090
 
@@ -35,9 +36,11 @@ namespace Roslynator.CommandLine
             WriteLine("Copyright (c) Josef Pihrt. All rights reserved.");
             WriteLine();
 
-            Parser.Default.ParseArguments<FixCommandLineOptions, FormatCommandLineOptions, LocCommandLineOptions, GenerateDocCommandLineOptions, GenerateDeclarationsCommandLineOptions, GenerateDocRootCommandLineOptions>(args)
+            Parser.Default.ParseArguments<FixCommandLineOptions, AnalyzeCommandLineOptions, AnalyzeAssemblyCommandLineOptions, FormatCommandLineOptions, LocCommandLineOptions, GenerateDocCommandLineOptions, GenerateDeclarationsCommandLineOptions, GenerateDocRootCommandLineOptions>(args)
                 .MapResult(
                   (FixCommandLineOptions options) => FixAsync(options).Result,
+                  (AnalyzeCommandLineOptions options) => AnalyzeAsync(options).Result,
+                  (AnalyzeAssemblyCommandLineOptions options) => AnalyzeAssembly(options),
                   (FormatCommandLineOptions options) => FormatAsync(options).Result,
                   (LocCommandLineOptions options) => LocAsync(options).Result,
                   (GenerateDocCommandLineOptions options) => GenerateDoc(options),
@@ -48,375 +51,166 @@ namespace Roslynator.CommandLine
 
         private static async Task<int> FixAsync(FixCommandLineOptions options)
         {
-            MSBuildWorkspace workspace = null;
+            var executor = new FixCommandExecutor(options);
 
-            try
+            CommandResult result = await executor.ExecuteAsync(options.SolutionPath, options.MSBuildPath, options.Properties);
+
+            return (result.Success) ? 0 : 1;
+        }
+
+        private static async Task<int> AnalyzeAsync(AnalyzeCommandLineOptions options)
+        {
+            DiagnosticSeverity minimalSeverity = CodeAnalyzerOptions.Default.MinimalSeverity;
+
+            if (options.MinimalSeverity != null)
             {
-                workspace = CreateMSBuildWorkspace(options.MSBuildPath, options.Properties);
-
-                if (workspace == null)
+                if (!TryParseDiagnosticSeverity(options.MinimalSeverity, out DiagnosticSeverity severity))
                     return 1;
 
-                workspace.WorkspaceFailed += (o, e) => WriteLine(e.Diagnostic.Message, ConsoleColor.Yellow);
+                minimalSeverity = severity;
+            }
 
-                string solutionPath = options.SolutionPath;
+            var executor = new AnalyzeCommandExecutor(options, minimalSeverity);
 
-                WriteLine($"Load solution '{solutionPath}'", ConsoleColor.Cyan);
+            CommandResult result = await executor.ExecuteAsync(options.SolutionPath, options.MSBuildPath, options.Properties);
 
-                try
+            return (result.Success) ? 0 : 1;
+        }
+
+        private static int AnalyzeAssembly(AnalyzeAssemblyCommandLineOptions options)
+        {
+            string language = GetLanguageName(options.Language);
+
+            var analyzerAssemblies = new List<AnalyzerAssembly>();
+
+            foreach (AnalyzerAssembly analyzerAssembly in AssemblyAnalyzer.Analyze(
+                path: options.Path,
+                loadAnalyzers: !options.NoAnalyzers,
+                loadFixers: !options.NoFixers,
+                language: language))
+            {
+                analyzerAssemblies.Add(analyzerAssembly);
+
+                WriteLine($"{analyzerAssembly.Assembly.GetName().Name} ({analyzerAssembly.Assembly.Location})", ConsoleColor.Green);
+
+                DiagnosticAnalyzer[] analyzers = analyzerAssembly
+                    .Analyzers
+                    .SelectMany(f => f.Value)
+                    .Distinct()
+                    .ToArray();
+
+                if (analyzers.Length > 0)
                 {
-                    var cts = new CancellationTokenSource();
-                    Console.CancelKeyPress += (sender, e) =>
-                    {
-                        e.Cancel = true;
-                        cts.Cancel();
-                    };
+                    WriteLine("  DiagnosticAnalyzers");
 
-                    CancellationToken cancellationToken = cts.Token;
-
-                    Solution solution;
-
-                    try
+                    foreach (IGrouping<string, DiagnosticAnalyzer> grouping in analyzers
+                        .GroupBy(f => f.GetType().Namespace)
+                        .OrderBy(f => f.Key))
                     {
-                        solution = await workspace.OpenSolutionAsync(solutionPath, new ConsoleProgressReporter(), cancellationToken);
-                    }
-                    catch (Exception ex)
-                    {
-                        if (ex is FileNotFoundException
-                            || ex is InvalidOperationException)
+                        WriteLine($"    {grouping.Key}");
+
+                        foreach (DiagnosticAnalyzer analyzer in grouping.OrderBy(f => f.GetType().Name))
                         {
-                            WriteLine(ex.ToString(), ConsoleColor.Red);
-                            return 1;
-                        }
-                        else
-                        {
-                            throw;
+                            Type type = analyzer.GetType();
+
+                            DiagnosticAnalyzerAttribute attribute = type.GetCustomAttribute<DiagnosticAnalyzerAttribute>();
+
+                            WriteLine($"      {type.Name} ({string.Join(") (", attribute.Languages.OrderBy(f => f))}) ({string.Join(", ", analyzer.SupportedDiagnostics.Select(f => f.Id).OrderBy(f => f))})");
                         }
                     }
-
-                    WriteLine($"Done loading solution '{solutionPath}'", ConsoleColor.Green);
-
-                    var codeFixerOptions = new CodeFixerOptions(
-                        ignoreCompilerErrors: options.IgnoreCompilerErrors,
-                        ignoreAnalyzerReferences: options.IgnoreAnalyzerReferences,
-                        ignoredDiagnosticIds: options.IgnoredDiagnostics,
-                        ignoredCompilerDiagnosticIds: options.IgnoredCompilerDiagnostics,
-                        ignoredProjectNames: options.IgnoredProjects,
-                        batchSize: options.BatchSize,
-                        format: options.Format);
-
-                    var codeFixer = new CodeFixer(workspace, analyzerAssemblies: options.AnalyzerAssemblies, options: codeFixerOptions);
-
-                    await codeFixer.FixAsync(cancellationToken);
                 }
-                catch (OperationCanceledException)
+
+                CodeFixProvider[] fixers = analyzerAssembly
+                    .Fixers
+                    .SelectMany(f => f.Value)
+                    .Distinct()
+                    .ToArray();
+
+                if (fixers.Length > 0)
                 {
-                    WriteLine("Fixing was canceled.");
+                    WriteLine("  CodeFixProviders");
+
+                    foreach (IGrouping<string, CodeFixProvider> grouping in fixers
+                        .GroupBy(f => f.GetType().Namespace)
+                        .OrderBy(f => f.Key))
+                    {
+                        WriteLine($"    {grouping.Key}");
+
+                        foreach (CodeFixProvider fixer in grouping)
+                        {
+                            Type type = fixer.GetType();
+
+                            ExportCodeFixProviderAttribute attribute = type.GetCustomAttribute<ExportCodeFixProviderAttribute>();
+
+                            WriteLine($"      {type.Name} ({string.Join(") (", attribute.Languages.Select(f => GetLanguageShortName(f)).OrderBy(f => f))}) ({string.Join(", ", fixer.FixableDiagnosticIds.OrderBy(f => f))})");
+                        }
+                    }
                 }
             }
-            finally
+
+            if (analyzerAssemblies.Count > 0)
             {
-                workspace?.Dispose();
+                WriteLine();
+
+                Console.WriteLine($"{analyzerAssemblies.Count} analyzer {((analyzerAssemblies.Count == 1) ? "assembly" : "assemblies")} found");
+
+                foreach (AnalyzerAssembly analyzerAssembly in analyzerAssemblies
+                    .OrderBy(f => f.Assembly.GetName().Name)
+                    .ThenBy(f => f.Assembly.Location))
+                {
+                    WriteLine($"  {analyzerAssembly.Assembly.GetName().Name}", ConsoleColor.Green);
+                    WriteLine($"    Location: {analyzerAssembly.Assembly.Location}");
+
+                    foreach (KeyValuePair<string, ImmutableArray<DiagnosticAnalyzer>> kvp in analyzerAssembly.Analyzers
+                        .OrderBy(f => f.Key))
+                    {
+                        WriteLine($"    {GetLanguageShortName(kvp.Key)} Analyzers: {kvp.Value.Length}");
+                    }
+
+                    foreach (KeyValuePair<string, ImmutableArray<CodeFixProvider>> kvp in analyzerAssembly.Fixers
+                        .OrderBy(f => f.Key))
+                    {
+                        WriteLine($"    {GetLanguageShortName(kvp.Key)} Fixers:    {kvp.Value.Length}");
+                    }
+                }
+
+                WriteLine();
             }
 
             return 0;
+
+            string GetLanguageShortName(string languageName)
+            {
+                switch (languageName)
+                {
+                    case LanguageNames.CSharp:
+                        return languageName;
+                    case LanguageNames.VisualBasic:
+                        return "VB";
+                }
+
+                Debug.Fail(languageName);
+
+                return languageName;
+            }
         }
 
         private static async Task<int> FormatAsync(FormatCommandLineOptions options)
         {
-            MSBuildWorkspace workspace = null;
+            var executor = new FormatCommandExecutor(options);
 
-            try
-            {
-                workspace = CreateMSBuildWorkspace(options.MSBuildPath, options.Properties);
+            CommandResult result = await executor.ExecuteAsync(options.SolutionPath, options.MSBuildPath, options.Properties);
 
-                if (workspace == null)
-                    return 1;
-
-                workspace.WorkspaceFailed += (o, e) => WriteLine(e.Diagnostic.Message, ConsoleColor.Yellow);
-
-                string solutionPath = options.SolutionPath;
-
-                WriteLine($"Load solution '{solutionPath}'", ConsoleColor.Cyan);
-
-                try
-                {
-                    var cts = new CancellationTokenSource();
-                    Console.CancelKeyPress += (sender, e) =>
-                    {
-                        e.Cancel = true;
-                        cts.Cancel();
-                    };
-
-                    CancellationToken cancellationToken = cts.Token;
-
-                    Solution solution;
-
-                    try
-                    {
-                        solution = await workspace.OpenSolutionAsync(solutionPath, new ConsoleProgressReporter(), cancellationToken);
-                    }
-                    catch (Exception ex)
-                    {
-                        if (ex is FileNotFoundException
-                            || ex is InvalidOperationException)
-                        {
-                            WriteLine(ex.ToString(), ConsoleColor.Red);
-                            return 1;
-                        }
-                        else
-                        {
-                            throw;
-                        }
-                    }
-
-                    WriteLine($"Done loading solution '{solutionPath}'", ConsoleColor.Green);
-
-                    WriteLine($"Format solution '{solutionPath}'", ConsoleColor.Cyan);
-
-                    ImmutableHashSet<string> ignoredProjectNames = (options.IgnoredProjects.Any())
-                        ? ImmutableHashSet.CreateRange(options.IgnoredProjects)
-                        : ImmutableHashSet<string>.Empty;
-
-                    foreach (ProjectId projectId in solution.ProjectIds)
-                    {
-                        Project project = workspace.CurrentSolution.GetProject(projectId);
-
-                        if (ignoredProjectNames.Contains(project.Name))
-                            continue;
-
-                        WriteLine($"  Format  '{project.Name}'");
-
-                        Project newProject = await CodeFormatter.FormatAsync(project, cancellationToken).ConfigureAwait(false);
-
-                        bool success = workspace.TryApplyChanges(newProject.Solution);
-
-                        Debug.Assert(success, "Cannot apply changes to a solution.");
-                    }
-
-                    WriteLine($"Done formatting solution '{solutionPath}'", ConsoleColor.Green);
-                }
-                catch (OperationCanceledException)
-                {
-                    WriteLine("Formatting was canceled.");
-                }
-            }
-            finally
-            {
-                workspace?.Dispose();
-            }
-
-            return 0;
+            return (result.Success) ? 0 : 1;
         }
 
         private static async Task<int> LocAsync(LocCommandLineOptions options)
         {
-            MSBuildWorkspace workspace = null;
+            var executor = new LocCommandExecutor(options);
 
-            try
-            {
-                workspace = CreateMSBuildWorkspace(options.MSBuildPath, options.Properties);
+            CommandResult result = await executor.ExecuteAsync(options.SolutionPath, options.MSBuildPath, options.Properties);
 
-                if (workspace == null)
-                    return 1;
-
-                workspace.WorkspaceFailed += (o, e) => WriteLine(e.Diagnostic.Message, ConsoleColor.Yellow);
-
-                string solutionPath = options.Solution;
-
-                WriteLine($"Load solution '{solutionPath}'", ConsoleColor.Cyan);
-
-                try
-                {
-                    var cts = new CancellationTokenSource();
-                    Console.CancelKeyPress += (sender, e) =>
-                    {
-                        e.Cancel = true;
-                        cts.Cancel();
-                    };
-
-                    CancellationToken cancellationToken = cts.Token;
-
-                    Solution solution;
-
-                    try
-                    {
-                        solution = await workspace.OpenSolutionAsync(solutionPath, new ConsoleProgressReporter(), cancellationToken);
-                    }
-                    catch (Exception ex)
-                    {
-                        if (ex is FileNotFoundException
-                            || ex is InvalidOperationException)
-                        {
-                            WriteLine(ex.ToString(), ConsoleColor.Red);
-                            return 1;
-                        }
-                        else
-                        {
-                            throw;
-                        }
-                    }
-
-                    WriteLine($"Done loading solution '{solutionPath}'", ConsoleColor.Green);
-
-                    var codeMetricsOptions = new CodeMetricsOptions(
-                        includeGenerated: options.IncludeGenerated,
-                        includeWhiteSpace: options.IncludeWhiteSpace,
-                        includeComments: options.IncludeComments,
-                        includePreprocessorDirectives: options.IncludePreprocessorDirectives,
-                        ignoreBlockBoundary: options.IgnoreBlockBoundary);
-
-                    WriteLine($"Count metrics for solution '{solutionPath}'", ConsoleColor.Cyan);
-
-                    var projectsMetrics = new List<(Project project, CodeMetrics metrics)>();
-
-                    ImmutableHashSet<string> ignoredProjectNames = (options.IgnoredProjects.Any())
-                        ? ImmutableHashSet.CreateRange(options.IgnoredProjects)
-                        : ImmutableHashSet<string>.Empty;
-
-                    foreach (Project project in solution.Projects)
-                    {
-                        if (ignoredProjectNames.Contains(project.Name))
-                            continue;
-
-                        WriteLine($"  Count metrics for project '{project.Name}'");
-
-                        projectsMetrics.Add((project, await CodeMetricsCounter.CountLinesAsync(project, codeMetricsOptions, cancellationToken).ConfigureAwait(false)));
-                    }
-
-                    WriteLine($"Done counting metrics for solution '{solutionPath}'", ConsoleColor.Green);
-
-                    WriteLine();
-                    WriteLine("Lines of code by project:");
-
-                    int maxDigits = projectsMetrics.Max(f => f.metrics.CodeLineCount).ToString("n0").Length;
-
-                    int maxNameLength = projectsMetrics.Max(f => f.project.Name.Length);
-
-                    foreach ((Project project, CodeMetrics metrics) in projectsMetrics.OrderByDescending(f => f.metrics.CodeLineCount))
-                    {
-                        WriteLine($"{metrics.CodeLineCount.ToString("n0").PadLeft(maxDigits)} {project.Name.PadRight(maxNameLength)} {project.Language}");
-                    }
-
-                    WriteLine();
-                    WriteLine("Solution metrics:");
-
-                    int totalCodeLineCount = projectsMetrics.Sum(f => f.metrics.CodeLineCount);
-                    int totalBlockBoundaryLineCount = projectsMetrics.Sum(f => f.metrics.BlockBoundaryLineCount);
-                    int totalWhiteSpaceLineCount = projectsMetrics.Sum(f => f.metrics.WhiteSpaceLineCount);
-                    int totalCommentLineCount = projectsMetrics.Sum(f => f.metrics.CommentLineCount);
-                    int totalPreprocessorDirectiveLineCount = projectsMetrics.Sum(f => f.metrics.PreprocessorDirectiveLineCount);
-                    int totalLineCount = projectsMetrics.Sum(f => f.metrics.TotalLineCount);
-
-                    string totalCodeLines = totalCodeLineCount.ToString("n0");
-                    string totalBlockBoundaryLines = totalBlockBoundaryLineCount.ToString("n0");
-                    string totalWhiteSpaceLines = totalWhiteSpaceLineCount.ToString("n0");
-                    string totalCommentLines = totalCommentLineCount.ToString("n0");
-                    string totalPreprocessorDirectiveLines = totalPreprocessorDirectiveLineCount.ToString("n0");
-                    string totalLines = totalLineCount.ToString("n0");
-
-                    maxDigits = Math.Max(totalCodeLines.Length,
-                        Math.Max(totalBlockBoundaryLines.Length,
-                            Math.Max(totalWhiteSpaceLines.Length,
-                                Math.Max(totalCommentLines.Length,
-                                    Math.Max(totalPreprocessorDirectiveLines.Length, totalLines.Length)))));
-
-                    if (options.IgnoreBlockBoundary
-                        || !options.IncludeWhiteSpace
-                        || !options.IncludeComments
-                        || !options.IncludePreprocessorDirectives)
-                    {
-                        WriteLine($"{totalCodeLines.PadLeft(maxDigits)} {totalCodeLineCount / (double)totalLineCount,4:P0} lines of code");
-                    }
-                    else
-                    {
-                        WriteLine($"{totalCodeLines.PadLeft(maxDigits)} lines of code");
-                    }
-
-                    if (options.IgnoreBlockBoundary)
-                        WriteLine($"{totalBlockBoundaryLines.PadLeft(maxDigits)} {totalBlockBoundaryLineCount / (double)totalLineCount,4:P0} block boundary lines");
-
-                    if (!options.IncludeWhiteSpace)
-                        WriteLine($"{totalWhiteSpaceLines.PadLeft(maxDigits)} {totalWhiteSpaceLineCount / (double)totalLineCount,4:P0} white-space lines");
-
-                    if (!options.IncludeComments)
-                        WriteLine($"{totalCommentLines.PadLeft(maxDigits)} {totalCommentLineCount / (double)totalLineCount,4:P0} comment lines");
-
-                    if (!options.IncludePreprocessorDirectives)
-                        WriteLine($"{totalPreprocessorDirectiveLines.PadLeft(maxDigits)} {totalPreprocessorDirectiveLineCount / (double)totalLineCount,4:P0} preprocessor directive lines");
-
-                    WriteLine($"{totalLines.PadLeft(maxDigits)} {totalLineCount / (double)totalLineCount,4:P0} total lines");
-
-                    WriteLine();
-                }
-                catch (OperationCanceledException)
-                {
-                    WriteLine("Metrics counting was canceled.");
-                }
-            }
-            finally
-            {
-                workspace?.Dispose();
-            }
-
-            return 0;
-        }
-
-        private static MSBuildWorkspace CreateMSBuildWorkspace(string msbuildPath, IEnumerable<string> properties)
-        {
-            if (msbuildPath != null)
-            {
-                MSBuildLocator.RegisterMSBuildPath(msbuildPath);
-            }
-            else
-            {
-                VisualStudioInstance instance = MSBuildLocator.QueryVisualStudioInstances()
-                    .OrderBy(f => f.Version)
-                    .LastOrDefault();
-
-                if (instance == null)
-                {
-                    WriteLine("MSBuild location not found. Use option '--msbuild-path' to specify MSBuild location", ConsoleColor.Red);
-                    return null;
-                }
-
-                WriteLine($"MSBuild location is '{instance.MSBuildPath}'");
-
-                MSBuildLocator.RegisterInstance(instance);
-            }
-
-            var dicProperties = new Dictionary<string, string>();
-
-            foreach (string property in properties)
-            {
-                int index = property.IndexOf("=");
-
-                if (index == -1)
-                {
-                    WriteLine($"Unable to parse property '{property}'", ConsoleColor.Red);
-                    return null;
-                }
-
-                string key = property.Substring(0, index);
-
-                dicProperties[key] = property.Substring(index + 1);
-            }
-
-            if (dicProperties.Count > 0)
-            {
-                WriteLine("Add MSBuild properties");
-
-                int maxLength = dicProperties.Max(f => f.Key.Length);
-
-                foreach (KeyValuePair<string, string> kvp in dicProperties)
-                    WriteLine($"  {kvp.Key.PadRight(maxLength)} = {kvp.Value}");
-            }
-
-            // https://github.com/Microsoft/MSBuildLocator/issues/16
-            if (!dicProperties.ContainsKey("AlwaysCompileMarkupFilesInSeparateDomain"))
-                dicProperties["AlwaysCompileMarkupFilesInSeparateDomain"] = bool.FalseString;
-
-            return MSBuildWorkspace.Create(dicProperties);
+            return (result.Success) ? 0 : 1;
         }
 
         private static int GenerateDoc(GenerateDocCommandLineOptions options)
@@ -427,22 +221,22 @@ namespace Roslynator.CommandLine
                 return 1;
             }
 
-            if (!TryGetIgnoredRootParts(options.IgnoredRootParts, out RootDocumentationParts ignoredRootParts))
+            if (!TryParseIgnoredRootParts(options.IgnoredRootParts, out RootDocumentationParts ignoredRootParts))
                 return 1;
 
-            if (!TryGetIgnoredNamespaceParts(options.IgnoredNamespaceParts, out NamespaceDocumentationParts ignoredNamespaceParts))
+            if (!TryParseIgnoredNamespaceParts(options.IgnoredNamespaceParts, out NamespaceDocumentationParts ignoredNamespaceParts))
                 return 1;
 
-            if (!TryGetIgnoredTypeParts(options.IgnoredTypeParts, out TypeDocumentationParts ignoredTypeParts))
+            if (!TryParseIgnoredTypeParts(options.IgnoredTypeParts, out TypeDocumentationParts ignoredTypeParts))
                 return 1;
 
-            if (!TryGetIgnoredMemberParts(options.IgnoredMemberParts, out MemberDocumentationParts ignoredMemberParts))
+            if (!TryParseIgnoredMemberParts(options.IgnoredMemberParts, out MemberDocumentationParts ignoredMemberParts))
                 return 1;
 
-            if (!TryGetOmitContainingNamespaceParts(options.OmitContainingNamespaceParts, out OmitContainingNamespaceParts omitContainingNamespaceParts))
+            if (!TryParseOmitContainingNamespaceParts(options.OmitContainingNamespaceParts, out OmitContainingNamespaceParts omitContainingNamespaceParts))
                 return 1;
 
-            if (!TryGetVisibility(options.Visibility, out DocumentationVisibility visibility))
+            if (!TryParseVisibility(options.Visibility, out DocumentationVisibility visibility))
                 return 1;
 
             DocumentationModel documentationModel = CreateDocumentationModel(options.References, options.Assemblies, visibility, options.AdditionalXmlDocumentation);
@@ -524,10 +318,10 @@ namespace Roslynator.CommandLine
 
         private static int GenerateDeclarations(GenerateDeclarationsCommandLineOptions options)
         {
-            if (!TryGetIgnoredDeclarationListParts(options.IgnoredParts, out DeclarationListParts ignoredParts))
+            if (!TryParseIgnoredDeclarationListParts(options.IgnoredParts, out DeclarationListParts ignoredParts))
                 return 1;
 
-            if (!TryGetVisibility(options.Visibility, out DocumentationVisibility visibility))
+            if (!TryParseVisibility(options.Visibility, out DocumentationVisibility visibility))
                 return 1;
 
             DocumentationModel documentationModel = CreateDocumentationModel(options.References, options.Assemblies, visibility, options.AdditionalXmlDocumentation);
@@ -588,7 +382,7 @@ namespace Roslynator.CommandLine
 
         private static int GenerateDocRoot(GenerateDocRootCommandLineOptions options)
         {
-            if (!TryGetVisibility(options.Visibility, out DocumentationVisibility visibility))
+            if (!TryParseVisibility(options.Visibility, out DocumentationVisibility visibility))
                 return 1;
 
             DocumentationModel documentationModel = CreateDocumentationModel(options.References, options.Assemblies, visibility);
@@ -596,7 +390,7 @@ namespace Roslynator.CommandLine
             if (documentationModel == null)
                 return 1;
 
-            if (!TryGetIgnoredRootParts(options.Parts, out RootDocumentationParts ignoredParts))
+            if (!TryParseIgnoredRootParts(options.Parts, out RootDocumentationParts ignoredParts))
                 return 1;
 
             var documentationOptions = new DocumentationOptions(
@@ -634,283 +428,6 @@ namespace Roslynator.CommandLine
             WriteLine($"Documentation root successfully generated to '{path}'.");
 
             return 0;
-        }
-
-        private static DocumentationModel CreateDocumentationModel(IEnumerable<string> assemblyReferences, IEnumerable<string> assemblies, DocumentationVisibility visibility, IEnumerable<string> additionalXmlDocumentationPaths = null)
-        {
-            var references = new List<PortableExecutableReference>();
-
-            foreach (string path in assemblyReferences.SelectMany(f => GetAssemblyReferences(f)))
-            {
-                if (path == null)
-                    return null;
-
-                references.Add(MetadataReference.CreateFromFile(path));
-            }
-
-            foreach (string assemblyPath in assemblies)
-            {
-                if (!TryGetReference(references, assemblyPath, out PortableExecutableReference reference))
-                {
-                    if (File.Exists(assemblyPath))
-                    {
-                        reference = MetadataReference.CreateFromFile(assemblyPath);
-                        references.Add(reference);
-                    }
-                    else
-                    {
-                        WriteLine($"Assembly not found: '{assemblyPath}'.");
-                        return null;
-                    }
-                }
-            }
-
-            CSharpCompilation compilation = CSharpCompilation.Create(
-                "",
-                syntaxTrees: default(IEnumerable<SyntaxTree>),
-                references: references,
-                options: default(CSharpCompilationOptions));
-
-            return new DocumentationModel(
-                compilation,
-                assemblies.Select(assemblyPath =>
-                {
-                    TryGetReference(references, assemblyPath, out PortableExecutableReference reference);
-                    return (IAssemblySymbol)compilation.GetAssemblyOrModuleSymbol(reference);
-                }),
-                visibility: visibility,
-                additionalXmlDocumentationPaths: additionalXmlDocumentationPaths);
-        }
-
-        private static IEnumerable<string> GetAssemblyReferences(string path)
-        {
-            if (!File.Exists(path))
-            {
-                WriteLine($"File not found: '{path}'.");
-                return null;
-            }
-
-            if (string.Equals(Path.GetExtension(path), ".dll", StringComparison.OrdinalIgnoreCase))
-            {
-                return new string[] { path };
-            }
-            else
-            {
-                return File.ReadLines(path).Where(f => !string.IsNullOrWhiteSpace(f));
-            }
-        }
-
-        private static bool TryGetIgnoredRootParts(IEnumerable<string> values, out RootDocumentationParts parts)
-        {
-            if (!values.Any())
-            {
-                parts = DocumentationOptions.Default.IgnoredRootParts;
-                return true;
-            }
-
-            parts = RootDocumentationParts.None;
-
-            foreach (string value in values)
-            {
-                if (Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out RootDocumentationParts result))
-                {
-                    parts |= result;
-                }
-                else
-                {
-                    WriteLine($"Unknown root documentation part '{value}'.");
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private static bool TryGetIgnoredNamespaceParts(IEnumerable<string> values, out NamespaceDocumentationParts parts)
-        {
-            if (!values.Any())
-            {
-                parts = DocumentationOptions.Default.IgnoredNamespaceParts;
-                return true;
-            }
-
-            parts = NamespaceDocumentationParts.None;
-
-            foreach (string value in values)
-            {
-                if (Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out NamespaceDocumentationParts result))
-                {
-                    parts |= result;
-                }
-                else
-                {
-                    WriteLine($"Unknown namespace documentation part '{value}'.");
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private static bool TryGetIgnoredTypeParts(IEnumerable<string> values, out TypeDocumentationParts parts)
-        {
-            if (!values.Any())
-            {
-                parts = DocumentationOptions.Default.IgnoredTypeParts;
-                return true;
-            }
-
-            parts = TypeDocumentationParts.None;
-
-            foreach (string value in values)
-            {
-                if (Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out TypeDocumentationParts result))
-                {
-                    parts |= result;
-                }
-                else
-                {
-                    WriteLine($"Unknown type documentation part '{value}'.");
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private static bool TryGetIgnoredMemberParts(IEnumerable<string> values, out MemberDocumentationParts parts)
-        {
-            if (!values.Any())
-            {
-                parts = DocumentationOptions.Default.IgnoredMemberParts;
-                return true;
-            }
-
-            parts = MemberDocumentationParts.None;
-
-            foreach (string value in values)
-            {
-                if (Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out MemberDocumentationParts result))
-                {
-                    parts |= result;
-                }
-                else
-                {
-                    WriteLine($"Unknown member documentation part '{value}'.");
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private static bool TryGetIgnoredDeclarationListParts(IEnumerable<string> values, out DeclarationListParts parts)
-        {
-            if (!values.Any())
-            {
-                parts = DeclarationListOptions.Default.IgnoredParts;
-                return true;
-            }
-
-            parts = DeclarationListParts.None;
-
-            foreach (string value in values)
-            {
-                if (Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out DeclarationListParts result))
-                {
-                    parts |= result;
-                }
-                else
-                {
-                    WriteLine($"Unknown declaration list part '{value}'.");
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private static bool TryGetOmitContainingNamespaceParts(IEnumerable<string> values, out OmitContainingNamespaceParts parts)
-        {
-            if (!values.Any())
-            {
-                parts = DocumentationOptions.Default.OmitContainingNamespaceParts;
-                return true;
-            }
-
-            parts = OmitContainingNamespaceParts.None;
-
-            foreach (string value in values)
-            {
-                if (Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out OmitContainingNamespaceParts result))
-                {
-                    parts |= result;
-                }
-                else
-                {
-                    WriteLine($"Unknown omit containing namespace part '{value}'.");
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private static bool TryGetVisibility(string value, out DocumentationVisibility visibility)
-        {
-            if (!Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out visibility))
-            {
-                WriteLine($"Unknown visibility '{value}'.");
-                return false;
-            }
-
-            return true;
-        }
-
-        private static bool TryGetReference(List<PortableExecutableReference> references, string path, out PortableExecutableReference reference)
-        {
-            if (path.Contains(Path.DirectorySeparatorChar))
-            {
-                foreach (PortableExecutableReference r in references)
-                {
-                    if (r.FilePath == path)
-                    {
-                        reference = r;
-                        return true;
-                    }
-                }
-            }
-            else
-            {
-                foreach (PortableExecutableReference r in references)
-                {
-                    string filePath = r.FilePath;
-
-                    int index = filePath.LastIndexOf(Path.DirectorySeparatorChar);
-
-                    if (string.Compare(filePath, index + 1, path, 0, path.Length, StringComparison.Ordinal) == 0)
-                    {
-                        reference = r;
-                        return true;
-                    }
-                }
-            }
-
-            reference = null;
-            return false;
-        }
-
-        private class ConsoleProgressReporter : IProgress<ProjectLoadProgress>
-        {
-            public void Report(ProjectLoadProgress value)
-            {
-                string text = Path.GetFileName(value.FilePath);
-
-                if (value.TargetFramework != null)
-                    text += $" ({value.TargetFramework})";
-
-                WriteLine($"  {value.Operation,-9} {value.ElapsedTime:mm\\:ss\\.ff}  {text}");
-            }
         }
     }
 }
