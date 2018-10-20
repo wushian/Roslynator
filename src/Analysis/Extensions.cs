@@ -4,7 +4,7 @@ using System;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics.Telemetry;
 
-namespace Roslynator.CodeFixes
+namespace Roslynator
 {
     internal static class Extensions
     {

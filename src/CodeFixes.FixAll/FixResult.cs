@@ -8,5 +8,6 @@ namespace Roslynator.CodeFixes
         NoAnalyzers = 1,
         NoFixers = 2,
         CompilerError = 3,
+        Skipped = 4,
     }
 }

@@ -1,26 +1,20 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Diagnostics;
-using Roslynator.CodeFixes;
+using Roslynator.Analysis;
 using Roslynator.Documentation;
 using Roslynator.Documentation.Markdown;
-using static Roslynator.CodeFixes.ConsoleHelpers;
 using static Roslynator.CommandLine.CommandLineHelpers;
 using static Roslynator.CommandLine.DocumentationHelpers;
+using static Roslynator.ConsoleHelpers;
 
 #pragma warning disable RCS1090
 
@@ -40,7 +34,7 @@ namespace Roslynator.CommandLine
                 .MapResult(
                   (FixCommandLineOptions options) => FixAsync(options).Result,
                   (AnalyzeCommandLineOptions options) => AnalyzeAsync(options).Result,
-                  (AnalyzeAssemblyCommandLineOptions options) => AnalyzeAssembly(options),
+                  (AnalyzeAssemblyCommandLineOptions options) => AnalyzeAssemblyCommandExecutor.Execute(options),
                   (FormatCommandLineOptions options) => FormatAsync(options).Result,
                   (LocCommandLineOptions options) => LocAsync(options).Result,
                   (GenerateDocCommandLineOptions options) => GenerateDoc(options),
@@ -75,124 +69,6 @@ namespace Roslynator.CommandLine
             CommandResult result = await executor.ExecuteAsync(options.SolutionPath, options.MSBuildPath, options.Properties);
 
             return (result.Success) ? 0 : 1;
-        }
-
-        private static int AnalyzeAssembly(AnalyzeAssemblyCommandLineOptions options)
-        {
-            string language = GetLanguageName(options.Language);
-
-            var analyzerAssemblies = new List<AnalyzerAssembly>();
-
-            foreach (AnalyzerAssembly analyzerAssembly in AssemblyAnalyzer.Analyze(
-                path: options.Path,
-                loadAnalyzers: !options.NoAnalyzers,
-                loadFixers: !options.NoFixers,
-                language: language))
-            {
-                analyzerAssemblies.Add(analyzerAssembly);
-
-                WriteLine($"{analyzerAssembly.Assembly.GetName().Name} ({analyzerAssembly.Assembly.Location})", ConsoleColor.Green);
-
-                DiagnosticAnalyzer[] analyzers = analyzerAssembly
-                    .Analyzers
-                    .SelectMany(f => f.Value)
-                    .Distinct()
-                    .ToArray();
-
-                if (analyzers.Length > 0)
-                {
-                    WriteLine("  DiagnosticAnalyzers");
-
-                    foreach (IGrouping<string, DiagnosticAnalyzer> grouping in analyzers
-                        .GroupBy(f => f.GetType().Namespace)
-                        .OrderBy(f => f.Key))
-                    {
-                        WriteLine($"    {grouping.Key}");
-
-                        foreach (DiagnosticAnalyzer analyzer in grouping.OrderBy(f => f.GetType().Name))
-                        {
-                            Type type = analyzer.GetType();
-
-                            DiagnosticAnalyzerAttribute attribute = type.GetCustomAttribute<DiagnosticAnalyzerAttribute>();
-
-                            WriteLine($"      {type.Name} ({string.Join(") (", attribute.Languages.OrderBy(f => f))}) ({string.Join(", ", analyzer.SupportedDiagnostics.Select(f => f.Id).OrderBy(f => f))})");
-                        }
-                    }
-                }
-
-                CodeFixProvider[] fixers = analyzerAssembly
-                    .Fixers
-                    .SelectMany(f => f.Value)
-                    .Distinct()
-                    .ToArray();
-
-                if (fixers.Length > 0)
-                {
-                    WriteLine("  CodeFixProviders");
-
-                    foreach (IGrouping<string, CodeFixProvider> grouping in fixers
-                        .GroupBy(f => f.GetType().Namespace)
-                        .OrderBy(f => f.Key))
-                    {
-                        WriteLine($"    {grouping.Key}");
-
-                        foreach (CodeFixProvider fixer in grouping)
-                        {
-                            Type type = fixer.GetType();
-
-                            ExportCodeFixProviderAttribute attribute = type.GetCustomAttribute<ExportCodeFixProviderAttribute>();
-
-                            WriteLine($"      {type.Name} ({string.Join(") (", attribute.Languages.Select(f => GetLanguageShortName(f)).OrderBy(f => f))}) ({string.Join(", ", fixer.FixableDiagnosticIds.OrderBy(f => f))})");
-                        }
-                    }
-                }
-            }
-
-            if (analyzerAssemblies.Count > 0)
-            {
-                WriteLine();
-
-                Console.WriteLine($"{analyzerAssemblies.Count} analyzer {((analyzerAssemblies.Count == 1) ? "assembly" : "assemblies")} found");
-
-                foreach (AnalyzerAssembly analyzerAssembly in analyzerAssemblies
-                    .OrderBy(f => f.Assembly.GetName().Name)
-                    .ThenBy(f => f.Assembly.Location))
-                {
-                    WriteLine($"  {analyzerAssembly.Assembly.GetName().Name}", ConsoleColor.Green);
-                    WriteLine($"    Location: {analyzerAssembly.Assembly.Location}");
-
-                    foreach (KeyValuePair<string, ImmutableArray<DiagnosticAnalyzer>> kvp in analyzerAssembly.Analyzers
-                        .OrderBy(f => f.Key))
-                    {
-                        WriteLine($"    {GetLanguageShortName(kvp.Key)} Analyzers: {kvp.Value.Length}");
-                    }
-
-                    foreach (KeyValuePair<string, ImmutableArray<CodeFixProvider>> kvp in analyzerAssembly.Fixers
-                        .OrderBy(f => f.Key))
-                    {
-                        WriteLine($"    {GetLanguageShortName(kvp.Key)} Fixers:    {kvp.Value.Length}");
-                    }
-                }
-
-                WriteLine();
-            }
-
-            return 0;
-
-            string GetLanguageShortName(string languageName)
-            {
-                switch (languageName)
-                {
-                    case LanguageNames.CSharp:
-                        return languageName;
-                    case LanguageNames.VisualBasic:
-                        return "VB";
-                }
-
-                Debug.Fail(languageName);
-
-                return languageName;
-            }
         }
 
         private static async Task<int> FormatAsync(FormatCommandLineOptions options)

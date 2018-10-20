@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -17,14 +16,12 @@ using Microsoft.CodeAnalysis.Diagnostics.Telemetry;
 using Microsoft.CodeAnalysis.Text;
 using Roslynator.CSharp;
 using Roslynator.Text;
-using static Roslynator.CodeFixes.ConsoleHelpers;
+using static Roslynator.ConsoleHelpers;
 
-namespace Roslynator.CodeFixes
+namespace Roslynator.Analysis
 {
     public class CodeAnalyzer
     {
-        private readonly CultureInfo _cultureInfo;
-
         private readonly AnalyzerAssemblyCache _analyzerAssemblies;
 
         private readonly AnalyzerAssemblyCache _analyzerAssemblyCache = new AnalyzerAssemblyCache();
@@ -45,7 +42,7 @@ namespace Roslynator.CodeFixes
             logAnalyzerExecutionTime: true,
             reportSuppressedDiagnostics: true);
 
-        public CodeAnalyzer(Solution solution, IEnumerable<string> analyzerAssemblies = null, CodeAnalyzerOptions options = null)
+        public CodeAnalyzer(Solution solution, IEnumerable<string> analyzerAssemblies = null, IFormatProvider formatProvider = null, CodeAnalyzerOptions options = null)
         {
             Workspace = solution.Workspace;
             Options = options ?? CodeAnalyzerOptions.Default;
@@ -55,8 +52,7 @@ namespace Roslynator.CodeFixes
             if (analyzerAssemblies != null)
                 _analyzerAssemblies.LoadFrom(analyzerAssemblies, loadFixers: false);
 
-            if (options.CultureName != null)
-                _cultureInfo = CultureInfo.GetCultureInfo(options.CultureName);
+            FormatProvider = formatProvider;
         }
 
         public Workspace Workspace { get; }
@@ -65,15 +61,14 @@ namespace Roslynator.CodeFixes
 
         public CodeAnalyzerOptions Options { get; }
 
+        public IFormatProvider FormatProvider { get; }
+
         public async Task AnalyzeAsync(CancellationToken cancellationToken = default)
         {
             ImmutableArray<ProjectId> projects = CurrentSolution
                 .GetProjectDependencyGraph()
                 .GetTopologicallySortedProjects(cancellationToken)
                 .ToImmutableArray();
-
-            foreach (string projectName in Options.IgnoredProjectNames.OrderBy(f => f))
-                WriteLine($"Ignore project '{projectName}'");
 
             foreach (string id in Options.IgnoredDiagnosticIds.OrderBy(f => f))
                 WriteLine($"Ignore diagnostic '{id}'");
@@ -92,15 +87,15 @@ namespace Roslynator.CodeFixes
 
                 Project project = CurrentSolution.GetProject(projects[i]);
 
-                WriteLine($"Analyze project {$"{i + 1}/{projects.Length}"} '{project.Name}' ({project.FilePath})");
-
-                if (Options.IgnoredProjectNames.Contains(project.Name))
+                if (Options.IgnoredProjectNames.Contains(project.Name)
+                    || (Options.Language != null && Options.Language != project.Language))
                 {
-                    WriteLine($"  Project '{project.Name}' is ignored");
+                    WriteLine($"Skip project {$"{i + 1}/{projects.Length}"} '{project.Name}' ({project.FilePath})", ConsoleColor.DarkGray);
                 }
-                else if (Options.Language == null
-                    || Options.Language == project.Language)
+                else
                 {
+                    WriteLine($"Analyze project {$"{i + 1}/{projects.Length}"} '{project.Name}' ({project.FilePath})");
+
                     ProjectAnalysisResult result = await AnalyzeProjectAsync(project, cancellationToken).ConfigureAwait(false);
 
                     if (result != null)
@@ -327,7 +322,7 @@ namespace Roslynator.CodeFixes
 
             sb.Append(diagnostic.Id);
             sb.Append(" ");
-            sb.Append(diagnostic.GetMessage(_cultureInfo));
+            sb.Append(diagnostic.GetMessage(FormatProvider));
             sb.Append(" ");
             sb.Append(GetSeverity(diagnostic.Severity));
 

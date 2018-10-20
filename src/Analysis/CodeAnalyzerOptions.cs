@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 
-namespace Roslynator.CodeFixes
+namespace Roslynator.Analysis
 {
     public class CodeAnalyzerOptions
     {

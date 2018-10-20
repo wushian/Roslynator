@@ -33,7 +33,7 @@ namespace Roslynator.Metrics
         }
 
         public static async Task<CodeMetrics> CountLinesAsync(
-            Project  project,
+            Project project,
             CodeMetricsOptions options = null,
             CancellationToken cancellationToken = default)
         {

@@ -6,7 +6,7 @@ using System.IO;
 using System.Reflection;
 using System.Security;
 
-namespace Roslynator.CodeFixes
+namespace Roslynator.Analysis
 {
     public static class AssemblyAnalyzer
     {

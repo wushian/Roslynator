@@ -7,8 +7,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
-using Roslynator.CodeFixes;
-using static Roslynator.CodeFixes.ConsoleHelpers;
+using Roslynator.Formatting;
+using static Roslynator.ConsoleHelpers;
 
 namespace Roslynator.CommandLine
 {
@@ -36,9 +36,12 @@ namespace Roslynator.CommandLine
                 Project project = workspace.CurrentSolution.GetProject(projectId);
 
                 if (ignoredProjectNames.Contains(project.Name))
+                {
+                    WriteLine($"  Skip   '{project.Name}'", ConsoleColor.DarkGray);
                     continue;
+                }
 
-                WriteLine($"  Format  '{project.Name}'");
+                WriteLine($"  Format '{project.Name}'");
 
                 Project newProject = await CodeFormatter.FormatAsync(project, cancellationToken).ConfigureAwait(false);
 

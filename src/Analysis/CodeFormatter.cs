@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.Options;
 using Microsoft.CodeAnalysis.CSharp;
 using Roslynator.CSharp;
 
-namespace Roslynator.CodeFixes
+namespace Roslynator.Formatting
 {
     internal static class CodeFormatter
     {

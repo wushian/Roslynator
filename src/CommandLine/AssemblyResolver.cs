@@ -12,10 +12,19 @@ namespace Roslynator.CommandLine
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         }
 
+        internal static void Register()
+        {
+        }
+
         private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             var assemblyName = new AssemblyName(args.Name);
 
+            if (assemblyName.Name.EndsWith(".resources"))
+                return null;
+#if DEBUG
+            Console.WriteLine($"Resolve assembly '{args.Name}'");
+#endif
             switch (assemblyName.Name)
             {
                 case "Microsoft.CodeAnalysis":
@@ -40,10 +49,8 @@ namespace Roslynator.CommandLine
                     }
             }
 
-            if (!assemblyName.Name.EndsWith(".resources"))
-                throw new InvalidOperationException($"Unable to resolve assembly '{assemblyName.FullName}'.");
-
-            return null;
+            //TODO: 
+            throw new InvalidOperationException($"Unable to resolve assembly '{assemblyName.FullName}'.");
 
             Assembly FindLoadedAssembly()
             {

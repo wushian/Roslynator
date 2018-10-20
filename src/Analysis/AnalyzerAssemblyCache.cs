@@ -6,9 +6,9 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using static Roslynator.CodeFixes.ConsoleHelpers;
+using static Roslynator.ConsoleHelpers;
 
-namespace Roslynator.CodeFixes
+namespace Roslynator.Analysis
 {
     internal sealed class AnalyzerAssemblyCache
     {

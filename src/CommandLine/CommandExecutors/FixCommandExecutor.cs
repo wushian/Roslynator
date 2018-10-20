@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Roslynator.CodeFixes;
-using static Roslynator.CodeFixes.ConsoleHelpers;
+using static Roslynator.ConsoleHelpers;
 
 namespace Roslynator.CommandLine
 {
@@ -20,6 +20,8 @@ namespace Roslynator.CommandLine
 
         public override async Task<CommandResult> ExecuteAsync(Solution solution, CancellationToken cancellationToken = default)
         {
+            AssemblyResolver.Register();
+
             var codeFixerOptions = new CodeFixerOptions(
                 ignoreCompilerErrors: Options.IgnoreCompilerErrors,
                 ignoreAnalyzerReferences: Options.IgnoreAnalyzerReferences,
@@ -28,7 +30,7 @@ namespace Roslynator.CommandLine
                 ignoredProjectNames: Options.IgnoredProjects,
                 batchSize: Options.BatchSize);
 
-            var codeFixer = new CodeFixer(solution.Workspace, analyzerAssemblies: Options.AnalyzerAssemblies, options: codeFixerOptions);
+            var codeFixer = new CodeFixer(solution, analyzerAssemblies: Options.AnalyzerAssemblies, options: codeFixerOptions);
 
             await codeFixer.FixAsync(cancellationToken).ConfigureAwait(false);
 

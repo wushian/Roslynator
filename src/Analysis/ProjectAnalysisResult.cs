@@ -5,11 +5,11 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Diagnostics.Telemetry;
 
-namespace Roslynator.CodeFixes
+namespace Roslynator.Analysis
 {
-    internal class ProjectAnalysisResult
+    internal sealed class ProjectAnalysisResult
     {
-        public ProjectAnalysisResult(
+        internal ProjectAnalysisResult(
             Project project,
             ImmutableArray<DiagnosticAnalyzer> analyzers,
             ImmutableArray<Diagnostic> diagnostics,

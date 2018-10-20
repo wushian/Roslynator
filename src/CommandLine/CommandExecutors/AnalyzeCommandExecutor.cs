@@ -1,14 +1,16 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
-using Roslynator.CodeFixes;
-using static Roslynator.CodeFixes.ConsoleHelpers;
+using Roslynator.Analysis;
+using static Roslynator.ConsoleHelpers;
 
 namespace Roslynator.CommandLine
 {
+    //TODO: DiagnosticDisplayParts - id message severity path span
     internal class AnalyzeCommandExecutor : MSBuildWorkspaceCommandExecutor
     {
         public AnalyzeCommandExecutor(AnalyzeCommandLineOptions options, DiagnosticSeverity minimalSeverity)
@@ -23,6 +25,8 @@ namespace Roslynator.CommandLine
 
         public override async Task<CommandResult> ExecuteAsync(Solution solution, CancellationToken cancellationToken = default)
         {
+            AssemblyResolver.Register();
+
             var codeAnalyzerOptions = new CodeAnalyzerOptions(
                 ignoreAnalyzerReferences: Options.IgnoreAnalyzerReferences,
                 ignoreCompilerDiagnostics: Options.IgnoreCompilerDiagnostics,
@@ -35,7 +39,9 @@ namespace Roslynator.CommandLine
                 language: CommandLineHelpers.GetLanguageName(Options.Language),
                 cultureName: Options.CultureName);
 
-            var codeAnalyzer = new CodeAnalyzer(solution, analyzerAssemblies: Options.AnalyzerAssemblies, options: codeAnalyzerOptions);
+            CultureInfo culture = (Options.CultureName != null) ? CultureInfo.GetCultureInfo(Options.CultureName) : null;
+
+            var codeAnalyzer = new CodeAnalyzer(solution, analyzerAssemblies: Options.AnalyzerAssemblies, formatProvider: culture, options: codeAnalyzerOptions);
 
             await codeAnalyzer.AnalyzeAsync(cancellationToken).ConfigureAwait(false);
 

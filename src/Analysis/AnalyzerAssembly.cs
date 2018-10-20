@@ -8,7 +8,7 @@ using System.Reflection;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace Roslynator.CodeFixes
+namespace Roslynator.Analysis
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public sealed class AnalyzerAssembly : IEquatable<AnalyzerAssembly>

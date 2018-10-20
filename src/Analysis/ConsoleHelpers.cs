@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 
-namespace Roslynator.CodeFixes
+namespace Roslynator
 {
     internal static class ConsoleHelpers
     {

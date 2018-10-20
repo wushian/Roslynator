@@ -8,7 +8,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Roslynator.Documentation;
-using static Roslynator.CodeFixes.ConsoleHelpers;
+using static Roslynator.ConsoleHelpers;
 
 namespace Roslynator.CommandLine
 {
