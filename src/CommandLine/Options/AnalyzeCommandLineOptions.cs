@@ -6,11 +6,8 @@ using CommandLine;
 namespace Roslynator.CommandLine
 {
     [Verb("analyze")]
-    public class AnalyzeCommandLineOptions
+    public class AnalyzeCommandLineOptions : AbstractCommandLineOptions
     {
-        [Value(index: 0, Required = true)]
-        public string SolutionPath { get; set; }
-
         [Option(shortName: 'a', longName: "analyzer-assemblies")]
         public IEnumerable<string> AnalyzerAssemblies { get; set; }
 
@@ -26,20 +23,8 @@ namespace Roslynator.CommandLine
         [Option(longName: "ignored-diagnostics")]
         public IEnumerable<string> IgnoredDiagnostics { get; set; }
 
-        [Option(longName: "ignored-projects")]
-        public IEnumerable<string> IgnoredProjects { get; set; }
-
-        [Option(longName: "language")]
-        public string Language { get; set; }
-
         [Option(longName: "minimal-severity")]
         public string MinimalSeverity { get; set; }
-
-        [Option(longName: "msbuild-path")]
-        public string MSBuildPath { get; set; }
-
-        [Option(shortName: 'p', longName: "properties")]
-        public IEnumerable<string> Properties { get; set; }
 
         [Option(longName: "report-fade-diagnostics")]
         public bool ReportFadeDiagnostics { get; set; }

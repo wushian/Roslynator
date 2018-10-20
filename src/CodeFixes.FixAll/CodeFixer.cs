@@ -74,7 +74,8 @@ namespace Roslynator.CodeFixes
 
                 Project project = CurrentSolution.GetProject(projects[i]);
 
-                if (Options.IgnoredProjectNames.Contains(project.Name))
+                if (Options.IgnoredProjectNames.Contains(project.Name)
+                    || (Options.Language != null && Options.Language != project.Language))
                 {
                     WriteLine($"Skip project {$"{i + 1}/{projects.Length}"} '{project.Name}'", ConsoleColor.DarkGray);
 
@@ -115,7 +116,7 @@ namespace Roslynator.CodeFixes
             stopwatch.Stop();
 
             WriteLine();
-            WriteLine("Fixed diagnostics");
+            WriteLine("Fixed diagnostics:");
 
             IEnumerable<DiagnosticDescriptor> diagnosticDescriptors = results
                 .SelectMany(f => f.Analyzers)
@@ -124,7 +125,7 @@ namespace Roslynator.CodeFixes
                 .Distinct(DiagnosticDescriptorComparer.Id);
 
             foreach (DiagnosticDescriptor diagnosticDescriptor in results
-                .SelectMany(f => f.DiagnosticIds)
+                .SelectMany(f => f.FixedDiagnosticIds)
                 .Distinct()
                 .Join(diagnosticDescriptors, id => id, d => d.Id, (_, d) => d)
                 .OrderBy(f => f.Id))

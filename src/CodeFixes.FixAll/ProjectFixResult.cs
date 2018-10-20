@@ -21,18 +21,18 @@ namespace Roslynator.CodeFixes
             FixResult.NoAnalyzers);
 
         public ProjectFixResult(
-            ImmutableArray<string> diagnosticIds,
+            ImmutableArray<string> fixedDiagnosticIds,
             ImmutableArray<DiagnosticAnalyzer> analyzers,
             ImmutableArray<CodeFixProvider> fixers,
             FixResult result)
         {
-            DiagnosticIds = diagnosticIds;
+            FixedDiagnosticIds = fixedDiagnosticIds;
             Analyzers = analyzers;
             Fixers = fixers;
             Result = result;
         }
 
-        public ImmutableArray<string> DiagnosticIds { get; }
+        public ImmutableArray<string> FixedDiagnosticIds { get; }
 
         public ImmutableArray<DiagnosticAnalyzer> Analyzers { get; }
 

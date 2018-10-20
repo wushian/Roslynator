@@ -6,18 +6,7 @@ using CommandLine;
 namespace Roslynator.CommandLine
 {
     [Verb("format")]
-    public class FormatCommandLineOptions
+    public class FormatCommandLineOptions : AbstractCommandLineOptions
     {
-        [Value(index: 0, Required = true)]
-        public string SolutionPath { get; set; }
-
-        [Option(longName: "ignored-projects")]
-        public IEnumerable<string> IgnoredProjects { get; set; }
-
-        [Option(longName: "msbuild-path")]
-        public string MSBuildPath { get; set; }
-
-        [Option(shortName: 'p', longName: "properties")]
-        public IEnumerable<string> Properties { get; set; }
     }
 }

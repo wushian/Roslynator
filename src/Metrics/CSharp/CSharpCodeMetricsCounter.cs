@@ -10,7 +10,6 @@ namespace Roslynator.Metrics.CSharp
 {
     public class CSharpCodeMetricsCounter : CodeMetricsCounter
     {
-        //TODO: shebang directive?
         public override bool IsComment(SyntaxTrivia trivia)
         {
             return trivia.IsKind(SyntaxKind.SingleLineCommentTrivia, SyntaxKind.MultiLineCommentTrivia);

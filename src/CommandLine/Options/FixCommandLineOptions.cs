@@ -7,11 +7,8 @@ namespace Roslynator.CommandLine
 {
     //TODO: normalize-line-endings
     [Verb("fix")]
-    public class FixCommandLineOptions
+    public class FixCommandLineOptions : AbstractCommandLineOptions
     {
-        [Value(index: 0, Required = true)]
-        public string SolutionPath { get; set; }
-
         [Option(shortName: 'a', longName: "analyzer-assemblies")]
         public IEnumerable<string> AnalyzerAssemblies { get; set; }
 
@@ -32,14 +29,5 @@ namespace Roslynator.CommandLine
 
         [Option(longName: "ignored-diagnostics")]
         public IEnumerable<string> IgnoredDiagnostics { get; set; }
-
-        [Option(longName: "ignored-projects")]
-        public IEnumerable<string> IgnoredProjects { get; set; }
-
-        [Option(longName: "msbuild-path")]
-        public string MSBuildPath { get; set; }
-
-        [Option(shortName: 'p', longName: "properties")]
-        public IEnumerable<string> Properties { get; set; }
     }
 }

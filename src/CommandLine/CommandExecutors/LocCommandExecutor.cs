@@ -40,8 +40,12 @@ namespace Roslynator.CommandLine
 
             foreach (Project project in solution.Projects)
             {
-                if (ignoredProjectNames.Contains(project.Name))
+                if (ignoredProjectNames.Contains(project.Name)
+                    || (Options.Language != null && Options.Language != project.Language))
+                {
+                    WriteLine($"  Skip project '{project.Name}'");
                     continue;
+                }
 
                 WriteLine($"  Count metrics for project '{project.Name}'");
 

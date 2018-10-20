@@ -28,7 +28,9 @@ namespace Roslynator.CommandLine
                 ignoredDiagnosticIds: Options.IgnoredDiagnostics,
                 ignoredCompilerDiagnosticIds: Options.IgnoredCompilerDiagnostics,
                 ignoredProjectNames: Options.IgnoredProjects,
-                batchSize: Options.BatchSize);
+                language: Options.Language,
+                batchSize: Options.BatchSize,
+                format: Options.Format);
 
             var codeFixer = new CodeFixer(solution, analyzerAssemblies: Options.AnalyzerAssemblies, options: codeFixerOptions);
 

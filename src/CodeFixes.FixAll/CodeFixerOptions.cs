@@ -17,6 +17,7 @@ namespace Roslynator.CodeFixes
             IEnumerable<string> ignoredDiagnosticIds = null,
             IEnumerable<string> ignoredCompilerDiagnosticIds = null,
             IEnumerable<string> ignoredProjectNames = null,
+            string language = null,
             int batchSize = -1,
             bool format = false)
         {
@@ -25,6 +26,7 @@ namespace Roslynator.CodeFixes
             IgnoredDiagnosticIds = ignoredDiagnosticIds?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
             IgnoredCompilerDiagnosticIds = ignoredCompilerDiagnosticIds?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
             IgnoredProjectNames = ignoredProjectNames?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
+            Language = language;
             BatchSize = batchSize;
             Format = format;
         }
@@ -38,6 +40,8 @@ namespace Roslynator.CodeFixes
         public ImmutableHashSet<string> IgnoredCompilerDiagnosticIds { get; }
 
         public ImmutableHashSet<string> IgnoredProjectNames { get; }
+
+        public string Language { get; }
 
         public int BatchSize { get; }
 
