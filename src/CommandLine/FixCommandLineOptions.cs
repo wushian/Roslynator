@@ -14,11 +14,11 @@ namespace Roslynator.CommandLine
         [Option(shortName: 'a', longName: "analyzer-assemblies")]
         public IEnumerable<string> AnalyzerAssemblies { get; set; }
 
-        [Option(shortName: 'p', longName: "properties")]
-        public IEnumerable<string> Properties { get; set; }
+        [Option(longName: "batch-size", Default = -1)]
+        public int BatchSize { get; set; }
 
-        [Option(longName: "msbuild-path")]
-        public string MSBuildPath { get; set; }
+        [Option(longName: "format")]
+        public bool Format { get; set; }
 
         [Option(longName: "ignore-analyzer-references")]
         public bool IgnoreAnalyzerReferences { get; set; }
@@ -26,16 +26,19 @@ namespace Roslynator.CommandLine
         [Option(longName: "ignore-compiler-errors")]
         public bool IgnoreCompilerErrors { get; set; }
 
-        [Option(longName: "ignored-diagnostics")]
-        public IEnumerable<string> IgnoredDiagnostics { get; set; }
-
         [Option(longName: "ignored-compiler-diagnostics")]
         public IEnumerable<string> IgnoredCompilerDiagnostics { get; set; }
+
+        [Option(longName: "ignored-diagnostics")]
+        public IEnumerable<string> IgnoredDiagnostics { get; set; }
 
         [Option(longName: "ignored-projects")]
         public IEnumerable<string> IgnoredProjects { get; set; }
 
-        [Option(longName: "batch-size", Default = -1)]
-        public int BatchSize { get; set; }
+        [Option(longName: "msbuild-path")]
+        public string MSBuildPath { get; set; }
+
+        [Option(shortName: 'p', longName: "properties")]
+        public IEnumerable<string> Properties { get; set; }
     }
 }

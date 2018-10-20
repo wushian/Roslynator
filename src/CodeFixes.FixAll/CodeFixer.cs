@@ -85,6 +85,19 @@ namespace Roslynator.CodeFixes
 
                     if (result == FixResult.CompilerError)
                         break;
+
+                    if (Options.Format)
+                    {
+                        project = CurrentSolution.GetProject(project.Id);
+
+                        WriteLine($"  Format  '{project.Name}'");
+
+                        Project newProject = await CodeFormatter.FormatAsync(project, cancellationToken).ConfigureAwait(false);
+
+                        bool success = Workspace.TryApplyChanges(newProject.Solution);
+
+                        Debug.Assert(success, "Cannot apply changes to a solution.");
+                    }
                 }
 
                 TimeSpan elapsed = stopwatch.Elapsed;

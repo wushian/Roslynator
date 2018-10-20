@@ -9,6 +9,7 @@ Fixes all diagnostics in the specified solution.
 roslynator fix <SOLUTION>
 [-a|--analyzer-assemblies]
 [--batch-size]
+[--format]
 [--ignore-analyzer-references]
 [--ignore-compiler-errors]
 [--ignored-compiler-diagnostics]
@@ -36,6 +37,10 @@ Defines one or more paths to:
 **`--batch-size`**
 
 Defines maximum number of diagnostics that can be fixed in one batch.
+
+**`--format`**
+
+Indicates whether each document should be formatted.
 
 **`--ignore-analyzer-references`**
 

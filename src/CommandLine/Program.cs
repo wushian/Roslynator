@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -16,7 +18,6 @@ using Microsoft.CodeAnalysis.MSBuild;
 using Roslynator.CodeFixes;
 using Roslynator.Documentation;
 using Roslynator.Documentation.Markdown;
-//using static System.Console;
 using static Roslynator.CodeFixes.ConsoleHelpers;
 
 #pragma warning disable RCS1090
@@ -33,9 +34,10 @@ namespace Roslynator.CommandLine
             WriteLine("Copyright (c) Josef Pihrt. All rights reserved.");
             WriteLine();
 
-            Parser.Default.ParseArguments<FixCommandLineOptions, GenerateDocCommandLineOptions, GenerateDeclarationsCommandLineOptions, GenerateDocRootCommandLineOptions>(args)
+            Parser.Default.ParseArguments<FixCommandLineOptions, FormatCommandLineOptions, GenerateDocCommandLineOptions, GenerateDeclarationsCommandLineOptions, GenerateDocRootCommandLineOptions>(args)
                 .MapResult(
                   (FixCommandLineOptions options) => FixAsync(options).Result,
+                  (FormatCommandLineOptions options) => FormatAsync(options).Result,
                   (GenerateDocCommandLineOptions options) => GenerateDoc(options),
                   (GenerateDeclarationsCommandLineOptions options) => GenerateDeclarations(options),
                   (GenerateDocRootCommandLineOptions options) => GenerateDocRoot(options),
@@ -44,69 +46,15 @@ namespace Roslynator.CommandLine
 
         private static async Task<int> FixAsync(FixCommandLineOptions options)
         {
-            var cts = new CancellationTokenSource();
-            Console.CancelKeyPress += (sender, e) =>
-            {
-                e.Cancel = true;
-                cts.Cancel();
-            };
+            MSBuildWorkspace workspace = null;
 
-            CancellationToken cancellationToken = cts.Token;
-
-            if (options.MSBuildPath != null)
+            try
             {
-                MSBuildLocator.RegisterMSBuildPath(options.MSBuildPath);
-            }
-            else
-            {
-                VisualStudioInstance instance = MSBuildLocator.QueryVisualStudioInstances()
-                    .OrderBy(f => f.Version)
-                    .LastOrDefault();
+                workspace = CreateMSBuildWorkspace(options.MSBuildPath, options.Properties);
 
-                if (instance == null)
-                {
-                    WriteLine("MSBuild location not found. Use option '--msbuild-path' to specify MSBuild location", ConsoleColor.Red);
+                if (workspace == null)
                     return 1;
-                }
 
-                WriteLine($"MSBuild location is '{instance.MSBuildPath}'");
-
-                MSBuildLocator.RegisterInstance(instance);
-            }
-
-            var properties = new Dictionary<string, string>();
-
-            foreach (string property in options.Properties)
-            {
-                int index = property.IndexOf("=");
-
-                if (index == -1)
-                {
-                    WriteLine($"Unable to parse property '{property}'", ConsoleColor.Red);
-                    return 1;
-                }
-
-                string key = property.Substring(0, index);
-
-                properties[key] = property.Substring(index + 1);
-            }
-
-            if (properties.Count > 0)
-            {
-                WriteLine("Add MSBuild properties");
-
-                int maxLength = properties.Max(f => f.Key.Length);
-
-                foreach (KeyValuePair<string, string> kvp in properties)
-                    WriteLine($"  {kvp.Key.PadRight(maxLength)} = {kvp.Value}");
-            }
-
-            // https://github.com/Microsoft/MSBuildLocator/issues/16
-            if (!properties.ContainsKey("AlwaysCompileMarkupFilesInSeparateDomain"))
-                properties["AlwaysCompileMarkupFilesInSeparateDomain"] = bool.FalseString;
-
-            using (MSBuildWorkspace workspace = MSBuildWorkspace.Create(properties))
-            {
                 workspace.WorkspaceFailed += (o, e) => WriteLine(e.Diagnostic.Message, ConsoleColor.Yellow);
 
                 string solutionPath = options.SolutionPath;
@@ -115,6 +63,15 @@ namespace Roslynator.CommandLine
 
                 try
                 {
+                    var cts = new CancellationTokenSource();
+                    Console.CancelKeyPress += (sender, e) =>
+                    {
+                        e.Cancel = true;
+                        cts.Cancel();
+                    };
+
+                    CancellationToken cancellationToken = cts.Token;
+
                     Solution solution;
 
                     try
@@ -143,7 +100,8 @@ namespace Roslynator.CommandLine
                         ignoredDiagnosticIds: options.IgnoredDiagnostics,
                         ignoredCompilerDiagnosticIds: options.IgnoredCompilerDiagnostics,
                         ignoredProjectNames: options.IgnoredProjects,
-                        batchSize: options.BatchSize);
+                        batchSize: options.BatchSize,
+                        format: options.Format);
 
                     var codeFixer = new CodeFixer(workspace, analyzerAssemblies: options.AnalyzerAssemblies, options: codeFixerOptions);
 
@@ -154,8 +112,156 @@ namespace Roslynator.CommandLine
                     WriteLine("Fixing was canceled.");
                 }
             }
+            finally
+            {
+                workspace?.Dispose();
+            }
 
             return 0;
+        }
+
+        private static async Task<int> FormatAsync(FormatCommandLineOptions options)
+        {
+            MSBuildWorkspace workspace = null;
+
+            try
+            {
+                workspace = CreateMSBuildWorkspace(options.MSBuildPath, options.Properties);
+
+                if (workspace == null)
+                    return 1;
+
+                workspace.WorkspaceFailed += (o, e) => WriteLine(e.Diagnostic.Message, ConsoleColor.Yellow);
+
+                string solutionPath = options.SolutionPath;
+
+                WriteLine($"Load solution '{solutionPath}'", ConsoleColor.Cyan);
+
+                try
+                {
+                    var cts = new CancellationTokenSource();
+                    Console.CancelKeyPress += (sender, e) =>
+                    {
+                        e.Cancel = true;
+                        cts.Cancel();
+                    };
+
+                    CancellationToken cancellationToken = cts.Token;
+
+                    Solution solution;
+
+                    try
+                    {
+                        solution = await workspace.OpenSolutionAsync(solutionPath, new ConsoleProgressReporter(), cancellationToken);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (ex is FileNotFoundException
+                            || ex is InvalidOperationException)
+                        {
+                            WriteLine(ex.ToString(), ConsoleColor.Red);
+                            return 1;
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+
+                    WriteLine($"Done loading solution '{solutionPath}'", ConsoleColor.Green);
+
+                    WriteLine($"Format solution '{solutionPath}'", ConsoleColor.Cyan);
+
+                    ImmutableHashSet<string> ignoredProjectNames = (options.IgnoredProjects.Any())
+                        ? ImmutableHashSet.CreateRange(options.IgnoredProjects)
+                        : ImmutableHashSet<string>.Empty;
+
+                    foreach (ProjectId projectId in solution.ProjectIds)
+                    {
+                        Project project = workspace.CurrentSolution.GetProject(projectId);
+
+                        if (ignoredProjectNames.Contains(project.Name))
+                            continue;
+
+                        WriteLine($"  Format  '{project.Name}'");
+
+                        Project newProject = await CodeFormatter.FormatAsync(project, cancellationToken).ConfigureAwait(false);
+
+                        bool success = workspace.TryApplyChanges(newProject.Solution);
+
+                        Debug.Assert(success, "Cannot apply changes to a solution.");
+                    }
+
+                    WriteLine($"Done formatting solution '{solutionPath}'", ConsoleColor.Green);
+                }
+                catch (OperationCanceledException)
+                {
+                    WriteLine("Formatting was canceled.");
+                }
+            }
+            finally
+            {
+                workspace?.Dispose();
+            }
+
+            return 0;
+        }
+
+        private static MSBuildWorkspace CreateMSBuildWorkspace(string msbuildPath, IEnumerable<string> properties)
+        {
+            if (msbuildPath != null)
+            {
+                MSBuildLocator.RegisterMSBuildPath(msbuildPath);
+            }
+            else
+            {
+                VisualStudioInstance instance = MSBuildLocator.QueryVisualStudioInstances()
+                    .OrderBy(f => f.Version)
+                    .LastOrDefault();
+
+                if (instance == null)
+                {
+                    WriteLine("MSBuild location not found. Use option '--msbuild-path' to specify MSBuild location", ConsoleColor.Red);
+                    return null;
+                }
+
+                WriteLine($"MSBuild location is '{instance.MSBuildPath}'");
+
+                MSBuildLocator.RegisterInstance(instance);
+            }
+
+            var dicProperties = new Dictionary<string, string>();
+
+            foreach (string property in properties)
+            {
+                int index = property.IndexOf("=");
+
+                if (index == -1)
+                {
+                    WriteLine($"Unable to parse property '{property}'", ConsoleColor.Red);
+                    return null;
+                }
+
+                string key = property.Substring(0, index);
+
+                dicProperties[key] = property.Substring(index + 1);
+            }
+
+            if (dicProperties.Count > 0)
+            {
+                WriteLine("Add MSBuild properties");
+
+                int maxLength = dicProperties.Max(f => f.Key.Length);
+
+                foreach (KeyValuePair<string, string> kvp in dicProperties)
+                    WriteLine($"  {kvp.Key.PadRight(maxLength)} = {kvp.Value}");
+            }
+
+            // https://github.com/Microsoft/MSBuildLocator/issues/16
+            if (!dicProperties.ContainsKey("AlwaysCompileMarkupFilesInSeparateDomain"))
+                dicProperties["AlwaysCompileMarkupFilesInSeparateDomain"] = bool.FalseString;
+
+            return MSBuildWorkspace.Create(dicProperties);
         }
 
         private static int GenerateDoc(GenerateDocCommandLineOptions options)
