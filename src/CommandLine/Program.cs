@@ -18,6 +18,7 @@ using Microsoft.CodeAnalysis.MSBuild;
 using Roslynator.CodeFixes;
 using Roslynator.Documentation;
 using Roslynator.Documentation.Markdown;
+using Roslynator.Metrics;
 using static Roslynator.CodeFixes.ConsoleHelpers;
 
 #pragma warning disable RCS1090
@@ -34,10 +35,11 @@ namespace Roslynator.CommandLine
             WriteLine("Copyright (c) Josef Pihrt. All rights reserved.");
             WriteLine();
 
-            Parser.Default.ParseArguments<FixCommandLineOptions, FormatCommandLineOptions, GenerateDocCommandLineOptions, GenerateDeclarationsCommandLineOptions, GenerateDocRootCommandLineOptions>(args)
+            Parser.Default.ParseArguments<FixCommandLineOptions, FormatCommandLineOptions, LocCommandLineOptions, GenerateDocCommandLineOptions, GenerateDeclarationsCommandLineOptions, GenerateDocRootCommandLineOptions>(args)
                 .MapResult(
                   (FixCommandLineOptions options) => FixAsync(options).Result,
                   (FormatCommandLineOptions options) => FormatAsync(options).Result,
+                  (LocCommandLineOptions options) => LocAsync(options).Result,
                   (GenerateDocCommandLineOptions options) => GenerateDoc(options),
                   (GenerateDeclarationsCommandLineOptions options) => GenerateDeclarations(options),
                   (GenerateDocRootCommandLineOptions options) => GenerateDocRoot(options),
@@ -197,6 +199,159 @@ namespace Roslynator.CommandLine
                 catch (OperationCanceledException)
                 {
                     WriteLine("Formatting was canceled.");
+                }
+            }
+            finally
+            {
+                workspace?.Dispose();
+            }
+
+            return 0;
+        }
+
+        private static async Task<int> LocAsync(LocCommandLineOptions options)
+        {
+            MSBuildWorkspace workspace = null;
+
+            try
+            {
+                workspace = CreateMSBuildWorkspace(options.MSBuildPath, options.Properties);
+
+                if (workspace == null)
+                    return 1;
+
+                workspace.WorkspaceFailed += (o, e) => WriteLine(e.Diagnostic.Message, ConsoleColor.Yellow);
+
+                string solutionPath = options.Solution;
+
+                WriteLine($"Load solution '{solutionPath}'", ConsoleColor.Cyan);
+
+                try
+                {
+                    var cts = new CancellationTokenSource();
+                    Console.CancelKeyPress += (sender, e) =>
+                    {
+                        e.Cancel = true;
+                        cts.Cancel();
+                    };
+
+                    CancellationToken cancellationToken = cts.Token;
+
+                    Solution solution;
+
+                    try
+                    {
+                        solution = await workspace.OpenSolutionAsync(solutionPath, new ConsoleProgressReporter(), cancellationToken);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (ex is FileNotFoundException
+                            || ex is InvalidOperationException)
+                        {
+                            WriteLine(ex.ToString(), ConsoleColor.Red);
+                            return 1;
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+
+                    WriteLine($"Done loading solution '{solutionPath}'", ConsoleColor.Green);
+
+                    var codeMetricsOptions = new CodeMetricsOptions(
+                        includeGenerated: options.IncludeGenerated,
+                        includeWhiteSpace: options.IncludeWhiteSpace,
+                        includeComments: options.IncludeComments,
+                        includePreprocessorDirectives: options.IncludePreprocessorDirectives,
+                        ignoreBlockBoundary: options.IgnoreBlockBoundary);
+
+                    WriteLine($"Count metrics for solution '{solutionPath}'", ConsoleColor.Cyan);
+
+                    var projectsMetrics = new List<(Project project, CodeMetrics metrics)>();
+
+                    ImmutableHashSet<string> ignoredProjectNames = (options.IgnoredProjects.Any())
+                        ? ImmutableHashSet.CreateRange(options.IgnoredProjects)
+                        : ImmutableHashSet<string>.Empty;
+
+                    foreach (Project project in solution.Projects)
+                    {
+                        if (ignoredProjectNames.Contains(project.Name))
+                            continue;
+
+                        WriteLine($"  Count metrics for project '{project.Name}'");
+
+                        projectsMetrics.Add((project, await CodeMetricsCounter.CountLinesAsync(project, codeMetricsOptions, cancellationToken).ConfigureAwait(false)));
+                    }
+
+                    WriteLine($"Done counting metrics for solution '{solutionPath}'", ConsoleColor.Green);
+
+                    WriteLine();
+                    WriteLine("Lines of code by project:");
+
+                    int maxDigits = projectsMetrics.Max(f => f.metrics.CodeLineCount).ToString("n0").Length;
+
+                    int maxNameLength = projectsMetrics.Max(f => f.project.Name.Length);
+
+                    foreach ((Project project, CodeMetrics metrics) in projectsMetrics.OrderByDescending(f => f.metrics.CodeLineCount))
+                    {
+                        WriteLine($"{metrics.CodeLineCount.ToString("n0").PadLeft(maxDigits)} {project.Name.PadRight(maxNameLength)} {project.Language}");
+                    }
+
+                    WriteLine();
+                    WriteLine("Solution metrics:");
+
+                    int totalCodeLineCount = projectsMetrics.Sum(f => f.metrics.CodeLineCount);
+                    int totalBlockBoundaryLineCount = projectsMetrics.Sum(f => f.metrics.BlockBoundaryLineCount);
+                    int totalWhiteSpaceLineCount = projectsMetrics.Sum(f => f.metrics.WhiteSpaceLineCount);
+                    int totalCommentLineCount = projectsMetrics.Sum(f => f.metrics.CommentLineCount);
+                    int totalPreprocessorDirectiveLineCount = projectsMetrics.Sum(f => f.metrics.PreprocessorDirectiveLineCount);
+                    int totalLineCount = projectsMetrics.Sum(f => f.metrics.TotalLineCount);
+
+                    string totalCodeLines = totalCodeLineCount.ToString("n0");
+                    string totalBlockBoundaryLines = totalBlockBoundaryLineCount.ToString("n0");
+                    string totalWhiteSpaceLines = totalWhiteSpaceLineCount.ToString("n0");
+                    string totalCommentLines = totalCommentLineCount.ToString("n0");
+                    string totalPreprocessorDirectiveLines = totalPreprocessorDirectiveLineCount.ToString("n0");
+                    string totalLines = totalLineCount.ToString("n0");
+
+                    maxDigits = Math.Max(totalCodeLines.Length,
+                        Math.Max(totalBlockBoundaryLines.Length,
+                            Math.Max(totalWhiteSpaceLines.Length,
+                                Math.Max(totalCommentLines.Length,
+                                    Math.Max(totalPreprocessorDirectiveLines.Length, totalLines.Length)))));
+
+                    if (options.IgnoreBlockBoundary
+                        || !options.IncludeWhiteSpace
+                        || !options.IncludeComments
+                        || !options.IncludePreprocessorDirectives)
+                    {
+                        WriteLine($"{totalCodeLines.PadLeft(maxDigits)} {totalCodeLineCount / (double)totalLineCount,4:P0} lines of code");
+                    }
+                    else
+                    {
+                        WriteLine($"{totalCodeLines.PadLeft(maxDigits)} lines of code");
+                    }
+
+                    if (options.IgnoreBlockBoundary)
+                        WriteLine($"{totalBlockBoundaryLines.PadLeft(maxDigits)} {totalBlockBoundaryLineCount / (double)totalLineCount,4:P0} block boundary lines");
+
+                    if (!options.IncludeWhiteSpace)
+                        WriteLine($"{totalWhiteSpaceLines.PadLeft(maxDigits)} {totalWhiteSpaceLineCount / (double)totalLineCount,4:P0} white-space lines");
+
+                    if (!options.IncludeComments)
+                        WriteLine($"{totalCommentLines.PadLeft(maxDigits)} {totalCommentLineCount / (double)totalLineCount,4:P0} comment lines");
+
+                    if (!options.IncludePreprocessorDirectives)
+                        WriteLine($"{totalPreprocessorDirectiveLines.PadLeft(maxDigits)} {totalPreprocessorDirectiveLineCount / (double)totalLineCount,4:P0} preprocessor directive lines");
+
+                    WriteLine($"{totalLines.PadLeft(maxDigits)} {totalLineCount / (double)totalLineCount,4:P0} total lines");
+
+                    WriteLine();
+                }
+                catch (OperationCanceledException)
+                {
+                    WriteLine("Metrics counting was canceled.");
                 }
             }
             finally
