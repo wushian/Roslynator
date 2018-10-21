@@ -38,6 +38,9 @@ namespace Roslynator.CSharp.Analysis
 
             var ifStatement = (IfStatementSyntax)context.Node;
 
+            if (ifStatement.IsSimpleIf())
+                return;
+
             StatementListInfo statementsInfo = SyntaxInfo.StatementListInfo(ifStatement);
             if (!statementsInfo.Success)
                 return;
