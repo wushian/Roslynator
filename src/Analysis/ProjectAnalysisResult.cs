@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.Diagnostics.Telemetry;
 
 namespace Roslynator.Analysis
 {
-    internal sealed class ProjectAnalysisResult
+    public sealed class ProjectAnalysisResult
     {
         internal ProjectAnalysisResult(
             Project project,

@@ -5,11 +5,8 @@ using CommandLine;
 namespace Roslynator.CommandLine
 {
     [Verb("loc")]
-    public class LocCommandLineOptions : AbstractCommandLineOptions
+    public class AbstractLinesOfCodeCommandLineOptions : AbstractCommandLineOptions
     {
-        [Option(longName: "ignore-block-boundary")]
-        public bool IgnoreBlockBoundary { get; set; }
-
         [Option(longName: "include-comments")]
         public bool IncludeComments { get; set; }
 

@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Reflection;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
+using static Roslynator.ConsoleHelpers;
 
 namespace Roslynator.Analysis
 {
@@ -103,7 +104,7 @@ namespace Roslynator.Analysis
             }
             catch (ReflectionTypeLoadException)
             {
-                Console.WriteLine($"Cannot load types from assembly '{analyzerAssembly.Location}'");
+                WriteLine($"Cannot load types from assembly '{analyzerAssembly.Location}'", ConsoleColor.DarkGray);
             }
 
             return new AnalyzerAssembly(

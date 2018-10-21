@@ -30,13 +30,23 @@ namespace Roslynator.CommandLine
             WriteLine("Copyright (c) Josef Pihrt. All rights reserved.");
             WriteLine();
 
-            Parser.Default.ParseArguments<FixCommandLineOptions, AnalyzeCommandLineOptions, AnalyzeAssemblyCommandLineOptions, FormatCommandLineOptions, LocCommandLineOptions, GenerateDocCommandLineOptions, GenerateDeclarationsCommandLineOptions, GenerateDocRootCommandLineOptions>(args)
+            Parser.Default
+                .ParseArguments<FixCommandLineOptions,
+                    AnalyzeCommandLineOptions,
+                    AnalyzeAssemblyCommandLineOptions,
+                    FormatCommandLineOptions,
+                    LinesOfCodeCommandLineOptions,
+                    LogicalLinesOfCodeCommandLineOptions,
+                    GenerateDocCommandLineOptions,
+                    GenerateDeclarationsCommandLineOptions,
+                    GenerateDocRootCommandLineOptions>(args)
                 .MapResult(
                   (FixCommandLineOptions options) => FixAsync(options).Result,
                   (AnalyzeCommandLineOptions options) => AnalyzeAsync(options).Result,
                   (AnalyzeAssemblyCommandLineOptions options) => AnalyzeAssemblyCommandExecutor.Execute(options),
                   (FormatCommandLineOptions options) => FormatAsync(options).Result,
-                  (LocCommandLineOptions options) => LocAsync(options).Result,
+                  (LinesOfCodeCommandLineOptions options) => LinesOrCodeAsync(options).Result,
+                  (LogicalLinesOfCodeCommandLineOptions options) => LogicalLinesOrCodeAsync(options).Result,
                   (GenerateDocCommandLineOptions options) => GenerateDoc(options),
                   (GenerateDeclarationsCommandLineOptions options) => GenerateDeclarations(options),
                   (GenerateDocRootCommandLineOptions options) => GenerateDocRoot(options),
@@ -47,7 +57,7 @@ namespace Roslynator.CommandLine
         {
             var executor = new FixCommandExecutor(options);
 
-            CommandResult result = await executor.ExecuteAsync(options.SolutionPath, options.MSBuildPath, options.Properties);
+            CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
 
             return (result.Success) ? 0 : 1;
         }
@@ -66,7 +76,7 @@ namespace Roslynator.CommandLine
 
             var executor = new AnalyzeCommandExecutor(options, minimalSeverity);
 
-            CommandResult result = await executor.ExecuteAsync(options.SolutionPath, options.MSBuildPath, options.Properties);
+            CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
 
             return (result.Success) ? 0 : 1;
         }
@@ -75,16 +85,25 @@ namespace Roslynator.CommandLine
         {
             var executor = new FormatCommandExecutor(options);
 
-            CommandResult result = await executor.ExecuteAsync(options.SolutionPath, options.MSBuildPath, options.Properties);
+            CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
 
             return (result.Success) ? 0 : 1;
         }
 
-        private static async Task<int> LocAsync(LocCommandLineOptions options)
+        private static async Task<int> LinesOrCodeAsync(LinesOfCodeCommandLineOptions options)
         {
-            var executor = new LocCommandExecutor(options);
+            var executor = new LinesOfCodeCommandExecutor(options);
 
-            CommandResult result = await executor.ExecuteAsync(options.SolutionPath, options.MSBuildPath, options.Properties);
+            CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
+
+            return (result.Success) ? 0 : 1;
+        }
+
+        private static async Task<int> LogicalLinesOrCodeAsync(LogicalLinesOfCodeCommandLineOptions options)
+        {
+            var executor = new LogicalLinesOfCodeCommandExecutor(options);
+
+            CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
 
             return (result.Success) ? 0 : 1;
         }

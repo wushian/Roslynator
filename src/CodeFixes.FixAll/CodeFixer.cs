@@ -49,7 +49,7 @@ namespace Roslynator.CodeFixes
 
         private Solution CurrentSolution => Workspace.CurrentSolution;
 
-        public async Task FixAsync(CancellationToken cancellationToken = default)
+        public async Task FixSolutionAsync(CancellationToken cancellationToken = default)
         {
             ImmutableArray<ProjectId> projects = CurrentSolution
                 .GetProjectDependencyGraph()
@@ -98,7 +98,7 @@ namespace Roslynator.CodeFixes
 
                         WriteLine($"  Format  '{project.Name}'");
 
-                        Project newProject = await CodeFormatter.FormatAsync(project, cancellationToken).ConfigureAwait(false);
+                        Project newProject = await CodeFormatter.FormatProjectAsync(project, cancellationToken).ConfigureAwait(false);
 
                         bool success = Workspace.TryApplyChanges(newProject.Solution);
 
@@ -137,7 +137,7 @@ namespace Roslynator.CodeFixes
             WriteLine($"Done fixing solution {stopwatch.Elapsed:mm\\:ss\\.ff} '{CurrentSolution.FilePath}'", ConsoleColor.Green);
         }
 
-        private async Task<ProjectFixResult> FixProjectAsync(Project project, CancellationToken cancellationToken = default)
+        public async Task<ProjectFixResult> FixProjectAsync(Project project, CancellationToken cancellationToken = default)
         {
             string language = project.Language;
 

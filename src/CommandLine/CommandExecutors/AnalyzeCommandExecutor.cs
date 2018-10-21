@@ -10,7 +10,6 @@ using static Roslynator.ConsoleHelpers;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: DiagnosticDisplayParts - id message severity path span
     internal class AnalyzeCommandExecutor : MSBuildWorkspaceCommandExecutor
     {
         public AnalyzeCommandExecutor(AnalyzeCommandLineOptions options, DiagnosticSeverity minimalSeverity)
@@ -23,7 +22,7 @@ namespace Roslynator.CommandLine
 
         public DiagnosticSeverity MinimalSeverity { get; }
 
-        public override async Task<CommandResult> ExecuteAsync(Solution solution, CancellationToken cancellationToken = default)
+        public override async Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default)
         {
             AssemblyResolver.Register();
 
@@ -41,9 +40,22 @@ namespace Roslynator.CommandLine
 
             CultureInfo culture = (Options.CultureName != null) ? CultureInfo.GetCultureInfo(Options.CultureName) : null;
 
-            var codeAnalyzer = new CodeAnalyzer(solution, analyzerAssemblies: Options.AnalyzerAssemblies, formatProvider: culture, options: codeAnalyzerOptions);
+            var codeAnalyzer = new CodeAnalyzer(analyzerAssemblies: Options.AnalyzerAssemblies, formatProvider: culture, options: codeAnalyzerOptions);
 
-            await codeAnalyzer.AnalyzeAsync(cancellationToken).ConfigureAwait(false);
+            if (projectOrSolution.IsProject)
+            {
+                Project project = projectOrSolution.AsProject();
+
+                WriteLine($"Analyze project '{project.Name}'");
+
+                await codeAnalyzer.AnalyzeProjectAsync(project, cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                Solution solution = projectOrSolution.AsSolution();
+
+                await codeAnalyzer.AnalyzeSolutionAsync(solution, cancellationToken).ConfigureAwait(false);
+            }
 
             return new CommandResult(true);
         }

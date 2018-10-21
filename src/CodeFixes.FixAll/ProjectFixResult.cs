@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Roslynator.CodeFixes
 {
-    internal readonly struct ProjectFixResult
+    public readonly struct ProjectFixResult
     {
         public static ProjectFixResult Skipped { get; } = new ProjectFixResult(
             ImmutableArray<string>.Empty,

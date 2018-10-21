@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -51,7 +52,7 @@ namespace Roslynator.Analysis
 
         private void AddImpl(AnalyzerAssembly analyzerAssembly)
         {
-            WriteLine($"Add analyzer assembly '{analyzerAssembly.Assembly.FullName}'");
+            WriteLine($"Add analyzer assembly '{analyzerAssembly.Assembly.FullName}'", ConsoleColor.DarkGray);
 
             _analyzerAssemblies.Add(analyzerAssembly.Assembly.FullName, analyzerAssembly);
         }

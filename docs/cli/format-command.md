@@ -1,28 +1,33 @@
 
 # `format` Command
 
-Formats documents in the specified solution.
+Formats documents in the specified project or solution.
 
 ## Synopsis
 
 ```
-roslynator format <SOLUTION>
+roslynator format <PROJECT|SOLUTION>
 [--ignored-projects]
+[--language]
 [--msbuild-path]
 [-p|--properties]
 ```
 
 ## Arguments
 
-**`SOLUTION`**
+**`PROJECT|SOLUTION`**
 
-The solution file to fix.
+The project or solution to fix.
 
 ### Optional Options
 
 **`--ignored-projects`**
 
 Defines project names that should not be formatted.
+
+**`--language`** {csharp|vb}
+
+Defines project language.
 
 **`--msbuild-path`**
 

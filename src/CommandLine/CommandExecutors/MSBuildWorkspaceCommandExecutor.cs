@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -15,9 +16,9 @@ namespace Roslynator.CommandLine
 {
     internal abstract class MSBuildWorkspaceCommandExecutor
     {
-        public abstract Task<CommandResult> ExecuteAsync(Solution solution, CancellationToken cancellationToken = default);
+        public abstract Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default);
 
-        public async Task<CommandResult> ExecuteAsync(string solutionPath, string msbuildPath = null, IEnumerable<string> properties = null)
+        public async Task<CommandResult> ExecuteAsync(string path, string msbuildPath = null, IEnumerable<string> properties = null)
         {
             MSBuildWorkspace workspace = null;
 
@@ -32,7 +33,9 @@ namespace Roslynator.CommandLine
 
                 workspace.WorkspaceFailed += (o, e) => WriteLine(e.Diagnostic.Message, ConsoleColor.Yellow);
 
-                WriteLine($"Load solution '{solutionPath}'", ConsoleColor.Cyan);
+                bool isSolution = string.Equals(Path.GetExtension(path), ".sln", StringComparison.OrdinalIgnoreCase);
+
+                WriteLine($"Load {((isSolution) ? "solution" : "project")} '{path}'", ConsoleColor.Cyan);
 
                 try
                 {
@@ -45,11 +48,18 @@ namespace Roslynator.CommandLine
 
                     CancellationToken cancellationToken = cts.Token;
 
-                    Solution solution;
+                    ProjectOrSolution projectOrSolution;
 
                     try
                     {
-                        solution = await workspace.OpenSolutionAsync(solutionPath, new ConsoleProgressReporter(), cancellationToken).ConfigureAwait(false);
+                        if (isSolution)
+                        {
+                            projectOrSolution = await workspace.OpenSolutionAsync(path, ConsoleProgressReporter.Instance, cancellationToken).ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            projectOrSolution = await workspace.OpenProjectAsync(path, ConsoleProgressReporter.Instance, cancellationToken).ConfigureAwait(false);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -65,9 +75,9 @@ namespace Roslynator.CommandLine
                         }
                     }
 
-                    WriteLine($"Done loading solution '{solutionPath}'", ConsoleColor.Green);
+                    WriteLine($"Done loading {((isSolution) ? "solution" : "project")} '{path}'", ConsoleColor.Green);
 
-                    return await ExecuteAsync(solution, cancellationToken).ConfigureAwait(false);
+                    return await ExecuteAsync(projectOrSolution, cancellationToken).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException ex)
                 {
@@ -121,8 +131,33 @@ namespace Roslynator.CommandLine
             return MSBuildWorkspace.Create(dicProperties);
         }
 
+        private protected static IEnumerable<Project> FilterProjects(Solution solution, IEnumerable<string> ignoredProjects = null, string language = null)
+        {
+            ImmutableHashSet<string> ignoredProjectNames = (ignoredProjects.Any())
+                ? ImmutableHashSet.CreateRange(ignoredProjects)
+                : ImmutableHashSet<string>.Empty;
+
+            Workspace workspace = solution.Workspace;
+
+            foreach (ProjectId projectId in solution.ProjectIds)
+            {
+                Project project = workspace.CurrentSolution.GetProject(projectId);
+
+                if (ignoredProjectNames.Contains(project.Name)
+                    || (language != null && language != project.Language))
+                {
+                    WriteLine($"  Skip '{project.Name}'", ConsoleColor.DarkGray);
+                    continue;
+                }
+
+                yield return project;
+            }
+        }
+
         private class ConsoleProgressReporter : IProgress<ProjectLoadProgress>
         {
+            public static ConsoleProgressReporter Instance { get; } = new ConsoleProgressReporter();
+
             public void Report(ProjectLoadProgress value)
             {
                 string text = Path.GetFileName(value.FilePath);

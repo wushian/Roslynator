@@ -30,7 +30,7 @@ namespace Roslynator.CommandLine
 
             using (MSBuildWorkspace workspace = MSBuildWorkspace.Create())
             {
-                string solutionPath = @"..\..\..\..\Roslynator.MetricsTest.sln";
+                const string solutionPath = @"..\..\..\..\Roslynator.MetricsTest.sln";
 
                 workspace.WorkspaceFailed += (o, e) => WriteLine(e.Diagnostic.Message, ConsoleColor.Yellow);
 
@@ -64,7 +64,12 @@ namespace Roslynator.CommandLine
 
                 foreach (Project project in solution.Projects)
                 {
-                    projectsMetrics.Add((project, await CodeMetricsCounter.CountLinesAsync(project, codeMetricsOptions)));
+                    CodeMetricsCounter counter = CodeMetricsCounter.GetPhysicalLinesCounter(project.Language);
+
+                    if (counter != null)
+                    {
+                        projectsMetrics.Add((project, await counter.CountLinesAsync(project, codeMetricsOptions)));
+                    }
                 }
 
                 int maxDigits = projectsMetrics.Max(f => f.metrics.CodeLineCount).ToString("n0").Length;

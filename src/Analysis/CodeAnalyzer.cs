@@ -42,9 +42,8 @@ namespace Roslynator.Analysis
             logAnalyzerExecutionTime: true,
             reportSuppressedDiagnostics: true);
 
-        public CodeAnalyzer(Solution solution, IEnumerable<string> analyzerAssemblies = null, IFormatProvider formatProvider = null, CodeAnalyzerOptions options = null)
+        public CodeAnalyzer(IEnumerable<string> analyzerAssemblies = null, IFormatProvider formatProvider = null, CodeAnalyzerOptions options = null)
         {
-            Workspace = solution.Workspace;
             Options = options ?? CodeAnalyzerOptions.Default;
 
             _analyzerAssemblies = new AnalyzerAssemblyCache();
@@ -55,17 +54,13 @@ namespace Roslynator.Analysis
             FormatProvider = formatProvider;
         }
 
-        public Workspace Workspace { get; }
-
-        private Solution CurrentSolution => Workspace.CurrentSolution;
-
         public CodeAnalyzerOptions Options { get; }
 
         public IFormatProvider FormatProvider { get; }
 
-        public async Task AnalyzeAsync(CancellationToken cancellationToken = default)
+        public async Task AnalyzeSolutionAsync(Solution solution, CancellationToken cancellationToken = default)
         {
-            ImmutableArray<ProjectId> projects = CurrentSolution
+            ImmutableArray<ProjectId> projectIds = solution
                 .GetProjectDependencyGraph()
                 .GetTopologicallySortedProjects(cancellationToken)
                 .ToImmutableArray();
@@ -73,7 +68,7 @@ namespace Roslynator.Analysis
             foreach (string id in Options.IgnoredDiagnosticIds.OrderBy(f => f))
                 WriteLine($"Ignore diagnostic '{id}'");
 
-            WriteLine($"Analyze solution '{CurrentSolution.FilePath}'");
+            WriteLine($"Analyze solution '{solution.FilePath}'");
 
             var results = new List<ProjectAnalysisResult>();
 
@@ -81,20 +76,20 @@ namespace Roslynator.Analysis
 
             TimeSpan lastElapsed = TimeSpan.Zero;
 
-            for (int i = 0; i < projects.Length; i++)
+            for (int i = 0; i < projectIds.Length; i++)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                Project project = CurrentSolution.GetProject(projects[i]);
+                Project project = solution.GetProject(projectIds[i]);
 
                 if (Options.IgnoredProjectNames.Contains(project.Name)
                     || (Options.Language != null && Options.Language != project.Language))
                 {
-                    WriteLine($"Skip project {$"{i + 1}/{projects.Length}"} '{project.Name}' ({project.FilePath})", ConsoleColor.DarkGray);
+                    WriteLine($"Skip project {$"{i + 1}/{projectIds.Length}"} '{project.Name}' ({project.FilePath})", ConsoleColor.DarkGray);
                 }
                 else
                 {
-                    WriteLine($"Analyze project {$"{i + 1}/{projects.Length}"} '{project.Name}' ({project.FilePath})");
+                    WriteLine($"Analyze project {$"{i + 1}/{projectIds.Length}"} '{project.Name}' ({project.FilePath})");
 
                     ProjectAnalysisResult result = await AnalyzeProjectAsync(project, cancellationToken).ConfigureAwait(false);
 
@@ -152,7 +147,7 @@ namespace Roslynator.Analysis
                 if (totalCount > 0)
                 {
                     WriteLine();
-                    WriteLine($"{totalCount} {((totalCount == 1) ? "diagnostic" : "diagnostics")} found in solution '{CurrentSolution.FilePath}'.");
+                    WriteLine($"{totalCount} {((totalCount == 1) ? "diagnostic" : "diagnostics")} found in solution '{solution.FilePath}'.");
 
                     Dictionary<DiagnosticDescriptor, int> diagnosticsByDescriptor = results
                         .SelectMany(f => FilterDiagnostics(f.Diagnostics.Concat(f.CompilerDiagnostics), cancellationToken))
@@ -171,10 +166,10 @@ namespace Roslynator.Analysis
                 }
             }
 
-            WriteLine($"Done analyzing solution {stopwatch.Elapsed:mm\\:ss\\.ff} '{CurrentSolution.FilePath}'", ConsoleColor.Green);
+            WriteLine($"Done analyzing solution {stopwatch.Elapsed:mm\\:ss\\.ff} '{solution.FilePath}'", ConsoleColor.Green);
         }
 
-        private async Task<ProjectAnalysisResult> AnalyzeProjectAsync(Project project, CancellationToken cancellationToken = default)
+        public async Task<ProjectAnalysisResult> AnalyzeProjectAsync(Project project, CancellationToken cancellationToken = default)
         {
             string language = project.Language;
 
@@ -196,8 +191,6 @@ namespace Roslynator.Analysis
             }
 
             cancellationToken.ThrowIfCancellationRequested();
-
-            project = CurrentSolution.GetProject(project.Id);
 
             Compilation compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 

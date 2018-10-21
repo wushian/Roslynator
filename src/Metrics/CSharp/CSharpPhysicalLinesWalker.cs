@@ -8,87 +8,13 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace Roslynator.Metrics.CSharp
 {
-    internal class CSharpCodeMetricsWalker : CSharpSyntaxWalker
+    internal class CSharpPhysicalLinesWalker : CSharpLinesWalker
     {
-        public int CommentLineCount { get; set; }
-
-        public int PreprocessorDirectiveLineCount { get; set; }
-
         public int BlockBoundaryLineCount { get; set; }
 
-        public TextLineCollection Lines { get; }
-
-        public CodeMetricsOptions Options { get; }
-
-        public CancellationToken CancellationToken { get; }
-
-        public CSharpCodeMetricsWalker(TextLineCollection lines, CodeMetricsOptions options, CancellationToken cancellationToken)
-            : base(SyntaxWalkerDepth.Trivia)
+        public CSharpPhysicalLinesWalker(TextLineCollection lines, CodeMetricsOptions options, CancellationToken cancellationToken)
+            : base(lines, options, cancellationToken)
         {
-            Lines = lines;
-            Options = options;
-            CancellationToken = cancellationToken;
-        }
-
-        public override void VisitTrivia(SyntaxTrivia trivia)
-        {
-            if (trivia.IsDirective)
-            {
-                if (!Options.IncludePreprocessorDirectives)
-                {
-                    PreprocessorDirectiveLineCount++;
-                }
-            }
-            else if (!Options.IncludeComments)
-            {
-                switch (trivia.Kind())
-                {
-                    case SyntaxKind.SingleLineCommentTrivia:
-                        {
-                            TextSpan span = trivia.Span;
-
-                            TextLine line = Lines.GetLineFromPosition(span.Start);
-
-                            if (line.IsEmptyOrWhiteSpace(TextSpan.FromBounds(line.Start, span.Start)))
-                            {
-                                CommentLineCount++;
-                            }
-
-                            break;
-                        }
-                    case SyntaxKind.SingleLineDocumentationCommentTrivia:
-                        {
-                            CommentLineCount += Lines.GetLineCount(trivia.Span) - 1;
-                            break;
-                        }
-                    case SyntaxKind.MultiLineCommentTrivia:
-                        {
-                            TextSpan span = trivia.Span;
-
-                            TextLine line = Lines.GetLineFromPosition(span.Start);
-
-                            if (line.IsEmptyOrWhiteSpace(TextSpan.FromBounds(line.Start, span.Start)))
-                            {
-                                int lineCount = Lines.GetLineCount(trivia.Span);
-
-                                if (lineCount == 1
-                                    || line.IsEmptyOrWhiteSpace(TextSpan.FromBounds(Lines.GetLineFromPosition(span.End).End, span.End)))
-                                {
-                                    CommentLineCount += lineCount;
-                                }
-                            }
-
-                            break;
-                        }
-                    case SyntaxKind.MultiLineDocumentationCommentTrivia:
-                        {
-                            CommentLineCount += Lines.GetLineCount(trivia.Span);
-                            break;
-                        }
-                }
-            }
-
-            base.VisitTrivia(trivia);
         }
 
         public override void VisitAccessorList(AccessorListSyntax node)

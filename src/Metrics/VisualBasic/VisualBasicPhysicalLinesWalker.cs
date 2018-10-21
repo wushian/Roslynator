@@ -8,63 +8,13 @@ using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 
 namespace Roslynator.Metrics.VisualBasic
 {
-    internal class VisualBasicCodeMetricsWalker : VisualBasicSyntaxWalker
+    internal class VisualBasicPhysicalLinesWalker : VisualBasicLinesWalker
     {
-        public int CommentLineCount { get; set; }
-
-        public int PreprocessorDirectiveLineCount { get; set; }
-
         public int BlockBoundaryLineCount { get; set; }
 
-        public TextLineCollection Lines { get; }
-
-        public CodeMetricsOptions Options { get; }
-
-        public CancellationToken CancellationToken { get; }
-
-        public VisualBasicCodeMetricsWalker(TextLineCollection lines, CodeMetricsOptions options, CancellationToken cancellationToken)
-            : base(SyntaxWalkerDepth.Trivia)
+        public VisualBasicPhysicalLinesWalker(TextLineCollection lines, CodeMetricsOptions options, CancellationToken cancellationToken)
+            : base(lines, options, cancellationToken)
         {
-            Lines = lines;
-            Options = options;
-            CancellationToken = cancellationToken;
-        }
-
-        public override void VisitTrivia(SyntaxTrivia trivia)
-        {
-            if (trivia.IsDirective)
-            {
-                if (!Options.IncludePreprocessorDirectives)
-                {
-                    PreprocessorDirectiveLineCount++;
-                }
-            }
-            else if (!Options.IncludeComments)
-            {
-                switch (trivia.Kind())
-                {
-                    case SyntaxKind.CommentTrivia:
-                        {
-                            TextSpan span = trivia.Span;
-
-                            TextLine line = Lines.GetLineFromPosition(span.Start);
-
-                            if (line.IsEmptyOrWhiteSpace(TextSpan.FromBounds(line.Start, span.Start)))
-                            {
-                                CommentLineCount++;
-                            }
-
-                            break;
-                        }
-                    case SyntaxKind.DocumentationCommentTrivia:
-                        {
-                            CommentLineCount += Lines.GetLineCount(trivia.Span) - 1;
-                            break;
-                        }
-                }
-            }
-
-            base.VisitTrivia(trivia);
         }
 
         public override void VisitEndBlockStatement(EndBlockStatementSyntax node)

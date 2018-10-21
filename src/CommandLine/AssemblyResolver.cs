@@ -49,7 +49,7 @@ namespace Roslynator.CommandLine
                     }
             }
 
-            //TODO: 
+            //TODO: throw?
             throw new InvalidOperationException($"Unable to resolve assembly '{assemblyName.FullName}'.");
 
             Assembly FindLoadedAssembly()

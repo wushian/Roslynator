@@ -11,14 +11,13 @@ namespace Roslynator.Metrics
     /// </summary>
     internal static class Foo //x
     {
-
 #if DEBUG
         /**
          * <summary>Bar</summary>
          */
         public static void Bar() /**/ {
             //
-            string s = @"
+            const string s = @"
 
 ";
 

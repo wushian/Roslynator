@@ -12,7 +12,7 @@ namespace Roslynator.Formatting
 {
     internal static class CodeFormatter
     {
-        public static async Task<Project> FormatAsync(Project project, CancellationToken cancellationToken = default)
+        public static async Task<Project> FormatProjectAsync(Project project, CancellationToken cancellationToken = default)
         {
             foreach (DocumentId documentId in project.DocumentIds)
             {

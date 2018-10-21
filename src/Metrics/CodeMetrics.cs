@@ -6,12 +6,14 @@ namespace Roslynator.Metrics
     {
         public CodeMetrics(
             int totalLineCount,
+            int codeLineCount,
             int whiteSpaceLineCount,
             int commentLineCount,
             int preprocessorDirectiveLineCount,
             int blockBoundaryLineCount)
         {
             TotalLineCount = totalLineCount;
+            CodeLineCount = codeLineCount;
             WhiteSpaceLineCount = whiteSpaceLineCount;
             CommentLineCount = commentLineCount;
             PreprocessorDirectiveLineCount = preprocessorDirectiveLineCount;
@@ -20,10 +22,7 @@ namespace Roslynator.Metrics
 
         public int TotalLineCount { get; }
 
-        public int CodeLineCount
-        {
-            get { return TotalLineCount - CommentLineCount - PreprocessorDirectiveLineCount - WhiteSpaceLineCount - BlockBoundaryLineCount; }
-        }
+        public int CodeLineCount { get; }
 
         public int WhiteSpaceLineCount { get; }
 
@@ -32,15 +31,5 @@ namespace Roslynator.Metrics
         public int PreprocessorDirectiveLineCount { get; }
 
         public int BlockBoundaryLineCount { get; }
-
-        internal CodeMetrics WithWhiteSpaceLineCount(int whiteSpaceLineCount)
-        {
-            return new CodeMetrics(
-                totalLineCount: TotalLineCount,
-                whiteSpaceLineCount: whiteSpaceLineCount,
-                commentLineCount: CommentLineCount,
-                preprocessorDirectiveLineCount: PreprocessorDirectiveLineCount,
-                blockBoundaryLineCount: BlockBoundaryLineCount);
-        }
     }
 }

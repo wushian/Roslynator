@@ -1,12 +1,12 @@
 
 # `fix` Command
 
-Fixes all diagnostics in the specified solution.
+Fixes all diagnostics in the specified project or solution.
 
 ## Synopsis
 
 ```
-roslynator fix <SOLUTION>
+roslynator fix <PROJECT|SOLUTION>
 [-a|--analyzer-assemblies]
 [--batch-size]
 [--format]
@@ -15,15 +15,16 @@ roslynator fix <SOLUTION>
 [--ignored-compiler-diagnostics]
 [--ignored-diagnostics]
 [--ignored-projects]
+[--language]
 [--msbuild-path]
 [-p|--properties]
 ```
 
 ## Arguments
 
-**`SOLUTION`**
+**`PROJECT|SOLUTION`**
 
-The solution file to fix.
+The project or solution to fix.
 
 ### Optional Options
 
@@ -61,6 +62,10 @@ Defines diagnostic identifiers that should not be fixed.
 **`--ignored-projects`**
 
 Defines project names that should not be fixed.
+
+**`--language`** {csharp|vb}
+
+Defines project language.
 
 **`--msbuild-path`**
 

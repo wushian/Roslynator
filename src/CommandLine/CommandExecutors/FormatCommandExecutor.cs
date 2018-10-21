@@ -21,37 +21,41 @@ namespace Roslynator.CommandLine
 
         public FormatCommandLineOptions Options { get; }
 
-        public override async Task<CommandResult> ExecuteAsync(Solution solution, CancellationToken cancellationToken = default)
+        public override async Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default)
         {
-            Workspace workspace = solution.Workspace;
+            Workspace workspace = projectOrSolution.Workspace;
 
-            WriteLine($"Format solution '{solution.FilePath}'", ConsoleColor.Cyan);
-
-            ImmutableHashSet<string> ignoredProjectNames = (Options.IgnoredProjects.Any())
-                ? ImmutableHashSet.CreateRange(Options.IgnoredProjects)
-                : ImmutableHashSet<string>.Empty;
-
-            foreach (ProjectId projectId in solution.ProjectIds)
+            if (projectOrSolution.IsProject)
             {
-                Project project = workspace.CurrentSolution.GetProject(projectId);
-
-                if (ignoredProjectNames.Contains(project.Name)
-                    || (Options.Language != null && Options.Language != project.Language))
-                {
-                    WriteLine($"  Skip   '{project.Name}'", ConsoleColor.DarkGray);
-                    continue;
-                }
+                Project project = projectOrSolution.AsProject();
 
                 WriteLine($"  Format '{project.Name}'");
 
-                Project newProject = await CodeFormatter.FormatAsync(project, cancellationToken).ConfigureAwait(false);
+                Project newProject = await CodeFormatter.FormatProjectAsync(project, cancellationToken).ConfigureAwait(false);
 
                 bool success = workspace.TryApplyChanges(newProject.Solution);
 
                 Debug.Assert(success, "Cannot apply changes to a solution.");
             }
+            else
+            {
+                Solution solution = projectOrSolution.AsSolution();
 
-            WriteLine($"Done formatting solution '{solution.FilePath}'", ConsoleColor.Green);
+                WriteLine($"Format solution '{projectOrSolution.FilePath}'", ConsoleColor.Cyan);
+
+                foreach (Project project in FilterProjects(solution, Options.IgnoredProjects, Options.Language))
+                {
+                    WriteLine($"  Format '{project.Name}'");
+
+                    Project newProject = await CodeFormatter.FormatProjectAsync(project, cancellationToken).ConfigureAwait(false);
+
+                    bool success = workspace.TryApplyChanges(newProject.Solution);
+
+                    Debug.Assert(success, "Cannot apply changes to a solution.");
+                }
+
+                WriteLine($"Done formatting solution '{solution.FilePath}'", ConsoleColor.Green);
+            }
 
             return new CommandResult(true);
         }

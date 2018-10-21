@@ -5,7 +5,7 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: normalize-line-endings
+    //TODO: NormalizeLineEndings
     [Verb("fix")]
     public class FixCommandLineOptions : AbstractCommandLineOptions
     {

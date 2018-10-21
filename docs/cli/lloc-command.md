@@ -1,13 +1,12 @@
 
-# `loc` Command
+# `lloc` Command
 
-Counts physical lines of code in the specified project or solution.
+Counts logical lines of code in the specified project or solution.
 
 ## Synopsis
 
 ```
-roslynator loc <PROJECT|SOLUTION>
-[--ignore-block-boundary]
+roslynator lloc <PROJECT|SOLUTION>
 [--ignored-projects]
 [--include-comments]
 [--include-generated]
@@ -25,10 +24,6 @@ roslynator loc <PROJECT|SOLUTION>
 The project or solution to calculate lines of code in.
 
 ### Optional Options
-
-**`--ignore-block-boundary`**
-
-Indicates whether a line that contains only block boundary should not be counted.
 
 In C# block boundary is opening brace or closing brace.
 

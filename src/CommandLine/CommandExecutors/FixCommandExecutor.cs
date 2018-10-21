@@ -18,7 +18,7 @@ namespace Roslynator.CommandLine
 
         public FixCommandLineOptions Options { get; }
 
-        public override async Task<CommandResult> ExecuteAsync(Solution solution, CancellationToken cancellationToken = default)
+        public override async Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default)
         {
             AssemblyResolver.Register();
 
@@ -32,9 +32,26 @@ namespace Roslynator.CommandLine
                 batchSize: Options.BatchSize,
                 format: Options.Format);
 
-            var codeFixer = new CodeFixer(solution, analyzerAssemblies: Options.AnalyzerAssemblies, options: codeFixerOptions);
+            if (projectOrSolution.IsProject)
+            {
+                Project project = projectOrSolution.AsProject();
 
-            await codeFixer.FixAsync(cancellationToken).ConfigureAwait(false);
+                Solution solution = project.Solution;
+
+                var codeFixer = new CodeFixer(solution, analyzerAssemblies: Options.AnalyzerAssemblies, options: codeFixerOptions);
+
+                WriteLine($"Fix project '{project.Name}'", ConsoleColor.Cyan);
+
+                await codeFixer.FixProjectAsync(project, cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                Solution solution = projectOrSolution.AsSolution();
+
+                var codeFixer = new CodeFixer(solution, analyzerAssemblies: Options.AnalyzerAssemblies, options: codeFixerOptions);
+
+                await codeFixer.FixSolutionAsync(cancellationToken).ConfigureAwait(false);
+            }
 
             return new CommandResult(true);
         }

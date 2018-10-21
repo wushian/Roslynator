@@ -8,7 +8,7 @@ namespace Roslynator.CommandLine
     public class AbstractCommandLineOptions
     {
         [Value(index: 0, Required = true)]
-        public string SolutionPath { get; set; }
+        public string Path { get; set; }
 
         [Option(longName: "ignored-projects")]
         public IEnumerable<string> IgnoredProjects { get; set; }
