@@ -31,5 +31,16 @@ namespace Roslynator.Metrics
         public int PreprocessorDirectiveLineCount { get; }
 
         public int BlockBoundaryLineCount { get; }
+
+        internal CodeMetrics Add(in CodeMetrics codeMetrics)
+        {
+            return new CodeMetrics(
+                totalLineCount: TotalLineCount + codeMetrics.TotalLineCount,
+                codeLineCount: CodeLineCount + codeMetrics.CodeLineCount,
+                whiteSpaceLineCount: WhiteSpaceLineCount + codeMetrics.WhiteSpaceLineCount,
+                commentLineCount: CommentLineCount + codeMetrics.CommentLineCount,
+                preprocessorDirectiveLineCount: PreprocessorDirectiveLineCount + codeMetrics.PreprocessorDirectiveLineCount,
+                blockBoundaryLineCount: BlockBoundaryLineCount + codeMetrics.BlockBoundaryLineCount);
+        }
     }
 }

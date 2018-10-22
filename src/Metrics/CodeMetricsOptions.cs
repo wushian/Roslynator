@@ -28,7 +28,6 @@ namespace Roslynator.Metrics
 
         public bool IncludePreprocessorDirectives { get; }
 
-        //TODO: IgnoreBlockBound
         public bool IgnoreBlockBoundary { get; }
     }
 }

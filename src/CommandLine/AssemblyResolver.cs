@@ -23,7 +23,7 @@ namespace Roslynator.CommandLine
             if (assemblyName.Name.EndsWith(".resources"))
                 return null;
 #if DEBUG
-            Console.WriteLine($"Resolve assembly '{args.Name}'");
+            ConsoleHelpers.WriteLine($"Resolve assembly '{args.Name}'", ConsoleColor.DarkGray);
 #endif
             switch (assemblyName.Name)
             {
@@ -49,8 +49,11 @@ namespace Roslynator.CommandLine
                     }
             }
 
-            //TODO: throw?
-            throw new InvalidOperationException($"Unable to resolve assembly '{assemblyName.FullName}'.");
+#if DEBUG
+            ConsoleHelpers.WriteLine($"Unable to resolve assembly '{args.Name}'.", ConsoleColor.DarkGray);
+#endif
+
+            return null;
 
             Assembly FindLoadedAssembly()
             {

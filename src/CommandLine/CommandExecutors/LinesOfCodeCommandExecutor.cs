@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -62,9 +64,11 @@ namespace Roslynator.CommandLine
 
                 WriteLine($"Count lines for solution '{solution.FilePath}'", ConsoleColor.Cyan);
 
-                var projectsMetrics = new List<(Project project, CodeMetrics metrics)>();
+                var projectsMetrics = new ConcurrentBag<(Project project, CodeMetrics metrics)>();
 
-                foreach (Project project in FilterProjects(solution, Options.IgnoredProjects, Options.Language))
+                Stopwatch stopwatch = Stopwatch.StartNew();
+
+                Parallel.ForEach(FilterProjects(solution, Options.IgnoredProjects, Options.Language), project =>
                 {
                     WriteLine($"  Analyze '{project.Name}'");
 
@@ -72,11 +76,11 @@ namespace Roslynator.CommandLine
 
                     if (counter != null)
                     {
-                        projectsMetrics.Add((project, await counter.CountLinesAsync(project, codeMetricsOptions, cancellationToken).ConfigureAwait(false)));
+                        projectsMetrics.Add((project, counter.CountLinesAsync(project, codeMetricsOptions, cancellationToken).Result));
                     }
-                }
+                });
 
-                WriteLine($"Done counting lines for solution '{solution.FilePath}'", ConsoleColor.Green);
+                WriteLine($"Done counting lines for solution '{solution.FilePath}' {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green);
 
                 WriteLine();
                 WriteLine("Lines of code by project:");

@@ -36,10 +36,7 @@ namespace Roslynator.Metrics
                 case LanguageNames.CSharp:
                     return CSharp.CSharpLogicalLinesCounter.Instance;
                 case LanguageNames.VisualBasic:
-                    {
-                        //TODO: VisualBasicLogicalLinesCounter
-                        return null;
-                    }
+                    return VisualBasic.VisualBasicLogicalLinesCounter.Instance;
             }
 
             Debug.Assert(language == LanguageNames.FSharp, language);
@@ -54,35 +51,19 @@ namespace Roslynator.Metrics
             CodeMetricsOptions options = null,
             CancellationToken cancellationToken = default)
         {
-            int totalLineCount = 0;
-            int codeLineCount = 0;
-            int preprocessDirectiveLineCount = 0;
-            int commentLineCount = 0;
-            int whiteSpaceLineCount = 0;
-            int blockBoundaryCount = 0;
+            CodeMetrics metrics = default;
 
             foreach (Document document in project.Documents)
             {
                 if (!document.SupportsSyntaxTree)
                     continue;
 
-                CodeMetrics metrics = await CountLinesAsync(document, options, cancellationToken).ConfigureAwait(false);
+                CodeMetrics documentMetrics = await CountLinesAsync(document, options, cancellationToken).ConfigureAwait(false);
 
-                totalLineCount += metrics.TotalLineCount;
-                codeLineCount += metrics.CodeLineCount;
-                preprocessDirectiveLineCount += metrics.PreprocessorDirectiveLineCount;
-                commentLineCount += metrics.CommentLineCount;
-                whiteSpaceLineCount += metrics.WhiteSpaceLineCount;
-                blockBoundaryCount += metrics.BlockBoundaryLineCount;
+                metrics = metrics.Add(documentMetrics);
             }
 
-            return new CodeMetrics(
-                totalLineCount: totalLineCount,
-                codeLineCount: codeLineCount,
-                whiteSpaceLineCount: whiteSpaceLineCount,
-                commentLineCount: commentLineCount,
-                preprocessorDirectiveLineCount: preprocessDirectiveLineCount,
-                blockBoundaryLineCount: blockBoundaryCount);
+            return metrics;
         }
 
         public async Task<CodeMetrics> CountLinesAsync(

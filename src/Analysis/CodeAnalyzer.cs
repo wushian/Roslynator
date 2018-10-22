@@ -329,15 +329,10 @@ namespace Roslynator.Analysis
 
                         if (span.IsValid)
                         {
-                            string path = span.Path;
-
-                            if (baseDirectoryPath != null
-                                && path.StartsWith(baseDirectoryPath))
-                            {
-                                path = path.Remove(0, baseDirectoryPath.Length).TrimStart(Path.DirectorySeparatorChar);
-                            }
-
                             sb.Append(" ");
+
+                            string path = PathUtilities.MakeRelativePath(span.Path, baseDirectoryPath);
+
                             sb.Append(path);
 
                             LinePosition linePosition = span.Span.Start;
