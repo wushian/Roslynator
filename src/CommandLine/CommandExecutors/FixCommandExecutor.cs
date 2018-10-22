@@ -11,18 +11,22 @@ namespace Roslynator.CommandLine
 {
     internal class FixCommandExecutor : MSBuildWorkspaceCommandExecutor
     {
-        public FixCommandExecutor(FixCommandLineOptions options)
+        public FixCommandExecutor(FixCommandLineOptions options, DiagnosticSeverity minimalSeverity)
         {
             Options = options;
+            MinimalSeverity = minimalSeverity;
         }
 
         public FixCommandLineOptions Options { get; }
+
+        public DiagnosticSeverity MinimalSeverity { get; }
 
         public override async Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default)
         {
             AssemblyResolver.Register();
 
             var codeFixerOptions = new CodeFixerOptions(
+                minimalSeverity: MinimalSeverity,
                 ignoreCompilerErrors: Options.IgnoreCompilerErrors,
                 ignoreAnalyzerReferences: Options.IgnoreAnalyzerReferences,
                 ignoredDiagnosticIds: Options.IgnoredDiagnostics,

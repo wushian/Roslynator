@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,7 +32,7 @@ namespace Roslynator.CommandLine
             {
                 Project project = projectOrSolution.AsProject();
 
-                WriteLine($"Count logical lines for project '{project.FilePath}'", ConsoleColor.Cyan);
+                WriteLine($"Count logical lines for '{project.FilePath}'", ConsoleColor.Cyan);
 
                 CodeMetricsCounter counter = CodeMetricsCounter.GetLogicalLinesCounter(project.Language);
 
@@ -41,7 +40,7 @@ namespace Roslynator.CommandLine
                 {
                     CodeMetrics metrics = await counter.CountLinesAsync(project, codeMetricsOptions, cancellationToken).ConfigureAwait(false);
 
-                    WriteLine($"Done counting logical lines for project '{project.FilePath}'", ConsoleColor.Green);
+                    WriteLine($"Done counting logical lines for '{project.FilePath}'", ConsoleColor.Green);
 
                     WriteLine();
 
@@ -66,7 +65,7 @@ namespace Roslynator.CommandLine
 
                 foreach (Project project in FilterProjects(solution, Options.IgnoredProjects, Options.Language))
                 {
-                    WriteLine($"  Count logical lines for project '{project.Name}'");
+                    WriteLine($"  Count logical lines for '{project.Name}'");
 
                     CodeMetricsCounter counter = CodeMetricsCounter.GetLogicalLinesCounter(project.Language);
 

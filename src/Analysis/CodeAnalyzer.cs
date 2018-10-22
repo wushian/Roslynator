@@ -186,7 +186,7 @@ namespace Roslynator.Analysis
 
             if (!analyzers.Any())
             {
-                WriteLine($"  No analyzers found to analyze '{project.Name}'");
+                WriteLine($"  No analyzers found to analyze '{project.Name}'", ConsoleColor.DarkGray);
                 return default;
             }
 

@@ -150,11 +150,23 @@ namespace Roslynator.CodeFixes
 
             ImmutableArray<DiagnosticAnalyzer> analyzers = _analyzerAssemblies
                 .GetAnalyzers(language)
-                .AddRange(_analyzerAssemblyCache.GetAnalyzers(assemblies, language));
+                .AddRange(_analyzerAssemblyCache.GetAnalyzers(assemblies, language))
+                .Where(a =>
+                 {
+                     return a.SupportedDiagnostics
+                         .Any(d =>
+                         {
+                             ReportDiagnostic reportDiagnostic = d.GetEffectiveSeverity(project.CompilationOptions);
+
+                             return reportDiagnostic != ReportDiagnostic.Suppress
+                                 && reportDiagnostic.ToDiagnosticSeverity() >= Options.MinimalSeverity;
+                         });
+                 })
+                 .ToImmutableArray();
 
             if (!analyzers.Any())
             {
-                WriteLine($"  No analyzers found to analyze '{project.Name}'", ConsoleColor.DarkYellow);
+                WriteLine($"  No analyzers found to analyze '{project.Name}'", ConsoleColor.DarkGray);
                 return ProjectFixResult.NoAnalyzers;
             }
 
@@ -164,14 +176,14 @@ namespace Roslynator.CodeFixes
 
             if (!fixers.Any())
             {
-                WriteLine($"  No fixers found to fix '{project.Name}'", ConsoleColor.DarkYellow);
+                WriteLine($"  No fixers found to fix '{project.Name}'", ConsoleColor.DarkGray);
                 return new ProjectFixResult(ImmutableArray<string>.Empty, analyzers, fixers, FixResult.NoFixers);
             }
 
             Dictionary<string, ImmutableArray<DiagnosticAnalyzer>> analyzersById = analyzers
-                .SelectMany(f => f.SupportedDiagnostics.Select(id => (id.Id, analyzer: f)))
-                .GroupBy(f => f.Id)
-                .ToDictionary(f => f.Key, g => g.Select(f => f.analyzer).Distinct().ToImmutableArray());
+                .SelectMany(f => f.SupportedDiagnostics.Select(d => (id: d.Id, analyzer: f)))
+                .GroupBy(f => f.id, f => f.analyzer)
+                .ToDictionary(g => g.Key, g => g.Select(analyzer => analyzer).Distinct().ToImmutableArray());
 
             Dictionary<string, ImmutableArray<CodeFixProvider>> fixersById = fixers
                 .Where(f => f.GetFixAllProvider() != null)
@@ -200,7 +212,7 @@ namespace Roslynator.CodeFixes
 
                 var compilationWithAnalyzers = new CompilationWithAnalyzers(compilation, analyzers, _defaultCompilationWithAnalyzersOptions);
 
-                WriteLine($"  Analyze '{project.Name}'");
+                WriteLine($"  Analyze '{project.Name}' with {analyzers.Length} analyzers");
 
                 ImmutableArray<Diagnostic> diagnostics = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
 
@@ -212,9 +224,8 @@ namespace Roslynator.CodeFixes
                     WriteLine(message, ConsoleColor.Yellow);
                 }
 
-                //TODO: MinimalSeverity
                 diagnostics = diagnostics
-                    .Where(f => f.Severity != DiagnosticSeverity.Hidden
+                    .Where(f => f.Severity >= Options.MinimalSeverity
                         && analyzersById.ContainsKey(f.Id)
                         && fixersById.ContainsKey(f.Id)
                         && !Options.IgnoredDiagnosticIds.Contains(f.Id))
@@ -281,7 +292,7 @@ namespace Roslynator.CodeFixes
                 ImmutableArray<Diagnostic> diagnostics = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
 
                 diagnostics = diagnostics
-                    .Where(f => f.Id == diagnosticId && f.Severity != DiagnosticSeverity.Hidden)
+                    .Where(f => f.Id == diagnosticId && f.Severity >= Options.MinimalSeverity)
                     .ToImmutableArray();
 
                 int length = diagnostics.Length;

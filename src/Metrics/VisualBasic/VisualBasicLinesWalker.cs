@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.VisualBasic;
 
 namespace Roslynator.Metrics.VisualBasic
 {
-    internal class VisualBasicLinesWalker : VisualBasicSyntaxWalker
+    internal abstract class VisualBasicLinesWalker : VisualBasicSyntaxWalker
     {
         public int CommentLineCount { get; set; }
 
@@ -19,7 +19,7 @@ namespace Roslynator.Metrics.VisualBasic
 
         public CancellationToken CancellationToken { get; }
 
-        public VisualBasicLinesWalker(TextLineCollection lines, CodeMetricsOptions options, CancellationToken cancellationToken)
+        protected VisualBasicLinesWalker(TextLineCollection lines, CodeMetricsOptions options, CancellationToken cancellationToken)
             : base(SyntaxWalkerDepth.Trivia)
         {
             Lines = lines;

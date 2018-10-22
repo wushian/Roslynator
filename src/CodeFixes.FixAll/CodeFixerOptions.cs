@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 
 namespace Roslynator.CodeFixes
 {
@@ -12,6 +13,7 @@ namespace Roslynator.CodeFixes
         public static CodeFixerOptions Default { get; } = new CodeFixerOptions();
 
         public CodeFixerOptions(
+            DiagnosticSeverity minimalSeverity = DiagnosticSeverity.Info,
             bool ignoreCompilerErrors = false,
             bool ignoreAnalyzerReferences = false,
             IEnumerable<string> ignoredDiagnosticIds = null,
@@ -21,6 +23,7 @@ namespace Roslynator.CodeFixes
             int batchSize = -1,
             bool format = false)
         {
+            MinimalSeverity = minimalSeverity;
             IgnoreCompilerErrors = ignoreCompilerErrors;
             IgnoreAnalyzerReferences = ignoreAnalyzerReferences;
             IgnoredDiagnosticIds = ignoredDiagnosticIds?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
@@ -30,6 +33,8 @@ namespace Roslynator.CodeFixes
             BatchSize = batchSize;
             Format = format;
         }
+
+        public DiagnosticSeverity MinimalSeverity { get; }
 
         public bool IgnoreCompilerErrors { get; }
 

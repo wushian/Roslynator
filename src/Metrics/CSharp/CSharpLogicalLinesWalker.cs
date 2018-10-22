@@ -6,12 +6,9 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace Roslynator.Metrics.CSharp
 {
-    //TODO: attributes, lambda, else
     internal class CSharpLogicalLinesWalker : CSharpLinesWalker
     {
         public int LogicalLineCount { get; set; }
-
-        public int BlockBoundaryLineCount { get; set; }
 
         public CSharpLogicalLinesWalker(TextLineCollection lines, CodeMetricsOptions options, CancellationToken cancellationToken)
             : base(lines, options, cancellationToken)
@@ -22,6 +19,12 @@ namespace Roslynator.Metrics.CSharp
         {
             LogicalLineCount++;
             base.VisitAccessorDeclaration(node);
+        }
+
+        public override void VisitAttributeList(AttributeListSyntax node)
+        {
+            LogicalLineCount++;
+            base.VisitAttributeList(node);
         }
 
         public override void VisitBreakStatement(BreakStatementSyntax node)

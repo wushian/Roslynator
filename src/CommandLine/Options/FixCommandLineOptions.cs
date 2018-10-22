@@ -29,5 +29,8 @@ namespace Roslynator.CommandLine
 
         [Option(longName: "ignored-diagnostics")]
         public IEnumerable<string> IgnoredDiagnostics { get; set; }
+
+        [Option(longName: "minimal-severity")]
+        public string MinimalSeverity { get; set; }
     }
 }

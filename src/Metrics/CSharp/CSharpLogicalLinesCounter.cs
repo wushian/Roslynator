@@ -24,7 +24,7 @@ namespace Roslynator.Metrics.CSharp
                 whiteSpaceLineCount: CountWhiteSpaceLines(node, sourceText, options),
                 commentLineCount: walker.CommentLineCount,
                 preprocessorDirectiveLineCount: walker.PreprocessorDirectiveLineCount,
-                blockBoundaryLineCount: walker.BlockBoundaryLineCount);
+                blockBoundaryLineCount: 0);
         }
     }
 }

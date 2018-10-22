@@ -16,6 +16,7 @@ roslynator fix <PROJECT|SOLUTION>
 [--ignored-diagnostics]
 [--ignored-projects]
 [--language]
+[--minimal-severity]
 [--msbuild-path]
 [-p|--properties]
 ```
@@ -66,6 +67,10 @@ Defines project names that should not be fixed.
 **`--language`** {csharp|vb}
 
 Defines project language.
+
+**`--minimal-severity`** {hidden|info|warning|error}
+
+Defines minimal severity for a diagnostic. Default value is `info`.
 
 **`--msbuild-path`**
 

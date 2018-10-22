@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,7 +33,7 @@ namespace Roslynator.CommandLine
             {
                 Project project = projectOrSolution.AsProject();
 
-                WriteLine($"Count lines for project '{project.FilePath}'", ConsoleColor.Cyan);
+                WriteLine($"Count lines for '{project.FilePath}'", ConsoleColor.Cyan);
 
                 CodeMetricsCounter counter = CodeMetricsCounter.GetPhysicalLinesCounter(project.Name);
 
@@ -42,7 +41,7 @@ namespace Roslynator.CommandLine
                 {
                     CodeMetrics metrics = await counter.CountLinesAsync(project, codeMetricsOptions, cancellationToken).ConfigureAwait(false);
 
-                    WriteLine($"Done counting lines for project '{project.FilePath}'", ConsoleColor.Green);
+                    WriteLine($"Done counting lines for '{project.FilePath}'", ConsoleColor.Green);
 
                     WriteLine();
 
@@ -67,7 +66,7 @@ namespace Roslynator.CommandLine
 
                 foreach (Project project in FilterProjects(solution, Options.IgnoredProjects, Options.Language))
                 {
-                    WriteLine($"  Count lines for project '{project.Name}'");
+                    WriteLine($"  Count lines for '{project.Name}'");
 
                     CodeMetricsCounter counter = CodeMetricsCounter.GetPhysicalLinesCounter(project.Language);
 

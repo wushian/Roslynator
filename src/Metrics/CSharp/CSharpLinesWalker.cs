@@ -19,7 +19,7 @@ namespace Roslynator.Metrics.CSharp
 
         public CancellationToken CancellationToken { get; }
 
-        public CSharpLinesWalker(TextLineCollection lines, CodeMetricsOptions options, CancellationToken cancellationToken)
+        protected CSharpLinesWalker(TextLineCollection lines, CodeMetricsOptions options, CancellationToken cancellationToken)
             : base(SyntaxWalkerDepth.Trivia)
         {
             Lines = lines;

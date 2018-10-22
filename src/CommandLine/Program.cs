@@ -10,6 +10,7 @@ using CommandLine;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Roslynator.Analysis;
+using Roslynator.CodeFixes;
 using Roslynator.Documentation;
 using Roslynator.Documentation.Markdown;
 using static Roslynator.CommandLine.CommandLineHelpers;
@@ -55,7 +56,17 @@ namespace Roslynator.CommandLine
 
         private static async Task<int> FixAsync(FixCommandLineOptions options)
         {
-            var executor = new FixCommandExecutor(options);
+            DiagnosticSeverity minimalSeverity = CodeFixerOptions.Default.MinimalSeverity;
+
+            if (options.MinimalSeverity != null)
+            {
+                if (!TryParseDiagnosticSeverity(options.MinimalSeverity, out DiagnosticSeverity severity))
+                    return 1;
+
+                minimalSeverity = severity;
+            }
+
+            var executor = new FixCommandExecutor(options, minimalSeverity);
 
             CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
 
