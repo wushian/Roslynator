@@ -7,6 +7,7 @@ Formats documents in the specified project or solution.
 
 ```
 roslynator format <PROJECT|SOLUTION>
+[--include-generated]
 [--ignored-projects]
 [--language]
 [--msbuild-path]
@@ -20,6 +21,10 @@ roslynator format <PROJECT|SOLUTION>
 The project or solution to fix.
 
 ### Optional Options
+
+**`--include-generated`**
+
+Indicates whether generated code should be formatted.
 
 **`--ignored-projects`**
 

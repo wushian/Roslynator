@@ -4,9 +4,10 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: include-generated
     [Verb("format")]
     public class FormatCommandLineOptions : AbstractCommandLineOptions
     {
+        [Option(longName: "include-generated")]
+        public bool IncludeGenerated { get; set; }
     }
 }

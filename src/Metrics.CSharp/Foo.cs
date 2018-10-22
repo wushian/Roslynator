@@ -15,7 +15,8 @@ namespace Roslynator.Metrics
         /**
          * <summary>Bar</summary>
          */
-        public static void Bar() /**/ {
+        public static void Bar() /**/
+        {
             //
             const string s = @"
 
@@ -23,7 +24,8 @@ namespace Roslynator.Metrics
 
             Bar(); /*
              
-             */ Bar();
+             */
+            Bar();
         }
 #endif
 

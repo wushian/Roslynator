@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -24,6 +25,8 @@ namespace Roslynator.CommandLine
 
         public override async Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default)
         {
+            var options = new CodeFormatterOptions(includeGenerated: Options.IncludeGenerated);
+
             Workspace workspace = projectOrSolution.Workspace;
 
             if (projectOrSolution.IsProject)
@@ -32,15 +35,18 @@ namespace Roslynator.CommandLine
 
                 WriteLine($"  Analyze '{project.Name}'");
 
-                Project newProject = await CodeFormatter.FormatProjectAsync(project, cancellationToken).ConfigureAwait(false);
+                Project newProject = await CodeFormatter.FormatProjectAsync(project, options, cancellationToken).ConfigureAwait(false);
 
-                foreach (string changedDocumentPath in newProject
+                foreach (DocumentId documentId in newProject
                     .GetChanges(project)
-                    .GetChangedDocuments(onlyGetDocumentsWithTextChanges: true)
-                    .Select(documentId => PathUtilities.MakeRelativePath(newProject.GetDocument(documentId), newProject))
-                    .OrderBy(f => f))
+                    .GetChangedDocuments(onlyGetDocumentsWithTextChanges: true))
                 {
-                    WriteLine($"  Format '{changedDocumentPath}'");
+                    Document document = newProject.GetDocument(documentId);
+
+                    IEnumerable<TextChange> textChanges = await document.GetTextChangesAsync(project.GetDocument(documentId)).ConfigureAwait(false);
+
+                    if (textChanges.Any())
+                        WriteLine($"  Format '{PathUtilities.MakeRelativePath(document, newProject)}'");
                 }
 
                 bool success = workspace.TryApplyChanges(newProject.Solution);
@@ -55,8 +61,9 @@ namespace Roslynator.CommandLine
 
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
-                bool parallel = false;
+                bool parallel = true;
 
+                //TODO: parallel
                 if (parallel)
                 {
                     var changedDocumentIds = new ConcurrentBag<(DocumentId, SourceText)>();
@@ -65,7 +72,7 @@ namespace Roslynator.CommandLine
                     {
                         WriteLine($"  Analyze '{project.Name}'");
 
-                        Project newProject = CodeFormatter.FormatProjectAsync(project, cancellationToken).Result;
+                        Project newProject = CodeFormatter.FormatProjectAsync(project, options, cancellationToken).Result;
 
                         foreach (DocumentId documentId in newProject
                             .GetChanges(project)
@@ -73,17 +80,23 @@ namespace Roslynator.CommandLine
                         {
                             Document document = newProject.GetDocument(documentId);
 
-                            WriteLine($"  Format '{PathUtilities.MakeRelativePath(document, newProject)}'");
+                            IEnumerable<TextChange> textChanges = document.GetTextChangesAsync(project.GetDocument(documentId)).Result;
 
-                            SourceText sourceText = document.GetTextAsync(cancellationToken).Result;
+                            if (textChanges.Any())
+                            {
+                                WriteLine($"  Format '{PathUtilities.MakeRelativePath(document, newProject)}'");
 
-                            changedDocumentIds.Add((documentId, sourceText));
+                                SourceText sourceText = document.GetTextAsync(cancellationToken).Result;
+
+                                changedDocumentIds.Add((document.Id, sourceText));
+                            }
                         }
+
+                        WriteLine($"  Done analyzing '{project.Name}'");
                     });
 
                     foreach ((DocumentId documentId, SourceText sourceText) in changedDocumentIds)
                     {
-                        Console.WriteLine(solution.GetDocument(documentId).FilePath);
                         solution = solution.WithDocumentText(documentId, sourceText);
                     }
 
@@ -99,15 +112,18 @@ namespace Roslynator.CommandLine
                     {
                         WriteLine($"  Analyze '{project.Name}'");
 
-                        Project newProject = await CodeFormatter.FormatProjectAsync(project, cancellationToken).ConfigureAwait(false);
+                        Project newProject = await CodeFormatter.FormatProjectAsync(project, options, cancellationToken).ConfigureAwait(false);
 
-                        foreach (string changedDocumentPath in newProject
+                        foreach (DocumentId documentId in newProject
                             .GetChanges(project)
-                            .GetChangedDocuments(onlyGetDocumentsWithTextChanges: true)
-                            .Select(documentId => PathUtilities.MakeRelativePath(newProject.GetDocument(documentId), newProject))
-                            .OrderBy(f => f))
+                            .GetChangedDocuments(onlyGetDocumentsWithTextChanges: true))
                         {
-                            WriteLine($"  Format '{changedDocumentPath}'");
+                            Document document = newProject.GetDocument(documentId);
+
+                            IEnumerable<TextChange> textChanges = await document.GetTextChangesAsync(project.GetDocument(documentId)).ConfigureAwait(false);
+
+                            if (textChanges.Any())
+                                WriteLine($"  Format '{PathUtilities.MakeRelativePath(document, newProject)}'");
                         }
 
                         bool success = workspace.TryApplyChanges(newProject.Solution);

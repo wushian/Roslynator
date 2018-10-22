@@ -26,5 +26,6 @@ Namespace Roslynator.CommandLine
         End Sub
 #End If
 
-    End Class
+    End _
+        Class
 End Namespace
