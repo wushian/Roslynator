@@ -66,7 +66,7 @@ namespace Roslynator.CommandLine
 
                 foreach (Project project in FilterProjects(solution, Options.IgnoredProjects, Options.Language))
                 {
-                    WriteLine($"  Count lines for '{project.Name}'");
+                    WriteLine($"  Analyze '{project.Name}'");
 
                     CodeMetricsCounter counter = CodeMetricsCounter.GetPhysicalLinesCounter(project.Language);
 

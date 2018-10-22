@@ -65,7 +65,7 @@ namespace Roslynator.CommandLine
 
                 foreach (Project project in FilterProjects(solution, Options.IgnoredProjects, Options.Language))
                 {
-                    WriteLine($"  Count logical lines for '{project.Name}'");
+                    WriteLine($"  Analyze '{project.Name}'");
 
                     CodeMetricsCounter counter = CodeMetricsCounter.GetLogicalLinesCounter(project.Language);
 
