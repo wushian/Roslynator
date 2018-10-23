@@ -17,8 +17,6 @@ using static Roslynator.CommandLine.CommandLineHelpers;
 using static Roslynator.CommandLine.DocumentationHelpers;
 using static Roslynator.ConsoleHelpers;
 
-#pragma warning disable RCS1090
-
 namespace Roslynator.CommandLine
 {
     internal static class Program
@@ -31,8 +29,11 @@ namespace Roslynator.CommandLine
             WriteLine("Copyright (c) Josef Pihrt. All rights reserved.");
             WriteLine();
 
-            Parser.Default
-                .ParseArguments<FixCommandLineOptions,
+            StreamWriter logWriter = null;
+
+            try
+            {
+                ParserResult<object> parserResult = Parser.Default.ParseArguments<FixCommandLineOptions,
                     AnalyzeCommandLineOptions,
                     AnalyzeAssemblyCommandLineOptions,
                     FormatCommandLineOptions,
@@ -40,18 +41,35 @@ namespace Roslynator.CommandLine
                     LogicalLinesOfCodeCommandLineOptions,
                     GenerateDocCommandLineOptions,
                     GenerateDeclarationsCommandLineOptions,
-                    GenerateDocRootCommandLineOptions>(args)
-                .MapResult(
-                  (FixCommandLineOptions options) => FixAsync(options).Result,
-                  (AnalyzeCommandLineOptions options) => AnalyzeAsync(options).Result,
-                  (AnalyzeAssemblyCommandLineOptions options) => AnalyzeAssemblyCommandExecutor.Execute(options),
-                  (FormatCommandLineOptions options) => FormatAsync(options).Result,
-                  (LinesOfCodeCommandLineOptions options) => LinesOrCodeAsync(options).Result,
-                  (LogicalLinesOfCodeCommandLineOptions options) => LogicalLinesOrCodeAsync(options).Result,
-                  (GenerateDocCommandLineOptions options) => GenerateDoc(options),
-                  (GenerateDeclarationsCommandLineOptions options) => GenerateDeclarations(options),
-                  (GenerateDocRootCommandLineOptions options) => GenerateDocRoot(options),
-                  _ => 1);
+                    GenerateDocRootCommandLineOptions>(args);
+
+                parserResult.WithParsed<BaseCommandLineOptions>(options =>
+                {
+                    if (options.LogFile != null)
+                    {
+                        var logStream = new FileStream(options.LogFile, FileMode.Create, FileAccess.Write, FileShare.Read);
+                        logWriter = new StreamWriter(logStream, Encoding.UTF8);
+                        Log = logWriter;
+                    }
+                });
+
+                parserResult.MapResult(
+                    (FixCommandLineOptions options) => FixAsync(options).Result,
+                    (AnalyzeCommandLineOptions options) => AnalyzeAsync(options).Result,
+                    (AnalyzeAssemblyCommandLineOptions options) => AnalyzeAssemblyCommandExecutor.Execute(options),
+                    (FormatCommandLineOptions options) => FormatAsync(options).Result,
+                    (LinesOfCodeCommandLineOptions options) => LinesOrCodeAsync(options).Result,
+                    (LogicalLinesOfCodeCommandLineOptions options) => LogicalLinesOrCodeAsync(options).Result,
+                    (GenerateDocCommandLineOptions options) => GenerateDoc(options),
+                    (GenerateDeclarationsCommandLineOptions options) => GenerateDeclarations(options),
+                    (GenerateDocRootCommandLineOptions options) => GenerateDocRoot(options),
+                    _ => 1);
+            }
+            finally
+            {
+                logWriter?.Dispose();
+                Log = null;
+            }
         }
 
         private static async Task<int> FixAsync(FixCommandLineOptions options)

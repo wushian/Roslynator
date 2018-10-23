@@ -48,13 +48,13 @@ namespace Roslynator.CommandLine
 
                 WriteLine($"Analyze project '{project.Name}'");
 
-                await codeAnalyzer.AnalyzeProjectAsync(project, cancellationToken).ConfigureAwait(false);
+                await codeAnalyzer.AnalyzeProjectAsync(project, cancellationToken);
             }
             else
             {
                 Solution solution = projectOrSolution.AsSolution();
 
-                await codeAnalyzer.AnalyzeSolutionAsync(solution, cancellationToken).ConfigureAwait(false);
+                await codeAnalyzer.AnalyzeSolutionAsync(solution, cancellationToken);
             }
 
             return new CommandResult(true);

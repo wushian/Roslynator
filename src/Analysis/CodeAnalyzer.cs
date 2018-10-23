@@ -6,25 +6,21 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Diagnostics.Telemetry;
-using Microsoft.CodeAnalysis.Text;
 using Roslynator.CSharp;
-using Roslynator.Text;
 using static Roslynator.ConsoleHelpers;
 
 namespace Roslynator.Analysis
 {
     public class CodeAnalyzer
     {
-        private readonly AnalyzerAssemblyCache _analyzerAssemblies;
+        private readonly AnalyzerAssemblyList _analyzerAssemblies = new AnalyzerAssemblyList();
 
-        private readonly AnalyzerAssemblyCache _analyzerAssemblyCache = new AnalyzerAssemblyCache();
+        private readonly AnalyzerAssemblyList _analyzerReferences = new AnalyzerAssemblyList();
 
         private static readonly TimeSpan _minimalExecutionTime = TimeSpan.FromMilliseconds(1);
 
@@ -45,8 +41,6 @@ namespace Roslynator.Analysis
         public CodeAnalyzer(IEnumerable<string> analyzerAssemblies = null, IFormatProvider formatProvider = null, CodeAnalyzerOptions options = null)
         {
             Options = options ?? CodeAnalyzerOptions.Default;
-
-            _analyzerAssemblies = new AnalyzerAssemblyCache();
 
             if (analyzerAssemblies != null)
                 _analyzerAssemblies.LoadFrom(analyzerAssemblies, loadFixers: false);
@@ -85,11 +79,11 @@ namespace Roslynator.Analysis
                 if (Options.IgnoredProjectNames.Contains(project.Name)
                     || (Options.Language != null && Options.Language != project.Language))
                 {
-                    WriteLine($"Skip project {$"{i + 1}/{projectIds.Length}"} '{project.Name}' ({project.FilePath})", ConsoleColor.DarkGray);
+                    WriteLine($"Skip '{project.Name}' {$"{i + 1}/{projectIds.Length}"}", ConsoleColor.DarkGray);
                 }
                 else
                 {
-                    WriteLine($"Analyze project {$"{i + 1}/{projectIds.Length}"} '{project.Name}' ({project.FilePath})");
+                    WriteLine($"Analyze '{project.Name}' {$"{i + 1}/{projectIds.Length}"}");
 
                     ProjectAnalysisResult result = await AnalyzeProjectAsync(project, cancellationToken).ConfigureAwait(false);
 
@@ -147,7 +141,7 @@ namespace Roslynator.Analysis
                 if (totalCount > 0)
                 {
                     WriteLine();
-                    WriteLine($"{totalCount} {((totalCount == 1) ? "diagnostic" : "diagnostics")} found in solution '{solution.FilePath}'.");
+                    WriteLine($"{totalCount} {((totalCount == 1) ? "diagnostic" : "diagnostics")} found", ConsoleColor.Green);
 
                     Dictionary<DiagnosticDescriptor, int> diagnosticsByDescriptor = results
                         .SelectMany(f => FilterDiagnostics(f.Diagnostics.Concat(f.CompilerDiagnostics), cancellationToken))
@@ -171,18 +165,12 @@ namespace Roslynator.Analysis
 
         public async Task<ProjectAnalysisResult> AnalyzeProjectAsync(Project project, CancellationToken cancellationToken = default)
         {
-            string language = project.Language;
-
-            ImmutableArray<Assembly> assemblies = (Options.IgnoreAnalyzerReferences) ? ImmutableArray<Assembly>.Empty : project.AnalyzerReferences
-                .Distinct()
-                .OfType<AnalyzerFileReference>()
-                .Select(f => f.GetAssembly())
-                .Where(f => !_analyzerAssemblies.Contains(f.FullName))
-                .ToImmutableArray();
-
-            ImmutableArray<DiagnosticAnalyzer> analyzers = _analyzerAssemblies
-                .GetAnalyzers(language)
-                .AddRange(_analyzerAssemblyCache.GetAnalyzers(assemblies, language));
+            ImmutableArray<DiagnosticAnalyzer> analyzers = AnalysisUtilities.GetAnalyzers(
+                project,
+                _analyzerAssemblies,
+                _analyzerReferences,
+                Options.IgnoreAnalyzerReferences,
+                Options.MinimalSeverity);
 
             if (!analyzers.Any())
             {
@@ -219,50 +207,17 @@ namespace Roslynator.Analysis
                 diagnostics = await compilationWithAnalyzers.GetAllDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
             }
 
-            WriteDiagnostics(FilterDiagnostics(diagnostics.Where(f => f.IsAnalyzerExceptionDiagnostic()), cancellationToken), project);
+            string projectDirectoryPath = Path.GetDirectoryName(project.FilePath);
+
+            WriteDiagnostics(FilterDiagnostics(diagnostics.Where(f => f.IsAnalyzerExceptionDiagnostic()), cancellationToken).ToImmutableArray(), projectDirectoryPath, FormatProvider);
 
             IEnumerable<Diagnostic> allDiagnostics = diagnostics
                 .Where(f => !f.IsAnalyzerExceptionDiagnostic())
                 .Concat(compilerDiagnostics);
 
-            WriteDiagnostics(FilterDiagnostics(allDiagnostics, cancellationToken), project);
+            WriteDiagnostics(FilterDiagnostics(allDiagnostics, cancellationToken).ToImmutableArray(), projectDirectoryPath, FormatProvider);
 
             return new ProjectAnalysisResult(project, analyzers, diagnostics, compilerDiagnostics, telemetry);
-        }
-
-        private void WriteDiagnostics(IEnumerable<Diagnostic> diagnostics, Project project)
-        {
-            string projectDirectory = Path.GetDirectoryName(project.FilePath);
-
-            foreach (IGrouping<SyntaxTree, Diagnostic> grouping in diagnostics
-                .OrderBy(f => f.Id)
-                .GroupBy(f => f.Location.SourceTree)
-                .OrderBy(f => f.Key.FilePath))
-            {
-                foreach (Diagnostic diagnostic in grouping.OrderBy(f => f.Location.SourceSpan.Start))
-                {
-                    string message = FormatDiagnostic(diagnostic, baseDirectoryPath: projectDirectory);
-
-                    WriteLine($"  {message}", GetColor(diagnostic.Severity));
-                }
-            }
-
-            ConsoleColor GetColor(DiagnosticSeverity diagnosticSeverity)
-            {
-                switch (diagnosticSeverity)
-                {
-                    case DiagnosticSeverity.Hidden:
-                        return ConsoleColor.DarkGray;
-                    case DiagnosticSeverity.Info:
-                        return ConsoleColor.Cyan;
-                    case DiagnosticSeverity.Warning:
-                        return ConsoleColor.Yellow;
-                    case DiagnosticSeverity.Error:
-                        return ConsoleColor.Red;
-                    default:
-                        throw new InvalidOperationException($"Unknown diagnostic severity '{diagnosticSeverity}'.");
-                }
-            }
         }
 
         private IEnumerable<Diagnostic> FilterDiagnostics(IEnumerable<Diagnostic> diagnostics, CancellationToken cancellationToken = default)
@@ -303,67 +258,6 @@ namespace Roslynator.Analysis
                         return trivia.IsKind(Microsoft.CodeAnalysis.VisualBasic.SyntaxKind.CommentTrivia);
                     default:
                         return false;
-                }
-            }
-        }
-
-        private string FormatDiagnostic(
-           Diagnostic diagnostic,
-           string baseDirectoryPath = null)
-        {
-            StringBuilder sb = StringBuilderCache.GetInstance();
-
-            sb.Append(diagnostic.Id);
-            sb.Append(" ");
-            sb.Append(diagnostic.GetMessage(FormatProvider));
-            sb.Append(" ");
-            sb.Append(GetSeverity(diagnostic.Severity));
-
-            switch (diagnostic.Location.Kind)
-            {
-                case LocationKind.SourceFile:
-                case LocationKind.XmlFile:
-                case LocationKind.ExternalFile:
-                    {
-                        FileLinePositionSpan span = diagnostic.Location.GetMappedLineSpan();
-
-                        if (span.IsValid)
-                        {
-                            sb.Append(" ");
-
-                            string path = PathUtilities.MakeRelativePath(span.Path, baseDirectoryPath);
-
-                            sb.Append(path);
-
-                            LinePosition linePosition = span.Span.Start;
-
-                            sb.Append("(");
-                            sb.Append(linePosition.Line + 1);
-                            sb.Append(",");
-                            sb.Append(linePosition.Character + 1);
-                            sb.Append(")");
-                        }
-
-                        break;
-                    }
-            }
-
-            return StringBuilderCache.GetStringAndFree(sb);
-
-            string GetSeverity(DiagnosticSeverity severity)
-            {
-                switch (severity)
-                {
-                    case DiagnosticSeverity.Hidden:
-                        return "hidden";
-                    case DiagnosticSeverity.Info:
-                        return "info";
-                    case DiagnosticSeverity.Warning:
-                        return "warning";
-                    case DiagnosticSeverity.Error:
-                        return "error";
-                    default:
-                        throw new InvalidOperationException();
                 }
             }
         }

@@ -5,7 +5,7 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    public class AbstractCommandLineOptions
+    public abstract class MSBuildCommandLineOptions : BaseCommandLineOptions
     {
         [Value(index: 0, Required = true)]
         public string Path { get; set; }

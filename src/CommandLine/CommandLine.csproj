@@ -9,7 +9,7 @@
     <Version>0.1.0.0</Version>
     <AssemblyName>Roslynator</AssemblyName>
     <RootNamespace>Roslynator.CommandLine</RootNamespace>
-    <CodeAnalysisRuleSet>..\global.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>CommandLine.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>CommandLine.snk</AssemblyOriginatorKeyFile>

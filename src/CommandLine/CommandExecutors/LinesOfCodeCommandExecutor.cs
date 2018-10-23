@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -41,7 +40,7 @@ namespace Roslynator.CommandLine
 
                 if (counter != null)
                 {
-                    CodeMetrics metrics = await counter.CountLinesAsync(project, codeMetricsOptions, cancellationToken).ConfigureAwait(false);
+                    CodeMetrics metrics = await counter.CountLinesAsync(project, codeMetricsOptions, cancellationToken);
 
                     WriteLine($"Done counting lines for '{project.FilePath}'", ConsoleColor.Green);
 

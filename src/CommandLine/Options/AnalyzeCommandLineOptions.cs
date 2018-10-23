@@ -6,7 +6,7 @@ using CommandLine;
 namespace Roslynator.CommandLine
 {
     [Verb("analyze")]
-    public class AnalyzeCommandLineOptions : AbstractCommandLineOptions
+    public class AnalyzeCommandLineOptions : MSBuildCommandLineOptions
     {
         [Option(shortName: 'a', longName: "analyzer-assemblies")]
         public IEnumerable<string> AnalyzerAssemblies { get; set; }

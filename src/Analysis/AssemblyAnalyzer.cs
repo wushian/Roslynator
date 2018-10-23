@@ -75,7 +75,7 @@ namespace Roslynator.Analysis
                         || ex is BadImageFormatException
                         || ex is SecurityException)
                     {
-                        Console.WriteLine($"Cannot load assembly '{filePath}'");
+                        ConsoleHelpers.WriteLine($"Cannot load assembly '{filePath}'", ConsoleColor.DarkGray);
 
                         return null;
                     }

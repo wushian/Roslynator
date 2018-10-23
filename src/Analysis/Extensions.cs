@@ -47,5 +47,39 @@ namespace Roslynator
             telemetryInfo.SyntaxNodeActionsCount += telemetryInfoToAdd.SyntaxNodeActionsCount;
             telemetryInfo.SyntaxTreeActionsCount += telemetryInfoToAdd.SyntaxTreeActionsCount;
         }
+
+        public static ReportDiagnostic ToReportDiagnostic(this DiagnosticSeverity diagnosticSeverity)
+        {
+            switch (diagnosticSeverity)
+            {
+                case DiagnosticSeverity.Hidden:
+                    return ReportDiagnostic.Hidden;
+                case DiagnosticSeverity.Info:
+                    return ReportDiagnostic.Info;
+                case DiagnosticSeverity.Warning:
+                    return ReportDiagnostic.Warn;
+                case DiagnosticSeverity.Error:
+                    return ReportDiagnostic.Error;
+                default:
+                    throw new ArgumentException("", nameof(diagnosticSeverity));
+            }
+        }
+
+        public static DiagnosticSeverity ToDiagnosticSeverity(this ReportDiagnostic reportDiagnostic)
+        {
+            switch (reportDiagnostic)
+            {
+                case ReportDiagnostic.Error:
+                    return DiagnosticSeverity.Error;
+                case ReportDiagnostic.Warn:
+                    return DiagnosticSeverity.Warning;
+                case ReportDiagnostic.Info:
+                    return DiagnosticSeverity.Info;
+                case ReportDiagnostic.Hidden:
+                    return DiagnosticSeverity.Hidden;
+                default:
+                    throw new ArgumentException("", nameof(reportDiagnostic));
+            }
+        }
     }
 }

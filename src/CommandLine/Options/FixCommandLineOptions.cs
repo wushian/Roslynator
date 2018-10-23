@@ -7,7 +7,7 @@ namespace Roslynator.CommandLine
 {
     //TODO: NormalizeLineEndings
     [Verb("fix")]
-    public class FixCommandLineOptions : AbstractCommandLineOptions
+    public class FixCommandLineOptions : MSBuildCommandLineOptions
     {
         [Option(shortName: 'a', longName: "analyzer-assemblies")]
         public IEnumerable<string> AnalyzerAssemblies { get; set; }

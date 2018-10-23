@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using Microsoft.CodeAnalysis.CodeFixes;
@@ -11,16 +11,16 @@ using static Roslynator.ConsoleHelpers;
 
 namespace Roslynator.Analysis
 {
-    internal sealed class AnalyzerAssemblyCache
+    internal sealed class AnalyzerAssemblyList : IEnumerable<AnalyzerAssembly>
     {
         private readonly Dictionary<string, AnalyzerAssembly> _analyzerAssemblies;
 
-        public AnalyzerAssemblyCache()
+        public AnalyzerAssemblyList()
         {
             _analyzerAssemblies = new Dictionary<string, AnalyzerAssembly>();
         }
 
-        internal bool Contains(string fullName)
+        internal bool ContainsAssembly(string fullName)
         {
             return _analyzerAssemblies.ContainsKey(fullName);
         }
@@ -41,7 +41,7 @@ namespace Roslynator.Analysis
 
         public bool Add(AnalyzerAssembly analyzerAssembly)
         {
-            if (!_analyzerAssemblies.ContainsKey(analyzerAssembly.Assembly.FullName))
+            if (!_analyzerAssemblies.ContainsKey(analyzerAssembly.FullName))
             {
                 AddImpl(analyzerAssembly);
                 return true;
@@ -52,9 +52,9 @@ namespace Roslynator.Analysis
 
         private void AddImpl(AnalyzerAssembly analyzerAssembly)
         {
-            WriteLine($"Add analyzer assembly '{analyzerAssembly.Assembly.FullName}'", ConsoleColor.DarkGray);
+            WriteLine($"Add analyzer assembly '{analyzerAssembly.FullName}'", ConsoleColor.DarkGray);
 
-            _analyzerAssemblies.Add(analyzerAssembly.Assembly.FullName, analyzerAssembly);
+            _analyzerAssemblies.Add(analyzerAssembly.FullName, analyzerAssembly);
         }
 
         public AnalyzerAssembly GetOrAdd(Assembly assembly)
@@ -69,42 +69,50 @@ namespace Roslynator.Analysis
             return analyzerAssembly;
         }
 
-        public ImmutableArray<DiagnosticAnalyzer> GetAnalyzers(string language)
+        public IEnumerable<DiagnosticAnalyzer> GetAnalyzers(string language)
         {
             return GetAnalyzers(_analyzerAssemblies.Values, language);
         }
 
-        public ImmutableArray<DiagnosticAnalyzer> GetAnalyzers(IEnumerable<Assembly> assemblies, string language)
+        public IEnumerable<DiagnosticAnalyzer> GetOrAddAnalyzers(IEnumerable<Assembly> assemblies, string language)
         {
             return GetAnalyzers(assemblies.Select(GetOrAdd), language);
         }
 
-        private static ImmutableArray<DiagnosticAnalyzer> GetAnalyzers(IEnumerable<AnalyzerAssembly> analyzerAssemblies, string language)
+        private static IEnumerable<DiagnosticAnalyzer> GetAnalyzers(IEnumerable<AnalyzerAssembly> analyzerAssemblies, string language)
         {
             return analyzerAssemblies
                 .SelectMany(f => f.Analyzers)
                 .Where(f => f.Key == language)
-                .SelectMany(f => f.Value)
-                .ToImmutableArray();
+                .SelectMany(f => f.Value);
         }
 
-        public ImmutableArray<CodeFixProvider> GetFixers(string language)
+        public IEnumerable<CodeFixProvider> GetFixers(string language)
         {
             return GetFixers(_analyzerAssemblies.Values, language);
         }
 
-        public ImmutableArray<CodeFixProvider> GetFixers(IEnumerable<Assembly> assemblies, string language)
+        public IEnumerable<CodeFixProvider> GetOrAddFixers(IEnumerable<Assembly> assemblies, string language)
         {
             return GetFixers(assemblies.Select(GetOrAdd), language);
         }
 
-        public static ImmutableArray<CodeFixProvider> GetFixers(IEnumerable<AnalyzerAssembly> analyzerAssemblies, string language)
+        private static IEnumerable<CodeFixProvider> GetFixers(IEnumerable<AnalyzerAssembly> analyzerAssemblies, string language)
         {
             return analyzerAssemblies
                 .SelectMany(f => f.Fixers)
                 .Where(f => f.Key == language)
-                .SelectMany(f => f.Value)
-                .ToImmutableArray();
+                .SelectMany(f => f.Value);
+        }
+
+        public IEnumerator<AnalyzerAssembly> GetEnumerator()
+        {
+            return _analyzerAssemblies.Values.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _analyzerAssemblies.Values.GetEnumerator();
         }
     }
 }

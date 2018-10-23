@@ -31,7 +31,7 @@ namespace Roslynator.CommandLine
             {
                 analyzerAssemblies.Add(analyzerAssembly);
 
-                WriteLine($"{analyzerAssembly.Assembly.GetName().Name} ({analyzerAssembly.Assembly.Location})", ConsoleColor.Green);
+                WriteLine($"{analyzerAssembly.GetName().Name} ({analyzerAssembly.Location})", ConsoleColor.Green);
 
                 DiagnosticAnalyzer[] analyzers = analyzerAssembly
                     .Analyzers
@@ -92,14 +92,14 @@ namespace Roslynator.CommandLine
             {
                 WriteLine();
 
-                Console.WriteLine($"{analyzerAssemblies.Count} analyzer {((analyzerAssemblies.Count == 1) ? "assembly" : "assemblies")} found");
+                WriteLine($"{analyzerAssemblies.Count} analyzer {((analyzerAssemblies.Count == 1) ? "assembly" : "assemblies")} found");
 
                 foreach (AnalyzerAssembly analyzerAssembly in analyzerAssemblies
-                    .OrderBy(f => f.Assembly.GetName().Name)
-                    .ThenBy(f => f.Assembly.Location))
+                    .OrderBy(f => f.GetName().Name)
+                    .ThenBy(f => f.Location))
                 {
-                    WriteLine($"  {analyzerAssembly.Assembly.GetName().Name}", ConsoleColor.Green);
-                    WriteLine($"    Location: {analyzerAssembly.Assembly.Location}");
+                    WriteLine($"  {analyzerAssembly.GetName().Name}", ConsoleColor.Green);
+                    WriteLine($"    Location: {analyzerAssembly.Location}");
 
                     foreach (KeyValuePair<string, ImmutableArray<DiagnosticAnalyzer>> kvp in analyzerAssembly.Analyzers
                         .OrderBy(f => f.Key))

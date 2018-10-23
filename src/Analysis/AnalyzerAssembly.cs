@@ -26,6 +26,10 @@ namespace Roslynator.Analysis
 
         public Assembly Assembly { get; }
 
+        public string FullName => Assembly.FullName;
+
+        public string Location => Assembly.Location;
+
         public ImmutableDictionary<string, ImmutableArray<DiagnosticAnalyzer>> Analyzers { get; }
 
         public ImmutableDictionary<string, ImmutableArray<CodeFixProvider>> Fixers { get; }
@@ -33,7 +37,9 @@ namespace Roslynator.Analysis
         internal bool IsEmpty => Analyzers.Count == 0 && Fixers.Count == 0;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string DebuggerDisplay => Assembly.FullName;
+        private string DebuggerDisplay => FullName;
+
+        public AssemblyName GetName() => Assembly.GetName();
 
         public static AnalyzerAssembly Load(
             Assembly analyzerAssembly,
@@ -115,7 +121,7 @@ namespace Roslynator.Analysis
 
         public override int GetHashCode()
         {
-            return StringComparer.Ordinal.GetHashCode(Assembly.FullName);
+            return StringComparer.Ordinal.GetHashCode(FullName);
         }
 
         public override bool Equals(object obj)
@@ -126,7 +132,7 @@ namespace Roslynator.Analysis
         public bool Equals(AnalyzerAssembly other)
         {
             return other != null
-                && StringComparer.Ordinal.Equals(Assembly.FullName, other.Assembly.FullName);
+                && StringComparer.Ordinal.Equals(FullName, other.FullName);
         }
     }
 }

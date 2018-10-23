@@ -54,11 +54,11 @@ namespace Roslynator.CommandLine
                     {
                         if (isSolution)
                         {
-                            projectOrSolution = await workspace.OpenSolutionAsync(path, ConsoleProgressReporter.Instance, cancellationToken).ConfigureAwait(false);
+                            projectOrSolution = await workspace.OpenSolutionAsync(path, ConsoleProgressReporter.Instance, cancellationToken);
                         }
                         else
                         {
-                            projectOrSolution = await workspace.OpenProjectAsync(path, ConsoleProgressReporter.Instance, cancellationToken).ConfigureAwait(false);
+                            projectOrSolution = await workspace.OpenProjectAsync(path, ConsoleProgressReporter.Instance, cancellationToken);
                         }
                     }
                     catch (Exception ex)
@@ -77,7 +77,7 @@ namespace Roslynator.CommandLine
 
                     WriteLine($"Done loading {((isSolution) ? "solution" : "project")} '{path}'", ConsoleColor.Green);
 
-                    return await ExecuteAsync(projectOrSolution, cancellationToken).ConfigureAwait(false);
+                    return await ExecuteAsync(projectOrSolution, cancellationToken);
                 }
                 catch (OperationCanceledException ex)
                 {

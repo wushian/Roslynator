@@ -46,7 +46,7 @@ namespace Roslynator.CommandLine
 
                 WriteLine($"Fix project '{project.Name}'", ConsoleColor.Cyan);
 
-                await codeFixer.FixProjectAsync(project, cancellationToken).ConfigureAwait(false);
+                await codeFixer.FixProjectAsync(project, cancellationToken);
             }
             else
             {
@@ -54,7 +54,7 @@ namespace Roslynator.CommandLine
 
                 var codeFixer = new CodeFixer(solution, analyzerAssemblies: Options.AnalyzerAssemblies, options: codeFixerOptions);
 
-                await codeFixer.FixSolutionAsync(cancellationToken).ConfigureAwait(false);
+                await codeFixer.FixSolutionAsync(cancellationToken);
             }
 
             return new CommandResult(true);

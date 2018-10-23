@@ -8,31 +8,13 @@ using static Roslynator.Documentation.DocumentationOptions;
 namespace Roslynator.CommandLine
 {
     [Verb("generate-doc")]
-    public class GenerateDocCommandLineOptions
+    public class GenerateDocCommandLineOptions : AbstractGenerateDocCommandLineOptions
     {
-        [Option(longName: "assemblies", shortName: 'a', Required = true)]
-        public IEnumerable<string> Assemblies { get; set; }
-
-        [Option(longName: "output", shortName: 'o', Required = true)]
-        public string OutputPath { get; set; }
-
-        [Option(longName: "references", shortName: 'r', Required = true)]
-        public IEnumerable<string> References { get; set; }
-
-        [Option(longName: "heading", shortName: 'h', Required = true)]
-        public string Heading { get; set; }
-
         [Option(longName: "additional-xml-documentation")]
         public IEnumerable<string> AdditionalXmlDocumentation { get; set; }
 
-        [Option(longName: "depth", Default = DefaultValues.Depth)]
-        public DocumentationDepth Depth { get; set; }
-
         [Option(longName: "ignored-member-parts")]
         public IEnumerable<string> IgnoredMemberParts { get; set; }
-
-        [Option(longName: "ignored-names")]
-        public IEnumerable<string> IgnoredNames { get; set; }
 
         [Option(longName: "ignored-namespace-parts")]
         public IEnumerable<string> IgnoredNamespaceParts { get; set; }
@@ -58,9 +40,6 @@ namespace Roslynator.CommandLine
         [Option(longName: "max-derived-types", Default = DefaultValues.MaxDerivedTypes)]
         public int MaxDerivedTypes { get; set; }
 
-        [Option(longName: "no-class-hierarchy")]
-        public bool NoClassHierarchy { get; set; }
-
         [Option(longName: "no-delete", Default = false)]
         public bool NoDelete { get; set; }
 
@@ -69,12 +48,6 @@ namespace Roslynator.CommandLine
 
         [Option(longName: "no-format-constraints")]
         public bool NoFormatConstraints { get; set; }
-
-        [Option(longName: "no-mark-obsolete")]
-        public bool NoMarkObsolete { get; set; }
-
-        [Option(longName: "no-precedence-for-system")]
-        public bool NoPrecedenceForSystem { get; set; }
 
         [Option(longName: "omit-attribute-arguments")]
         public bool OmitAttributeArguments { get; set; }
@@ -99,11 +72,5 @@ namespace Roslynator.CommandLine
 
         [Option(longName: "preferred-culture")]
         public string PreferredCulture { get; set; }
-
-        [Option(longName: "scroll-to-content")]
-        public bool ScrollToContent { get; set; }
-
-        [Option(longName: "visibility", Default = nameof(DocumentationVisibility.Publicly))]
-        public string Visibility { get; set; }
     }
 }

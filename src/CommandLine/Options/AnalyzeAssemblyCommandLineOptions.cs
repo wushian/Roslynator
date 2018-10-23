@@ -5,7 +5,7 @@ using CommandLine;
 namespace Roslynator.CommandLine
 {
     [Verb("analyze-assembly")]
-    public class AnalyzeAssemblyCommandLineOptions
+    public class AnalyzeAssemblyCommandLineOptions : BaseCommandLineOptions
     {
         [Value(index: 0, Required = true)]
         public string Path { get; set; }

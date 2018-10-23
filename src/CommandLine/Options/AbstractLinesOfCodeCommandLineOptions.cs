@@ -5,7 +5,7 @@ using CommandLine;
 namespace Roslynator.CommandLine
 {
     [Verb("loc")]
-    public class AbstractLinesOfCodeCommandLineOptions : AbstractCommandLineOptions
+    public class AbstractLinesOfCodeCommandLineOptions : MSBuildCommandLineOptions
     {
         [Option(longName: "include-comments")]
         public bool IncludeComments { get; set; }

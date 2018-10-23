@@ -35,7 +35,7 @@ namespace Roslynator.CommandLine
 
                 WriteLine($"  Analyze '{project.Name}'");
 
-                Project newProject = await CodeFormatter.FormatProjectAsync(project, options, cancellationToken).ConfigureAwait(false);
+                Project newProject = await CodeFormatter.FormatProjectAsync(project, options, cancellationToken);
 
                 foreach (DocumentId documentId in newProject
                     .GetChanges(project)
@@ -43,7 +43,7 @@ namespace Roslynator.CommandLine
                 {
                     Document document = newProject.GetDocument(documentId);
 
-                    IEnumerable<TextChange> textChanges = await document.GetTextChangesAsync(project.GetDocument(documentId)).ConfigureAwait(false);
+                    IEnumerable<TextChange> textChanges = await document.GetTextChangesAsync(project.GetDocument(documentId));
 
                     if (textChanges.Any())
                         WriteLine($"  Format '{PathUtilities.MakeRelativePath(document, newProject)}'");
@@ -61,76 +61,45 @@ namespace Roslynator.CommandLine
 
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
-                bool parallel = true;
+                var changedDocumentIds = new ConcurrentBag<(DocumentId, SourceText)>();
 
-                //TODO: parallel
-                if (parallel)
+                Parallel.ForEach(FilterProjects(solution, Options.IgnoredProjects, Options.Language), project =>
                 {
-                    var changedDocumentIds = new ConcurrentBag<(DocumentId, SourceText)>();
+                    WriteLine($"  Analyze '{project.Name}'");
 
-                    Parallel.ForEach(FilterProjects(solution, Options.IgnoredProjects, Options.Language), project =>
+                    Project newProject = CodeFormatter.FormatProjectAsync(project, options, cancellationToken).Result;
+
+                    foreach (DocumentId documentId in newProject
+                        .GetChanges(project)
+                        .GetChangedDocuments(onlyGetDocumentsWithTextChanges: true))
                     {
-                        WriteLine($"  Analyze '{project.Name}'");
+                        Document document = newProject.GetDocument(documentId);
 
-                        Project newProject = CodeFormatter.FormatProjectAsync(project, options, cancellationToken).Result;
+                        IEnumerable<TextChange> textChanges = document.GetTextChangesAsync(project.GetDocument(documentId)).Result;
 
-                        foreach (DocumentId documentId in newProject
-                            .GetChanges(project)
-                            .GetChangedDocuments(onlyGetDocumentsWithTextChanges: true))
+                        if (textChanges.Any())
                         {
-                            Document document = newProject.GetDocument(documentId);
+                            WriteLine($"  Format '{PathUtilities.MakeRelativePath(document, newProject)}'");
 
-                            IEnumerable<TextChange> textChanges = document.GetTextChangesAsync(project.GetDocument(documentId)).Result;
+                            SourceText sourceText = document.GetTextAsync(cancellationToken).Result;
 
-                            if (textChanges.Any())
-                            {
-                                WriteLine($"  Format '{PathUtilities.MakeRelativePath(document, newProject)}'");
-
-                                SourceText sourceText = document.GetTextAsync(cancellationToken).Result;
-
-                                changedDocumentIds.Add((document.Id, sourceText));
-                            }
+                            changedDocumentIds.Add((document.Id, sourceText));
                         }
-
-                        WriteLine($"  Done analyzing '{project.Name}'");
-                    });
-
-                    foreach ((DocumentId documentId, SourceText sourceText) in changedDocumentIds)
-                    {
-                        solution = solution.WithDocumentText(documentId, sourceText);
                     }
 
-                    Console.WriteLine($"Apply changes to solution '{solution.FilePath}'");
+                    WriteLine($"  Done analyzing '{project.Name}'");
+                });
 
-                    bool success = workspace.TryApplyChanges(solution);
-
-                    Debug.Assert(success, $"Cannot apply changes to solution '{solution.FilePath}'");
-                }
-                else
+                foreach ((DocumentId documentId, SourceText sourceText) in changedDocumentIds)
                 {
-                    foreach (Project project in FilterProjects(solution, Options.IgnoredProjects, Options.Language))
-                    {
-                        WriteLine($"  Analyze '{project.Name}'");
-
-                        Project newProject = await CodeFormatter.FormatProjectAsync(project, options, cancellationToken).ConfigureAwait(false);
-
-                        foreach (DocumentId documentId in newProject
-                            .GetChanges(project)
-                            .GetChangedDocuments(onlyGetDocumentsWithTextChanges: true))
-                        {
-                            Document document = newProject.GetDocument(documentId);
-
-                            IEnumerable<TextChange> textChanges = await document.GetTextChangesAsync(project.GetDocument(documentId)).ConfigureAwait(false);
-
-                            if (textChanges.Any())
-                                WriteLine($"  Format '{PathUtilities.MakeRelativePath(document, newProject)}'");
-                        }
-
-                        bool success = workspace.TryApplyChanges(newProject.Solution);
-
-                        Debug.Assert(success, "Cannot apply changes to a solution.");
-                    }
+                    solution = solution.WithDocumentText(documentId, sourceText);
                 }
+
+                WriteLine($"Apply changes to solution '{solution.FilePath}'");
+
+                bool success = workspace.TryApplyChanges(solution);
+
+                Debug.Assert(success, $"Cannot apply changes to solution '{solution.FilePath}'");
 
                 WriteLine($"Done formatting solution '{solution.FilePath}' {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green);
             }

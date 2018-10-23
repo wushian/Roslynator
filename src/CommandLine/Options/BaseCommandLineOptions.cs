@@ -4,10 +4,10 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    [Verb("format")]
-    public class FormatCommandLineOptions : MSBuildCommandLineOptions
+    //TODO: Verbosity
+    public abstract class BaseCommandLineOptions
     {
-        [Option(longName: "include-generated")]
-        public bool IncludeGenerated { get; set; }
+        [Option(longName: "log-file")]
+        public string LogFile { get; set; }
     }
 }

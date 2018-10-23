@@ -2,41 +2,12 @@
 
 using System.Collections.Generic;
 using CommandLine;
-using Roslynator.Documentation;
-using static Roslynator.Documentation.DocumentationOptions;
 
 namespace Roslynator.CommandLine
 {
     [Verb("generate-doc-root")]
-    public class GenerateDocRootCommandLineOptions
+    public class GenerateDocRootCommandLineOptions : AbstractGenerateDocCommandLineOptions
     {
-        [Option(longName: "assemblies", shortName: 'a', Required = true)]
-        public IEnumerable<string> Assemblies { get; set; }
-
-        [Option(longName: "heading", shortName: 'h', Required = true)]
-        public string Heading { get; set; }
-
-        [Option(longName: "output", shortName: 'o', Required = true)]
-        public string OutputPath { get; set; }
-
-        [Option(longName: "references", shortName: 'r', Required = true)]
-        public IEnumerable<string> References { get; set; }
-
-        [Option(longName: "depth", Default = DefaultValues.Depth)]
-        public DocumentationDepth Depth { get; set; }
-
-        [Option(longName: "ignored-names")]
-        public IEnumerable<string> IgnoredNames { get; set; }
-
-        [Option(longName: "no-class-hierarchy")]
-        public bool NoClassHierarchy { get; set; }
-
-        [Option(longName: "no-mark-obsolete")]
-        public bool NoMarkObsolete { get; set; }
-
-        [Option(longName: "no-precedence-for-system")]
-        public bool NoPrecedenceForSystem { get; set; }
-
         [Option(longName: "omit-containing-namespace")]
         public bool OmitContainingNamespace { get; set; }
 
@@ -45,11 +16,5 @@ namespace Roslynator.CommandLine
 
         [Option(longName: "root-directory-url")]
         public string RootDirectoryUrl { get; set; }
-
-        [Option(longName: "scroll-to-content")]
-        public bool ScrollToContent { get; set; }
-
-        [Option(longName: "visibility", Default = nameof(DocumentationVisibility.Publicly))]
-        public string Visibility { get; set; }
     }
 }

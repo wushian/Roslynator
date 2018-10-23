@@ -12,24 +12,24 @@ namespace Roslynator.CodeFixes
             ImmutableArray<string>.Empty,
             ImmutableArray<DiagnosticAnalyzer>.Empty,
             ImmutableArray<CodeFixProvider>.Empty,
-            FixResult.Skipped);
+            ProjectFixKind.Skipped);
 
         public static ProjectFixResult NoAnalyzers { get; } = new ProjectFixResult(
             ImmutableArray<string>.Empty,
             ImmutableArray<DiagnosticAnalyzer>.Empty,
             ImmutableArray<CodeFixProvider>.Empty,
-            FixResult.NoAnalyzers);
+            ProjectFixKind.NoAnalyzers);
 
         public ProjectFixResult(
             ImmutableArray<string> fixedDiagnosticIds,
             ImmutableArray<DiagnosticAnalyzer> analyzers,
             ImmutableArray<CodeFixProvider> fixers,
-            FixResult result)
+            ProjectFixKind kind)
         {
             FixedDiagnosticIds = fixedDiagnosticIds;
             Analyzers = analyzers;
             Fixers = fixers;
-            Result = result;
+            Kind = kind;
         }
 
         public ImmutableArray<string> FixedDiagnosticIds { get; }
@@ -38,6 +38,6 @@ namespace Roslynator.CodeFixes
 
         public ImmutableArray<CodeFixProvider> Fixers { get; }
 
-        public FixResult Result { get; }
+        public ProjectFixKind Kind { get; }
     }
 }
