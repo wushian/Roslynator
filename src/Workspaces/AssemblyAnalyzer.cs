@@ -6,8 +6,9 @@ using System.IO;
 using System.Reflection;
 using System.Security;
 
-namespace Roslynator.Analysis
+namespace Roslynator
 {
+    //TODO: rename AssemblyAnalyzer
     public static class AssemblyAnalyzer
     {
         public static IEnumerable<AnalyzerAssembly> Analyze(

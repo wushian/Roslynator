@@ -9,7 +9,6 @@ using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Roslynator.Analysis;
 using static Roslynator.CommandLine.CommandLineHelpers;
 using static Roslynator.ConsoleHelpers;
 

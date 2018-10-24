@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using static Roslynator.ConsoleHelpers;
 
-namespace Roslynator.Analysis
+namespace Roslynator
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public sealed class AnalyzerAssembly : IEquatable<AnalyzerAssembly>

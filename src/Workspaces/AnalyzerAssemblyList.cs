@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using static Roslynator.ConsoleHelpers;
 
-namespace Roslynator.Analysis
+namespace Roslynator
 {
     internal sealed class AnalyzerAssemblyList : IEnumerable<AnalyzerAssembly>
     {

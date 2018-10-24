@@ -2,8 +2,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeFixes.FixAll", "CodeFixes.FixAll\CodeFixes.FixAll.csproj", "{2478A559-0789-4182-B94C-052FC1A4652B}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8B17331B-D942-4A0C-82AA-23515F4B46C4}"
 	ProjectSection(SolutionItems) = preProject
 		..\docs\cli\fix-command.md = ..\docs\cli\fix-command.md
@@ -35,15 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandLine", "CommandLine\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documentation", "Documentation\Documentation.csproj", "{43B9DEFC-E6A9-4CA2-B19E-0C486A418831}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analysis", "Analysis\Analysis.csproj", "{F8922FB4-67DB-4EA6-932F-AAF9C7503EE7}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Metrics", "Metrics\Metrics.csproj", "{24EEA915-D156-4B36-B29D-B23191C7403F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Metrics.CommandLine", "Metrics.CommandLine\Metrics.CommandLine.csproj", "{E885DF39-69EB-42C2-861D-A392D60CF569}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Metrics.CSharp", "Metrics.CSharp\Metrics.CSharp.csproj", "{2A684D32-F9A0-47F9-941E-30BC9474EB75}"
-EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Metrics.VisualBasic", "Metrics.VisualBasic\Metrics.VisualBasic.vbproj", "{74362866-7B3E-4579-A257-60A16999ABD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Workspaces", "Workspaces\Workspaces.csproj", "{F8922FB4-67DB-4EA6-932F-AAF9C7503EE7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,10 +41,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2478A559-0789-4182-B94C-052FC1A4652B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2478A559-0789-4182-B94C-052FC1A4652B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2478A559-0789-4182-B94C-052FC1A4652B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2478A559-0789-4182-B94C-052FC1A4652B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{156C7E61-2199-44EB-BEFD-5507BEC5E359}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{156C7E61-2199-44EB-BEFD-5507BEC5E359}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1CA0874-A853-41B9-9E12-82850BDF4596}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -81,22 +67,6 @@ Global
 		{F8922FB4-67DB-4EA6-932F-AAF9C7503EE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8922FB4-67DB-4EA6-932F-AAF9C7503EE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8922FB4-67DB-4EA6-932F-AAF9C7503EE7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{24EEA915-D156-4B36-B29D-B23191C7403F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{24EEA915-D156-4B36-B29D-B23191C7403F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{24EEA915-D156-4B36-B29D-B23191C7403F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{24EEA915-D156-4B36-B29D-B23191C7403F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E885DF39-69EB-42C2-861D-A392D60CF569}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E885DF39-69EB-42C2-861D-A392D60CF569}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E885DF39-69EB-42C2-861D-A392D60CF569}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E885DF39-69EB-42C2-861D-A392D60CF569}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2A684D32-F9A0-47F9-941E-30BC9474EB75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2A684D32-F9A0-47F9-941E-30BC9474EB75}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2A684D32-F9A0-47F9-941E-30BC9474EB75}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2A684D32-F9A0-47F9-941E-30BC9474EB75}.Release|Any CPU.Build.0 = Release|Any CPU
-		{74362866-7B3E-4579-A257-60A16999ABD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{74362866-7B3E-4579-A257-60A16999ABD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{74362866-7B3E-4579-A257-60A16999ABD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{74362866-7B3E-4579-A257-60A16999ABD9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

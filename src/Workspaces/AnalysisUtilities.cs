@@ -6,13 +6,12 @@ using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Roslynator.Analysis;
 
 namespace Roslynator
 {
     internal static class AnalysisUtilities
     {
-        public static ImmutableArray<DiagnosticAnalyzer>GetAnalyzers(
+        public static ImmutableArray<DiagnosticAnalyzer> GetAnalyzers(
             Project project,
             AnalyzerAssemblyList analyzerAssemblies,
             AnalyzerAssemblyList analyzerReferences,

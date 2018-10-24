@@ -26,9 +26,11 @@ namespace Roslynator
 
         public bool IsSolution => _solution != null;
 
-        public Workspace Workspace => (IsProject) ? _project.Solution.Workspace : _solution?.Workspace;
-
         public string FilePath => (IsProject) ? _project.FilePath : _solution?.FilePath;
+
+        public VersionStamp Version => (IsProject) ? _project.Version : (_solution?.Version ?? default);
+
+        public Workspace Workspace => (IsProject) ? _project.Solution.Workspace : _solution?.Workspace;
 
         public Project AsProject() => _project;
 

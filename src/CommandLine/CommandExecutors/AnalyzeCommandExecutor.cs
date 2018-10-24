@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
-using Roslynator.Analysis;
+using Roslynator.Diagnostics;
 using static Roslynator.ConsoleHelpers;
 
 namespace Roslynator.CommandLine

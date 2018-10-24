@@ -14,7 +14,7 @@ using Microsoft.CodeAnalysis.Diagnostics.Telemetry;
 using Roslynator.CSharp;
 using static Roslynator.ConsoleHelpers;
 
-namespace Roslynator.Analysis
+namespace Roslynator.Diagnostics
 {
     public class CodeAnalyzer
     {

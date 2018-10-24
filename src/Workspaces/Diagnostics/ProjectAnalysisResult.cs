@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Diagnostics.Telemetry;
 
-namespace Roslynator.Analysis
+namespace Roslynator.Diagnostics
 {
     public sealed class ProjectAnalysisResult
     {

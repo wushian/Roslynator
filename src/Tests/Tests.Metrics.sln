@@ -2,9 +2,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Metrics.VisualBasic", "Metrics.VisualBasic\Metrics.VisualBasic.vbproj", "{2009CB07-05AD-411D-8E4C-8A86CC0B1957}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Tests.Metrics.VisualBasic", "Tests.Metrics.VisualBasic\Tests.Metrics.VisualBasic.vbproj", "{2009CB07-05AD-411D-8E4C-8A86CC0B1957}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Metrics.CSharp", "Metrics.CSharp\Metrics.CSharp.csproj", "{D14E8671-BBBF-4464-817C-92010404FD9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Metrics.CSharp", "Tests.Metrics.CSharp\Tests.Metrics.CSharp.csproj", "{D14E8671-BBBF-4464-817C-92010404FD9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

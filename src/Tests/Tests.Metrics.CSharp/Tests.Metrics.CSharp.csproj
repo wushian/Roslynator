@@ -5,21 +5,15 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyName>Roslynator.Metrics</AssemblyName>
+    <AssemblyName>Roslynator.MetricsTest</AssemblyName>
     <RootNamespace>Roslynator.Metrics</RootNamespace>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Metrics.snk</AssemblyOriginatorKeyFile>
-    <CodeAnalysisRuleSet>..\global.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\global.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.9.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="2.9.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\CSharp\CSharp.csproj" />
   </ItemGroup>
 
 </Project>

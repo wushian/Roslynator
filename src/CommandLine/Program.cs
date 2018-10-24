@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using CommandLine;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Roslynator.Analysis;
+using Roslynator.Diagnostics;
 using Roslynator.CodeFixes;
 using Roslynator.Documentation;
 using Roslynator.Documentation.Markdown;
