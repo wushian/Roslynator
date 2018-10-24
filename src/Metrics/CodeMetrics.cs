@@ -4,7 +4,9 @@ namespace Roslynator.Metrics
 {
     public readonly struct CodeMetrics
     {
-        public CodeMetrics(
+        internal static CodeMetrics NotAvailable { get; } = new CodeMetrics(-1, 0, 0, 0, 0, 0);
+
+        internal CodeMetrics(
             int totalLineCount,
             int codeLineCount,
             int whiteSpaceLineCount,

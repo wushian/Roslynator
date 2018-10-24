@@ -4,19 +4,9 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    [Verb("loc")]
     public class AbstractLinesOfCodeCommandLineOptions : MSBuildCommandLineOptions
     {
-        [Option(longName: "include-comments")]
-        public bool IncludeComments { get; set; }
-
         [Option(longName: "include-generated")]
         public bool IncludeGenerated { get; set; }
-
-        [Option(longName: "include-preprocessor-directives")]
-        public bool IncludePreprocessorDirectives { get; set; }
-
-        [Option(longName: "include-whitespace")]
-        public bool IncludeWhiteSpace { get; set; }
     }
 }

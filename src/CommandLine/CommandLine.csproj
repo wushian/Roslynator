@@ -24,6 +24,12 @@
     <TrimFilesRootFiles Include="System.Runtime.InteropServices.RuntimeInformation.dll" />
     <TrimFilesRootFiles Include="System.Diagnostics.Tracing.dll" />
     <TrimFilesRootFiles Include="System.Composition.Convention.dll" />
+    <TrimFilesRootFiles Include="Roslynator.Common.dll" />
+    <TrimFilesRootFiles Include="Roslynator.Common.Workspaces.dll" />
+    <TrimFilesRootFiles Include="Roslynator.CSharp.dll" />
+    <TrimFilesRootFiles Include="Roslynator.CSharp.Workspaces.dll" />
+    <TrimFilesRootFiles Include="Roslynator.CSharp.Analyzers.dll" />
+    <TrimFilesRootFiles Include="Roslynator.CSharp.Analyzers.CodeFixes.dll" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -47,6 +53,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Analyzers.CodeFixes\Analyzers.CodeFixes.csproj" />
     <ProjectReference Include="..\Documentation\Documentation.csproj" />
     <ProjectReference Include="..\CodeFixes.FixAll\CodeFixes.FixAll.csproj" />
     <ProjectReference Include="..\Analysis\Analysis.csproj" />

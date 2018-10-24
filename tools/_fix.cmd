@@ -5,13 +5,7 @@
 set _analyzersDir=..\src\Analyzers.CodeFixes\bin\Debug\netstandard1.3\
 
 "..\src\CommandLine\bin\Debug\net461\roslynator" fix "..\src\CommandLine.sln" ^
- --analyzer-assemblies ^
-  "%_analyzersDir%Roslynator.Common.dll" ^
-  "%_analyzersDir%Roslynator.Common.Workspaces.dll" ^
-  "%_analyzersDir%Roslynator.CSharp.Analyzers.CodeFixes.dll" ^
-  "%_analyzersDir%Roslynator.CSharp.Analyzers.dll" ^
-  "%_analyzersDir%Roslynator.CSharp.dll" ^
-  "%_analyzersDir%Roslynator.CSharp.Workspaces.dll" ^
+ --use-roslynator-analyzers
  --ignore-analyzer-references ^
  --format
 

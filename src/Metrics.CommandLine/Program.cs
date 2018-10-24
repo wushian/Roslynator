@@ -64,7 +64,7 @@ namespace Roslynator.CommandLine
 
                 foreach (Project project in solution.Projects)
                 {
-                    CodeMetricsCounter counter = CodeMetricsCounter.GetPhysicalLinesCounter(project.Language);
+                    CodeMetricsCounter counter = CodeMetricsCounters.GetPhysicalLinesCounter(project.Language);
 
                     if (counter != null)
                     {

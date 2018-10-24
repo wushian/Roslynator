@@ -5,7 +5,6 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: NormalizeLineEndings
     [Verb("fix")]
     public class FixCommandLineOptions : MSBuildCommandLineOptions
     {
@@ -32,5 +31,8 @@ namespace Roslynator.CommandLine
 
         [Option(longName: "minimal-severity")]
         public string MinimalSeverity { get; set; }
+
+        [Option(longName: "use-roslynator-analyzers")]
+        public bool UseRoslynatorAnalyzers { get; set; }
     }
 }

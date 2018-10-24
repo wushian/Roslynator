@@ -157,7 +157,7 @@ namespace Roslynator.Metrics.CSharp
                     }
                 }
 
-                return false;
+                return true;
             }
 
             bool AnalyzeTrailingTrivia(in SyntaxTriviaList trailingTrivia)
@@ -191,7 +191,7 @@ namespace Roslynator.Metrics.CSharp
                     }
                 }
 
-                return false;
+                return true;
             }
         }
     }

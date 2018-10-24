@@ -18,7 +18,7 @@ namespace Roslynator.Metrics.VisualBasic
 
             walker.Visit(node);
 
-            int whiteSpaceLineCount = CountWhiteSpaceLines(node, sourceText, options);
+            int whiteSpaceLineCount = (options.IncludeWhiteSpace) ? 0 : CountWhiteSpaceLines(node, sourceText);
 
             return new CodeMetrics(
                 totalLineCount: lines.Count,

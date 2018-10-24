@@ -19,6 +19,7 @@ roslynator fix <PROJECT|SOLUTION>
 [--minimal-severity]
 [--msbuild-path]
 [-p|--properties]
+[--use-roslynator-analyzers]
 ```
 
 ## Arguments
@@ -81,6 +82,10 @@ Defines a path to MSBuild.
 **`-p|--properties`** `<NAME=VALUE>`
 
 Defines one or more MSBuild properties.
+
+**`--use-roslynator-analyzers`**
+
+Indicates whether code analysis should use analyzers from nuget package [Roslynator.Analyzers](https://nuget.org/packages/Roslynator.Analyzers).
 
 ## See Also
 

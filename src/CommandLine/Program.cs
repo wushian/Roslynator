@@ -37,7 +37,7 @@ namespace Roslynator.CommandLine
                     AnalyzeCommandLineOptions,
                     AnalyzeAssemblyCommandLineOptions,
                     FormatCommandLineOptions,
-                    LinesOfCodeCommandLineOptions,
+                    PhysicalLinesOfCodeCommandLineOptions,
                     LogicalLinesOfCodeCommandLineOptions,
                     GenerateDocCommandLineOptions,
                     GenerateDeclarationsCommandLineOptions,
@@ -58,7 +58,7 @@ namespace Roslynator.CommandLine
                     (AnalyzeCommandLineOptions options) => AnalyzeAsync(options).Result,
                     (AnalyzeAssemblyCommandLineOptions options) => AnalyzeAssemblyCommandExecutor.Execute(options),
                     (FormatCommandLineOptions options) => FormatAsync(options).Result,
-                    (LinesOfCodeCommandLineOptions options) => LinesOrCodeAsync(options).Result,
+                    (PhysicalLinesOfCodeCommandLineOptions options) => PhysicalLinesOrCodeAsync(options).Result,
                     (LogicalLinesOfCodeCommandLineOptions options) => LogicalLinesOrCodeAsync(options).Result,
                     (GenerateDocCommandLineOptions options) => GenerateDoc(options),
                     (GenerateDeclarationsCommandLineOptions options) => GenerateDeclarations(options),
@@ -119,9 +119,9 @@ namespace Roslynator.CommandLine
             return (result.Success) ? 0 : 1;
         }
 
-        private static async Task<int> LinesOrCodeAsync(LinesOfCodeCommandLineOptions options)
+        private static async Task<int> PhysicalLinesOrCodeAsync(PhysicalLinesOfCodeCommandLineOptions options)
         {
-            var executor = new LinesOfCodeCommandExecutor(options);
+            var executor = new PhysicalLinesOfCodeCommandExecutor(options);
 
             CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
 

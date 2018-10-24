@@ -1,7 +1,8 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -12,14 +13,14 @@ using static Roslynator.ConsoleHelpers;
 
 namespace Roslynator.CommandLine
 {
-    internal class LinesOfCodeCommandExecutor : MSBuildWorkspaceCommandExecutor
+    internal class PhysicalLinesOfCodeCommandExecutor : AbstractLinesOfCodeCommandExecutor
     {
-        public LinesOfCodeCommandExecutor(LinesOfCodeCommandLineOptions options)
+        public PhysicalLinesOfCodeCommandExecutor(PhysicalLinesOfCodeCommandLineOptions options)
         {
             Options = options;
         }
 
-        public LinesOfCodeCommandLineOptions Options { get; }
+        public PhysicalLinesOfCodeCommandLineOptions Options { get; }
 
         public override async Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default)
         {
@@ -36,13 +37,15 @@ namespace Roslynator.CommandLine
 
                 WriteLine($"Count lines for '{project.FilePath}'", ConsoleColor.Cyan);
 
-                CodeMetricsCounter counter = CodeMetricsCounter.GetPhysicalLinesCounter(project.Name);
+                CodeMetricsCounter counter = CodeMetricsCounters.GetPhysicalLinesCounter(project.Language);
 
                 if (counter != null)
                 {
+                    Stopwatch stopwatch = Stopwatch.StartNew();
+
                     CodeMetrics metrics = await counter.CountLinesAsync(project, codeMetricsOptions, cancellationToken);
 
-                    WriteLine($"Done counting lines for '{project.FilePath}'", ConsoleColor.Green);
+                    stopwatch.Stop();
 
                     WriteLine();
 
@@ -55,6 +58,11 @@ namespace Roslynator.CommandLine
                         metrics.TotalLineCount);
 
                     WriteLine();
+                    WriteLine($"Done counting lines for '{project.FilePath}' {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green);
+                }
+                else
+                {
+                    WriteLine($"Cannot count lines for language '{project.Language}'", ConsoleColor.Yellow);
                 }
             }
             else
@@ -63,48 +71,32 @@ namespace Roslynator.CommandLine
 
                 WriteLine($"Count lines for solution '{solution.FilePath}'", ConsoleColor.Cyan);
 
-                var projectsMetrics = new ConcurrentBag<(Project project, CodeMetrics metrics)>();
+                IEnumerable<Project> projects = FilterProjects(solution, Options.IgnoredProjects, Options.Language);
 
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
-                Parallel.ForEach(FilterProjects(solution, Options.IgnoredProjects, Options.Language), project =>
-                {
-                    WriteLine($"  Analyze '{project.Name}'");
+                ImmutableDictionary<ProjectId, CodeMetrics> projectsMetrics = CodeMetricsCounter.CountPhysicalLinesInParallel(projects, codeMetricsOptions, cancellationToken);
 
-                    CodeMetricsCounter counter = CodeMetricsCounter.GetPhysicalLinesCounter(project.Language);
-
-                    if (counter != null)
-                    {
-                        projectsMetrics.Add((project, counter.CountLinesAsync(project, codeMetricsOptions, cancellationToken).Result));
-                    }
-                });
-
-                WriteLine($"Done counting lines for solution '{solution.FilePath}' {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green);
+                stopwatch.Stop();
 
                 WriteLine();
                 WriteLine("Lines of code by project:");
 
-                int maxDigits = projectsMetrics.Max(f => f.metrics.CodeLineCount).ToString("n0").Length;
-
-                int maxNameLength = projectsMetrics.Max(f => f.project.Name.Length);
-
-                foreach ((Project project, CodeMetrics metrics) in projectsMetrics.OrderByDescending(f => f.metrics.CodeLineCount))
-                {
-                    WriteLine($"{metrics.CodeLineCount.ToString("n0").PadLeft(maxDigits)} {project.Name.PadRight(maxNameLength)} {project.Language}");
-                }
+                WriteLinesOfCode(solution, projectsMetrics);
 
                 WriteLine();
                 WriteLine("Summary:");
 
                 WriteMetrics(
-                    projectsMetrics.Sum(f => f.metrics.CodeLineCount),
-                    projectsMetrics.Sum(f => f.metrics.BlockBoundaryLineCount),
-                    projectsMetrics.Sum(f => f.metrics.WhiteSpaceLineCount),
-                    projectsMetrics.Sum(f => f.metrics.CommentLineCount),
-                    projectsMetrics.Sum(f => f.metrics.PreprocessorDirectiveLineCount),
-                    projectsMetrics.Sum(f => f.metrics.TotalLineCount));
+                    projectsMetrics.Sum(f => f.Value.CodeLineCount),
+                    projectsMetrics.Sum(f => f.Value.BlockBoundaryLineCount),
+                    projectsMetrics.Sum(f => f.Value.WhiteSpaceLineCount),
+                    projectsMetrics.Sum(f => f.Value.CommentLineCount),
+                    projectsMetrics.Sum(f => f.Value.PreprocessorDirectiveLineCount),
+                    projectsMetrics.Sum(f => f.Value.TotalLineCount));
 
                 WriteLine();
+                WriteLine($"Done counting lines for solution '{solution.FilePath}' {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green);
             }
 
             return new CommandResult(true);
