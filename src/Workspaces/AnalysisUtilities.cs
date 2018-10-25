@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
@@ -130,10 +131,15 @@ namespace Roslynator
             if (analyzers.Any()
                 && loadFixers)
             {
-                //TODO: filter fixers
+                HashSet<string> diagnosticIds = analyzers
+                    .SelectMany(f => f.SupportedDiagnostics)
+                    .Select(f => f.Id)
+                    .ToHashSet();
+
                 fixers = analyzerAssemblies
                     .GetFixers(language)
                     .Concat(analyzerReferences.GetOrAddFixers(assemblies, language))
+                    .Where(f => f.FixableDiagnosticIds.Any(id => diagnosticIds.Contains(id)))
                     .ToImmutableArray();
             }
 

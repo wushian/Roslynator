@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics.Telemetry;
 
@@ -65,6 +66,23 @@ namespace Roslynator
             }
         }
 
+        public static ConsoleColor GetColor(this DiagnosticSeverity diagnosticSeverity)
+        {
+            switch (diagnosticSeverity)
+            {
+                case DiagnosticSeverity.Hidden:
+                    return ConsoleColor.DarkGray;
+                case DiagnosticSeverity.Info:
+                    return ConsoleColor.Cyan;
+                case DiagnosticSeverity.Warning:
+                    return ConsoleColor.Yellow;
+                case DiagnosticSeverity.Error:
+                    return ConsoleColor.Red;
+                default:
+                    throw new InvalidOperationException($"Unknown diagnostic severity '{diagnosticSeverity}'.");
+            }
+        }
+
         public static DiagnosticSeverity ToDiagnosticSeverity(this ReportDiagnostic reportDiagnostic)
         {
             switch (reportDiagnostic)
@@ -80,6 +98,16 @@ namespace Roslynator
                 default:
                     throw new ArgumentException("", nameof(reportDiagnostic));
             }
+        }
+
+        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> collection)
+        {
+            return new HashSet<T>(collection);
+        }
+
+        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> collection, IEqualityComparer<T> comparer)
+        {
+            return new HashSet<T>(collection, comparer);
         }
     }
 }

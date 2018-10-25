@@ -35,19 +35,19 @@ namespace Roslynator.CommandLine
             {
                 Project project = projectOrSolution.AsProject();
 
-                WriteLine($"Count lines for '{project.FilePath}'", ConsoleColor.Cyan);
-
                 CodeMetricsCounter counter = CodeMetricsCounters.GetPhysicalLinesCounter(project.Language);
 
                 if (counter != null)
                 {
+                    WriteLine($"Count lines for '{project.FilePath}'", ConsoleColor.Cyan, Verbosity.Minimal);
+
                     Stopwatch stopwatch = Stopwatch.StartNew();
 
                     CodeMetrics metrics = await counter.CountLinesAsync(project, codeMetricsOptions, cancellationToken);
 
                     stopwatch.Stop();
 
-                    WriteLine();
+                    WriteLine(Verbosity.Minimal);
 
                     WriteMetrics(
                         metrics.CodeLineCount,
@@ -57,19 +57,19 @@ namespace Roslynator.CommandLine
                         metrics.PreprocessorDirectiveLineCount,
                         metrics.TotalLineCount);
 
-                    WriteLine();
-                    WriteLine($"Done counting lines for '{project.FilePath}' {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green);
+                    WriteLine(Verbosity.Minimal);
+                    WriteLine($"Done counting lines for '{project.FilePath}' {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Normal);
                 }
                 else
                 {
-                    WriteLine($"Cannot count lines for language '{project.Language}'", ConsoleColor.Yellow);
+                    WriteLine($"Cannot count lines for '{project.FilePath}' language '{project.Language}' is not supported", ConsoleColor.Yellow, Verbosity.Minimal);
                 }
             }
             else
             {
                 Solution solution = projectOrSolution.AsSolution();
 
-                WriteLine($"Count lines for solution '{solution.FilePath}'", ConsoleColor.Cyan);
+                WriteLine($"Count lines for solution '{solution.FilePath}'", ConsoleColor.Cyan, Verbosity.Minimal);
 
                 IEnumerable<Project> projects = FilterProjects(solution, Options.IgnoredProjects, Options.Language);
 
@@ -79,13 +79,16 @@ namespace Roslynator.CommandLine
 
                 stopwatch.Stop();
 
-                WriteLine();
-                WriteLine("Lines of code by project:");
+                if (projectsMetrics.Count > 0)
+                {
+                    WriteLine(Verbosity.Normal);
+                    WriteLine("Lines of code by project:", Verbosity.Normal);
 
-                WriteLinesOfCode(solution, projectsMetrics);
+                    WriteLinesOfCode(solution, projectsMetrics);
+                }
 
-                WriteLine();
-                WriteLine("Summary:");
+                WriteLine(Verbosity.Minimal);
+                WriteLine("Summary:", Verbosity.Minimal);
 
                 WriteMetrics(
                     projectsMetrics.Sum(f => f.Value.CodeLineCount),
@@ -95,8 +98,8 @@ namespace Roslynator.CommandLine
                     projectsMetrics.Sum(f => f.Value.PreprocessorDirectiveLineCount),
                     projectsMetrics.Sum(f => f.Value.TotalLineCount));
 
-                WriteLine();
-                WriteLine($"Done counting lines for solution '{solution.FilePath}' {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green);
+                WriteLine(Verbosity.Minimal);
+                WriteLine($"Done counting lines for solution '{solution.FilePath}' {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Minimal);
             }
 
             return new CommandResult(true);
@@ -122,31 +125,31 @@ namespace Roslynator.CommandLine
                 || !Options.IncludeComments
                 || !Options.IncludePreprocessorDirectives)
             {
-                WriteLine($"{totalCodeLines.PadLeft(maxDigits)} {totalCodeLineCount / (double)totalLineCount,4:P0} lines of code");
+                WriteLine($"{totalCodeLines.PadLeft(maxDigits)} {totalCodeLineCount / (double)totalLineCount,4:P0} lines of code", Verbosity.Minimal);
             }
             else
             {
-                WriteLine($"{totalCodeLines.PadLeft(maxDigits)} lines of code");
+                WriteLine($"{totalCodeLines.PadLeft(maxDigits)} lines of code", Verbosity.Minimal);
             }
 
             if (Options.IgnoreBlockBoundary)
-                WriteLine($"{totalBlockBoundaryLines.PadLeft(maxDigits)} {totalBlockBoundaryLineCount / (double)totalLineCount,4:P0} block boundary lines");
+                WriteLine($"{totalBlockBoundaryLines.PadLeft(maxDigits)} {totalBlockBoundaryLineCount / (double)totalLineCount,4:P0} block boundary lines", Verbosity.Minimal);
 
             if (!Options.IncludeWhiteSpace)
-                WriteLine($"{totalWhiteSpaceLines.PadLeft(maxDigits)} {totalWhiteSpaceLineCount / (double)totalLineCount,4:P0} white-space lines");
+                WriteLine($"{totalWhiteSpaceLines.PadLeft(maxDigits)} {totalWhiteSpaceLineCount / (double)totalLineCount,4:P0} white-space lines", Verbosity.Minimal);
 
             if (!Options.IncludeComments)
-                WriteLine($"{totalCommentLines.PadLeft(maxDigits)} {totalCommentLineCount / (double)totalLineCount,4:P0} comment lines");
+                WriteLine($"{totalCommentLines.PadLeft(maxDigits)} {totalCommentLineCount / (double)totalLineCount,4:P0} comment lines", Verbosity.Minimal);
 
             if (!Options.IncludePreprocessorDirectives)
-                WriteLine($"{totalPreprocessorDirectiveLines.PadLeft(maxDigits)} {totalPreprocessorDirectiveLineCount / (double)totalLineCount,4:P0} preprocessor directive lines");
+                WriteLine($"{totalPreprocessorDirectiveLines.PadLeft(maxDigits)} {totalPreprocessorDirectiveLineCount / (double)totalLineCount,4:P0} preprocessor directive lines", Verbosity.Minimal);
 
-            WriteLine($"{totalLines.PadLeft(maxDigits)} {totalLineCount / (double)totalLineCount,4:P0} total lines");
+            WriteLine($"{totalLines.PadLeft(maxDigits)} {totalLineCount / (double)totalLineCount,4:P0} total lines", Verbosity.Minimal);
         }
 
         protected override void OperationCanceled(OperationCanceledException ex)
         {
-            WriteLine("Lines counting was canceled.");
+            WriteLine("Lines counting was canceled.", Verbosity.Quiet);
         }
     }
 }

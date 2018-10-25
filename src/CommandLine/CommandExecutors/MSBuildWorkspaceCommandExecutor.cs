@@ -31,11 +31,9 @@ namespace Roslynator.CommandLine
 
                 workspace.WorkspaceFailed += WorkspaceFailed;
 
-                workspace.WorkspaceFailed += (o, e) => WriteLine(e.Diagnostic.Message, ConsoleColor.Yellow);
-
                 bool isSolution = string.Equals(Path.GetExtension(path), ".sln", StringComparison.OrdinalIgnoreCase);
 
-                WriteLine($"Load {((isSolution) ? "solution" : "project")} '{path}'", ConsoleColor.Cyan);
+                WriteLine($"Load {((isSolution) ? "solution" : "project")} '{path}'", ConsoleColor.Cyan, Verbosity.Minimal);
 
                 try
                 {
@@ -66,7 +64,7 @@ namespace Roslynator.CommandLine
                         if (ex is FileNotFoundException
                             || ex is InvalidOperationException)
                         {
-                            WriteLine(ex.ToString(), ConsoleColor.Red);
+                            WriteLine(ex.ToString(), ConsoleColor.Red, Verbosity.Minimal);
                             return CommandResult.Fail;
                         }
                         else
@@ -75,7 +73,7 @@ namespace Roslynator.CommandLine
                         }
                     }
 
-                    WriteLine($"Done loading {((isSolution) ? "solution" : "project")} '{path}'", ConsoleColor.Green);
+                    WriteLine($"Done loading {((isSolution) ? "solution" : "project")} '{path}'", ConsoleColor.Green, Verbosity.Minimal);
 
                     return await ExecuteAsync(projectOrSolution, cancellationToken);
                 }
@@ -94,12 +92,12 @@ namespace Roslynator.CommandLine
 
         protected virtual void OperationCanceled(OperationCanceledException ex)
         {
-            WriteLine("Operation was canceled.");
+            WriteLine("Operation was canceled.", Verbosity.Quiet);
         }
 
         protected virtual void WorkspaceFailed(object sender, WorkspaceDiagnosticEventArgs e)
         {
-            WriteLine(e.Diagnostic.Message, ConsoleColor.Yellow);
+            WriteLine(e.Diagnostic.Message, ConsoleColor.Yellow, Verbosity.Normal);
         }
 
         private static MSBuildWorkspace CreateMSBuildWorkspace(string msbuildPath, IEnumerable<string> properties)
@@ -116,11 +114,11 @@ namespace Roslynator.CommandLine
 
                 if (instance == null)
                 {
-                    WriteLine("MSBuild location not found. Use option '--msbuild-path' to specify MSBuild location", ConsoleColor.Red);
+                    WriteLine("MSBuild location not found. Use option '--msbuild-path' to specify MSBuild location", ConsoleColor.Red, Verbosity.Quiet);
                     return null;
                 }
 
-                WriteLine($"MSBuild location is '{instance.MSBuildPath}'");
+                WriteLine($"MSBuild location is '{instance.MSBuildPath}'", Verbosity.Detailed);
 
                 MSBuildLocator.RegisterInstance(instance);
             }
@@ -146,7 +144,7 @@ namespace Roslynator.CommandLine
                 if (ignoredProjectNames.Contains(project.Name)
                     || (language != null && language != project.Language))
                 {
-                    WriteLine($"  Skip '{project.Name}'", ConsoleColor.DarkGray);
+                    WriteLine($"  Skip '{project.Name}'", ConsoleColor.DarkGray, Verbosity.Normal);
                     continue;
                 }
 
@@ -165,7 +163,7 @@ namespace Roslynator.CommandLine
                 if (value.TargetFramework != null)
                     text += $" ({value.TargetFramework})";
 
-                WriteLine($"  {value.Operation,-9} {value.ElapsedTime:mm\\:ss\\.ff}  {text}");
+                WriteLine($"  {value.Operation,-9} {value.ElapsedTime:mm\\:ss\\.ff}  {text}", Verbosity.Detailed);
             }
         }
     }

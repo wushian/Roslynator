@@ -78,7 +78,7 @@ namespace Roslynator.CommandLine
 
                 var codeFixer = new CodeFixer(solution, analyzerAssemblies: analyzerAssemblies, options: codeFixerOptions);
 
-                WriteLine($"Fix project '{project.Name}'", ConsoleColor.Cyan);
+                WriteLine($"Fix project '{project.Name}'", ConsoleColor.Cyan, Verbosity.Minimal);
 
                 await codeFixer.FixProjectAsync(project, cancellationToken);
             }
@@ -96,7 +96,7 @@ namespace Roslynator.CommandLine
 
         protected override void OperationCanceled(OperationCanceledException ex)
         {
-            WriteLine("Fixing was canceled.");
+            WriteLine("Fixing was canceled.", Verbosity.Quiet);
         }
     }
 }

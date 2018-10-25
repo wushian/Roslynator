@@ -54,9 +54,11 @@ namespace Roslynator.CommandLine
 
                 string solutionDirectory = Path.GetDirectoryName(project.Solution.FilePath);
 
-                WriteLine($"  Analyze '{project.Name}'");
+                WriteLine($"  Analyze '{project.Name}'", Verbosity.Minimal);
 
                 Project newProject = await CodeFormatter.FormatProjectAsync(project, options, cancellationToken);
+
+                bool hasChanges = false;
 
                 foreach (DocumentId documentId in newProject
                     .GetChanges(project)
@@ -67,12 +69,28 @@ namespace Roslynator.CommandLine
                     IEnumerable<TextChange> textChanges = await document.GetTextChangesAsync(project.GetDocument(documentId));
 
                     if (textChanges.Any())
-                        WriteLine($"  Format '{PathUtilities.MakeRelativePath(document.FilePath, solutionDirectory)}'");
+                    {
+                        hasChanges = true;
+
+                        WriteLine($"  Format '{PathUtilities.MakeRelativePath(document.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
+#if DEBUG
+                        await VerifySyntaxTreeEquivalence(document, project, cancellationToken);
+#endif
+                    }
                 }
 
-                bool success = workspace.TryApplyChanges(newProject.Solution);
+                if (hasChanges)
+                {
+                    Solution solution = newProject.Solution;
 
-                Debug.Assert(success, "Cannot apply changes to a solution.");
+                    WriteLine($"Apply changes to solution '{solution.FilePath}'", Verbosity.Normal);
+
+                    if (!workspace.TryApplyChanges(solution))
+                    {
+                        Debug.Fail($"Cannot apply changes to solution '{solution.FilePath}'");
+                        WriteLine($"Cannot apply changes to solution '{solution.FilePath}'", ConsoleColor.Yellow, Verbosity.Detailed);
+                    }
+                }
             }
             else
             {
@@ -80,7 +98,7 @@ namespace Roslynator.CommandLine
 
                 string solutionDirectory = Path.GetDirectoryName(solution.FilePath);
 
-                WriteLine($"Analyze solution '{projectOrSolution.FilePath}'", ConsoleColor.Cyan);
+                WriteLine($"Analyze solution '{projectOrSolution.FilePath}'", ConsoleColor.Cyan, Verbosity.Minimal);
 
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
@@ -88,7 +106,7 @@ namespace Roslynator.CommandLine
 
                 Parallel.ForEach(FilterProjects(solution, Options.IgnoredProjects, Options.Language), project =>
                 {
-                    WriteLine($"  Analyze '{project.Name}'");
+                    WriteLine($"  Analyze '{project.Name}'", Verbosity.Minimal);
 
                     Project newProject = CodeFormatter.FormatProjectAsync(project, options, cancellationToken).Result;
 
@@ -102,29 +120,36 @@ namespace Roslynator.CommandLine
 
                         if (textChanges.Any())
                         {
-                            WriteLine($"  Format '{PathUtilities.MakeRelativePath(document.FilePath, solutionDirectory)}'");
-
+                            WriteLine($"  Format '{PathUtilities.MakeRelativePath(document.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
+#if DEBUG
+                            VerifySyntaxTreeEquivalence(document, project, cancellationToken).Wait(cancellationToken);
+#endif
                             SourceText sourceText = document.GetTextAsync(cancellationToken).Result;
 
                             changedDocumentIds.Add((document.Id, sourceText));
                         }
                     }
 
-                    WriteLine($"  Done analyzing '{project.Name}'");
+                    WriteLine($"  Done analyzing '{project.Name}'", Verbosity.Normal);
                 });
 
-                foreach ((DocumentId documentId, SourceText sourceText) in changedDocumentIds)
+                if (changedDocumentIds.Count > 0)
                 {
-                    solution = solution.WithDocumentText(documentId, sourceText);
+                    foreach ((DocumentId documentId, SourceText sourceText) in changedDocumentIds)
+                    {
+                        solution = solution.WithDocumentText(documentId, sourceText);
+                    }
+
+                    WriteLine($"Apply changes to solution '{solution.FilePath}'", Verbosity.Normal);
+
+                    if (!workspace.TryApplyChanges(solution))
+                    {
+                        Debug.Fail($"Cannot apply changes to solution '{solution.FilePath}'");
+                        WriteLine($"Cannot apply changes to solution '{solution.FilePath}'", ConsoleColor.Yellow, Verbosity.Detailed);
+                    }
                 }
 
-                WriteLine($"Apply changes to solution '{solution.FilePath}'");
-
-                bool success = workspace.TryApplyChanges(solution);
-
-                Debug.Assert(success, $"Cannot apply changes to solution '{solution.FilePath}'");
-
-                WriteLine($"Done formatting solution '{solution.FilePath}' {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green);
+                WriteLine($"Done formatting solution '{solution.FilePath}' {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Minimal);
             }
 
             return new CommandResult(true);
@@ -132,7 +157,61 @@ namespace Roslynator.CommandLine
 
         protected override void OperationCanceled(OperationCanceledException ex)
         {
-            WriteLine("Formatting was canceled.");
+            WriteLine("Formatting was canceled.", Verbosity.Minimal);
+        }
+
+        private static async Task VerifySyntaxTreeEquivalence(
+            Document newDocument,
+            Project oldProject,
+            CancellationToken cancellationToken)
+        {
+            if (!string.Equals(
+                (await newDocument.GetSyntaxRootAsync(cancellationToken)).NormalizeWhitespace("", false).ToFullString(),
+                (await oldProject.GetDocument(newDocument.Id).GetSyntaxRootAsync(cancellationToken)).NormalizeWhitespace("", false).ToFullString(),
+                StringComparison.Ordinal))
+            {
+                WriteLine("Normalized syntax roots are not equivalent", ConsoleColor.Yellow);
+            }
+            else
+            {
+                WriteLine("Normalized syntax roots are equivalent");
+            }
+
+            switch (oldProject.Language)
+            {
+                case LanguageNames.CSharp:
+                    {
+                        if (!Microsoft.CodeAnalysis.CSharp.SyntaxFactory.AreEquivalent(
+                            await newDocument.GetSyntaxTreeAsync(cancellationToken),
+                            await oldProject.GetDocument(newDocument.Id).GetSyntaxTreeAsync(cancellationToken),
+                            topLevel: false))
+                        {
+                            WriteLine("Syntax trees are not equivalent", ConsoleColor.Yellow);
+                        }
+                        else
+                        {
+                            WriteLine("Syntax trees are equivalent");
+                        }
+
+                        break;
+                    }
+                case LanguageNames.VisualBasic:
+                    {
+                        if (!Microsoft.CodeAnalysis.VisualBasic.SyntaxFactory.AreEquivalent(
+                            await newDocument.GetSyntaxTreeAsync(cancellationToken),
+                            await oldProject.GetDocument(newDocument.Id).GetSyntaxTreeAsync(cancellationToken),
+                            topLevel: false))
+                        {
+                            WriteLine("Syntax trees are not equivalent", ConsoleColor.Yellow);
+                        }
+                        else
+                        {
+                            WriteLine("Syntax trees are equivalent");
+                        }
+
+                        break;
+                    }
+            }
         }
     }
 }

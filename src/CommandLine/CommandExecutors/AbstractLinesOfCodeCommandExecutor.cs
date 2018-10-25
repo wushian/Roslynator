@@ -25,7 +25,7 @@ namespace Roslynator.CommandLine
                     ? codeMetrics.CodeLineCount.ToString("n0").PadLeft(maxDigits)
                     : "-";
 
-                WriteLine($"{count} {project.Name.PadRight(maxNameLength)} {project.Language}");
+                WriteLine($"{count} {project.Name.PadRight(maxNameLength)} {project.Language}", Verbosity.Normal);
             }
         }
     }

@@ -35,7 +35,7 @@ namespace Roslynator
 
         internal void LoadFrom(string path, bool loadAnalyzers = true, bool loadFixers = true)
         {
-            foreach (AnalyzerAssembly analyzerAssembly in AssemblyAnalyzer.Analyze(path, loadAnalyzers: loadAnalyzers, loadFixers: loadFixers))
+            foreach (AnalyzerAssembly analyzerAssembly in AnalyzerAssembly.LoadFiles(path, loadAnalyzers: loadAnalyzers, loadFixers: loadFixers))
             {
                 Add(analyzerAssembly);
             }
@@ -54,7 +54,7 @@ namespace Roslynator
 
         private void AddImpl(AnalyzerAssembly analyzerAssembly)
         {
-            WriteLine($"Add analyzer assembly '{analyzerAssembly.FullName}'", ConsoleColor.DarkGray);
+            WriteLine($"Add analyzer assembly '{analyzerAssembly.FullName}'", ConsoleColor.DarkGray, Verbosity.Detailed);
 
             _analyzerAssemblies.Add(analyzerAssembly.FullName, analyzerAssembly);
         }

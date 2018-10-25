@@ -25,13 +25,11 @@ namespace Roslynator.CommandLine
     {
         private static readonly Encoding _defaultEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
 
-        private static void Main(string[] args)
+        private static int Main(string[] args)
         {
-            WriteLine($"Roslynator Command Line Tool version {typeof(Program).GetTypeInfo().Assembly.GetName().Version}");
-            WriteLine("Copyright (c) Josef Pihrt. All rights reserved.");
-            WriteLine();
-
-            StreamWriter logWriter = null;
+            WriteLine($"Roslynator Command Line Tool version {typeof(Program).GetTypeInfo().Assembly.GetName().Version}", Verbosity.Quiet);
+            WriteLine("Copyright (c) Josef Pihrt. All rights reserved.", Verbosity.Quiet);
+            WriteLine(Verbosity.Quiet);
 
             try
             {
@@ -45,17 +43,38 @@ namespace Roslynator.CommandLine
                     GenerateDeclarationsCommandLineOptions,
                     GenerateDocRootCommandLineOptions>(args);
 
+                bool verbosityParsed = false;
+
                 parserResult.WithParsed<BaseCommandLineOptions>(options =>
                 {
-                    if (options.LogFile != null)
+                    Verbosity consoleVerbosity = ConsoleOut.Verbosity;
+
+                    if (options.Verbosity == null
+                        || TryParseVerbosity(options.Verbosity, out consoleVerbosity))
                     {
-                        var logStream = new FileStream(options.LogFile, FileMode.Create, FileAccess.Write, FileShare.Read);
-                        logWriter = new StreamWriter(logStream, Encoding.UTF8);
-                        Log = logWriter;
+                        ConsoleOut.Verbosity = consoleVerbosity;
+
+                        Verbosity logFileVerbosity = consoleVerbosity;
+
+                        if (options.LogFileVerbosity == null
+                            || TryParseVerbosity(options.LogFileVerbosity, out logFileVerbosity))
+                        {
+                            if (options.LogFile != null)
+                            {
+                                var fs = new FileStream(options.LogFile, FileMode.Create, FileAccess.Write, FileShare.Read);
+                                var sw = new StreamWriter(fs, Encoding.UTF8);
+                                LogOut = new LogWriter(sw) { Verbosity = logFileVerbosity };
+                            }
+
+                            verbosityParsed = true;
+                        }
                     }
                 });
 
-                parserResult.MapResult(
+                if (!verbosityParsed)
+                    return 1;
+
+                return parserResult.MapResult(
                     (FixCommandLineOptions options) => FixAsync(options).Result,
                     (AnalyzeCommandLineOptions options) => AnalyzeAsync(options).Result,
                     (AnalyzeAssemblyCommandLineOptions options) => AnalyzeAssemblyCommandExecutor.Execute(options),
@@ -69,8 +88,8 @@ namespace Roslynator.CommandLine
             }
             finally
             {
-                logWriter?.Dispose();
-                Log = null;
+                LogOut?.Dispose();
+                LogOut = null;
             }
         }
 
@@ -152,7 +171,7 @@ namespace Roslynator.CommandLine
         {
             if (options.MaxDerivedTypes < 0)
             {
-                WriteLine("Maximum number of derived items must be equal or greater than 0.");
+                WriteLine("Maximum number of derived items must be equal or greater than 0.", ConsoleColor.Red, Verbosity.Quiet);
                 return 1;
             }
 
@@ -219,7 +238,8 @@ namespace Roslynator.CommandLine
                 }
                 catch (IOException ex)
                 {
-                    WriteLine(ex.ToString());
+                    WriteLine(ex.ToString(), ConsoleColor.Red, Verbosity.Quiet);
+                    return 1;
                 }
             }
 
@@ -232,21 +252,20 @@ namespace Roslynator.CommandLine
 
             CancellationToken cancellationToken = cts.Token;
 
-            WriteLine($"Documentation is being generated to '{options.OutputPath}'.");
+            WriteLine($"Documentation is being generated to '{options.OutputPath}'", Verbosity.Minimal);
 
             foreach (DocumentationGeneratorResult documentationFile in generator.Generate(heading: options.Heading, cancellationToken))
             {
                 string path = Path.Combine(directoryPath, documentationFile.FilePath);
 
-#if DEBUG
-                WriteLine($"saving '{path}'");
-#else
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
+
+                WriteLine($"  Saving '{path}'", ConsoleColor.DarkGray, Verbosity.Detailed);
+
                 File.WriteAllText(path, documentationFile.Content, _defaultEncoding);
-#endif
             }
 
-            WriteLine($"Documentation successfully generated to '{options.OutputPath}'.");
+            WriteLine($"Documentation successfully generated to '{options.OutputPath}'.", Verbosity.Minimal);
 
             return 0;
         }
@@ -291,7 +310,7 @@ namespace Roslynator.CommandLine
 
             CancellationToken cancellationToken = cts.Token;
 
-            WriteLine($"Declaration list is being generated to '{options.OutputPath}'.");
+            WriteLine($"Declaration list is being generated to '{options.OutputPath}'.", Verbosity.Minimal);
 
             Task<string> task = DeclarationListGenerator.GenerateAsync(
                 documentationModel,
@@ -303,14 +322,10 @@ namespace Roslynator.CommandLine
 
             string path = options.OutputPath;
 
-#if DEBUG
-            WriteLine($"saving '{path}'");
-#else
             Directory.CreateDirectory(Path.GetDirectoryName(path));
             File.WriteAllText(path, content, Encoding.UTF8);
-#endif
 
-            WriteLine($"Declaration list successfully generated to '{options.OutputPath}'.");
+            WriteLine($"Declaration list successfully generated to '{options.OutputPath}'.", Verbosity.Minimal);
 
             return 0;
         }
@@ -343,7 +358,7 @@ namespace Roslynator.CommandLine
 
             string path = options.OutputPath;
 
-            WriteLine($"Documentation root is being generated to '{path}'.");
+            WriteLine($"Documentation root is being generated to '{path}'.", Verbosity.Minimal);
 
             string heading = options.Heading;
 
@@ -360,7 +375,7 @@ namespace Roslynator.CommandLine
 
             File.WriteAllText(path, result.Content, _defaultEncoding);
 
-            WriteLine($"Documentation root successfully generated to '{path}'.");
+            WriteLine($"Documentation root successfully generated to '{path}'.", Verbosity.Minimal);
 
             return 0;
         }

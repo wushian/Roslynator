@@ -47,7 +47,7 @@ namespace Roslynator.CommandLine
             {
                 Project project = projectOrSolution.AsProject();
 
-                WriteLine($"Analyze project '{project.Name}'");
+                WriteLine($"Analyze project '{project.Name}'", Verbosity.Minimal);
 
                 await codeAnalyzer.AnalyzeProjectAsync(project, cancellationToken);
             }
@@ -63,7 +63,7 @@ namespace Roslynator.CommandLine
 
         protected override void OperationCanceled(OperationCanceledException ex)
         {
-            WriteLine("Analysis was canceled.");
+            WriteLine("Analysis was canceled.", Verbosity.Quiet);
         }
     }
 }

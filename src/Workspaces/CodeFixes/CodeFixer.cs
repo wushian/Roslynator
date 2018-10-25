@@ -53,10 +53,10 @@ namespace Roslynator.CodeFixes
                 .ToImmutableArray();
 
             foreach (string id in Options.IgnoredDiagnosticIds.OrderBy(f => f))
-                WriteLine($"Ignore diagnostic '{id}'");
+                WriteLine($"Ignore diagnostic '{id}'", Verbosity.Detailed);
 
             foreach (string id in Options.IgnoredCompilerDiagnosticIds.OrderBy(f => f))
-                WriteLine($"Ignore compiler diagnostic '{id}'");
+                WriteLine($"Ignore compiler diagnostic '{id}'", Verbosity.Detailed);
 
             var results = new List<ProjectFixResult>();
 
@@ -73,13 +73,13 @@ namespace Roslynator.CodeFixes
                 if (Options.IgnoredProjectNames.Contains(project.Name)
                     || (Options.Language != null && Options.Language != project.Language))
                 {
-                    WriteLine($"Skip project {$"{i + 1}/{projects.Length}"} '{project.Name}'", ConsoleColor.DarkGray);
+                    WriteLine($"Skip project {$"{i + 1}/{projects.Length}"} '{project.Name}'", ConsoleColor.DarkGray, Verbosity.Minimal);
 
                     results.Add(ProjectFixResult.Skipped);
                 }
                 else
                 {
-                    WriteLine($"Fix project {$"{i + 1}/{projects.Length}"} '{project.Name}'", ConsoleColor.Cyan);
+                    WriteLine($"Fix project {$"{i + 1}/{projects.Length}"} '{project.Name}'", ConsoleColor.Cyan, Verbosity.Minimal);
 
                     ProjectFixResult result = await FixProjectAsync(project, cancellationToken).ConfigureAwait(false);
 
@@ -92,7 +92,7 @@ namespace Roslynator.CodeFixes
                     {
                         project = CurrentSolution.GetProject(project.Id);
 
-                        WriteLine($"  Format  '{project.Name}'");
+                        WriteLine($"  Format  '{project.Name}'", Verbosity.Normal);
 
                         Project newProject = await CodeFormatter.FormatProjectAsync(project, cancellationToken).ConfigureAwait(false);
 
@@ -104,7 +104,7 @@ namespace Roslynator.CodeFixes
 
                 TimeSpan elapsed = stopwatch.Elapsed;
 
-                WriteLine($"Done fixing project {$"{i + 1}/{projects.Length}"} {elapsed - lastElapsed:mm\\:ss\\.ff} '{project.Name}'", ConsoleColor.Green);
+                WriteLine($"Done fixing project {$"{i + 1}/{projects.Length}"} {elapsed - lastElapsed:mm\\:ss\\.ff} '{project.Name}'", ConsoleColor.Green, Verbosity.Normal);
 
                 lastElapsed = elapsed;
             }
@@ -126,19 +126,19 @@ namespace Roslynator.CodeFixes
 
             if (fixedDiagnostics.Length > 0)
             {
-                WriteLine();
-                WriteLine("Fixed diagnostics:");
+                WriteLine(Verbosity.Normal);
+                WriteLine("Fixed diagnostics:", Verbosity.Normal);
 
                 int maxIdLength = fixedDiagnostics.Max(f => f.Id.Length);
 
                 foreach (DiagnosticDescriptor diagnosticDescriptor in fixedDiagnostics)
                 {
-                    WriteLine($"  {diagnosticDescriptor.Id.PadRight(maxIdLength)} '{diagnosticDescriptor.Title}'");
+                    WriteLine($"  {diagnosticDescriptor.Id.PadRight(maxIdLength)} '{diagnosticDescriptor.Title}'", Verbosity.Normal);
                 }
             }
 
-            WriteLine();
-            WriteLine($"Done fixing solution {stopwatch.Elapsed:mm\\:ss\\.ff} '{CurrentSolution.FilePath}'", ConsoleColor.Green);
+            WriteLine(Verbosity.Minimal);
+            WriteLine($"Done fixing solution {stopwatch.Elapsed:mm\\:ss\\.ff} '{CurrentSolution.FilePath}'", ConsoleColor.Green, Verbosity.Minimal);
         }
 
         public async Task<ProjectFixResult> FixProjectAsync(Project project, CancellationToken cancellationToken = default)
@@ -156,13 +156,13 @@ namespace Roslynator.CodeFixes
 
             if (!analyzers.Any())
             {
-                WriteLine($"  No analyzers found to analyze '{project.Name}'", ConsoleColor.DarkGray);
+                WriteLine($"  No analyzers found to analyze '{project.Name}'", ConsoleColor.DarkGray, Verbosity.Normal);
                 return ProjectFixResult.NoAnalyzers;
             }
 
             if (!fixers.Any())
             {
-                WriteLine($"  No fixers found to fix '{project.Name}'", ConsoleColor.DarkGray);
+                WriteLine($"  No fixers found to fix '{project.Name}'", ConsoleColor.DarkGray, Verbosity.Normal);
                 return new ProjectFixResult(ImmutableArray<string>.Empty, analyzers, fixers, ProjectFixKind.NoFixers);
             }
 
@@ -189,7 +189,7 @@ namespace Roslynator.CodeFixes
 
                 project = CurrentSolution.GetProject(project.Id);
 
-                WriteLine($"  Compile '{project.Name}'{((iterationCount > 1) ? $" iteration {iterationCount}" : "")}");
+                WriteLine($"  Compile '{project.Name}'{((iterationCount > 1) ? $" iteration {iterationCount}" : "")}", Verbosity.Normal);
 
                 Compilation compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
@@ -200,11 +200,11 @@ namespace Roslynator.CodeFixes
 
                 if (iterationCount == 1)
                 {
-                    WriteLine($"  Analyze '{project.Name}' ({analyzers.Length} analyzers)");
+                    WriteLine($"  Analyze '{project.Name}' ({analyzers.Length} analyzers)", Verbosity.Normal);
                 }
                 else
                 {
-                    WriteLine($"  Analyze '{project.Name}'");
+                    WriteLine($"  Analyze '{project.Name}'", Verbosity.Normal);
                 }
 
                 ImmutableArray<Diagnostic> diagnostics = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
@@ -214,7 +214,7 @@ namespace Roslynator.CodeFixes
                     .Select(f => f.ToString())
                     .Distinct())
                 {
-                    WriteLine(message, ConsoleColor.Yellow);
+                    WriteLine(message, ConsoleColor.Yellow, Verbosity.Detailed);
                 }
 
                 diagnostics = diagnostics
@@ -235,7 +235,7 @@ namespace Roslynator.CodeFixes
                     break;
                 }
 
-                WriteLine($"  Found {length} {((length == 1) ? "diagnostic" : "diagnostics")} in '{project.Name}'");
+                WriteLine($"  Found {length} {((length == 1) ? "diagnostic" : "diagnostics")} in '{project.Name}'", Verbosity.Normal);
 
                 foreach (string diagnosticId in diagnostics
                     .Select(f => f.Id)
@@ -328,10 +328,9 @@ namespace Roslynator.CodeFixes
             ImmutableArray<CodeFixProvider> fixers,
             CancellationToken cancellationToken)
         {
-            WriteLine($"  Fix {diagnostics.Length,4} {diagnosticId,10} '{diagnostics[0].Descriptor.Title}'");
+            WriteLine($"  Fix {diagnostics.Length,4} {diagnosticId,10} '{diagnostics[0].Descriptor.Title}'", Verbosity.Normal);
 
-            if (Options.BatchSize == 1)
-                WriteLine($"  {diagnostics[0]}", ConsoleColor.DarkGray);
+            WriteDiagnostics(diagnostics, indentation: "  ", verbosity: Verbosity.Detailed);
 
             CodeFixProvider fixer = null;
             CodeAction codeAction = null;
@@ -356,11 +355,9 @@ namespace Roslynator.CodeFixes
                     }
                     else
                     {
-#if DEBUG
-                        WriteLine($"Diagnostic '{diagnosticId}' is fixable by multiple fixers", ConsoleColor.DarkYellow);
-                        WriteLine($"  {fixer.GetType().Name}", ConsoleColor.DarkYellow);
-                        WriteLine($"  {fixers[i].GetType().Name}", ConsoleColor.DarkYellow);
-#endif
+                        WriteLine($"Diagnostic '{diagnosticId}' is fixable by multiple fixers", ConsoleColor.DarkYellow, Verbosity.Detailed);
+                        WriteLine($"  {fixer.GetType().Name}", ConsoleColor.DarkYellow, Verbosity.Detailed);
+                        WriteLine($"  {fixers[i].GetType().Name}", ConsoleColor.DarkYellow, Verbosity.Detailed);
                         codeAction = null;
                         break;
                     }
@@ -371,12 +368,16 @@ namespace Roslynator.CodeFixes
             {
                 ImmutableArray<CodeActionOperation> operations = await codeAction.GetOperationsAsync(cancellationToken).ConfigureAwait(false);
 
-                WriteLineIf(operations.Length > 1, $@"Code action has multiple operations
-Title: {codeAction.Title}
-Equivalence key: {codeAction.EquivalenceKey}", ConsoleColor.Magenta);
-
                 if (operations.Length == 1)
+                {
                     operations[0].Apply(Workspace, cancellationToken);
+                }
+                else if (operations.Length > 1)
+                {
+                    WriteLine($@"Code action has multiple operations
+  Title: {codeAction.Title}
+  Equivalence key: {codeAction.EquivalenceKey}", ConsoleColor.DarkGray, Verbosity.Detailed);
+                }
             }
         }
 
@@ -422,11 +423,10 @@ Equivalence key: {codeAction.EquivalenceKey}", ConsoleColor.Magenta);
                         }
                         else if (!string.Equals(a.EquivalenceKey, action.EquivalenceKey, StringComparison.Ordinal))
                         {
-#if DEBUG
-                            WriteLine($"'{fixer.GetType().Name}' registered multiple actions for diagnostic '{diagnosticId}'", ConsoleColor.DarkYellow);
-                            WriteLine($"  {action.EquivalenceKey}", ConsoleColor.DarkYellow);
-                            WriteLine($"  {a.EquivalenceKey}", ConsoleColor.DarkYellow);
-#endif
+                            WriteLine($"'{fixer.GetType().Name}' registered multiple actions for diagnostic '{diagnosticId}'", ConsoleColor.DarkYellow, Verbosity.Detailed);
+                            WriteLine($"  {action.EquivalenceKey}", ConsoleColor.DarkYellow, Verbosity.Detailed);
+                            WriteLine($"  {a.EquivalenceKey}", ConsoleColor.DarkYellow, Verbosity.Detailed);
+
                             action = null;
                         }
                     },
@@ -448,10 +448,11 @@ Equivalence key: {codeAction.EquivalenceKey}", ConsoleColor.Magenta);
 
                 CodeAction fixAllAction = await fixAll.GetFixAsync(fixAllContext).ConfigureAwait(false);
 
-                if (fixAllAction == null && diagnosticId.StartsWith("RCS"))
+                if (fixAllAction == null
+                    && diagnosticId.StartsWith("RCS"))
                 {
-                    WriteLine($"'{fixer.GetType().FullName}' registered no action for diagnostics:", ConsoleColor.Magenta);
-                    WriteDiagnostics(diagnostics, 10, ConsoleColor.Magenta);
+                    WriteLine($"'{fixer.GetType().FullName}' registered no action for diagnostics:", ConsoleColor.DarkGray, Verbosity.Detailed);
+                    WriteDiagnostics(diagnostics, maxCount: 10, verbosity: Verbosity.Detailed);
                 }
 
                 return fixAllAction;
@@ -481,7 +482,7 @@ Equivalence key: {codeAction.EquivalenceKey}", ConsoleColor.Magenta);
 
                         if (count <= maxCount)
                         {
-                            WriteLine(en.Current.ToString(), ConsoleColor.Red);
+                            WriteDiagnostic(en.Current, verbosity: Verbosity.Normal);
                         }
                         else
                         {
@@ -507,7 +508,7 @@ Equivalence key: {codeAction.EquivalenceKey}", ConsoleColor.Magenta);
 
                     if (count > maxCount)
                     {
-                        WriteLine($"and {count}{((plus) ? "+" : "")} more diagnostics", ConsoleColor.Red);
+                        WriteLine($"and {count}{((plus) ? "+" : "")} more diagnostics", verbosity: Verbosity.Normal);
                     }
 
                     if (!Options.IgnoreCompilerErrors)

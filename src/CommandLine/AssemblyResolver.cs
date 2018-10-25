@@ -2,6 +2,7 @@
 
 using System;
 using System.Reflection;
+using static Roslynator.ConsoleHelpers;
 
 namespace Roslynator.CommandLine
 {
@@ -22,9 +23,9 @@ namespace Roslynator.CommandLine
 
             if (assemblyName.Name.EndsWith(".resources"))
                 return null;
-#if DEBUG
-            ConsoleHelpers.WriteLine($"Resolve assembly '{args.Name}'", ConsoleColor.DarkGray);
-#endif
+
+            WriteLine($"Resolve assembly '{args.Name}'", ConsoleColor.DarkGray, Verbosity.Detailed);
+
             switch (assemblyName.Name)
             {
                 case "Microsoft.CodeAnalysis":
@@ -49,9 +50,7 @@ namespace Roslynator.CommandLine
                     }
             }
 
-#if DEBUG
-            ConsoleHelpers.WriteLine($"Unable to resolve assembly '{args.Name}'.", ConsoleColor.DarkGray);
-#endif
+            WriteLine($"Unable to resolve assembly '{args.Name}'.", ConsoleColor.DarkGray, Verbosity.Detailed);
 
             return null;
 

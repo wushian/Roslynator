@@ -5,6 +5,7 @@ using CommandLine;
 namespace Roslynator.CommandLine
 {
     //TODO: NormalizeLineEndings
+    //TODO: VerifySyntaxEquivalence
     [Verb("format")]
     public class FormatCommandLineOptions : MSBuildCommandLineOptions
     {

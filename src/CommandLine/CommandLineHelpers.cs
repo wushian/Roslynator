@@ -21,7 +21,7 @@ namespace Roslynator.CommandLine
 
                 if (index == -1)
                 {
-                    WriteLine($"Unable to parse property '{property}'", ConsoleColor.Red);
+                    WriteLine($"Unable to parse property '{property}'", ConsoleColor.Red, Verbosity.Quiet);
                     return false;
                 }
 
@@ -32,12 +32,12 @@ namespace Roslynator.CommandLine
 
             if (properties.Count > 0)
             {
-                WriteLine("Add MSBuild properties");
+                WriteLine("Add MSBuild properties", Verbosity.Normal);
 
                 int maxLength = properties.Max(f => f.Key.Length);
 
                 foreach (KeyValuePair<string, string> kvp in properties)
-                    WriteLine($"  {kvp.Key.PadRight(maxLength)} = {kvp.Value}");
+                    WriteLine($"  {kvp.Key.PadRight(maxLength)} = {kvp.Value}", Verbosity.Normal);
             }
 
             // https://github.com/Microsoft/MSBuildLocator/issues/16
@@ -51,7 +51,7 @@ namespace Roslynator.CommandLine
         {
             if (!Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out severity))
             {
-                WriteLine($"Unknown diagnostic severity '{value}'.");
+                WriteLine($"Unknown diagnostic severity '{value}'.", Verbosity.Quiet);
                 return false;
             }
 
@@ -76,7 +76,7 @@ namespace Roslynator.CommandLine
                 }
                 else
                 {
-                    WriteLine($"Unknown root documentation part '{value}'.");
+                    WriteLine($"Unknown root documentation part '{value}'.", Verbosity.Quiet);
                     return false;
                 }
             }
@@ -102,7 +102,7 @@ namespace Roslynator.CommandLine
                 }
                 else
                 {
-                    WriteLine($"Unknown namespace documentation part '{value}'.");
+                    WriteLine($"Unknown namespace documentation part '{value}'.", Verbosity.Quiet);
                     return false;
                 }
             }
@@ -128,7 +128,7 @@ namespace Roslynator.CommandLine
                 }
                 else
                 {
-                    WriteLine($"Unknown type documentation part '{value}'.");
+                    WriteLine($"Unknown type documentation part '{value}'.", Verbosity.Quiet);
                     return false;
                 }
             }
@@ -154,7 +154,7 @@ namespace Roslynator.CommandLine
                 }
                 else
                 {
-                    WriteLine($"Unknown member documentation part '{value}'.");
+                    WriteLine($"Unknown member documentation part '{value}'.", Verbosity.Quiet);
                     return false;
                 }
             }
@@ -180,7 +180,7 @@ namespace Roslynator.CommandLine
                 }
                 else
                 {
-                    WriteLine($"Unknown declaration list part '{value}'.");
+                    WriteLine($"Unknown declaration list part '{value}'.", Verbosity.Quiet);
                     return false;
                 }
             }
@@ -206,7 +206,7 @@ namespace Roslynator.CommandLine
                 }
                 else
                 {
-                    WriteLine($"Unknown omit containing namespace part '{value}'.");
+                    WriteLine($"Unknown omit containing namespace part '{value}'.", Verbosity.Quiet);
                     return false;
                 }
             }
@@ -218,11 +218,42 @@ namespace Roslynator.CommandLine
         {
             if (!Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out visibility))
             {
-                WriteLine($"Unknown visibility '{value}'.");
+                WriteLine($"Unknown visibility '{value}'.", Verbosity.Quiet);
                 return false;
             }
 
             return true;
+        }
+
+        public static bool TryParseVerbosity(string value, out Verbosity verbosity)
+        {
+            if (string.Equals(value, "q", StringComparison.OrdinalIgnoreCase))
+            {
+                verbosity = Verbosity.Quiet;
+                return true;
+            }
+            else if (string.Equals(value, "m", StringComparison.OrdinalIgnoreCase))
+            {
+                verbosity = Verbosity.Minimal;
+                return true;
+            }
+            else if (string.Equals(value, "n", StringComparison.OrdinalIgnoreCase))
+            {
+                verbosity = Verbosity.Normal;
+                return true;
+            }
+            else if (string.Equals(value, "d", StringComparison.OrdinalIgnoreCase))
+            {
+                verbosity = Verbosity.Detailed;
+                return true;
+            }
+            else if (Enum.TryParse(value, ignoreCase: true, out verbosity))
+            {
+                return true;
+            }
+
+            WriteLine($"Unknown verbosity '{value}'.", Verbosity.Quiet);
+            return false;
         }
 
         public static string GetLanguageName(string value)
