@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -12,7 +13,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Roslynator.CodeFixes;
 using Roslynator.Formatting;
-using static Roslynator.ConsoleHelpers;
+using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
@@ -27,13 +28,18 @@ namespace Roslynator.CommandLine
 
         public override async Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default)
         {
-            if (Options.RemoveRedundantEmptyLine)
+            ImmutableArray<string> supportedDiagnosticIds = Options
+                .GetSupportedDiagnostics()
+                .Select(f => f.Id)
+                .ToImmutableArray();
+
+            if (supportedDiagnosticIds.Any())
             {
                 var codeFixerOptions = new CodeFixerOptions(
-                    DiagnosticSeverity.Warning,
+                    minimalSeverity: DiagnosticSeverity.Hidden,
                     ignoreCompilerErrors: true,
                     ignoreAnalyzerReferences: true,
-                    supportedDiagnosticIds: new string[] { "RCS1036" },
+                    supportedDiagnosticIds: supportedDiagnosticIds,
                     batchSize: 1000,
                     format: true);
 
@@ -41,6 +47,7 @@ namespace Roslynator.CommandLine
                     projectOrSolution,
                     FixCommandExecutor.RoslynatorAnalyzerAssemblies,
                     codeFixerOptions,
+                    default(IFormatProvider),
                     cancellationToken);
             }
 

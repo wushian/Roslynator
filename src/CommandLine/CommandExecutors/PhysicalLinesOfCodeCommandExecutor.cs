@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Roslynator.Metrics;
-using static Roslynator.ConsoleHelpers;
+using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {

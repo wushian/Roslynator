@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -17,7 +18,7 @@ using Roslynator.Documentation;
 using Roslynator.Documentation.Markdown;
 using static Roslynator.CommandLine.CommandLineHelpers;
 using static Roslynator.CommandLine.DocumentationHelpers;
-using static Roslynator.ConsoleHelpers;
+using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
@@ -62,7 +63,7 @@ namespace Roslynator.CommandLine
                             if (options.LogFile != null)
                             {
                                 var fs = new FileStream(options.LogFile, FileMode.Create, FileAccess.Write, FileShare.Read);
-                                var sw = new StreamWriter(fs, Encoding.UTF8);
+                                var sw = new StreamWriter(fs, Encoding.UTF8, bufferSize: 4096, leaveOpen: false);
                                 LogOut = new LogWriter(sw) { Verbosity = logFileVerbosity };
                             }
 
@@ -105,7 +106,17 @@ namespace Roslynator.CommandLine
                 minimalSeverity = severity;
             }
 
-            var executor = new FixCommandExecutor(options, minimalSeverity);
+            if (!TryParseKeyValuePairs(options.DiagnosticFixMap, out Dictionary<string, string> diagnosticFixMap))
+                return 1;
+
+            if (!TryParseKeyValuePairs(options.DiagnosticFixerMap, out Dictionary<string, string> diagnosticFixerMap))
+                return 1;
+
+            var executor = new FixCommandExecutor(
+                options: options,
+                minimalSeverity: minimalSeverity,
+                diagnosticFixMap: diagnosticFixMap?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty,
+                diagnosticFixerMap: diagnosticFixerMap?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty);
 
             CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
 
@@ -137,7 +148,7 @@ namespace Roslynator.CommandLine
 
             IEnumerable<string> properties = options.Properties;
 
-            if (options.RemoveRedundantEmptyLine)
+            if (options.GetSupportedDiagnostics().Any())
             {
                 string ruleSetPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "format.ruleset");
 

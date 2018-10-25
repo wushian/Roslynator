@@ -12,7 +12,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Diagnostics.Telemetry;
 using Roslynator.CSharp;
-using static Roslynator.ConsoleHelpers;
+using static Roslynator.Logger;
 
 namespace Roslynator.Diagnostics
 {
@@ -211,13 +211,13 @@ namespace Roslynator.Diagnostics
 
             string projectDirectoryPath = Path.GetDirectoryName(project.FilePath);
 
-            WriteDiagnostics(FilterDiagnostics(diagnostics.Where(f => f.IsAnalyzerExceptionDiagnostic()), cancellationToken).ToImmutableArray(), projectDirectoryPath, FormatProvider, Verbosity.Detailed);
+            WriteDiagnostics(FilterDiagnostics(diagnostics.Where(f => f.IsAnalyzerExceptionDiagnostic()), cancellationToken).ToImmutableArray(), baseDirectoryPath: projectDirectoryPath, formatProvider: FormatProvider, indentation: "  ", verbosity: Verbosity.Detailed);
 
             IEnumerable<Diagnostic> allDiagnostics = diagnostics
                 .Where(f => !f.IsAnalyzerExceptionDiagnostic())
                 .Concat(compilerDiagnostics);
 
-            WriteDiagnostics(FilterDiagnostics(allDiagnostics, cancellationToken).ToImmutableArray(), projectDirectoryPath, FormatProvider, Verbosity.Normal);
+            WriteDiagnostics(FilterDiagnostics(allDiagnostics, cancellationToken).ToImmutableArray(), baseDirectoryPath: projectDirectoryPath, formatProvider: FormatProvider, indentation: "  ", verbosity: Verbosity.Normal);
 
             return new ProjectAnalysisResult(project, analyzers, diagnostics, compilerDiagnostics, telemetry);
         }

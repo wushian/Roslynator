@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Roslynator.Metrics;
-using static Roslynator.ConsoleHelpers;
+using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {

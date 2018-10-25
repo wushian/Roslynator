@@ -1,18 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="Format Ruleset" ToolsVersion="15.0">
   <Rules AnalyzerId="Roslynator.CSharp.Analyzers" RuleNamespace="Roslynator.CSharp.Analyzers">
-    <Rule Id="RCS1023" Action="Warning" />
-    <Rule Id="RCS1024" Action="Warning" />
-    <Rule Id="RCS1025" Action="Warning" />
-    <Rule Id="RCS1026" Action="Warning" />
-    <Rule Id="RCS1027" Action="Warning" />
-    <Rule Id="RCS1028" Action="Warning" />
-    <Rule Id="RCS1030" Action="Warning" />
-    <Rule Id="RCS1036" Action="Warning" />
-    <Rule Id="RCS1057" Action="Warning" />
-    <Rule Id="RCS1076" Action="Warning" />
-    <Rule Id="RCS1092" Action="Warning" />
-    <Rule Id="RCS1153" Action="Warning" />
-    <Rule Id="RCS1185" Action="Warning" />
+    <Rule Id="RCS1023" Action="Warning" /> <!-- Format empty block. -->
+    <Rule Id="RCS1024" Action="Warning" /> <!-- Format accessor list. -->
+    <Rule Id="RCS1025" Action="Warning" /> <!-- Format each enum member on a separate line. -->
+    <Rule Id="RCS1026" Action="Warning" /> <!-- Format each statement on a separate line. -->
+    <Rule Id="RCS1027" Action="Warning" /> <!-- Format embedded statement on a separate line. -->
+    <Rule Id="RCS1028" Action="Warning" /> <!-- Format switch section's statement on a separate line. -->
+    <Rule Id="RCS1030" Action="Warning" /> <!-- Add empty line after embedded statement. -->
+    <Rule Id="RCS1036" Action="Warning" /> <!-- Remove redundant empty line. -->
+    <Rule Id="RCS1057" Action="Warning" /> <!-- Add empty line between declarations. -->
+    <Rule Id="RCS1076" Action="Warning" /> <!-- Format declaration braces. -->
+    <Rule Id="RCS1092" Action="Warning" /> <!-- Add empty line after last statement in do statement. -->
+    <Rule Id="RCS1153" Action="Warning" /> <!-- Add empty line after closing brace. -->
+    <Rule Id="RCS1185" Action="Warning" /> <!-- Avoid single-line block. -->
   </Rules>
 </RuleSet>

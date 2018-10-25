@@ -2,7 +2,7 @@
 
 using System;
 using System.Reflection;
-using static Roslynator.ConsoleHelpers;
+using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {

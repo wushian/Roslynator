@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
-using static Roslynator.ConsoleHelpers;
+using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
@@ -100,7 +100,7 @@ namespace Roslynator.CommandLine
             WriteLine(e.Diagnostic.Message, ConsoleColor.Yellow, Verbosity.Normal);
         }
 
-        private static MSBuildWorkspace CreateMSBuildWorkspace(string msbuildPath, IEnumerable<string> properties)
+        private static MSBuildWorkspace CreateMSBuildWorkspace(string msbuildPath, IEnumerable<string> rawProperties)
         {
             if (msbuildPath != null)
             {
@@ -123,10 +123,17 @@ namespace Roslynator.CommandLine
                 MSBuildLocator.RegisterInstance(instance);
             }
 
-            if (!CommandLineHelpers.TryParseMSBuildProperties(properties, out Dictionary<string, string> dicProperties))
+            if (!CommandLineHelpers.TryParseMSBuildProperties(rawProperties, out Dictionary<string, string> properties))
                 return null;
 
-            return MSBuildWorkspace.Create(dicProperties);
+            if (properties == null)
+                properties = new Dictionary<string, string>();
+
+            // https://github.com/Microsoft/MSBuildLocator/issues/16
+            if (!properties.ContainsKey("AlwaysCompileMarkupFilesInSeparateDomain"))
+                properties["AlwaysCompileMarkupFilesInSeparateDomain"] = bool.FalseString;
+
+            return MSBuildWorkspace.Create(properties);
         }
 
         private protected static IEnumerable<Project> FilterProjects(Solution solution, IEnumerable<string> ignoredProjects = null, string language = null)

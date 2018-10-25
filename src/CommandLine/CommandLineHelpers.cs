@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Roslynator.Documentation;
-using static Roslynator.ConsoleHelpers;
+using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
@@ -13,7 +13,7 @@ namespace Roslynator.CommandLine
     {
         public static bool TryParseMSBuildProperties(IEnumerable<string> values, out Dictionary<string, string> properties)
         {
-            properties = new Dictionary<string, string>();
+            properties = null;
 
             foreach (string property in values)
             {
@@ -27,10 +27,13 @@ namespace Roslynator.CommandLine
 
                 string key = property.Substring(0, index);
 
+                if (properties == null)
+                    properties = new Dictionary<string, string>();
+
                 properties[key] = property.Substring(index + 1);
             }
 
-            if (properties.Count > 0)
+            if (properties?.Count > 0)
             {
                 WriteLine("Add MSBuild properties", Verbosity.Normal);
 
@@ -40,9 +43,30 @@ namespace Roslynator.CommandLine
                     WriteLine($"  {kvp.Key.PadRight(maxLength)} = {kvp.Value}", Verbosity.Normal);
             }
 
-            // https://github.com/Microsoft/MSBuildLocator/issues/16
-            if (!properties.ContainsKey("AlwaysCompileMarkupFilesInSeparateDomain"))
-                properties["AlwaysCompileMarkupFilesInSeparateDomain"] = bool.FalseString;
+            return true;
+        }
+
+        public static bool TryParseKeyValuePairs(IEnumerable<string> values, out Dictionary<string, string> properties)
+        {
+            properties = null;
+
+            foreach (string property in values)
+            {
+                int index = property.IndexOf("=");
+
+                if (index == -1)
+                {
+                    WriteLine($"Unable to parse key/value pair '{property}'", ConsoleColor.Red, Verbosity.Quiet);
+                    return false;
+                }
+
+                string key = property.Substring(0, index);
+
+                if (properties == null)
+                    properties = new Dictionary<string, string>();
+
+                properties[key] = property.Substring(index + 1);
+            }
 
             return true;
         }

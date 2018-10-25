@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Roslynator.Diagnostics;
-using static Roslynator.ConsoleHelpers;
+using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
@@ -36,8 +36,7 @@ namespace Roslynator.CommandLine
                 supportedDiagnosticIds: Options.SupportedDiagnostics,
                 ignoredDiagnosticIds: Options.IgnoredDiagnostics,
                 ignoredProjectNames: Options.IgnoredProjects,
-                language: CommandLineHelpers.GetLanguageName(Options.Language),
-                cultureName: Options.CultureName);
+                language: CommandLineHelpers.GetLanguageName(Options.Language));
 
             CultureInfo culture = (Options.CultureName != null) ? CultureInfo.GetCultureInfo(Options.CultureName) : null;
 

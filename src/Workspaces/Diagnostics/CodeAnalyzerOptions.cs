@@ -19,14 +19,12 @@ namespace Roslynator.Diagnostics
             IEnumerable<string> supportedDiagnosticIds = null,
             IEnumerable<string> ignoredDiagnosticIds = null,
             IEnumerable<string> ignoredProjectNames = null,
-            string language = null,
-            string cultureName = null) : base(minimalSeverity, ignoreAnalyzerReferences, supportedDiagnosticIds, ignoredDiagnosticIds, ignoredProjectNames, language)
+            string language = null) : base(minimalSeverity, ignoreAnalyzerReferences, supportedDiagnosticIds, ignoredDiagnosticIds, ignoredProjectNames, language)
         {
             IgnoreCompilerDiagnostics = ignoreCompilerDiagnostics;
             ReportFadeDiagnostics = reportFadeDiagnostics;
             ReportSuppressedDiagnostics = reportSuppressedDiagnostics;
             ExecutionTime = executionTime;
-            CultureName = cultureName;
         }
 
         public bool IgnoreCompilerDiagnostics { get; }
@@ -36,7 +34,5 @@ namespace Roslynator.Diagnostics
         public bool ReportSuppressedDiagnostics { get; }
 
         public bool ExecutionTime { get; }
-
-        public string CultureName { get; }
     }
 }

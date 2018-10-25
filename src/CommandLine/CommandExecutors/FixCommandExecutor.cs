@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -10,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Roslynator.CodeFixes;
-using static Roslynator.ConsoleHelpers;
+using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
@@ -18,10 +19,16 @@ namespace Roslynator.CommandLine
     {
         private static ImmutableHashSet<string> _roslynatorAnalyzerAssemblies;
 
-        public FixCommandExecutor(FixCommandLineOptions options, DiagnosticSeverity minimalSeverity)
+        public FixCommandExecutor(
+            FixCommandLineOptions options,
+            DiagnosticSeverity minimalSeverity,
+            ImmutableDictionary<string, string> diagnosticFixMap,
+            ImmutableDictionary<string, string> diagnosticFixerMap)
         {
             Options = options;
             MinimalSeverity = minimalSeverity;
+            DiagnosticFixMap = diagnosticFixMap;
+            DiagnosticFixerMap = diagnosticFixerMap;
         }
 
         public static ImmutableHashSet<string> RoslynatorAnalyzerAssemblies
@@ -40,6 +47,10 @@ namespace Roslynator.CommandLine
 
         public DiagnosticSeverity MinimalSeverity { get; }
 
+        public ImmutableDictionary<string, string> DiagnosticFixMap { get; }
+
+        public ImmutableDictionary<string, string> DiagnosticFixerMap { get; }
+
         public override async Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default)
         {
             AssemblyResolver.Register();
@@ -52,6 +63,8 @@ namespace Roslynator.CommandLine
                 ignoredDiagnosticIds: Options.IgnoredDiagnostics,
                 ignoredCompilerDiagnosticIds: Options.IgnoredCompilerDiagnostics,
                 ignoredProjectNames: Options.IgnoredProjects,
+                diagnosticFixMap: DiagnosticFixMap,
+                diagnosticFixerMap: DiagnosticFixerMap,
                 language: Options.Language,
                 batchSize: Options.BatchSize,
                 format: Options.Format);
@@ -61,13 +74,16 @@ namespace Roslynator.CommandLine
             if (Options.UseRoslynatorAnalyzers)
                 analyzerAssemblies = analyzerAssemblies.Concat(RoslynatorAnalyzerAssemblies);
 
-            return await FixAsync(projectOrSolution, analyzerAssemblies, codeFixerOptions, cancellationToken);
+            CultureInfo culture = (Options.CultureName != null) ? CultureInfo.GetCultureInfo(Options.CultureName) : null;
+
+            return await FixAsync(projectOrSolution, analyzerAssemblies, codeFixerOptions, culture, cancellationToken);
         }
 
         internal static async Task<CommandResult> FixAsync(
             ProjectOrSolution projectOrSolution,
             IEnumerable<string> analyzerAssemblies,
             CodeFixerOptions codeFixerOptions,
+            IFormatProvider formatProvider = null,
             CancellationToken cancellationToken = default)
         {
             if (projectOrSolution.IsProject)
@@ -76,7 +92,7 @@ namespace Roslynator.CommandLine
 
                 Solution solution = project.Solution;
 
-                var codeFixer = new CodeFixer(solution, analyzerAssemblies: analyzerAssemblies, options: codeFixerOptions);
+                var codeFixer = new CodeFixer(solution, analyzerAssemblies: analyzerAssemblies, formatProvider: formatProvider, options: codeFixerOptions);
 
                 WriteLine($"Fix project '{project.Name}'", ConsoleColor.Cyan, Verbosity.Minimal);
 

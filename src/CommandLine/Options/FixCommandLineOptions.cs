@@ -14,6 +14,15 @@ namespace Roslynator.CommandLine
         [Option(longName: "batch-size", Default = -1)]
         public int BatchSize { get; set; }
 
+        [Option(longName: "culture")]
+        public string CultureName { get; set; }
+
+        [Option(longName: "diagnostic-fix-map")]
+        public IEnumerable<string> DiagnosticFixMap { get; set; }
+
+        [Option(longName: "diagnostic-fixer-map")]
+        public IEnumerable<string> DiagnosticFixerMap { get; set; }
+
         [Option(longName: "format")]
         public bool Format { get; set; }
 

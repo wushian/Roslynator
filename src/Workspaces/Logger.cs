@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 
 namespace Roslynator
 {
-    internal static class ConsoleHelpers
+    internal static class Logger
     {
         public static ConsoleWriter ConsoleOut { get; } = ConsoleWriter.Instance;
 
@@ -300,28 +300,53 @@ namespace Roslynator
             string indentation = null,
             Verbosity verbosity = Verbosity.None)
         {
-            ConsoleOut.WriteDiagnostic(diagnostic, indentation, verbosity);
-            LogOut?.WriteDiagnostic(diagnostic, indentation, verbosity);
-        }
+            Write(indentation, verbosity);
 
-        public static void WriteDiagnostics(
-            IEnumerable<Diagnostic> diagnostics,
-            int maxCount = int.MaxValue,
-            string indentation = null,
-            Verbosity verbosity = Verbosity.None)
-        {
-            ConsoleOut.WriteDiagnostics(diagnostics, maxCount, indentation, verbosity);
-            LogOut.WriteDiagnostics(diagnostics, maxCount, indentation, verbosity);
+            string message = diagnostic.ToString();
+
+            ConsoleOut.WriteLine(message, diagnostic.Severity.GetColor(), verbosity);
+            LogOut?.WriteLine(message, verbosity);
         }
 
         public static void WriteDiagnostics(
             ImmutableArray<Diagnostic> diagnostics,
+            DiagnosticDisplayParts parts = DiagnosticDisplayParts.All,
             string baseDirectoryPath = null,
             IFormatProvider formatProvider = null,
+            string indentation = null,
+            int maxCount = int.MaxValue,
             Verbosity verbosity = Verbosity.None)
         {
-            ConsoleOut.WriteDiagnostics(diagnostics, baseDirectoryPath, formatProvider, verbosity);
-            LogOut.WriteDiagnostics(diagnostics, baseDirectoryPath, formatProvider, verbosity);
+            if (!diagnostics.Any())
+                return;
+
+            if (verbosity > ConsoleOut.Verbosity
+                && (LogOut == null || verbosity > LogOut.Verbosity))
+            {
+                return;
+            }
+
+            int count = 0;
+
+            foreach ((Diagnostic diagnostic, string message) in DiagnosticFormatter.FormatDiagnostics(diagnostics, baseDirectoryPath, formatProvider, parts))
+            {
+                Write(indentation, verbosity);
+                ConsoleOut.WriteLine(message, diagnostic.Severity.GetColor(), verbosity);
+                LogOut?.WriteLine(message, verbosity);
+
+                count++;
+
+                if (count > maxCount)
+                {
+                    int remainingCount = diagnostics.Length - count;
+
+                    if (remainingCount > 0)
+                    {
+                        Write(indentation, verbosity);
+                        WriteLine($"and {remainingCount} more diagnostics", verbosity);
+                    }
+                }
+            }
         }
     }
 }

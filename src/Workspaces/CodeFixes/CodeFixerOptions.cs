@@ -6,8 +6,6 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator.CodeFixes
 {
-    //TODO: DiagnosticCodeFixProviderMap RCS1155=Roslynator.CodeFixes.MyCodeFixProvider
-    //TODO: DiagnosticEquivalenceKeyMap RCS1155=Roslynator.RCS1155.CurrentCultureIgnoreCase
     public class CodeFixerOptions : CodeAnalysisOptions
     {
         public static CodeFixerOptions Default { get; } = new CodeFixerOptions();
@@ -20,12 +18,16 @@ namespace Roslynator.CodeFixes
             IEnumerable<string> ignoredDiagnosticIds = null,
             IEnumerable<string> ignoredCompilerDiagnosticIds = null,
             IEnumerable<string> ignoredProjectNames = null,
+            IEnumerable<KeyValuePair<string, string>> diagnosticFixMap = null,
+            IEnumerable<KeyValuePair<string, string>> diagnosticFixerMap = null,
             string language = null,
             int batchSize = -1,
             bool format = false) : base(minimalSeverity, ignoreAnalyzerReferences, supportedDiagnosticIds, ignoredDiagnosticIds, ignoredProjectNames, language)
         {
             IgnoreCompilerErrors = ignoreCompilerErrors;
             IgnoredCompilerDiagnosticIds = ignoredCompilerDiagnosticIds?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
+            DiagnosticFixMap = diagnosticFixMap?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty;
+            DiagnosticFixerMap = diagnosticFixerMap?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty;
             BatchSize = batchSize;
             Format = format;
         }
@@ -37,5 +39,9 @@ namespace Roslynator.CodeFixes
         public int BatchSize { get; }
 
         public bool Format { get; }
+
+        public ImmutableDictionary<string, string> DiagnosticFixMap { get; }
+
+        public ImmutableDictionary<string, string> DiagnosticFixerMap { get; }
     }
 }
