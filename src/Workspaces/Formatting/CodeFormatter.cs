@@ -14,7 +14,7 @@ namespace Roslynator.Formatting
     {
         public static Task<Project> FormatProjectAsync(Project project, CancellationToken cancellationToken = default)
         {
-            return FormatProjectAsync(project, CodeFormatterOptions.Default, cancellationToken);
+            return FormatProjectAsync(project, default(CodeFormatterOptions), cancellationToken);
         }
 
         public static async Task<Project> FormatProjectAsync(Project project, CodeFormatterOptions options, CancellationToken cancellationToken = default)

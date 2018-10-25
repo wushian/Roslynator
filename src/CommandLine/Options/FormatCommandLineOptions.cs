@@ -10,5 +10,8 @@ namespace Roslynator.CommandLine
     {
         [Option(longName: "include-generated")]
         public bool IncludeGenerated { get; set; }
+
+        [Option(longName: "remove-redundant-empty-line")]
+        public bool RemoveRedundantEmptyLine { get; set; }
     }
 }

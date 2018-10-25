@@ -3,7 +3,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -28,12 +30,8 @@ namespace Roslynator.CommandLine
             {
                 return _roslynatorAnalyzerAssemblies ?? (_roslynatorAnalyzerAssemblies = ImmutableHashSet.CreateRange(new string[]
                 {
-                    "Roslynator.Common.dll",
-                    "Roslynator.Common.Workspaces.dll",
-                    "Roslynator.CSharp.Analyzers.CodeFixes.dll",
-                    "Roslynator.CSharp.Analyzers.dll",
-                    "Roslynator.CSharp.dll",
-                    "Roslynator.CSharp.Workspaces.dll",
+                    Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Roslynator.CSharp.Analyzers.dll"),
+                    Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Roslynator.CSharp.Analyzers.CodeFixes.dll"),
                 }));
             }
         }
@@ -50,6 +48,7 @@ namespace Roslynator.CommandLine
                 minimalSeverity: MinimalSeverity,
                 ignoreCompilerErrors: Options.IgnoreCompilerErrors,
                 ignoreAnalyzerReferences: Options.IgnoreAnalyzerReferences,
+                supportedDiagnosticIds: Options.SupportedDiagnostics,
                 ignoredDiagnosticIds: Options.IgnoredDiagnostics,
                 ignoredCompilerDiagnosticIds: Options.IgnoredCompilerDiagnostics,
                 ignoredProjectNames: Options.IgnoredProjects,
@@ -62,6 +61,15 @@ namespace Roslynator.CommandLine
             if (Options.UseRoslynatorAnalyzers)
                 analyzerAssemblies = analyzerAssemblies.Concat(RoslynatorAnalyzerAssemblies);
 
+            return await FixAsync(projectOrSolution, analyzerAssemblies, codeFixerOptions, cancellationToken);
+        }
+
+        internal static async Task<CommandResult> FixAsync(
+            ProjectOrSolution projectOrSolution,
+            IEnumerable<string> analyzerAssemblies,
+            CodeFixerOptions codeFixerOptions,
+            CancellationToken cancellationToken = default)
+        {
             if (projectOrSolution.IsProject)
             {
                 Project project = projectOrSolution.AsProject();

@@ -32,6 +32,9 @@ namespace Roslynator.CommandLine
         [Option(longName: "minimal-severity")]
         public string MinimalSeverity { get; set; }
 
+        [Option(longName: "supported-diagnostics")]
+        public IEnumerable<string> SupportedDiagnostics { get; set; }
+
         [Option(longName: "use-roslynator-analyzers")]
         public bool UseRoslynatorAnalyzers { get; set; }
     }

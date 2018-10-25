@@ -166,11 +166,13 @@ namespace Roslynator.Diagnostics
         public async Task<ProjectAnalysisResult> AnalyzeProjectAsync(Project project, CancellationToken cancellationToken = default)
         {
             ImmutableArray<DiagnosticAnalyzer> analyzers = AnalysisUtilities.GetAnalyzers(
-                project,
-                _analyzerAssemblies,
-                _analyzerReferences,
-                Options.IgnoreAnalyzerReferences,
-                Options.MinimalSeverity);
+                project: project,
+                analyzerAssemblies: _analyzerReferences,
+                analyzerReferences: _analyzerAssemblies,
+                supportedDiagnosticIds: Options.SupportedDiagnosticIds,
+                ignoredDiagnosticIds: Options.IgnoredDiagnosticIds,
+                ignoreAnalyzerReferences: Options.IgnoreAnalyzerReferences,
+                minimalSeverity: Options.MinimalSeverity);
 
             if (!analyzers.Any())
             {
@@ -225,7 +227,7 @@ namespace Roslynator.Diagnostics
             foreach (Diagnostic diagnostic in diagnostics)
             {
                 if (diagnostic.Severity >= Options.MinimalSeverity
-                    && !Options.IgnoredDiagnosticIds.Contains(diagnostic.Id)
+                    && Options.IsSupported(diagnostic.Id)
                     && (Options.ReportFadeDiagnostics || !diagnostic.IsFadeDiagnostic()))
                 {
                     if (diagnostic.Descriptor.CustomTags.Contains(WellKnownDiagnosticTags.Compiler))

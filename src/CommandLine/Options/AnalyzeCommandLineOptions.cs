@@ -14,6 +14,9 @@ namespace Roslynator.CommandLine
         [Option(longName: "culture")]
         public string CultureName { get; set; }
 
+        [Option(longName: "execution-time")]
+        public bool ExecutionTime { get; set; }
+
         [Option(longName: "ignore-analyzer-references")]
         public bool IgnoreAnalyzerReferences { get; set; }
 
@@ -32,7 +35,7 @@ namespace Roslynator.CommandLine
         [Option(longName: "report-suppressed-diagnostics")]
         public bool ReportSuppressedDiagnostics { get; set; }
 
-        [Option(longName: "execution-time")]
-        public bool ExecutionTime { get; set; }
+        [Option(longName: "supported-diagnostics")]
+        public IEnumerable<string> SupportedDiagnostics { get; set; }
     }
 }

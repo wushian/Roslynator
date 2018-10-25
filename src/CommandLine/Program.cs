@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -9,8 +11,8 @@ using System.Threading.Tasks;
 using CommandLine;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Roslynator.Diagnostics;
 using Roslynator.CodeFixes;
+using Roslynator.Diagnostics;
 using Roslynator.Documentation;
 using Roslynator.Documentation.Markdown;
 using static Roslynator.CommandLine.CommandLineHelpers;
@@ -114,7 +116,16 @@ namespace Roslynator.CommandLine
         {
             var executor = new FormatCommandExecutor(options);
 
-            CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
+            IEnumerable<string> properties = options.Properties;
+
+            if (options.RemoveRedundantEmptyLine)
+            {
+                string ruleSetPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "format.ruleset");
+
+                properties = properties.Concat(new string[] { $"CodeAnalysisRuleSet={ruleSetPath}" });
+            }
+
+            CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, properties);
 
             return (result.Success) ? 0 : 1;
         }

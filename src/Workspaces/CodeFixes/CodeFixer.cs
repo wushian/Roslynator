@@ -111,27 +111,30 @@ namespace Roslynator.CodeFixes
 
             stopwatch.Stop();
 
-            WriteLine();
-            WriteLine("Fixed diagnostics:");
-
-            IEnumerable<DiagnosticDescriptor> diagnosticDescriptors = results
+            IEnumerable<DiagnosticDescriptor> supportedDiagnostics = results
                 .SelectMany(f => f.Analyzers)
                 .Distinct()
                 .SelectMany(f => f.SupportedDiagnostics)
                 .Distinct(DiagnosticDescriptorComparer.Id);
 
-            diagnosticDescriptors = results
+            DiagnosticDescriptor[] fixedDiagnostics = results
                 .SelectMany(f => f.FixedDiagnosticIds)
                 .Distinct()
-                .Join(diagnosticDescriptors, id => id, d => d.Id, (_, d) => d)
+                .Join(supportedDiagnostics, id => id, d => d.Id, (_, d) => d)
                 .OrderBy(f => f.Id)
                 .ToArray();
 
-            int maxIdLength = diagnosticDescriptors.Max(f => f.Id.Length);
-
-            foreach (DiagnosticDescriptor diagnosticDescriptor in diagnosticDescriptors)
+            if (fixedDiagnostics.Length > 0)
             {
-                WriteLine($"  {diagnosticDescriptor.Id.PadRight(maxIdLength)} '{diagnosticDescriptor.Title}'");
+                WriteLine();
+                WriteLine("Fixed diagnostics:");
+
+                int maxIdLength = fixedDiagnostics.Max(f => f.Id.Length);
+
+                foreach (DiagnosticDescriptor diagnosticDescriptor in fixedDiagnostics)
+                {
+                    WriteLine($"  {diagnosticDescriptor.Id.PadRight(maxIdLength)} '{diagnosticDescriptor.Title}'");
+                }
             }
 
             WriteLine();
@@ -143,11 +146,13 @@ namespace Roslynator.CodeFixes
             string language = project.Language;
 
             (ImmutableArray<DiagnosticAnalyzer> analyzers, ImmutableArray<CodeFixProvider> fixers) = AnalysisUtilities.GetAnalyzersAndFixers(
-                project,
-                _analyzerAssemblies,
-                _analyzerReferences,
-                Options.IgnoreAnalyzerReferences,
-                Options.MinimalSeverity);
+                project: project,
+                analyzerAssemblies: _analyzerAssemblies,
+                analyzerReferences: _analyzerReferences,
+                supportedDiagnosticIds: Options.SupportedDiagnosticIds,
+                ignoredDiagnosticIds: Options.IgnoredDiagnosticIds,
+                ignoreAnalyzerReferences: Options.IgnoreAnalyzerReferences,
+                minimalSeverity: Options.MinimalSeverity);
 
             if (!analyzers.Any())
             {
@@ -193,7 +198,14 @@ namespace Roslynator.CodeFixes
 
                 var compilationWithAnalyzers = new CompilationWithAnalyzers(compilation, analyzers, _defaultCompilationWithAnalyzersOptions);
 
-                WriteLine($"  Analyze '{project.Name}' with {analyzers.Length} analyzers");
+                if (iterationCount == 1)
+                {
+                    WriteLine($"  Analyze '{project.Name}' ({analyzers.Length} analyzers)");
+                }
+                else
+                {
+                    WriteLine($"  Analyze '{project.Name}'");
+                }
 
                 ImmutableArray<Diagnostic> diagnostics = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
 
@@ -209,7 +221,7 @@ namespace Roslynator.CodeFixes
                     .Where(f => f.Severity >= Options.MinimalSeverity
                         && analyzersById.ContainsKey(f.Id)
                         && fixersById.ContainsKey(f.Id)
-                        && !Options.IgnoredDiagnosticIds.Contains(f.Id))
+                        && Options.IsSupported(f.Id))
                     .ToImmutableArray();
 
                 int length = diagnostics.Length;

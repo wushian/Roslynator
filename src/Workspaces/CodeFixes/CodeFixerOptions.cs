@@ -16,6 +16,7 @@ namespace Roslynator.CodeFixes
             DiagnosticSeverity minimalSeverity = DiagnosticSeverity.Info,
             bool ignoreCompilerErrors = false,
             bool ignoreAnalyzerReferences = false,
+            IEnumerable<string> supportedDiagnosticIds = null,
             IEnumerable<string> ignoredDiagnosticIds = null,
             IEnumerable<string> ignoredCompilerDiagnosticIds = null,
             IEnumerable<string> ignoredProjectNames = null,
@@ -26,7 +27,13 @@ namespace Roslynator.CodeFixes
             MinimalSeverity = minimalSeverity;
             IgnoreCompilerErrors = ignoreCompilerErrors;
             IgnoreAnalyzerReferences = ignoreAnalyzerReferences;
-            IgnoredDiagnosticIds = ignoredDiagnosticIds?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
+            SupportedDiagnosticIds = supportedDiagnosticIds?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
+
+            //TODO: 
+            IgnoredDiagnosticIds = (ignoredDiagnosticIds != null && SupportedDiagnosticIds.Count == 0)
+                ? ignoredDiagnosticIds.ToImmutableHashSet()
+                : ImmutableHashSet<string>.Empty;
+
             IgnoredCompilerDiagnosticIds = ignoredCompilerDiagnosticIds?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
             IgnoredProjectNames = ignoredProjectNames?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
             Language = language;
@@ -40,6 +47,8 @@ namespace Roslynator.CodeFixes
 
         public bool IgnoreAnalyzerReferences { get; }
 
+        public ImmutableHashSet<string> SupportedDiagnosticIds { get; }
+
         public ImmutableHashSet<string> IgnoredDiagnosticIds { get; }
 
         public ImmutableHashSet<string> IgnoredCompilerDiagnosticIds { get; }
@@ -51,5 +60,12 @@ namespace Roslynator.CodeFixes
         public int BatchSize { get; }
 
         public bool Format { get; }
+
+        internal bool IsSupported(string diagnosticId)
+        {
+            return (SupportedDiagnosticIds.Count > 0)
+                ? SupportedDiagnosticIds.Contains(diagnosticId)
+                : !IgnoredDiagnosticIds.Contains(diagnosticId);
+        }
     }
 }

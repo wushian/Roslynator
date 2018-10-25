@@ -58,4 +58,10 @@
     <ProjectReference Include="..\Documentation\Documentation.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="format.ruleset">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

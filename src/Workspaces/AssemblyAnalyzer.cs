@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Security;
+using static Roslynator.ConsoleHelpers;
 
 namespace Roslynator
 {
@@ -61,6 +62,10 @@ namespace Roslynator
                     }
                 }
             }
+            else
+            {
+                WriteLine($"File or directory not found '{path}'", ConsoleColor.DarkGray);
+            }
 
             AnalyzerAssembly Load(string filePath)
             {
@@ -76,7 +81,7 @@ namespace Roslynator
                         || ex is BadImageFormatException
                         || ex is SecurityException)
                     {
-                        ConsoleHelpers.WriteLine($"Cannot load assembly '{filePath}'", ConsoleColor.DarkGray);
+                        WriteLine($"Cannot load assembly '{filePath}'", ConsoleColor.DarkGray);
 
                         return null;
                     }

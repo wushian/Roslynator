@@ -4,11 +4,13 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
+using Roslynator.CodeFixes;
 using Roslynator.Formatting;
 using static Roslynator.ConsoleHelpers;
 
@@ -25,6 +27,23 @@ namespace Roslynator.CommandLine
 
         public override async Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default)
         {
+            if (Options.RemoveRedundantEmptyLine)
+            {
+                var codeFixerOptions = new CodeFixerOptions(
+                    DiagnosticSeverity.Warning,
+                    ignoreCompilerErrors: true,
+                    ignoreAnalyzerReferences: true,
+                    supportedDiagnosticIds: new string[] { "RCS1036" },
+                    batchSize: 1000,
+                    format: true);
+
+                return await FixCommandExecutor.FixAsync(
+                    projectOrSolution,
+                    FixCommandExecutor.RoslynatorAnalyzerAssemblies,
+                    codeFixerOptions,
+                    cancellationToken);
+            }
+
             var options = new CodeFormatterOptions(includeGenerated: Options.IncludeGenerated);
 
             Workspace workspace = projectOrSolution.Workspace;
@@ -32,6 +51,8 @@ namespace Roslynator.CommandLine
             if (projectOrSolution.IsProject)
             {
                 Project project = projectOrSolution.AsProject();
+
+                string solutionDirectory = Path.GetDirectoryName(project.Solution.FilePath);
 
                 WriteLine($"  Analyze '{project.Name}'");
 
@@ -46,7 +67,7 @@ namespace Roslynator.CommandLine
                     IEnumerable<TextChange> textChanges = await document.GetTextChangesAsync(project.GetDocument(documentId));
 
                     if (textChanges.Any())
-                        WriteLine($"  Format '{PathUtilities.MakeRelativePath(document, newProject)}'");
+                        WriteLine($"  Format '{PathUtilities.MakeRelativePath(document.FilePath, solutionDirectory)}'");
                 }
 
                 bool success = workspace.TryApplyChanges(newProject.Solution);
@@ -56,6 +77,8 @@ namespace Roslynator.CommandLine
             else
             {
                 Solution solution = projectOrSolution.AsSolution();
+
+                string solutionDirectory = Path.GetDirectoryName(solution.FilePath);
 
                 WriteLine($"Analyze solution '{projectOrSolution.FilePath}'", ConsoleColor.Cyan);
 
@@ -79,7 +102,7 @@ namespace Roslynator.CommandLine
 
                         if (textChanges.Any())
                         {
-                            WriteLine($"  Format '{PathUtilities.MakeRelativePath(document, newProject)}'");
+                            WriteLine($"  Format '{PathUtilities.MakeRelativePath(document.FilePath, solutionDirectory)}'");
 
                             SourceText sourceText = document.GetTextAsync(cancellationToken).Result;
 

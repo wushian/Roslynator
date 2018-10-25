@@ -17,6 +17,7 @@ namespace Roslynator.Diagnostics
             bool reportSuppressedDiagnostics = false,
             bool executionTime = false,
             DiagnosticSeverity minimalSeverity = DiagnosticSeverity.Info,
+            IEnumerable<string> supportedDiagnosticIds = null,
             IEnumerable<string> ignoredDiagnosticIds = null,
             IEnumerable<string> ignoredProjectNames = null,
             string language = null,
@@ -28,7 +29,13 @@ namespace Roslynator.Diagnostics
             ReportSuppressedDiagnostics = reportSuppressedDiagnostics;
             ExecutionTime = executionTime;
             MinimalSeverity = minimalSeverity;
-            IgnoredDiagnosticIds = ignoredDiagnosticIds?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
+            SupportedDiagnosticIds = supportedDiagnosticIds?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
+
+            //TODO: 
+            IgnoredDiagnosticIds = (ignoredDiagnosticIds != null && SupportedDiagnosticIds.Count == 0)
+                ? ignoredDiagnosticIds.ToImmutableHashSet()
+                : ImmutableHashSet<string>.Empty;
+
             IgnoredProjectNames = ignoredProjectNames?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
             Language = language;
             CultureName = cultureName;
@@ -46,6 +53,8 @@ namespace Roslynator.Diagnostics
 
         public DiagnosticSeverity MinimalSeverity { get; }
 
+        public ImmutableHashSet<string> SupportedDiagnosticIds { get; }
+
         public ImmutableHashSet<string> IgnoredDiagnosticIds { get; }
 
         public ImmutableHashSet<string> IgnoredProjectNames { get; }
@@ -53,5 +62,12 @@ namespace Roslynator.Diagnostics
         public string Language { get; }
 
         public string CultureName { get; }
+
+        internal bool IsSupported(string diagnosticId)
+        {
+            return (SupportedDiagnosticIds.Count > 0)
+                ? SupportedDiagnosticIds.Contains(diagnosticId)
+                : !IgnoredDiagnosticIds.Contains(diagnosticId);
+        }
     }
 }

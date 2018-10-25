@@ -33,6 +33,7 @@ namespace Roslynator.CommandLine
                 reportSuppressedDiagnostics: Options.ReportSuppressedDiagnostics,
                 executionTime: Options.ExecutionTime,
                 minimalSeverity: MinimalSeverity,
+                supportedDiagnosticIds: Options.SupportedDiagnostics,
                 ignoredDiagnosticIds: Options.IgnoredDiagnostics,
                 ignoredProjectNames: Options.IgnoredProjects,
                 language: CommandLineHelpers.GetLanguageName(Options.Language),

@@ -15,6 +15,8 @@ namespace Roslynator
             Project project,
             AnalyzerAssemblyList analyzerAssemblies,
             AnalyzerAssemblyList analyzerReferences,
+            ImmutableHashSet<string> supportedDiagnosticIds,
+            ImmutableHashSet<string> ignoredDiagnosticIds,
             bool ignoreAnalyzerReferences = false,
             DiagnosticSeverity minimalSeverity = DiagnosticSeverity.Info)
         {
@@ -22,6 +24,8 @@ namespace Roslynator
                 project: project,
                 analyzerAssemblies: analyzerAssemblies,
                 analyzerReferences: analyzerReferences,
+                supportedDiagnosticIds: supportedDiagnosticIds,
+                ignoredDiagnosticIds: ignoredDiagnosticIds,
                 ignoreAnalyzerReferences: ignoreAnalyzerReferences,
                 minimalSeverity: minimalSeverity,
                 loadFixers: false).analyzers;
@@ -31,6 +35,8 @@ namespace Roslynator
             Project project,
             AnalyzerAssemblyList analyzerAssemblies,
             AnalyzerAssemblyList analyzerReferences,
+            ImmutableHashSet<string> supportedDiagnosticIds,
+            ImmutableHashSet<string> ignoredDiagnosticIds,
             bool ignoreAnalyzerReferences = false,
             DiagnosticSeverity minimalSeverity = DiagnosticSeverity.Info)
         {
@@ -38,6 +44,8 @@ namespace Roslynator
                 project: project,
                 analyzerAssemblies: analyzerAssemblies,
                 analyzerReferences: analyzerReferences,
+                supportedDiagnosticIds: supportedDiagnosticIds,
+                ignoredDiagnosticIds: ignoredDiagnosticIds,
                 ignoreAnalyzerReferences: ignoreAnalyzerReferences,
                 minimalSeverity: minimalSeverity,
                 loadFixers: true);
@@ -47,6 +55,8 @@ namespace Roslynator
             Project project,
             AnalyzerAssemblyList analyzerAssemblies,
             AnalyzerAssemblyList analyzerReferences,
+            ImmutableHashSet<string> supportedDiagnosticIds,
+            ImmutableHashSet<string> ignoredDiagnosticIds,
             bool ignoreAnalyzerReferences = false,
             DiagnosticSeverity minimalSeverity = DiagnosticSeverity.Info,
             bool loadFixers = true)
@@ -63,16 +73,55 @@ namespace Roslynator
             ImmutableArray<DiagnosticAnalyzer> analyzers = analyzerAssemblies
                 .GetAnalyzers(language)
                 .Concat(analyzerReferences.GetOrAddAnalyzers(assemblies, language))
-                .Where(a =>
+                .Where(analyzer =>
                 {
-                    return a.SupportedDiagnostics
-                        .Any(d =>
-                        {
-                            ReportDiagnostic reportDiagnostic = d.GetEffectiveSeverity(project.CompilationOptions);
+                    ImmutableArray<DiagnosticDescriptor> supportedDiagnostics = analyzer.SupportedDiagnostics;
 
-                            return reportDiagnostic != ReportDiagnostic.Suppress
-                                && reportDiagnostic.ToDiagnosticSeverity() >= minimalSeverity;
-                        });
+                    if (supportedDiagnosticIds.Count > 0)
+                    {
+                        bool success = false;
+
+                        foreach (DiagnosticDescriptor supportedDiagnostic in supportedDiagnostics)
+                        {
+                            if (supportedDiagnosticIds.Contains(supportedDiagnostic.Id))
+                            {
+                                success = true;
+                                break;
+                            }
+                        }
+
+                        if (!success)
+                            return false;
+                    }
+                    else if (ignoredDiagnosticIds.Count > 0)
+                    {
+                        bool success = false;
+
+                        foreach (DiagnosticDescriptor supportedDiagnostic in supportedDiagnostics)
+                        {
+                            if (!ignoredDiagnosticIds.Contains(supportedDiagnostic.Id))
+                            {
+                                success = true;
+                                break;
+                            }
+                        }
+
+                        if (!success)
+                            return false;
+                    }
+
+                    foreach (DiagnosticDescriptor supportedDiagnostic in supportedDiagnostics)
+                    {
+                        ReportDiagnostic reportDiagnostic = supportedDiagnostic.GetEffectiveSeverity(project.CompilationOptions);
+
+                        if (reportDiagnostic != ReportDiagnostic.Suppress
+                            && reportDiagnostic.ToDiagnosticSeverity() >= minimalSeverity)
+                        {
+                            return true;
+                        }
+                    }
+
+                    return false;
                 })
                  .ToImmutableArray();
 
@@ -81,6 +130,7 @@ namespace Roslynator
             if (analyzers.Any()
                 && loadFixers)
             {
+                //TODO: filter fixers
                 fixers = analyzerAssemblies
                     .GetFixers(language)
                     .Concat(analyzerReferences.GetOrAddFixers(assemblies, language))
