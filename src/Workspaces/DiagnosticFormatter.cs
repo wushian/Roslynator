@@ -62,19 +62,25 @@ namespace Roslynator
             if ((parts & DiagnosticDisplayParts.Severity) != 0)
             {
                 sb.Append(severity);
-                sb.Append(' ', maxSeverityLength - severity.Length + 1);
+                sb.Append(' ', maxSeverityLength - severity.Length);
             }
 
             if ((parts & DiagnosticDisplayParts.Id) != 0)
             {
+                if ((parts & DiagnosticDisplayParts.Severity) != 0)
+                    sb.Append(' ');
+
                 sb.Append(diagnostic.Id);
-                sb.Append(' ', maxIdLength - diagnostic.Id.Length + 1);
+                sb.Append(' ', maxIdLength - diagnostic.Id.Length);
             }
 
             string message = diagnostic.GetMessage(formatProvider);
 
             if ((parts & DiagnosticDisplayParts.Message) != 0)
             {
+                if ((parts & (DiagnosticDisplayParts.Severity | DiagnosticDisplayParts.Id)) != 0)
+                    sb.Append(' ');
+
                 sb.Append(message);
                 sb.Append(' ', maxMessageLength - message.Length);
             }
@@ -91,7 +97,9 @@ namespace Roslynator
                         {
                             if ((parts & DiagnosticDisplayParts.Path) != 0)
                             {
-                                sb.Append(' ');
+                                if ((parts & (DiagnosticDisplayParts.Severity | DiagnosticDisplayParts.Id | DiagnosticDisplayParts.Message)) != 0)
+                                    sb.Append(' ');
+
                                 sb.Append(PathUtilities.MakeRelativePath(span.Path, baseDirectoryPath));
                             }
 

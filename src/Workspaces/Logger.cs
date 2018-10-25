@@ -310,11 +310,11 @@ namespace Roslynator
 
         public static void WriteDiagnostics(
             ImmutableArray<Diagnostic> diagnostics,
-            DiagnosticDisplayParts parts = DiagnosticDisplayParts.All,
             string baseDirectoryPath = null,
             IFormatProvider formatProvider = null,
             string indentation = null,
             int maxCount = int.MaxValue,
+            DiagnosticDisplayParts parts = DiagnosticDisplayParts.All,
             Verbosity verbosity = Verbosity.None)
         {
             if (!diagnostics.Any())

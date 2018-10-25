@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: NormalizeLineEndings, VerifySyntaxEquivalence
+    //TODO: NormalizeLineEndings
     [Verb("format")]
     public class FormatCommandLineOptions : MSBuildCommandLineOptions
     {
@@ -38,8 +38,8 @@ namespace Roslynator.CommandLine
         [Option(longName: "include-generated")]
         public bool IncludeGenerated { get; set; }
 
-        [Option(longName: "new-line-after-case-label")]
-        public bool NewLineAfterCaseLabel { get; set; }
+        [Option(longName: "new-line-after-switch-label")]
+        public bool NewLineAfterSwitchLabel { get; set; }
 
         [Option(longName: "new-line-before-embedded-statement")]
         public bool NewLineBeforeEmbeddedStatement { get; set; }
@@ -79,7 +79,7 @@ namespace Roslynator.CommandLine
             if (FormatSingleLineBlock)
                 yield return DiagnosticDescriptors.AvoidSingleLineBlock;
 
-            if (NewLineAfterCaseLabel)
+            if (NewLineAfterSwitchLabel)
                 yield return DiagnosticDescriptors.FormatSwitchSectionStatementOnSeparateLine;
 
             if (NewLineBeforeEmbeddedStatement)

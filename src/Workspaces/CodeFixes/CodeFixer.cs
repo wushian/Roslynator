@@ -333,9 +333,9 @@ namespace Roslynator.CodeFixes
             ImmutableArray<CodeFixProvider> fixers,
             CancellationToken cancellationToken)
         {
-            WriteLine($"  Fix {diagnostics.Length,4} {diagnosticId,10} '{diagnostics[0].Descriptor.Title}'", Verbosity.Normal);
+            WriteLine($"  Fix {diagnostics.Length,4} {diagnosticId,10} '{diagnostics[0].Descriptor.Title}'", diagnostics[0].Severity.GetColor(), Verbosity.Normal);
 
-            WriteDiagnostics(diagnostics, DiagnosticDisplayParts.PathAndLocation, Path.GetDirectoryName(project.FilePath), FormatProvider, indentation: "  ", verbosity: Verbosity.Detailed);
+            WriteDiagnostics(diagnostics, baseDirectoryPath: Path.GetDirectoryName(project.FilePath), formatProvider: FormatProvider, indentation: "    ", verbosity: Verbosity.Detailed);
 
             CodeFixProvider fixer = null;
             CodeAction codeAction = null;

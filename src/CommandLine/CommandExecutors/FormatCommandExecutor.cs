@@ -177,11 +177,7 @@ namespace Roslynator.CommandLine
                 (await oldProject.GetDocument(newDocument.Id).GetSyntaxRootAsync(cancellationToken)).NormalizeWhitespace("", false).ToFullString(),
                 StringComparison.Ordinal))
             {
-                WriteLine("Normalized syntax roots are not equivalent", ConsoleColor.Yellow);
-            }
-            else
-            {
-                WriteLine("Normalized syntax roots are equivalent");
+                WriteLine("Syntax roots with normalized white-space are not equivalent", ConsoleColor.Magenta);
             }
 
             switch (oldProject.Language)
@@ -193,11 +189,7 @@ namespace Roslynator.CommandLine
                             await oldProject.GetDocument(newDocument.Id).GetSyntaxTreeAsync(cancellationToken),
                             topLevel: false))
                         {
-                            WriteLine("Syntax trees are not equivalent", ConsoleColor.Yellow);
-                        }
-                        else
-                        {
-                            WriteLine("Syntax trees are equivalent");
+                            WriteLine("Syntax trees are not equivalent", ConsoleColor.Magenta);
                         }
 
                         break;
@@ -209,13 +201,14 @@ namespace Roslynator.CommandLine
                             await oldProject.GetDocument(newDocument.Id).GetSyntaxTreeAsync(cancellationToken),
                             topLevel: false))
                         {
-                            WriteLine("Syntax trees are not equivalent", ConsoleColor.Yellow);
-                        }
-                        else
-                        {
-                            WriteLine("Syntax trees are equivalent");
+                            WriteLine("Syntax trees are not equivalent", ConsoleColor.Magenta);
                         }
 
+                        break;
+                    }
+                default:
+                    {
+                        Debug.Fail(oldProject.Language);
                         break;
                     }
             }
