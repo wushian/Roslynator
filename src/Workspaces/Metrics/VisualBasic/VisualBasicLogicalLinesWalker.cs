@@ -15,12 +15,6 @@ namespace Roslynator.Metrics.VisualBasic
         {
         }
 
-        public override void VisitEmptyStatement(EmptyStatementSyntax node)
-        {
-            LogicalLineCount++;
-            base.VisitEmptyStatement(node);
-        }
-
         public override void VisitOptionStatement(OptionStatementSyntax node)
         {
             LogicalLineCount++;

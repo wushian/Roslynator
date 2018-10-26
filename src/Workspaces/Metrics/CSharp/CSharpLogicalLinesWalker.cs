@@ -87,12 +87,6 @@ namespace Roslynator.Metrics.CSharp
             base.VisitElseClause(node);
         }
 
-        public override void VisitEmptyStatement(EmptyStatementSyntax node)
-        {
-            LogicalLineCount++;
-            base.VisitEmptyStatement(node);
-        }
-
         public override void VisitEnumDeclaration(EnumDeclarationSyntax node)
         {
             LogicalLineCount++;

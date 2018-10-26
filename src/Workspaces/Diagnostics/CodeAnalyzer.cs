@@ -165,7 +165,7 @@ namespace Roslynator.Diagnostics
 
         public async Task<ProjectAnalysisResult> AnalyzeProjectAsync(Project project, CancellationToken cancellationToken = default)
         {
-            ImmutableArray<DiagnosticAnalyzer> analyzers = AnalysisUtilities.GetAnalyzers(
+            ImmutableArray<DiagnosticAnalyzer> analyzers = WorkspacesUtilities.GetAnalyzers(
                 project: project,
                 analyzerAssemblies: _analyzerReferences,
                 analyzerReferences: _analyzerAssemblies,
