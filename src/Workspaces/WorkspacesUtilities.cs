@@ -169,16 +169,45 @@ namespace Roslynator
             return false;
         }
 
+        public static bool BeginsWithBanner(SyntaxNode root, ImmutableArray<string> banner)
+        {
+            switch (root.Language)
+            {
+                case LanguageNames.CSharp:
+                    {
+                        return BeginsWithBanner(
+                            root,
+                            banner,
+                            f => f.IsKind(Microsoft.CodeAnalysis.CSharp.SyntaxKind.SingleLineCommentTrivia),
+                            f => f.IsKind(Microsoft.CodeAnalysis.CSharp.SyntaxKind.EndOfLineTrivia),
+                            2);
+                    }
+                case LanguageNames.VisualBasic:
+                    {
+                        return BeginsWithBanner(
+                            root,
+                            banner,
+                            f => f.IsKind(Microsoft.CodeAnalysis.VisualBasic.SyntaxKind.CommentTrivia),
+                            f => f.IsKind(Microsoft.CodeAnalysis.VisualBasic.SyntaxKind.EndOfLineTrivia),
+                            1);
+                    }
+                default:
+                    {
+                        throw new NotSupportedException($"Language '{root.Language}' is not supported.");
+                    }
+            }
+        }
+
         public static bool BeginsWithBanner(
             SyntaxNode root,
-            ImmutableArray<string> bannerLines,
+            ImmutableArray<string> banner,
             Func<SyntaxTrivia, bool> isSingleLineComment,
             Func<SyntaxTrivia, bool> isEndOfLine,
             int singleLineCommentStartLength)
         {
             SyntaxTriviaList leading = root.GetLeadingTrivia();
 
-            if (bannerLines.Length > leading.Count)
+            if (banner.Length > leading.Count)
                 return false;
 
             int i = 0;
@@ -191,7 +220,7 @@ namespace Roslynator
                     string comment = trivia.ToString();
 
                     if (string.Compare(
-                        bannerLines[i],
+                        banner[i],
                         0,
                         comment,
                         singleLineCommentStartLength,
@@ -201,7 +230,7 @@ namespace Roslynator
                         return false;
                     }
 
-                    if (i == bannerLines.Length - 1)
+                    if (i == banner.Length - 1)
                         return true;
 
                     i++;
@@ -220,7 +249,7 @@ namespace Roslynator
                 i++;
             }
 
-            return i == bannerLines.Length;
+            return i == banner.Length;
         }
     }
 }

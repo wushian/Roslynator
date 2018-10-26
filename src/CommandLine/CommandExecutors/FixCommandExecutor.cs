@@ -65,6 +65,7 @@ namespace Roslynator.CommandLine
                 ignoredProjectNames: Options.IgnoredProjects,
                 diagnosticFixMap: DiagnosticFixMap,
                 diagnosticFixerMap: DiagnosticFixerMap,
+                fileBanner: Options.FileBanner,
                 language: Options.Language,
                 batchSize: Options.BatchSize,
                 format: Options.Format);
