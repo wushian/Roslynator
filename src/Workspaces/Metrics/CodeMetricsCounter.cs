@@ -13,9 +13,7 @@ namespace Roslynator.Metrics
 {
     public abstract class CodeMetricsCounter
     {
-        public abstract bool IsComment(SyntaxTrivia trivia);
-
-        public abstract bool IsEndOfLine(SyntaxTrivia trivia);
+        internal abstract SyntaxFactsService SyntaxFacts { get; }
 
         protected abstract CodeMetrics CountLines(SyntaxNode node, SourceText sourceText, CodeMetricsOptions options, CancellationToken cancellationToken);
 
@@ -126,7 +124,7 @@ namespace Roslynator.Metrics
                 return default;
 
             if (!options.IncludeGenerated
-                && GeneratedCodeUtility.IsGeneratedCode(tree, IsComment, cancellationToken))
+                && GeneratedCodeUtility.IsGeneratedCode(tree, SyntaxFacts.IsComment, cancellationToken))
             {
                 return default;
             }
@@ -147,7 +145,7 @@ namespace Roslynator.Metrics
                 if (line.IsEmptyOrWhiteSpace())
                 {
                     if (line.End == sourceText.Length
-                        || IsEndOfLine(root.FindTrivia(line.End)))
+                        || SyntaxFacts.IsEndOfLineTrivia(root.FindTrivia(line.End)))
                     {
                         whiteSpaceLineCount++;
                     }

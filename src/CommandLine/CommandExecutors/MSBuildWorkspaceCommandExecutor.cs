@@ -148,7 +148,8 @@ namespace Roslynator.CommandLine
             {
                 Project project = workspace.CurrentSolution.GetProject(projectId);
 
-                if (ignoredProjectNames.Contains(project.Name)
+                if (SyntaxFactsService.IsSupportedLanguage(project.Language)
+                    || ignoredProjectNames.Contains(project.Name)
                     || (language != null && language != project.Language))
                 {
                     WriteLine($"  Skip '{project.Name}'", ConsoleColor.DarkGray, Verbosity.Normal);

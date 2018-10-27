@@ -81,7 +81,7 @@ namespace Roslynator.CommandLine
 
                         WriteLine($"  Format '{PathUtilities.MakeRelativePath(document.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
 #if DEBUG
-                        await VerifySyntaxEquivalence(project.GetDocument(document.Id), document, cancellationToken);
+                        await WorkspacesUtilities.VerifySyntaxEquivalenceAsync(project.GetDocument(document.Id), document, cancellationToken);
 #endif
                     }
                 }
@@ -129,7 +129,7 @@ namespace Roslynator.CommandLine
                         {
                             WriteLine($"  Format '{PathUtilities.MakeRelativePath(document.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
 #if DEBUG
-                            VerifySyntaxEquivalence(project.GetDocument(document.Id), document, cancellationToken).Wait(cancellationToken);
+                            bool success = WorkspacesUtilities.VerifySyntaxEquivalenceAsync(project.GetDocument(document.Id), document, cancellationToken).Result;
 #endif
                             SourceText sourceText = document.GetTextAsync(cancellationToken).Result;
 
@@ -165,53 +165,6 @@ namespace Roslynator.CommandLine
         protected override void OperationCanceled(OperationCanceledException ex)
         {
             WriteLine("Formatting was canceled.", Verbosity.Minimal);
-        }
-
-        private static async Task VerifySyntaxEquivalence(
-            Document oldDocument,
-            Document newDocument,
-            CancellationToken cancellationToken)
-        {
-            if (!string.Equals(
-                (await newDocument.GetSyntaxRootAsync(cancellationToken)).NormalizeWhitespace("", false).ToFullString(),
-                (await oldDocument.GetSyntaxRootAsync(cancellationToken)).NormalizeWhitespace("", false).ToFullString(),
-                StringComparison.Ordinal))
-            {
-                WriteLine("Syntax roots with normalized white-space are not equivalent", ConsoleColor.Magenta);
-            }
-
-            switch (oldDocument.Project.Language)
-            {
-                case LanguageNames.CSharp:
-                    {
-                        if (!Microsoft.CodeAnalysis.CSharp.SyntaxFactory.AreEquivalent(
-                            await newDocument.GetSyntaxTreeAsync(cancellationToken),
-                            await oldDocument.GetSyntaxTreeAsync(cancellationToken),
-                            topLevel: false))
-                        {
-                            WriteLine("Syntax trees are not equivalent", ConsoleColor.Magenta);
-                        }
-
-                        break;
-                    }
-                case LanguageNames.VisualBasic:
-                    {
-                        if (!Microsoft.CodeAnalysis.VisualBasic.SyntaxFactory.AreEquivalent(
-                            await newDocument.GetSyntaxTreeAsync(cancellationToken),
-                            await oldDocument.GetSyntaxTreeAsync(cancellationToken),
-                            topLevel: false))
-                        {
-                            WriteLine("Syntax trees are not equivalent", ConsoleColor.Magenta);
-                        }
-
-                        break;
-                    }
-                default:
-                    {
-                        Debug.Fail(oldDocument.Project.Language);
-                        break;
-                    }
-            }
         }
     }
 }

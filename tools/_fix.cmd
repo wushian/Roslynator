@@ -4,13 +4,14 @@
 
 set _analyzersDir=..\src\Analyzers.CodeFixes\bin\Debug\netstandard1.3\
 
-"..\src\CommandLine\bin\Debug\net461\roslynator" fix "..\src\CommandLine.sln" ^
+"..\src\CommandLine\bin\Debug\net461\roslynator" fix "..\src\Roslynator.sln" ^
  --use-roslynator-analyzers ^
  --ignore-analyzer-references ^
  --format ^
+ --verbosity d ^
  --log-file "roslynator.log" ^
  --log-file-verbosity d ^
- --diagnostic-fix-map "RCS1155=Roslynator.RCS1155.OrdinalIgnoreCase ^
+ --diagnostic-fix-map "RCS1155=Roslynator.RCS1155.OrdinalIgnoreCase" ^
  --file-banner " Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information."
 
 pause

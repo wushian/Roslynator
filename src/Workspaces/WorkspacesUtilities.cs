@@ -5,10 +5,13 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Roslynator.CSharp;
+using static Roslynator.Logger;
 
 namespace Roslynator
 {
@@ -164,33 +167,6 @@ namespace Roslynator
                             root,
                             f => f.IsKind(Microsoft.CodeAnalysis.VisualBasic.SyntaxKind.CommentTrivia));
                     }
-            }
-
-            return false;
-        }
-
-        public static bool BeginsWithBanner(SyntaxNode root, ImmutableArray<string> banner)
-        {
-            switch (root.Language)
-            {
-                case LanguageNames.CSharp:
-                    {
-                        return BeginsWithBanner(
-                            root,
-                            banner,
-                            f => f.IsKind(Microsoft.CodeAnalysis.CSharp.SyntaxKind.SingleLineCommentTrivia),
-                            f => f.IsKind(Microsoft.CodeAnalysis.CSharp.SyntaxKind.EndOfLineTrivia),
-                            2);
-                    }
-                case LanguageNames.VisualBasic:
-                    {
-                        return BeginsWithBanner(
-                            root,
-                            banner,
-                            f => f.IsKind(Microsoft.CodeAnalysis.VisualBasic.SyntaxKind.CommentTrivia),
-                            f => f.IsKind(Microsoft.CodeAnalysis.VisualBasic.SyntaxKind.EndOfLineTrivia),
-                            1);
-                    }
                 default:
                     {
                         throw new NotSupportedException($"Language '{root.Language}' is not supported.");
@@ -198,58 +174,29 @@ namespace Roslynator
             }
         }
 
-        public static bool BeginsWithBanner(
-            SyntaxNode root,
-            ImmutableArray<string> banner,
-            Func<SyntaxTrivia, bool> isSingleLineComment,
-            Func<SyntaxTrivia, bool> isEndOfLine,
-            int singleLineCommentStartLength)
+        public static async Task<bool> VerifySyntaxEquivalenceAsync(
+            Document oldDocument,
+            Document newDocument,
+            CancellationToken cancellationToken = default)
         {
-            SyntaxTriviaList leading = root.GetLeadingTrivia();
-
-            if (banner.Length > leading.Count)
-                return false;
-
-            int i = 0;
-            while (i < leading.Count)
+            if (!string.Equals(
+                (await newDocument.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false)).NormalizeWhitespace("", false).ToFullString(),
+                (await oldDocument.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false)).NormalizeWhitespace("", false).ToFullString(),
+                StringComparison.Ordinal))
             {
-                SyntaxTrivia trivia = leading[i];
-
-                if (isSingleLineComment(trivia))
-                {
-                    string comment = trivia.ToString();
-
-                    if (string.Compare(
-                        banner[i],
-                        0,
-                        comment,
-                        singleLineCommentStartLength,
-                        comment.Length - singleLineCommentStartLength,
-                        StringComparison.Ordinal) != 0)
-                    {
-                        return false;
-                    }
-
-                    if (i == banner.Length - 1)
-                        return true;
-
-                    i++;
-
-                    if (i == leading.Count
-                        || !isEndOfLine(leading[i]))
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-
-                i++;
+                WriteLine("Syntax roots with normalized white-space are not equivalent", ConsoleColor.Magenta);
+                return false;
             }
 
-            return i == banner.Length;
+            if (!SyntaxFactsService.GetService(oldDocument.Project.Language).AreEquivalent(
+                await newDocument.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false),
+                await oldDocument.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false)))
+            {
+                WriteLine("Syntax trees are not equivalent", ConsoleColor.Magenta);
+                return false;
+            }
+
+            return true;
         }
     }
 }
