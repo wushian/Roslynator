@@ -15,8 +15,8 @@ roslynator analyze <PROJECT|SOLUTION>
 [--ignored-diagnostics]
 [--ignored-projects]
 [--language]
-[--log-file]
-[--log-file-verbosity]
+[--file-log]
+[--file-log-verbosity]
 [--minimal-severity]
 [--msbuild-path]
 [--projects]
@@ -66,7 +66,7 @@ Defines diagnostic identifiers that should not be reported.
 
 Defines projects that should not be analyzed.
 
-**`--language`** `{csharp|vb}`
+**`--language`** `{cs[harp]|v[isual-]b[asic])}`
 
 Defines project language.
 

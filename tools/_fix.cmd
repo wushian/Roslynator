@@ -9,8 +9,8 @@ set _analyzersDir=..\src\Analyzers.CodeFixes\bin\Debug\netstandard1.3\
  --ignore-analyzer-references ^
  --format ^
  --verbosity d ^
- --log-file "roslynator.log" ^
- --log-file-verbosity d ^
+ --file-log "roslynator.log" ^
+ --file-log-verbosity d ^
  --diagnostic-fix-map "RCS1155=Roslynator.RCS1155.OrdinalIgnoreCase" ^
  --file-banner " Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information."
 

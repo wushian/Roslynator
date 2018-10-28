@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using CommandLine;
+using Microsoft.CodeAnalysis;
 
 namespace Roslynator.CommandLine
 {
@@ -24,5 +25,14 @@ namespace Roslynator.CommandLine
 
         [Option(longName: "supported-diagnostics")]
         public IEnumerable<string> SupportedDiagnostics { get; set; }
+
+        internal bool TryGetMinimalSeverity(DiagnosticSeverity defaultValue, out DiagnosticSeverity value)
+        {
+            if (MinimalSeverity != null)
+                return CommandLineHelpers.TryParseDiagnosticSeverity(MinimalSeverity, out value);
+
+            value = defaultValue;
+            return true;
+        }
     }
 }

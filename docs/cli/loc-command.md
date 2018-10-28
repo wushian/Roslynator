@@ -14,8 +14,8 @@ roslynator loc <PROJECT|SOLUTION>
 [--include-preprocessor-directives]
 [--include-whitespace]
 [--language]
-[--log-file]
-[--log-file-verbosity]
+[--file-log]
+[--file-log-verbosity]
 [--msbuild-path]
 [--projects]
 [-p|--properties]
@@ -58,7 +58,7 @@ Indicates whether preprocessor directive line should be counted.
 
 Indicates whether white-space line should be counted.
 
-**`--language`** `{csharp|vb}`
+**`--language`** `{cs[harp]|v[isual-]b[asic])}`
 
 Defines project language.
 

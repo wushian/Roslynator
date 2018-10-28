@@ -57,12 +57,12 @@ namespace Roslynator.CommandLine
 
                         Verbosity logFileVerbosity = consoleVerbosity;
 
-                        if (options.LogFileVerbosity == null
-                            || TryParseVerbosity(options.LogFileVerbosity, out logFileVerbosity))
+                        if (options.FileLogVerbosity == null
+                            || TryParseVerbosity(options.FileLogVerbosity, out logFileVerbosity))
                         {
-                            if (options.LogFile != null)
+                            if (options.FileLog != null)
                             {
-                                var fs = new FileStream(options.LogFile, FileMode.Create, FileAccess.Write, FileShare.Read);
+                                var fs = new FileStream(options.FileLog, FileMode.Create, FileAccess.Write, FileShare.Read);
                                 var sw = new StreamWriter(fs, Encoding.UTF8, bufferSize: 4096, leaveOpen: false);
                                 Out = new TextWriterWithVerbosity(sw) { Verbosity = logFileVerbosity };
                             }
@@ -78,7 +78,7 @@ namespace Roslynator.CommandLine
                 return parserResult.MapResult(
                     (FixCommandLineOptions options) => FixAsync(options).Result,
                     (AnalyzeCommandLineOptions options) => AnalyzeAsync(options).Result,
-                    (AnalyzeAssemblyCommandLineOptions options) => AnalyzeAssemblyCommandExecutor.Execute(options),
+                    (AnalyzeAssemblyCommandLineOptions options) => AnalyzeAssembly(options),
                     (FormatCommandLineOptions options) => FormatAsync(options).Result,
                     (PhysicalLinesOfCodeCommandLineOptions options) => PhysicalLinesOrCodeAsync(options).Result,
                     (LogicalLinesOfCodeCommandLineOptions options) => LogicalLinesOrCodeAsync(options).Result,
@@ -96,15 +96,8 @@ namespace Roslynator.CommandLine
 
         private static async Task<int> FixAsync(FixCommandLineOptions options)
         {
-            DiagnosticSeverity minimalSeverity = CodeFixerOptions.Default.MinimalSeverity;
-
-            if (options.MinimalSeverity != null)
-            {
-                if (!TryParseDiagnosticSeverity(options.MinimalSeverity, out DiagnosticSeverity severity))
-                    return 1;
-
-                minimalSeverity = severity;
-            }
+            if (!options.TryGetMinimalSeverity(CodeFixerOptions.Default.MinimalSeverity, out DiagnosticSeverity minimalSeverity))
+                return 1;
 
             if (!TryParseKeyValuePairs(options.DiagnosticFixMap, out Dictionary<string, string> diagnosticFixMap))
                 return 1;
@@ -112,11 +105,15 @@ namespace Roslynator.CommandLine
             if (!TryParseKeyValuePairs(options.DiagnosticFixerMap, out Dictionary<string, string> diagnosticFixerMap))
                 return 1;
 
+            if (!options.TryGetLanguage(out string language))
+                return 1;
+
             var executor = new FixCommandExecutor(
                 options: options,
                 minimalSeverity: minimalSeverity,
                 diagnosticFixMap: diagnosticFixMap?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty,
-                diagnosticFixerMap: diagnosticFixerMap?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty);
+                diagnosticFixerMap: diagnosticFixerMap?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty,
+                language: language);
 
             CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
 
@@ -125,26 +122,42 @@ namespace Roslynator.CommandLine
 
         private static async Task<int> AnalyzeAsync(AnalyzeCommandLineOptions options)
         {
-            DiagnosticSeverity minimalSeverity = CodeAnalyzerOptions.Default.MinimalSeverity;
+            if (!options.TryGetMinimalSeverity(CodeAnalyzerOptions.Default.MinimalSeverity, out DiagnosticSeverity minimalSeverity))
+                return 1;
 
-            if (options.MinimalSeverity != null)
-            {
-                if (!TryParseDiagnosticSeverity(options.MinimalSeverity, out DiagnosticSeverity severity))
-                    return 1;
+            if (!options.TryGetLanguage(out string language))
+                return 1;
 
-                minimalSeverity = severity;
-            }
-
-            var executor = new AnalyzeCommandExecutor(options, minimalSeverity);
+            var executor = new AnalyzeCommandExecutor(options, minimalSeverity, language);
 
             CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
 
             return (result.Success) ? 0 : 1;
         }
 
+        private static int AnalyzeAssembly(AnalyzeAssemblyCommandLineOptions options)
+        {
+            string language = null;
+
+            if (options.Language != null
+                && !TryParseLanguage(options.Language, out language))
+            {
+                return 1;
+            }
+
+            var executor = new AnalyzeAssemblyCommandExecutor(language);
+
+            CommandResult result = executor.Execute(options);
+
+            return (result.Success) ? 0 : 1;
+        }
+
         private static async Task<int> FormatAsync(FormatCommandLineOptions options)
         {
-            var executor = new FormatCommandExecutor(options);
+            if (!options.TryGetLanguage(out string language))
+                return 1;
+
+            var executor = new FormatCommandExecutor(options, language);
 
             IEnumerable<string> properties = options.Properties;
 
@@ -162,7 +175,10 @@ namespace Roslynator.CommandLine
 
         private static async Task<int> PhysicalLinesOrCodeAsync(PhysicalLinesOfCodeCommandLineOptions options)
         {
-            var executor = new PhysicalLinesOfCodeCommandExecutor(options);
+            if (!options.TryGetLanguage(out string language))
+                return 1;
+
+            var executor = new PhysicalLinesOfCodeCommandExecutor(options, language);
 
             CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
 
@@ -171,7 +187,10 @@ namespace Roslynator.CommandLine
 
         private static async Task<int> LogicalLinesOrCodeAsync(LogicalLinesOfCodeCommandLineOptions options)
         {
-            var executor = new LogicalLinesOfCodeCommandExecutor(options);
+            if (!options.TryGetLanguage(out string language))
+                return 1;
+
+            var executor = new LogicalLinesOfCodeCommandExecutor(options, language);
 
             CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
 

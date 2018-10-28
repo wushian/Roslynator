@@ -251,22 +251,22 @@ namespace Roslynator.CommandLine
 
         public static bool TryParseVerbosity(string value, out Verbosity verbosity)
         {
-            if (string.Equals(value, "q", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(value, "q", StringComparison.Ordinal))
             {
                 verbosity = Verbosity.Quiet;
                 return true;
             }
-            else if (string.Equals(value, "m", StringComparison.OrdinalIgnoreCase))
+            else if (string.Equals(value, "m", StringComparison.Ordinal))
             {
                 verbosity = Verbosity.Minimal;
                 return true;
             }
-            else if (string.Equals(value, "n", StringComparison.OrdinalIgnoreCase))
+            else if (string.Equals(value, "n", StringComparison.Ordinal))
             {
                 verbosity = Verbosity.Normal;
                 return true;
             }
-            else if (string.Equals(value, "d", StringComparison.OrdinalIgnoreCase))
+            else if (string.Equals(value, "d", StringComparison.Ordinal))
             {
                 verbosity = Verbosity.Detailed;
                 return true;
@@ -280,15 +280,28 @@ namespace Roslynator.CommandLine
             return false;
         }
 
-        public static string GetLanguageName(string value)
+        public static bool TryParseLanguage(string value, out string language)
         {
-            if (string.Equals(value, "csharp", StringComparison.OrdinalIgnoreCase))
-                return LanguageNames.CSharp;
+            switch (value)
+            {
+                case "cs":
+                case "csharp":
+                    {
+                        language = LanguageNames.CSharp;
+                        return true;
+                    }
+                case "vb":
+                case "visual-basic":
+                    {
+                        language = LanguageNames.VisualBasic;
+                        return true;
+                    }
+            }
 
-            if (string.Equals(value, "vb", StringComparison.OrdinalIgnoreCase))
-                return LanguageNames.VisualBasic;
+            WriteLine($"Unknown language '{value}'.", Verbosity.Quiet);
 
-            return null;
+            language = null;
+            return false;
         }
     }
 }

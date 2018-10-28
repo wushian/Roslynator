@@ -15,7 +15,7 @@ namespace Roslynator.CommandLine
 {
     internal class PhysicalLinesOfCodeCommandExecutor : AbstractLinesOfCodeCommandExecutor
     {
-        public PhysicalLinesOfCodeCommandExecutor(PhysicalLinesOfCodeCommandLineOptions options)
+        public PhysicalLinesOfCodeCommandExecutor(PhysicalLinesOfCodeCommandLineOptions options, string language) : base(language)
         {
             Options = options;
         }

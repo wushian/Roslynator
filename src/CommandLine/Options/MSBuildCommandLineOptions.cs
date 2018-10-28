@@ -25,5 +25,14 @@ namespace Roslynator.CommandLine
 
         [Option(shortName: 'p', longName: "properties")]
         public IEnumerable<string> Properties { get; set; }
+
+        internal bool TryGetLanguage(out string value)
+        {
+            if (Language != null)
+                return CommandLineHelpers.TryParseLanguage(Language, out value);
+
+            value = null;
+            return true;
+        }
     }
 }

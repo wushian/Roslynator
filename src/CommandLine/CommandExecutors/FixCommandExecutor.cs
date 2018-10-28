@@ -23,7 +23,8 @@ namespace Roslynator.CommandLine
             FixCommandLineOptions options,
             DiagnosticSeverity minimalSeverity,
             ImmutableDictionary<string, string> diagnosticFixMap,
-            ImmutableDictionary<string, string> diagnosticFixerMap)
+            ImmutableDictionary<string, string> diagnosticFixerMap,
+            string language) : base(language)
         {
             Options = options;
             MinimalSeverity = minimalSeverity;
@@ -67,7 +68,7 @@ namespace Roslynator.CommandLine
                 diagnosticFixMap: DiagnosticFixMap,
                 diagnosticFixerMap: DiagnosticFixerMap,
                 fileBanner: Options.FileBanner,
-                language: Options.Language,
+                language: Language,
                 batchSize: Options.BatchSize,
                 format: Options.Format);
 

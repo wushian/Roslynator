@@ -8,8 +8,8 @@ Searches file or directory for analyzer assemblies.
 ```
 roslynator analyze-assembly <PATH>
 [--language]
-[--log-file]
-[--log-file-verbosity]
+[--file-log]
+[--file-log-verbosity]
 [--no-analyzers]
 [--no-fixers]
 [-v|--verbosity]
@@ -23,7 +23,7 @@ The path to file or directory to analyze.
 
 ### Optional Options
 
-**`--language`** `{csharp|vb}`
+**`--language`** `{cs[harp]|v[isual-]b[asic])}`
 
 Defines project language.
 

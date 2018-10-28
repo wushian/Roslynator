@@ -12,7 +12,7 @@ namespace Roslynator.CommandLine
 {
     internal class AnalyzeCommandExecutor : MSBuildWorkspaceCommandExecutor
     {
-        public AnalyzeCommandExecutor(AnalyzeCommandLineOptions options, DiagnosticSeverity minimalSeverity)
+        public AnalyzeCommandExecutor(AnalyzeCommandLineOptions options, DiagnosticSeverity minimalSeverity, string language) : base(language)
         {
             Options = options;
             MinimalSeverity = minimalSeverity;
@@ -37,7 +37,7 @@ namespace Roslynator.CommandLine
                 ignoredDiagnosticIds: Options.IgnoredDiagnostics,
                 projectNames: Options.Projects,
                 ignoredProjectNames: Options.IgnoredProjects,
-                language: CommandLineHelpers.GetLanguageName(Options.Language));
+                language: Language);
 
             CultureInfo culture = (Options.CultureName != null) ? CultureInfo.GetCultureInfo(Options.CultureName) : null;
 

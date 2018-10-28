@@ -4,14 +4,13 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: FileLog, FileLogVerbosity
     public abstract class BaseCommandLineOptions
     {
-        [Option(longName: "log-file")]
-        public string LogFile { get; set; }
+        [Option(longName: "file-log")]
+        public string FileLog { get; set; }
 
-        [Option(longName: "log-file-verbosity")]
-        public string LogFileVerbosity { get; set; }
+        [Option(longName: "file-log-verbosity")]
+        public string FileLogVerbosity { get; set; }
 
         [Option(shortName: 'v', longName: "verbosity")]
         public string Verbosity { get; set; }

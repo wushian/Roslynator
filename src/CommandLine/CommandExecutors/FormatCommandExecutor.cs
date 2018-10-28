@@ -19,7 +19,7 @@ namespace Roslynator.CommandLine
 {
     internal class FormatCommandExecutor : MSBuildWorkspaceCommandExecutor
     {
-        public FormatCommandExecutor(FormatCommandLineOptions options)
+        public FormatCommandExecutor(FormatCommandLineOptions options, string language) : base(language)
         {
             Options = options;
         }
@@ -42,6 +42,7 @@ namespace Roslynator.CommandLine
                     supportedDiagnosticIds: supportedDiagnosticIds,
                     projectNames: Options.Projects,
                     ignoredProjectNames: Options.IgnoredProjects,
+                    language: Language,
                     batchSize: 1000,
                     format: true);
 

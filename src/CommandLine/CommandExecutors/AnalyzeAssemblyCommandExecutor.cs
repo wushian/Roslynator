@@ -9,24 +9,28 @@ using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using static Roslynator.CommandLine.CommandLineHelpers;
 using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
-    internal static class AnalyzeAssemblyCommandExecutor
+    internal class AnalyzeAssemblyCommandExecutor
     {
-        public static int Execute(AnalyzeAssemblyCommandLineOptions options)
+        public AnalyzeAssemblyCommandExecutor(string language = null)
         {
-            string language = GetLanguageName(options.Language);
+            Language = language;
+        }
 
+        public string Language { get; }
+
+        public CommandResult Execute(AnalyzeAssemblyCommandLineOptions options)
+        {
             var analyzerAssemblies = new List<AnalyzerAssembly>();
 
             foreach (AnalyzerAssembly analyzerAssembly in AnalyzerAssembly.LoadFiles(
                 path: options.Path,
                 loadAnalyzers: !options.NoAnalyzers,
                 loadFixers: !options.NoFixers,
-                language: language))
+                language: Language))
             {
                 analyzerAssemblies.Add(analyzerAssembly);
 
@@ -116,7 +120,7 @@ namespace Roslynator.CommandLine
                 WriteLine(Verbosity.Minimal);
             }
 
-            return 0;
+            return new CommandResult(success: true);
 
             string GetLanguageShortName(string languageName)
             {

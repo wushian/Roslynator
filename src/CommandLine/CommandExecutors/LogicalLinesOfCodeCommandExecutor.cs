@@ -15,7 +15,7 @@ namespace Roslynator.CommandLine
 {
     internal class LogicalLinesOfCodeCommandExecutor : AbstractLinesOfCodeCommandExecutor
     {
-        public LogicalLinesOfCodeCommandExecutor(LogicalLinesOfCodeCommandLineOptions options)
+        public LogicalLinesOfCodeCommandExecutor(LogicalLinesOfCodeCommandLineOptions options, string language) : base(language)
         {
             Options = options;
         }

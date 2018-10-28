@@ -17,8 +17,8 @@ roslynator fix <PROJECT|SOLUTION>
 [--ignored-diagnostics]
 [--ignored-projects]
 [--language]
-[--log-file]
-[--log-file-verbosity]
+[--file-log]
+[--file-log-verbosity]
 [--minimal-severity]
 [--msbuild-path]
 [--projects]
@@ -75,7 +75,7 @@ Defines diagnostic identifiers that should not be fixed.
 
 Defines projects that should not be fixed.
 
-**`--language`** `{csharp|vb}`
+**`--language`** `{cs[harp]|v[isual-]b[asic])}`
 
 Defines project language.
 

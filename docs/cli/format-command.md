@@ -18,8 +18,8 @@ roslynator format <PROJECT|SOLUTION>
 [--include-generated-code]
 [--ignored-projects]
 [--language]
-[--log-file]
-[--log-file-verbosity]
+[--file-log]
+[--file-log-verbosity]
 [--msbuild-path]
 [--new-line-after-switch-label]
 [--new-line-before-embedded-statement]
@@ -94,7 +94,7 @@ Indicates whether generated code should be formatted.
 
 Defines project names that should not be formatted.
 
-**`--language`** `{csharp|vb}`
+**`--language`** `{cs[harp]|v[isual-]b[asic])}`
 
 Defines project language.
 

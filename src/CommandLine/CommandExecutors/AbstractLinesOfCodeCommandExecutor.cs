@@ -11,6 +11,10 @@ namespace Roslynator.CommandLine
 {
     internal abstract class AbstractLinesOfCodeCommandExecutor : MSBuildWorkspaceCommandExecutor
     {
+        protected AbstractLinesOfCodeCommandExecutor(string language) : base(language)
+        {
+        }
+
         internal static void WriteLinesOfCode(Solution solution, ImmutableDictionary<ProjectId, CodeMetrics> projectsMetrics)
         {
             int maxDigits = projectsMetrics.Max(f => f.Value.CodeLineCount).ToString("n0").Length;

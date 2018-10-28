@@ -16,6 +16,13 @@ namespace Roslynator.CommandLine
 {
     internal abstract class MSBuildWorkspaceCommandExecutor
     {
+        protected MSBuildWorkspaceCommandExecutor(string language)
+        {
+            Language = language;
+        }
+
+        public string Language { get; }
+
         public abstract Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default);
 
         public async Task<CommandResult> ExecuteAsync(string path, string msbuildPath = null, IEnumerable<string> properties = null)
@@ -136,7 +143,7 @@ namespace Roslynator.CommandLine
             return MSBuildWorkspace.Create(properties);
         }
 
-        private protected static IEnumerable<Project> FilterProjects(
+        private protected IEnumerable<Project> FilterProjects(
             Solution solution,
             MSBuildCommandLineOptions options)
         {
@@ -155,7 +162,7 @@ namespace Roslynator.CommandLine
                 Project project = workspace.CurrentSolution.GetProject(projectId);
 
                 if (SyntaxFactsService.IsSupportedLanguage(project.Language)
-                    && (options.Language == null || options.Language == project.Language)
+                    && (Language == null || Language == project.Language)
                     && ((projectNames.Count > 0) ? projectNames.Contains(project.Name) : !ignoredProjectNames.Contains(project.Name)))
                 {
                     yield return project;
