@@ -4,6 +4,7 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
+    //TODO: XmlFileLog
     [Verb("analyze")]
     public class AnalyzeCommandLineOptions : AbstractAnalyzeCommandLineOptions
     {

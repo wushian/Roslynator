@@ -78,17 +78,9 @@ namespace Roslynator.CodeFixes
 
                 string language = project.Language;
 
-                if (!SyntaxFactsService.IsSupportedLanguage(language)
-                    || Options.IgnoredProjectNames.Contains(project.Name)
-                    || (Options.Language != null && Options.Language != language))
+                if (Options.IsSupportedProject(project))
                 {
-                    WriteLine($"Skip project '{project.Name}' {$"{i + 1}/{projects.Length}"}", ConsoleColor.DarkGray, Verbosity.Minimal);
-
-                    results.Add(ProjectFixResult.Skipped);
-                }
-                else
-                {
-                    WriteLine($"Fix project '{project.Name}' {$"{i + 1}/{projects.Length}"}", ConsoleColor.Cyan, Verbosity.Minimal);
+                    WriteLine($"Fix '{project.Name}' {$"{i + 1}/{projects.Length}"}", ConsoleColor.Cyan, Verbosity.Minimal);
 
                     ProjectFixResult result = await FixProjectAsync(project, cancellationToken).ConfigureAwait(false);
 
@@ -98,53 +90,21 @@ namespace Roslynator.CodeFixes
                         break;
 
                     if (Options.FileBannerLines.Length > 0)
-                    {
                         await AddFileBannerAsync(project, Options.FileBannerLines, cancellationToken).ConfigureAwait(false);
-                    }
 
                     if (Options.Format)
-                    {
-                        project = CurrentSolution.GetProject(project.Id);
+                        await FormatProjectAsync(project, cancellationToken).ConfigureAwait(false);
+                }
+                else
+                {
+                    WriteLine($"Skip '{project.Name}' {$"{i + 1}/{projects.Length}"}", ConsoleColor.DarkGray, Verbosity.Minimal);
 
-                        WriteLine($"  Format  '{project.Name}'", Verbosity.Normal);
-
-                        Project newProject = await CodeFormatter.FormatProjectAsync(project, cancellationToken).ConfigureAwait(false);
-
-                        string solutionDirectory = Path.GetDirectoryName(project.Solution.FilePath);
-
-                        bool hasChanges = false;
-
-                        foreach (DocumentId documentId in newProject
-                            .GetChanges(project)
-                            .GetChangedDocuments(onlyGetDocumentsWithTextChanges: true))
-                        {
-                            Document newDocument = newProject.GetDocument(documentId);
-
-                            IEnumerable<TextChange> textChanges = await newDocument.GetTextChangesAsync(project.GetDocument(documentId)).ConfigureAwait(false);
-
-                            if (textChanges.Any())
-                            {
-                                hasChanges = true;
-
-                                WriteLine($"  Format '{PathUtilities.MakeRelativePath(newDocument.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
-#if DEBUG
-                                await WorkspacesUtilities.VerifySyntaxEquivalenceAsync(project.GetDocument(newDocument.Id), newDocument, cancellationToken).ConfigureAwait(false);
-#endif
-                            }
-                        }
-
-                        if (hasChanges
-                            && !Workspace.TryApplyChanges(newProject.Solution))
-                        {
-                            Debug.Fail($"Cannot apply changes to solution '{newProject.Solution.FilePath}'");
-                            WriteLine($"Cannot apply changes to solution '{newProject.Solution.FilePath}'", ConsoleColor.Yellow, Verbosity.Detailed);
-                        }
-                    }
+                    results.Add(ProjectFixResult.Skipped);
                 }
 
                 TimeSpan elapsed = stopwatch.Elapsed;
 
-                WriteLine($"Done fixing project '{project.Name}' {$"{i + 1}/{projects.Length}"} {elapsed - lastElapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Normal);
+                WriteLine($"Done fixing '{project.Name}' {$"{i + 1}/{projects.Length}"} {elapsed - lastElapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Normal);
 
                 lastElapsed = elapsed;
             }
@@ -258,10 +218,9 @@ namespace Roslynator.CodeFixes
                 }
 
                 diagnostics = diagnostics
-                    .Where(f => f.Severity >= Options.MinimalSeverity
+                    .Where(f => Options.IsSupportedDiagnostic(f)
                         && analyzersById.ContainsKey(f.Id)
-                        && fixersById.ContainsKey(f.Id)
-                        && Options.IsSupported(f.Id))
+                        && fixersById.ContainsKey(f.Id))
                     .ToImmutableArray();
 
                 int length = diagnostics.Length;
@@ -628,6 +587,45 @@ namespace Roslynator.CodeFixes
             {
                 Debug.Fail($"Cannot apply changes to solution '{project.FilePath}'");
                 WriteLine($"Cannot apply changes to solution '{project.Solution.FilePath}'", ConsoleColor.Yellow, Verbosity.Detailed);
+            }
+        }
+
+        private async Task FormatProjectAsync(Project project, CancellationToken cancellationToken)
+        {
+            project = CurrentSolution.GetProject(project.Id);
+
+            WriteLine($"  Format  '{project.Name}'", Verbosity.Normal);
+
+            Project newProject = await CodeFormatter.FormatProjectAsync(project, cancellationToken).ConfigureAwait(false);
+
+            string solutionDirectory = Path.GetDirectoryName(project.Solution.FilePath);
+
+            bool hasChanges = false;
+
+            foreach (DocumentId documentId in newProject
+                .GetChanges(project)
+                .GetChangedDocuments(onlyGetDocumentsWithTextChanges: true))
+            {
+                Document newDocument = newProject.GetDocument(documentId);
+
+                IEnumerable<TextChange> textChanges = await newDocument.GetTextChangesAsync(project.GetDocument(documentId)).ConfigureAwait(false);
+
+                if (textChanges.Any())
+                {
+                    hasChanges = true;
+
+                    WriteLine($"  Format '{PathUtilities.MakeRelativePath(newDocument.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
+#if DEBUG
+                    await WorkspacesUtilities.VerifySyntaxEquivalenceAsync(project.GetDocument(newDocument.Id), newDocument, cancellationToken).ConfigureAwait(false);
+#endif
+                }
+            }
+
+            if (hasChanges
+                && !Workspace.TryApplyChanges(newProject.Solution))
+            {
+                Debug.Fail($"Cannot apply changes to solution '{newProject.Solution.FilePath}'");
+                WriteLine($"Cannot apply changes to solution '{newProject.Solution.FilePath}'", ConsoleColor.Yellow, Verbosity.Detailed);
             }
         }
     }

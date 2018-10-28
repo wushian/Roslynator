@@ -13,8 +13,12 @@ roslynator lloc <PROJECT|SOLUTION>
 [--include-preprocessor-directives]
 [--include-whitespace]
 [--language]
+[--log-file]
+[--log-file-verbosity]
 [--msbuild-path]
+[--projects]
 [-p|--properties]
+[-v|--verbosity]
 ```
 
 ## Arguments
@@ -59,9 +63,17 @@ Defines a path to MSBuild.
 
 *Note: If the path to MSBuild is not specified and there are installed multiple instances of MSBuild the instance with the highest version will be used.*
 
+**`--projects`**
+
+Defines projects that should be analyzed.
+
 **`-p|--properties`** `<NAME=VALUE>`
 
 Defines one or more MSBuild properties.
+
+**`-v|--verbosity`** {q[uiet]|m[inimal]|n[ormal]|d[etailed]}
+
+Defines the amount of information to display in the log.
 
 ## See Also
 

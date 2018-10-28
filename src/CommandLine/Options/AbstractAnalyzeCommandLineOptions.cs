@@ -5,7 +5,6 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: Projects
     public abstract class AbstractAnalyzeCommandLineOptions : MSBuildCommandLineOptions
     {
         [Option(shortName: 'a', longName: "analyzer-assemblies")]

@@ -76,12 +76,7 @@ namespace Roslynator.Diagnostics
 
                 Project project = solution.GetProject(projectIds[i]);
 
-                if (Options.IgnoredProjectNames.Contains(project.Name)
-                    || (Options.Language != null && Options.Language != project.Language))
-                {
-                    WriteLine($"Skip '{project.Name}' {$"{i + 1}/{projectIds.Length}"}", ConsoleColor.DarkGray, Verbosity.Minimal);
-                }
-                else
+                if (Options.IsSupportedProject(project))
                 {
                     WriteLine($"Analyze '{project.Name}' {$"{i + 1}/{projectIds.Length}"}", Verbosity.Minimal);
 
@@ -89,6 +84,10 @@ namespace Roslynator.Diagnostics
 
                     if (result != null)
                         results.Add(result);
+                }
+                else
+                {
+                    WriteLine($"Skip '{project.Name}' {$"{i + 1}/{projectIds.Length}"}", ConsoleColor.DarkGray, Verbosity.Minimal);
                 }
 
                 lastElapsed = stopwatch.Elapsed;
@@ -226,8 +225,7 @@ namespace Roslynator.Diagnostics
         {
             foreach (Diagnostic diagnostic in diagnostics)
             {
-                if (diagnostic.Severity >= Options.MinimalSeverity
-                    && Options.IsSupported(diagnostic.Id)
+                if (Options.IsSupportedDiagnostic(diagnostic)
                     && (Options.ReportFadeDiagnostics || !diagnostic.IsFadeDiagnostic()))
                 {
                     if (diagnostic.Descriptor.CustomTags.Contains(WellKnownDiagnosticTags.Compiler))

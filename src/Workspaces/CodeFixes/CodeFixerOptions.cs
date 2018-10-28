@@ -20,13 +20,14 @@ namespace Roslynator.CodeFixes
             IEnumerable<string> supportedDiagnosticIds = null,
             IEnumerable<string> ignoredDiagnosticIds = null,
             IEnumerable<string> ignoredCompilerDiagnosticIds = null,
+            IEnumerable<string> projectNames = null,
             IEnumerable<string> ignoredProjectNames = null,
             IEnumerable<KeyValuePair<string, string>> diagnosticFixMap = null,
             IEnumerable<KeyValuePair<string, string>> diagnosticFixerMap = null,
             string fileBanner = null,
             string language = null,
             int batchSize = -1,
-            bool format = false) : base(minimalSeverity, ignoreAnalyzerReferences, supportedDiagnosticIds, ignoredDiagnosticIds, ignoredProjectNames, language)
+            bool format = false) : base(minimalSeverity, ignoreAnalyzerReferences, supportedDiagnosticIds, ignoredDiagnosticIds, projectNames, ignoredProjectNames, language)
         {
             IgnoreCompilerErrors = ignoreCompilerErrors;
             IgnoredCompilerDiagnosticIds = ignoredCompilerDiagnosticIds?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;

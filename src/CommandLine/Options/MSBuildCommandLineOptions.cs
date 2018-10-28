@@ -20,6 +20,9 @@ namespace Roslynator.CommandLine
         [Option(longName: "msbuild-path")]
         public string MSBuildPath { get; set; }
 
+        [Option(longName: "projects")]
+        public IEnumerable<string> Projects { get; set; }
+
         [Option(shortName: 'p', longName: "properties")]
         public IEnumerable<string> Properties { get; set; }
     }

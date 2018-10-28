@@ -40,6 +40,8 @@ namespace Roslynator.CommandLine
                     ignoreCompilerErrors: true,
                     ignoreAnalyzerReferences: true,
                     supportedDiagnosticIds: supportedDiagnosticIds,
+                    projectNames: Options.Projects,
+                    ignoredProjectNames: Options.IgnoredProjects,
                     batchSize: 1000,
                     format: true);
 
@@ -111,7 +113,7 @@ namespace Roslynator.CommandLine
 
                 var changedDocumentIds = new ConcurrentBag<(DocumentId, SourceText)>();
 
-                Parallel.ForEach(FilterProjects(solution, Options.IgnoredProjects, Options.Language), project =>
+                Parallel.ForEach(FilterProjects(solution, Options), project =>
                 {
                     WriteLine($"  Analyze '{project.Name}'", Verbosity.Minimal);
 

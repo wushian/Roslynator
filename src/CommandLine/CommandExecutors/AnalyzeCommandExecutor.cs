@@ -35,6 +35,7 @@ namespace Roslynator.CommandLine
                 minimalSeverity: MinimalSeverity,
                 supportedDiagnosticIds: Options.SupportedDiagnostics,
                 ignoredDiagnosticIds: Options.IgnoredDiagnostics,
+                projectNames: Options.Projects,
                 ignoredProjectNames: Options.IgnoredProjects,
                 language: CommandLineHelpers.GetLanguageName(Options.Language));
 

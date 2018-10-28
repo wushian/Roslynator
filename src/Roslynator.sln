@@ -96,10 +96,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandLine", "CommandLine\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CLI", "CLI", "{A16068FE-9E6C-45D2-8114-CC189600AFA2}"
 	ProjectSection(SolutionItems) = preProject
+		..\docs\cli\analyze-assembly-command.md = ..\docs\cli\analyze-assembly-command.md
+		..\docs\cli\analyze-command.md = ..\docs\cli\analyze-command.md
 		..\docs\cli\fix-command.md = ..\docs\cli\fix-command.md
+		..\docs\cli\format-command.md = ..\docs\cli\format-command.md
 		..\docs\cli\generate-declarations-command.md = ..\docs\cli\generate-declarations-command.md
 		..\docs\cli\generate-doc-command.md = ..\docs\cli\generate-doc-command.md
 		..\docs\cli\generate-doc-root-command.md = ..\docs\cli\generate-doc-root-command.md
+		..\docs\cli\lloc-command.md = ..\docs\cli\lloc-command.md
+		..\docs\cli\loc-command.md = ..\docs\cli\loc-command.md
 		..\docs\cli\README.md = ..\docs\cli\README.md
 	EndProjectSection
 EndProject

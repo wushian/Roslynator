@@ -18,8 +18,9 @@ namespace Roslynator.Diagnostics
             DiagnosticSeverity minimalSeverity = DiagnosticSeverity.Info,
             IEnumerable<string> supportedDiagnosticIds = null,
             IEnumerable<string> ignoredDiagnosticIds = null,
+            IEnumerable<string> projectNames = null,
             IEnumerable<string> ignoredProjectNames = null,
-            string language = null) : base(minimalSeverity, ignoreAnalyzerReferences, supportedDiagnosticIds, ignoredDiagnosticIds, ignoredProjectNames, language)
+            string language = null) : base(minimalSeverity, ignoreAnalyzerReferences, supportedDiagnosticIds, ignoredDiagnosticIds, projectNames, ignoredProjectNames, language)
         {
             IgnoreCompilerDiagnostics = ignoreCompilerDiagnostics;
             ReportFadeDiagnostics = reportFadeDiagnostics;

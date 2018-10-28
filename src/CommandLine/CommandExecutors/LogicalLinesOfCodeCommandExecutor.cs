@@ -65,7 +65,7 @@ namespace Roslynator.CommandLine
 
                 WriteLine($"Count logical lines for solution '{solution.FilePath}'", ConsoleColor.Cyan, Verbosity.Minimal);
 
-                IEnumerable<Project> projects = FilterProjects(solution, Options.IgnoredProjects, Options.Language);
+                IEnumerable<Project> projects = FilterProjects(solution, Options);
 
                 Stopwatch stopwatch = Stopwatch.StartNew();
 

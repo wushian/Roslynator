@@ -4,6 +4,7 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
+    //TODO: IgnoredSyntax
     [Verb("lloc")]
     public class LogicalLinesOfCodeCommandLineOptions : AbstractLinesOfCodeCommandLineOptions
     {

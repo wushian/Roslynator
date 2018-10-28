@@ -15,19 +15,27 @@ namespace Roslynator
             bool ignoreAnalyzerReferences = false,
             IEnumerable<string> supportedDiagnosticIds = null,
             IEnumerable<string> ignoredDiagnosticIds = null,
+            IEnumerable<string> projectNames = null,
             IEnumerable<string> ignoredProjectNames = null,
             string language = null)
         {
             if (supportedDiagnosticIds?.Any() == true
                 && ignoredDiagnosticIds?.Any() == true)
             {
-                throw new ArgumentException($"Cannot specify both '{supportedDiagnosticIds}' and '{ignoredDiagnosticIds}'.", nameof(ignoredDiagnosticIds));
+                throw new ArgumentException($"Cannot specify both '{nameof(supportedDiagnosticIds)}' and '{nameof(ignoredDiagnosticIds)}'.", nameof(ignoredDiagnosticIds));
+            }
+
+            if (projectNames?.Any() == true
+                && ignoredProjectNames?.Any() == true)
+            {
+                throw new ArgumentException($"Cannot specify both '{nameof(projectNames)}' and '{nameof(ignoredProjectNames)}'.", nameof(ignoredProjectNames));
             }
 
             MinimalSeverity = minimalSeverity;
             IgnoreAnalyzerReferences = ignoreAnalyzerReferences;
             SupportedDiagnosticIds = supportedDiagnosticIds?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
             IgnoredDiagnosticIds = ignoredDiagnosticIds?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
+            ProjectNames = projectNames?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
             IgnoredProjectNames = ignoredProjectNames?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
             Language = language;
         }
@@ -40,15 +48,35 @@ namespace Roslynator
 
         public ImmutableHashSet<string> IgnoredDiagnosticIds { get; }
 
+        public ImmutableHashSet<string> ProjectNames { get; }
+
         public ImmutableHashSet<string> IgnoredProjectNames { get; }
 
         public string Language { get; }
 
-        internal bool IsSupported(string diagnosticId)
+        internal bool IsSupportedDiagnostic(Diagnostic diagnostic)
         {
-            return (SupportedDiagnosticIds.Count > 0)
-                ? SupportedDiagnosticIds.Contains(diagnosticId)
-                : !IgnoredDiagnosticIds.Contains(diagnosticId);
+            if (diagnostic.Severity >= MinimalSeverity)
+            {
+                return (SupportedDiagnosticIds.Count > 0)
+                    ? SupportedDiagnosticIds.Contains(diagnostic.Id)
+                    : !IgnoredDiagnosticIds.Contains(diagnostic.Id);
+            }
+
+            return false;
+        }
+
+        internal bool IsSupportedProject(Project project)
+        {
+            if (SyntaxFactsService.IsSupportedLanguage(project.Language)
+                && (Language == null || Language == project.Language))
+            {
+                return (ProjectNames.Count > 0)
+                    ? ProjectNames.Contains(project.Name)
+                    : !IgnoredProjectNames.Contains(project.Name);
+            }
+
+            return false;
         }
     }
 }

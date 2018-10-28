@@ -136,10 +136,16 @@ namespace Roslynator.CommandLine
             return MSBuildWorkspace.Create(properties);
         }
 
-        private protected static IEnumerable<Project> FilterProjects(Solution solution, IEnumerable<string> ignoredProjects = null, string language = null)
+        private protected static IEnumerable<Project> FilterProjects(
+            Solution solution,
+            MSBuildCommandLineOptions options)
         {
-            ImmutableHashSet<string> ignoredProjectNames = (ignoredProjects.Any())
-                ? ImmutableHashSet.CreateRange(ignoredProjects)
+            ImmutableHashSet<string> projectNames = (options.Projects != null)
+                ? options.Projects.ToImmutableHashSet()
+                : ImmutableHashSet<string>.Empty;
+
+            ImmutableHashSet<string> ignoredProjectNames = (options.IgnoredProjects != null)
+                ? options.IgnoredProjects.ToImmutableHashSet()
                 : ImmutableHashSet<string>.Empty;
 
             Workspace workspace = solution.Workspace;
@@ -149,14 +155,15 @@ namespace Roslynator.CommandLine
                 Project project = workspace.CurrentSolution.GetProject(projectId);
 
                 if (SyntaxFactsService.IsSupportedLanguage(project.Language)
-                    || ignoredProjectNames.Contains(project.Name)
-                    || (language != null && language != project.Language))
+                    && (options.Language == null || options.Language == project.Language)
+                    && ((projectNames.Count > 0) ? projectNames.Contains(project.Name) : !ignoredProjectNames.Contains(project.Name)))
+                {
+                    yield return project;
+                }
+                else
                 {
                     WriteLine($"  Skip '{project.Name}'", ConsoleColor.DarkGray, Verbosity.Normal);
-                    continue;
                 }
-
-                yield return project;
             }
         }
 

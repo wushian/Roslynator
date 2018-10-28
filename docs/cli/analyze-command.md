@@ -1,19 +1,17 @@
 
-# `fix` Command
+# `analyze` Command
 
-Fixes all diagnostics in the specified project or solution.
+Analyzes specified project or solution and reports diagnostics.
 
 ## Synopsis
 
 ```
-roslynator fix <PROJECT|SOLUTION>
+roslynator analyze <PROJECT|SOLUTION>
 [-a|--analyzer-assemblies]
-[--batch-size]
 [--culture]
-[--format]
+[--execution-time]
 [--ignore-analyzer-references]
-[--ignore-compiler-errors]
-[--ignored-compiler-diagnostics]
+[--ignore-compiler-diagnostics]
 [--ignored-diagnostics]
 [--ignored-projects]
 [--language]
@@ -23,8 +21,9 @@ roslynator fix <PROJECT|SOLUTION>
 [--msbuild-path]
 [--projects]
 [-p|--properties]
+[--report-fade-diagnostics]
+[--report-suppressed-diagnostics]
 [--supported-diagnostics]
-[--use-roslynator-analyzers]
 [-v|--verbosity]
 ```
 
@@ -32,7 +31,7 @@ roslynator fix <PROJECT|SOLUTION>
 
 **`PROJECT|SOLUTION`**
 
-The project or solution to fix.
+The project or solution to analyze.
 
 ### Optional Options
 
@@ -43,37 +42,29 @@ Defines one or more paths to:
 * analyzer assembly
 * directory that should be searched recursively for analyzer assemblies
 
-**`--batch-size`**
-
-Defines maximum number of diagnostics that can be fixed in one batch.
-
 **`--culture`**
 
 Defines culture that should be used to display diagnostic message.
 
-**`--format`**
+**`--execution-time`**
 
-Indicates whether each document should be formatted.
+Indicates whether to measure execution time of each analyzer.
 
 **`--ignore-analyzer-references`**
 
 Indicates whether Roslynator should ignore analyzers that are referenced in projects.
 
-**`--ignore-compiler-errors`**
+**`--ignore-compiler-diagnostics`**
 
-Indicates whether fixing should continue even if compilation has errors.
-
-**`--ignored-compiler-diagnostics`**
-
-Defines compiler diagnostic identifiers that should be ignored even if `--ignore-compiler-errors` is not set.
+Indicates whether to display compiler diagnostics.
 
 **`--ignored-diagnostics`**
 
-Defines diagnostic identifiers that should not be fixed.
+Defines diagnostic identifiers that should not be reported.
 
 **`--ignored-projects`**
 
-Defines projects that should not be fixed.
+Defines projects that should not be analyzed.
 
 **`--language`** {csharp|vb}
 
@@ -100,6 +91,18 @@ Defines one or more MSBuild properties.
 **`--use-roslynator-analyzers`**
 
 Indicates whether code analysis should use analyzers from nuget package [Roslynator.Analyzers](https://nuget.org/packages/Roslynator.Analyzers).
+
+**`--report-fade-diagnostics`**
+
+Indicates whether diagnostics whose ID ends with 'FadedToken' or 'FadeOut' should be reported.
+
+**`--report-suppressed-diagnostics`**
+
+Indicates whether suppressed diagnostics should be reported.
+
+**`--supported-diagnostics`**
+
+Defines diagnostic identifiers that should be reported.
 
 **`-v|--verbosity`** {q[uiet]|m[inimal]|n[ormal]|d[etailed]}
 
