@@ -11,6 +11,7 @@ roslynator format <PROJECT|SOLUTION>
 [--empty-line-after-embedded-statement]
 [--empty-line-before-while-in-do-statement]
 [--empty-line-between-declarations]
+[--end-of-line]
 [--format-accessor-list]
 [--format-declaration-braces]
 [--format-empty-block]
@@ -42,49 +43,55 @@ The project or solution to fix.
 
 Indicates whether a closing brace should be followed with empty line.
 
-*Note: (this option is available only for C#, for details see [RCS1153](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1153.md)).*
+*Note: This option is available only for C#. For details see [RCS1153](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1153.md).*
 
 **`--empty-line-after-embedded-statement`**
 
 Indicates whether an embedded statement should be followed with empty line.
 
-*Note: (this option is available only for C#, for details see [RCS1030](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1030.md)).*
+*Note: This option is available only for C#. For details see [RCS1030](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1030.md).*
 
 **`--empty-line-before-while-in-do-statement`**
 
 Indicates whether while keyword in `do` statement should be preceded with empty line.
 
-*Note: (this option is available only for C#, for details see [RCS1092](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1092.md)).*
+*Note: This option is available only for C#. For details see [RCS1092](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1092.md).*
 
 **`--empty-line-between-declarations`**
 
 Indicates whether member declarations should be separated with empty line.
 
-*Note: (this option is available only for C#, for details see [RCS1057](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1057.md)).*
+*Note: This option is available only for C#. For details see [RCS1057](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1057.md).*
+
+**`--end-of-line`** {lf|crlf}
+
+Defines end of line character(s).
+
+*Note: For details see [RCS1086](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1086.md) and [RCS1087](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1087.md).*
 
 **`--format-accessor-list`**
 
 Indicates whether access list should be formatted.
 
-*Note: (this option is available only for C#, for details see [RCS1024](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1024.md)).*
+*Note: This option is available only for C#. For details see [RCS1024](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1024.md).*
 
 **`--format-declaration-braces`**
 
 Indicates whether declaration braces should be formatted.
 
-*Note: (this option is available only for C#, for details see [RCS1076](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1076.md)).*
+*Note: This option is available only for C#. For details see [RCS1076](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1076.md).*
 
 **`--format-empty-block`**
 
 Indicates whether an empty block should be formatted.
 
-*Note: (this option is available only for C#, for details see [RCS1023](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1023.md)).*
+*Note: This option is available only for C#. For details see [RCS1023](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1023.md).*
 
 **`--format-single-line-block`**
 
 Indicates whether a single-line block should be formatted.
 
-*Note: (this option is available only for C#, for details see [RCS1185](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1185.md)).*
+*Note: This option is available only for C#. For details see [RCS1185](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1185.md).*
 
 **`--include-generated-code`**
 
@@ -108,25 +115,25 @@ Defines a path to MSBuild.
 
 Indicates whether switch label should be followed with empty line.
 
-*Note: (this option is available only for C#, for details see [RCS1028](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1028.md)).*
+*Note: This option is available only for C#. For details see [RCS1028](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1028.md).*
 
 **`--new-line-before-embedded-statement`**
 
 Indicates whether an embedded statement should be preceded with empty line.
 
-*Note: (this option is available only for C#, for details see [RCS1027](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1027.md)).*
+*Note: This option is available only for C#. For details see [RCS1027](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1027.md).*
 
 **`--new-line-before-enum-member`**
 
 Indicates whether an enum member declaration should be preceded with empty line.
 
-*Note: (this option is available only for C#, for details see [RCS1025](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1025.md)).*
+*Note: This option is available only for C#. For details see [RCS1025](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1025.md).*
 
 **`--new-line-before-statement`**
 
 Indicates whether a statement should be preceded with newline.
 
-*Note: (this option is available only for C#, for details see [RCS1026](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1026.md)).*
+*Note: This option is available only for C#. For details see [RCS1026](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1026.md).*
 
 **`--projects`**
 
@@ -140,7 +147,7 @@ Defines one or more MSBuild properties.
 
 Indicates whether redundant empty lines should be removed.
 
-*Note: (this option is available only for C#, for details see [RCS1036](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1036.md)).*
+*Note: This option is available only for C#. For details see [RCS1036](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1036.md).*
 
 **`-v|--verbosity`** `{q[uiet]|m[inimal]|n[ormal]|d[etailed]}`
 

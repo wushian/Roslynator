@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.Text;
 using Roslynator.CodeFixes;
 
 namespace Roslynator.CSharp.CodeFixes
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(RemoveTriviaCodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, LanguageNames.VisualBasic, Name = nameof(WhitespaceTriviaCodeFixProvider))]
     [Shared]
-    public class RemoveTriviaCodeFixProvider : BaseCodeFixProvider
+    public class WhitespaceTriviaCodeFixProvider : BaseCodeFixProvider
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
@@ -39,7 +40,7 @@ namespace Roslynator.CSharp.CodeFixes
                         {
                             CodeAction codeAction = CodeAction.Create(
                                 "Remove trailing white-space",
-                                cancellationToken => context.Document.RemoveTriviaAsync(context.Span, cancellationToken),
+                                ct => context.Document.WithTextChangeAsync(new TextChange(context.Span, ""), ct),
                                 GetEquivalenceKey(diagnostic));
 
                             context.RegisterCodeFix(codeAction, diagnostic);
@@ -49,7 +50,7 @@ namespace Roslynator.CSharp.CodeFixes
                         {
                             CodeAction codeAction = CodeAction.Create(
                                 "Remove empty line",
-                                cancellationToken => context.Document.RemoveTriviaAsync(context.Span, cancellationToken),
+                                ct => context.Document.WithTextChangeAsync(new TextChange(context.Span, ""), ct),
                                 GetEquivalenceKey(diagnostic));
 
                             context.RegisterCodeFix(codeAction, diagnostic);

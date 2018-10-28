@@ -157,6 +157,16 @@ namespace Roslynator.CommandLine
             if (!options.TryGetLanguage(out string language))
                 return 1;
 
+            string endOfLine = options.EndOfLine;
+
+            if (endOfLine != null
+                && endOfLine != "lf"
+                && endOfLine != "crlf")
+            {
+                WriteLine($"Unknown end of line '{endOfLine}'.", Verbosity.Quiet);
+                return 1;
+            }
+
             var executor = new FormatCommandExecutor(options, language);
 
             IEnumerable<string> properties = options.Properties;

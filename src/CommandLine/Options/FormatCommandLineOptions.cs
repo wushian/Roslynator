@@ -7,7 +7,6 @@ using System.Collections.Generic;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: NormalizeLineEndings
     [Verb("format")]
     public class FormatCommandLineOptions : MSBuildCommandLineOptions
     {
@@ -22,6 +21,9 @@ namespace Roslynator.CommandLine
 
         [Option(longName: "empty-line-between-declarations")]
         public bool EmptyLineBetweenDeclarations { get; set; }
+
+        [Option(longName: "end-of-line")]
+        public string EndOfLine { get; set; }
 
         [Option(longName: "format-accessor-list")]
         public bool FormatAccessorList { get; set; }
@@ -93,6 +95,15 @@ namespace Roslynator.CommandLine
 
             if (RemoveRedundantEmptyLine)
                 yield return DiagnosticDescriptors.RemoveRedundantEmptyLine;
+
+            if (EndOfLine == "lf")
+            {
+                yield return DiagnosticDescriptors.UseLinefeedAsNewLine;
+            }
+            else if (EndOfLine == "crlf")
+            {
+                yield return DiagnosticDescriptors.UseCarriageReturnAndLinefeedAsNewLine;
+            }
         }
     }
 }

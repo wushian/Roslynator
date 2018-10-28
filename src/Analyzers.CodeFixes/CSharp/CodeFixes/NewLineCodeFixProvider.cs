@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.Text;
 using Roslynator.CodeFixes;
-using Roslynator.CSharp.Refactorings;
 
 namespace Roslynator.CSharp.CodeFixes
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(NewLineCodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, LanguageNames.VisualBasic, Name = nameof(NewLineCodeFixProvider))]
     [Shared]
     public class NewLineCodeFixProvider : BaseCodeFixProvider
     {
@@ -35,7 +35,7 @@ namespace Roslynator.CSharp.CodeFixes
                         {
                             CodeAction codeAction = CodeAction.Create(
                                 "Use linefeed as newline",
-                                cancellationToken => UseLinefeedAsNewLineRefactoring.RefactorAsync(context.Document, context.Span, cancellationToken),
+                                ct => context.Document.WithTextChangeAsync(new TextChange(context.Span, "\n"), ct),
                                 GetEquivalenceKey(diagnostic));
 
                             context.RegisterCodeFix(codeAction, diagnostic);
@@ -45,7 +45,7 @@ namespace Roslynator.CSharp.CodeFixes
                         {
                             CodeAction codeAction = CodeAction.Create(
                                 "Use carriage return + linefeed as newline",
-                                cancellationToken => UseCarriageReturnAndLinefeedAsNewLineRefactoring.RefactorAsync(context.Document, context.Span, cancellationToken),
+                                ct => context.Document.WithTextChangeAsync(new TextChange(context.Span, "\r\n"), ct),
                                 GetEquivalenceKey(diagnostic));
 
                             context.RegisterCodeFix(codeAction, diagnostic);
