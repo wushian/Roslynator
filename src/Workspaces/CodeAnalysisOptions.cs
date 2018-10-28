@@ -10,8 +10,6 @@ namespace Roslynator
 {
     public abstract class CodeAnalysisOptions
     {
-        private ImmutableDictionary<string, ReportDiagnostic> _specificDiagnosticOptions;
-
         protected CodeAnalysisOptions(
             DiagnosticSeverity minimalSeverity = DiagnosticSeverity.Info,
             bool ignoreAnalyzerReferences = false,
@@ -45,11 +43,6 @@ namespace Roslynator
         public ImmutableHashSet<string> IgnoredProjectNames { get; }
 
         public string Language { get; }
-
-        internal ImmutableDictionary<string, ReportDiagnostic> SpecificDiagnosticOptions
-        {
-            get { return _specificDiagnosticOptions ?? (_specificDiagnosticOptions = SupportedDiagnosticIds.ToImmutableDictionary(id => id, _ => MinimalSeverity.ToReportDiagnostic())); }
-        }
 
         internal bool IsSupported(string diagnosticId)
         {

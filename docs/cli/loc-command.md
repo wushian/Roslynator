@@ -10,7 +10,7 @@ roslynator loc <PROJECT|SOLUTION>
 [--ignore-block-boundary]
 [--ignored-projects]
 [--include-comments]
-[--include-generated]
+[--include-generated-code]
 [--include-preprocessor-directives]
 [--include-whitespace]
 [--language]
@@ -42,7 +42,7 @@ Defines project names that should not be fixed.
 
 Indicates whether a line that contains only comment should be counted.
 
-**`--include-generated`**
+**`--include-generated-code`**
 
 Indicates whether generated code should be counted.
 

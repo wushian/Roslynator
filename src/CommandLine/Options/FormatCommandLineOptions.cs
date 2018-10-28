@@ -35,8 +35,8 @@ namespace Roslynator.CommandLine
         [Option(longName: "format-single-line-block")]
         public bool FormatSingleLineBlock { get; set; }
 
-        [Option(longName: "include-generated")]
-        public bool IncludeGenerated { get; set; }
+        [Option(longName: "include-generated-code")]
+        public bool IncludeGeneratedCode { get; set; }
 
         [Option(longName: "new-line-after-switch-label")]
         public bool NewLineAfterSwitchLabel { get; set; }

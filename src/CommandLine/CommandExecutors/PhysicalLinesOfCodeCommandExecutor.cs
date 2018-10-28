@@ -25,8 +25,8 @@ namespace Roslynator.CommandLine
         public override async Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default)
         {
             var codeMetricsOptions = new CodeMetricsOptions(
-                includeGenerated: Options.IncludeGenerated,
-                includeWhiteSpace: Options.IncludeWhiteSpace,
+                includeGenerated: Options.IncludeGeneratedCode,
+                includeWhitespace: Options.IncludeWhitespace,
                 includeComments: Options.IncludeComments,
                 includePreprocessorDirectives: Options.IncludePreprocessorDirectives,
                 ignoreBlockBoundary: Options.IgnoreBlockBoundary);
@@ -35,7 +35,7 @@ namespace Roslynator.CommandLine
             {
                 Project project = projectOrSolution.AsProject();
 
-                CodeMetricsCounter counter = CodeMetricsCounters.GetPhysicalLinesCounter(project.Language);
+                CodeMetricsCounter counter = CodeMetricsCounter.GetPhysicalLinesCounter(project.Language);
 
                 if (counter != null)
                 {
@@ -52,7 +52,7 @@ namespace Roslynator.CommandLine
                     WriteMetrics(
                         metrics.CodeLineCount,
                         metrics.BlockBoundaryLineCount,
-                        metrics.WhiteSpaceLineCount,
+                        metrics.WhitespaceLineCount,
                         metrics.CommentLineCount,
                         metrics.PreprocessorDirectiveLineCount,
                         metrics.TotalLineCount);
@@ -93,7 +93,7 @@ namespace Roslynator.CommandLine
                 WriteMetrics(
                     projectsMetrics.Sum(f => f.Value.CodeLineCount),
                     projectsMetrics.Sum(f => f.Value.BlockBoundaryLineCount),
-                    projectsMetrics.Sum(f => f.Value.WhiteSpaceLineCount),
+                    projectsMetrics.Sum(f => f.Value.WhitespaceLineCount),
                     projectsMetrics.Sum(f => f.Value.CommentLineCount),
                     projectsMetrics.Sum(f => f.Value.PreprocessorDirectiveLineCount),
                     projectsMetrics.Sum(f => f.Value.TotalLineCount));
@@ -105,23 +105,23 @@ namespace Roslynator.CommandLine
             return new CommandResult(true);
         }
 
-        private void WriteMetrics(int totalCodeLineCount, int totalBlockBoundaryLineCount, int totalWhiteSpaceLineCount, int totalCommentLineCount, int totalPreprocessorDirectiveLineCount, int totalLineCount)
+        private void WriteMetrics(int totalCodeLineCount, int totalBlockBoundaryLineCount, int totalWhitespaceLineCount, int totalCommentLineCount, int totalPreprocessorDirectiveLineCount, int totalLineCount)
         {
             string totalCodeLines = totalCodeLineCount.ToString("n0");
             string totalBlockBoundaryLines = totalBlockBoundaryLineCount.ToString("n0");
-            string totalWhiteSpaceLines = totalWhiteSpaceLineCount.ToString("n0");
+            string totalWhitespaceLines = totalWhitespaceLineCount.ToString("n0");
             string totalCommentLines = totalCommentLineCount.ToString("n0");
             string totalPreprocessorDirectiveLines = totalPreprocessorDirectiveLineCount.ToString("n0");
             string totalLines = totalLineCount.ToString("n0");
 
             int maxDigits = Math.Max(totalCodeLines.Length,
                 Math.Max(totalBlockBoundaryLines.Length,
-                    Math.Max(totalWhiteSpaceLines.Length,
+                    Math.Max(totalWhitespaceLines.Length,
                         Math.Max(totalCommentLines.Length,
                             Math.Max(totalPreprocessorDirectiveLines.Length, totalLines.Length)))));
 
             if (Options.IgnoreBlockBoundary
-                || !Options.IncludeWhiteSpace
+                || !Options.IncludeWhitespace
                 || !Options.IncludeComments
                 || !Options.IncludePreprocessorDirectives)
             {
@@ -135,8 +135,8 @@ namespace Roslynator.CommandLine
             if (Options.IgnoreBlockBoundary)
                 WriteLine($"{totalBlockBoundaryLines.PadLeft(maxDigits)} {totalBlockBoundaryLineCount / (double)totalLineCount,4:P0} block boundary lines", Verbosity.Minimal);
 
-            if (!Options.IncludeWhiteSpace)
-                WriteLine($"{totalWhiteSpaceLines.PadLeft(maxDigits)} {totalWhiteSpaceLineCount / (double)totalLineCount,4:P0} white-space lines", Verbosity.Minimal);
+            if (!Options.IncludeWhitespace)
+                WriteLine($"{totalWhitespaceLines.PadLeft(maxDigits)} {totalWhitespaceLineCount / (double)totalLineCount,4:P0} white-space lines", Verbosity.Minimal);
 
             if (!Options.IncludeComments)
                 WriteLine($"{totalCommentLines.PadLeft(maxDigits)} {totalCommentLineCount / (double)totalLineCount,4:P0} comment lines", Verbosity.Minimal);

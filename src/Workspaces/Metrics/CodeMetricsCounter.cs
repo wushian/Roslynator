@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -17,12 +18,42 @@ namespace Roslynator.Metrics
 
         protected abstract CodeMetrics CountLines(SyntaxNode node, SourceText sourceText, CodeMetricsOptions options, CancellationToken cancellationToken);
 
+        public static CodeMetricsCounter GetPhysicalLinesCounter(string language)
+        {
+            switch (language)
+            {
+                case LanguageNames.CSharp:
+                    return CSharp.CSharpPhysicalLinesCounter.Instance;
+                case LanguageNames.VisualBasic:
+                    return VisualBasic.VisualBasicPhysicalLinesCounter.Instance;
+            }
+
+            Debug.Assert(language == LanguageNames.FSharp, language);
+
+            return null;
+        }
+
+        public static CodeMetricsCounter GetLogicalLinesCounter(string language)
+        {
+            switch (language)
+            {
+                case LanguageNames.CSharp:
+                    return CSharp.CSharpLogicalLinesCounter.Instance;
+                case LanguageNames.VisualBasic:
+                    return VisualBasic.VisualBasicLogicalLinesCounter.Instance;
+            }
+
+            Debug.Assert(language == LanguageNames.FSharp, language);
+
+            return null;
+        }
+
         public static ImmutableDictionary<ProjectId, CodeMetrics> CountPhysicalLinesInParallel(
             IEnumerable<Project> projects,
             CodeMetricsOptions options = null,
             CancellationToken cancellationToken = default)
         {
-            return CountLinesInParallel(projects, CodeMetricsCounters.GetPhysicalLinesCounter, options, cancellationToken);
+            return CountLinesInParallel(projects, GetPhysicalLinesCounter, options, cancellationToken);
         }
 
         public static ImmutableDictionary<ProjectId, CodeMetrics> CountLogicalLinesInParallel(
@@ -30,7 +61,7 @@ namespace Roslynator.Metrics
             CodeMetricsOptions options = null,
             CancellationToken cancellationToken = default)
         {
-            return CountLinesInParallel(projects, CodeMetricsCounters.GetLogicalLinesCounter, options, cancellationToken);
+            return CountLinesInParallel(projects, GetLogicalLinesCounter, options, cancellationToken);
         }
 
         private static ImmutableDictionary<ProjectId, CodeMetrics> CountLinesInParallel(
@@ -60,7 +91,7 @@ namespace Roslynator.Metrics
             CodeMetricsOptions options = null,
             CancellationToken cancellationToken = default)
         {
-            return CountLinesAsync(projects, CodeMetricsCounters.GetPhysicalLinesCounter, options, cancellationToken);
+            return CountLinesAsync(projects, GetPhysicalLinesCounter, options, cancellationToken);
         }
 
         public static Task<ImmutableDictionary<ProjectId, CodeMetrics>> CountLogicalLinesAsync(
@@ -68,7 +99,7 @@ namespace Roslynator.Metrics
             CodeMetricsOptions options = null,
             CancellationToken cancellationToken = default)
         {
-            return CountLinesAsync(projects, CodeMetricsCounters.GetLogicalLinesCounter, options, cancellationToken);
+            return CountLinesAsync(projects, GetLogicalLinesCounter, options, cancellationToken);
         }
 
         private static async Task<ImmutableDictionary<ProjectId, CodeMetrics>> CountLinesAsync(
@@ -123,7 +154,7 @@ namespace Roslynator.Metrics
             if (tree == null)
                 return default;
 
-            if (!options.IncludeGenerated
+            if (!options.IncludeGeneratedCode
                 && GeneratedCodeUtility.IsGeneratedCode(tree, SyntaxFacts.IsComment, cancellationToken))
             {
                 return default;
@@ -136,9 +167,9 @@ namespace Roslynator.Metrics
             return CountLines(root, sourceText, options, cancellationToken);
         }
 
-        private protected int CountWhiteSpaceLines(SyntaxNode root, SourceText sourceText)
+        private protected int CountWhitespaceLines(SyntaxNode root, SourceText sourceText)
         {
-            int whiteSpaceLineCount = 0;
+            int whitespaceLineCount = 0;
 
             foreach (TextLine line in sourceText.Lines)
             {
@@ -147,12 +178,12 @@ namespace Roslynator.Metrics
                     if (line.End == sourceText.Length
                         || SyntaxFacts.IsEndOfLineTrivia(root.FindTrivia(line.End)))
                     {
-                        whiteSpaceLineCount++;
+                        whitespaceLineCount++;
                     }
                 }
             }
 
-            return whiteSpaceLineCount;
+            return whitespaceLineCount;
         }
     }
 }

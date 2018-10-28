@@ -64,7 +64,7 @@ namespace Roslynator.CommandLine
                             {
                                 var fs = new FileStream(options.LogFile, FileMode.Create, FileAccess.Write, FileShare.Read);
                                 var sw = new StreamWriter(fs, Encoding.UTF8, bufferSize: 4096, leaveOpen: false);
-                                LogOut = new LogWriter(sw) { Verbosity = logFileVerbosity };
+                                Out = new TextWriterWithVerbosity(sw) { Verbosity = logFileVerbosity };
                             }
 
                             verbosityParsed = true;
@@ -89,8 +89,8 @@ namespace Roslynator.CommandLine
             }
             finally
             {
-                LogOut?.Dispose();
-                LogOut = null;
+                Out?.Dispose();
+                Out = null;
             }
         }
 

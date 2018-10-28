@@ -7,23 +7,23 @@ using Microsoft.CodeAnalysis.Diagnostics.Telemetry;
 
 namespace Roslynator.Diagnostics
 {
-    public sealed class ProjectAnalysisResult
+    public class ProjectAnalysisResult
     {
         internal ProjectAnalysisResult(
-            Project project,
+            ProjectId projectId,
             ImmutableArray<DiagnosticAnalyzer> analyzers,
             ImmutableArray<Diagnostic> diagnostics,
             ImmutableArray<Diagnostic> compilerDiagnostics,
             ImmutableDictionary<DiagnosticAnalyzer, AnalyzerTelemetryInfo> telemetry)
         {
-            Project = project;
+            ProjectId = projectId;
             Analyzers = analyzers;
             Diagnostics = diagnostics;
             CompilerDiagnostics = compilerDiagnostics;
             Telemetry = telemetry;
         }
 
-        public Project Project { get; }
+        public ProjectId ProjectId { get; }
 
         public ImmutableArray<DiagnosticAnalyzer> Analyzers { get; }
 
@@ -32,5 +32,7 @@ namespace Roslynator.Diagnostics
         public ImmutableArray<Diagnostic> CompilerDiagnostics { get; }
 
         public ImmutableDictionary<DiagnosticAnalyzer, AnalyzerTelemetryInfo> Telemetry { get; }
+
+        public bool IsDefault => ProjectId == null;
     }
 }

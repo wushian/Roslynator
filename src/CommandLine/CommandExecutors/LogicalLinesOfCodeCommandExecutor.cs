@@ -24,13 +24,13 @@ namespace Roslynator.CommandLine
 
         public override async Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default)
         {
-            var codeMetricsOptions = new CodeMetricsOptions(includeGenerated: Options.IncludeGenerated);
+            var codeMetricsOptions = new CodeMetricsOptions(includeGenerated: Options.IncludeGeneratedCode);
 
             if (projectOrSolution.IsProject)
             {
                 Project project = projectOrSolution.AsProject();
 
-                CodeMetricsCounter counter = CodeMetricsCounters.GetLogicalLinesCounter(project.Language);
+                CodeMetricsCounter counter = CodeMetricsCounter.GetLogicalLinesCounter(project.Language);
 
                 if (counter != null)
                 {
@@ -46,7 +46,7 @@ namespace Roslynator.CommandLine
 
                     WriteMetrics(
                         metrics.CodeLineCount,
-                        metrics.WhiteSpaceLineCount,
+                        metrics.WhitespaceLineCount,
                         metrics.CommentLineCount,
                         metrics.PreprocessorDirectiveLineCount,
                         metrics.TotalLineCount);
@@ -86,7 +86,7 @@ namespace Roslynator.CommandLine
 
                 WriteMetrics(
                     projectsMetrics.Sum(f => f.Value.CodeLineCount),
-                    projectsMetrics.Sum(f => f.Value.WhiteSpaceLineCount),
+                    projectsMetrics.Sum(f => f.Value.WhitespaceLineCount),
                     projectsMetrics.Sum(f => f.Value.CommentLineCount),
                     projectsMetrics.Sum(f => f.Value.PreprocessorDirectiveLineCount),
                     projectsMetrics.Sum(f => f.Value.TotalLineCount));
@@ -100,24 +100,24 @@ namespace Roslynator.CommandLine
 
         private static void WriteMetrics(
             int totalCodeLineCount,
-            int totalWhiteSpaceLineCount,
+            int totalWhitespaceLineCount,
             int totalCommentLineCount,
             int totalPreprocessorDirectiveLineCount,
             int totalLineCount)
         {
             string totalCodeLines = totalCodeLineCount.ToString("n0");
-            string totalWhiteSpaceLines = totalWhiteSpaceLineCount.ToString("n0");
+            string totalWhitespaceLines = totalWhitespaceLineCount.ToString("n0");
             string totalCommentLines = totalCommentLineCount.ToString("n0");
             string totalPreprocessorDirectiveLines = totalPreprocessorDirectiveLineCount.ToString("n0");
             string totalLines = totalLineCount.ToString("n0");
 
             int maxDigits = Math.Max(totalCodeLines.Length,
-                Math.Max(totalWhiteSpaceLines.Length,
+                Math.Max(totalWhitespaceLines.Length,
                     Math.Max(totalCommentLines.Length,
                         Math.Max(totalPreprocessorDirectiveLines.Length, totalLines.Length))));
 
             WriteLine($"{totalCodeLines.PadLeft(maxDigits)} {totalCodeLineCount / (double)totalLineCount,4:P0} logical lines of code", Verbosity.Minimal);
-            WriteLine($"{totalWhiteSpaceLines.PadLeft(maxDigits)} {totalWhiteSpaceLineCount / (double)totalLineCount,4:P0} white-space lines", Verbosity.Minimal);
+            WriteLine($"{totalWhitespaceLines.PadLeft(maxDigits)} {totalWhitespaceLineCount / (double)totalLineCount,4:P0} white-space lines", Verbosity.Minimal);
             WriteLine($"{totalCommentLines.PadLeft(maxDigits)} {totalCommentLineCount / (double)totalLineCount,4:P0} comment lines", Verbosity.Minimal);
             WriteLine($"{totalPreprocessorDirectiveLines.PadLeft(maxDigits)} {totalPreprocessorDirectiveLineCount / (double)totalLineCount,4:P0} preprocessor directive lines", Verbosity.Minimal);
             WriteLine($"{totalLines.PadLeft(maxDigits)} {totalLineCount / (double)totalLineCount,4:P0} total lines", Verbosity.Minimal);

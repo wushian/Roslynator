@@ -6,13 +6,13 @@ namespace Roslynator.Metrics
     {
         public CodeMetricsOptions(
             bool includeGenerated = false,
-            bool includeWhiteSpace = false,
+            bool includeWhitespace = false,
             bool includeComments = false,
             bool includePreprocessorDirectives = false,
             bool ignoreBlockBoundary = false)
         {
-            IncludeGenerated = includeGenerated;
-            IncludeWhiteSpace = includeWhiteSpace;
+            IncludeGeneratedCode = includeGenerated;
+            IncludeWhitespace = includeWhitespace;
             IncludeComments = includeComments;
             IncludePreprocessorDirectives = includePreprocessorDirectives;
             IgnoreBlockBoundary = ignoreBlockBoundary;
@@ -20,9 +20,9 @@ namespace Roslynator.Metrics
 
         public static CodeMetricsOptions Default { get; } = new CodeMetricsOptions();
 
-        public bool IncludeGenerated { get; }
+        public bool IncludeGeneratedCode { get; }
 
-        public bool IncludeWhiteSpace { get; }
+        public bool IncludeWhitespace { get; }
 
         public bool IncludeComments { get; }
 

@@ -18,12 +18,12 @@ namespace Roslynator.Metrics.VisualBasic
 
             walker.Visit(node);
 
-            int whiteSpaceLineCount = (options.IncludeWhiteSpace) ? 0 : CountWhiteSpaceLines(node, sourceText);
+            int whitespaceLineCount = (options.IncludeWhitespace) ? 0 : CountWhitespaceLines(node, sourceText);
 
             return new CodeMetrics(
                 totalLineCount: lines.Count,
                 codeLineCount: walker.LogicalLineCount,
-                whiteSpaceLineCount: whiteSpaceLineCount,
+                whitespaceLineCount: whitespaceLineCount,
                 commentLineCount: walker.CommentLineCount,
                 preprocessorDirectiveLineCount: walker.PreprocessorDirectiveLineCount,
                 blockBoundaryLineCount: 0);

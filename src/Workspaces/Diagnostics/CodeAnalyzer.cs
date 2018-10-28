@@ -219,7 +219,7 @@ namespace Roslynator.Diagnostics
 
             WriteDiagnostics(FilterDiagnostics(allDiagnostics, cancellationToken).ToImmutableArray(), baseDirectoryPath: projectDirectoryPath, formatProvider: FormatProvider, indentation: "  ", verbosity: Verbosity.Normal);
 
-            return new ProjectAnalysisResult(project, analyzers, diagnostics, compilerDiagnostics, telemetry);
+            return new ProjectAnalysisResult(project.Id, analyzers, diagnostics, compilerDiagnostics, telemetry);
         }
 
         private IEnumerable<Diagnostic> FilterDiagnostics(IEnumerable<Diagnostic> diagnostics, CancellationToken cancellationToken = default)

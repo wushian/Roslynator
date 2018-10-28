@@ -17,6 +17,6 @@ namespace Roslynator.CommandLine
         public bool IncludePreprocessorDirectives { get; set; }
 
         [Option(longName: "include-whitespace")]
-        public bool IncludeWhiteSpace { get; set; }
+        public bool IncludeWhitespace { get; set; }
     }
 }

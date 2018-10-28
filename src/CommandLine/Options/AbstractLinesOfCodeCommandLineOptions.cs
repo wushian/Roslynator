@@ -6,7 +6,7 @@ namespace Roslynator.CommandLine
 {
     public class AbstractLinesOfCodeCommandLineOptions : MSBuildCommandLineOptions
     {
-        [Option(longName: "include-generated")]
-        public bool IncludeGenerated { get; set; }
+        [Option(longName: "include-generated-code")]
+        public bool IncludeGeneratedCode { get; set; }
     }
 }

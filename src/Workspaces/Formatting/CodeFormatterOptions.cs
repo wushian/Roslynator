@@ -7,11 +7,11 @@ namespace Roslynator.Formatting
         public static CodeFormatterOptions Default { get; } = new CodeFormatterOptions();
 
         public CodeFormatterOptions(
-            bool includeGenerated = false)
+            bool includeGeneratedCode = false)
         {
-            IncludeGenerated = includeGenerated;
+            IncludeGeneratedCode = includeGeneratedCode;
         }
 
-        public bool IncludeGenerated { get; }
+        public bool IncludeGeneratedCode { get; }
     }
 }

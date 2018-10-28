@@ -4,7 +4,7 @@ using System;
 
 namespace Roslynator
 {
-    internal sealed class ConsoleWriter : LogWriter
+    internal sealed class ConsoleWriter : TextWriterWithVerbosity
     {
         public static ConsoleWriter Instance { get; } = new ConsoleWriter() { Verbosity = Verbosity.Normal };
 

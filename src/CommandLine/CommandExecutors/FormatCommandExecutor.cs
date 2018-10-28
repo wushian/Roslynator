@@ -51,7 +51,7 @@ namespace Roslynator.CommandLine
                     cancellationToken);
             }
 
-            var options = new CodeFormatterOptions(includeGenerated: Options.IncludeGenerated);
+            var options = new CodeFormatterOptions(includeGeneratedCode: Options.IncludeGeneratedCode);
 
             Workspace workspace = projectOrSolution.Workspace;
 

@@ -6,14 +6,14 @@ using System.Text;
 
 namespace Roslynator
 {
-    internal class LogWriter : TextWriter
+    internal class TextWriterWithVerbosity : TextWriter
     {
-        public LogWriter(TextWriter writer)
+        public TextWriterWithVerbosity(TextWriter writer)
         {
             Writer = writer;
         }
 
-        public LogWriter(TextWriter writer, IFormatProvider formatProvider) : base(formatProvider)
+        public TextWriterWithVerbosity(TextWriter writer, IFormatProvider formatProvider) : base(formatProvider)
         {
             Writer = writer;
         }
