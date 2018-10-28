@@ -75,11 +75,11 @@ Defines diagnostic identifiers that should not be fixed.
 
 Defines projects that should not be fixed.
 
-**`--language`** {csharp|vb}
+**`--language`** `{csharp|vb}`
 
 Defines project language.
 
-**`--minimal-severity`** {hidden|info|warning|error}
+**`--minimal-severity`** `{hidden|info|warning|error}`
 
 Defines minimal severity for a diagnostic. Default value is `info`.
 
@@ -101,7 +101,7 @@ Defines one or more MSBuild properties.
 
 Indicates whether code analysis should use analyzers from nuget package [Roslynator.Analyzers](https://nuget.org/packages/Roslynator.Analyzers).
 
-**`-v|--verbosity`** {q[uiet]|m[inimal]|n[ormal]|d[etailed]}
+**`-v|--verbosity`** `{q[uiet]|m[inimal]|n[ormal]|d[etailed]}`
 
 Defines the amount of information to display in the log.
 

@@ -4,6 +4,7 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
+    //TODO: FileLog, FileLogVerbosity
     public abstract class BaseCommandLineOptions
     {
         [Option(longName: "log-file")]

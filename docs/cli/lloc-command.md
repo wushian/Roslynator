@@ -29,10 +29,6 @@ The project or solution to calculate lines of code in.
 
 ### Optional Options
 
-In C# block boundary is opening brace or closing brace.
-
-In Visual Basic block boundary is end-block-statement such as `End Class`.
-
 **`--ignored-projects`**
 
 Defines project names that should not be fixed.
@@ -53,7 +49,7 @@ Indicates whether preprocessor directive line should be counted.
 
 Indicates whether white-space line should be counted.
 
-**`--language`** {csharp|vb}
+**`--language`** `{csharp|vb}`
 
 Defines project language.
 
@@ -71,7 +67,7 @@ Defines projects that should be analyzed.
 
 Defines one or more MSBuild properties.
 
-**`-v|--verbosity`** {q[uiet]|m[inimal]|n[ormal]|d[etailed]}
+**`-v|--verbosity`** `{q[uiet]|m[inimal]|n[ormal]|d[etailed]}`
 
 Defines the amount of information to display in the log.
 

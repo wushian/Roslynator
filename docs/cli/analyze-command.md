@@ -66,11 +66,11 @@ Defines diagnostic identifiers that should not be reported.
 
 Defines projects that should not be analyzed.
 
-**`--language`** {csharp|vb}
+**`--language`** `{csharp|vb}`
 
 Defines project language.
 
-**`--minimal-severity`** {hidden|info|warning|error}
+**`--minimal-severity`** `{hidden|info|warning|error}`
 
 Defines minimal severity for a diagnostic. Default value is `info`.
 
@@ -104,7 +104,7 @@ Indicates whether suppressed diagnostics should be reported.
 
 Defines diagnostic identifiers that should be reported.
 
-**`-v|--verbosity`** {q[uiet]|m[inimal]|n[ormal]|d[etailed]}
+**`-v|--verbosity`** `{q[uiet]|m[inimal]|n[ormal]|d[etailed]}`
 
 Defines the amount of information to display in the log.
 
