@@ -35,7 +35,7 @@ namespace Roslynator
 
         internal void LoadFrom(string path, bool loadAnalyzers = true, bool loadFixers = true)
         {
-            foreach (AnalyzerAssembly analyzerAssembly in AnalyzerAssembly.LoadFiles(path, loadAnalyzers: loadAnalyzers, loadFixers: loadFixers))
+            foreach ((string filePath, AnalyzerAssembly analyzerAssembly) in AnalyzerAssembly.LoadFiles(path, loadAnalyzers: loadAnalyzers, loadFixers: loadFixers))
             {
                 Add(analyzerAssembly);
             }

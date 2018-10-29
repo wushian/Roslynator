@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -91,6 +92,10 @@ namespace Roslynator.CommandLine
             {
                 Out?.Dispose();
                 Out = null;
+#if DEBUG
+                if (Debugger.IsAttached)
+                    Console.ReadKey();
+#endif
             }
         }
 
@@ -300,7 +305,7 @@ namespace Roslynator.CommandLine
 
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
 
-                WriteLine($"  Saving '{path}'", ConsoleColor.DarkGray, Verbosity.Detailed);
+                WriteLine($"  Save '{path}'", ConsoleColor.DarkGray, Verbosity.Detailed);
 
                 File.WriteAllText(path, documentationFile.Content, _defaultEncoding);
             }

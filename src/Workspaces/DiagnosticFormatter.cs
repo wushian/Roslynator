@@ -100,7 +100,7 @@ namespace Roslynator
                                 if ((parts & (DiagnosticDisplayParts.Severity | DiagnosticDisplayParts.Id | DiagnosticDisplayParts.Message)) != 0)
                                     sb.Append(' ');
 
-                                sb.Append(PathUtilities.MakeRelativePath(span.Path, baseDirectoryPath));
+                                sb.Append(PathUtilities.TrimStart(span.Path, baseDirectoryPath));
                             }
 
                             if ((parts & DiagnosticDisplayParts.Location) != 0)

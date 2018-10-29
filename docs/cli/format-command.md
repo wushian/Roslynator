@@ -149,7 +149,7 @@ Indicates whether redundant empty lines should be removed.
 
 *Note: This option is available only for C#. For details see [RCS1036](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1036.md).*
 
-**`-v|--verbosity`** `{q[uiet]|m[inimal]|n[ormal]|d[etailed]}`
+**`-v|--verbosity`** `{q[uiet]|m[inimal]|n[ormal]|d[etailed]|diag[nostic]}`
 
 Defines the amount of information to display in the log.
 

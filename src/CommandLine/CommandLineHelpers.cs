@@ -251,30 +251,37 @@ namespace Roslynator.CommandLine
 
         public static bool TryParseVerbosity(string value, out Verbosity verbosity)
         {
-            if (string.Equals(value, "q", StringComparison.Ordinal))
+            switch (value)
             {
-                verbosity = Verbosity.Quiet;
-                return true;
+                case "q":
+                    {
+                        verbosity = Verbosity.Quiet;
+                        return true;
+                    }
+                case "m":
+                    {
+                        verbosity = Verbosity.Minimal;
+                        return true;
+                    }
+                case "n":
+                    {
+                        verbosity = Verbosity.Normal;
+                        return true;
+                    }
+                case "d":
+                    {
+                        verbosity = Verbosity.Detailed;
+                        return true;
+                    }
+                case "diag":
+                    {
+                        verbosity = Verbosity.Diagnostic;
+                        return true;
+                    }
             }
-            else if (string.Equals(value, "m", StringComparison.Ordinal))
-            {
-                verbosity = Verbosity.Minimal;
+
+            if (Enum.TryParse(value, ignoreCase: true, out verbosity))
                 return true;
-            }
-            else if (string.Equals(value, "n", StringComparison.Ordinal))
-            {
-                verbosity = Verbosity.Normal;
-                return true;
-            }
-            else if (string.Equals(value, "d", StringComparison.Ordinal))
-            {
-                verbosity = Verbosity.Detailed;
-                return true;
-            }
-            else if (Enum.TryParse(value, ignoreCase: true, out verbosity))
-            {
-                return true;
-            }
 
             WriteLine($"Unknown verbosity '{value}'.", Verbosity.Quiet);
             return false;

@@ -104,7 +104,7 @@ Indicates whether suppressed diagnostics should be reported.
 
 Defines diagnostic identifiers that should be reported.
 
-**`-v|--verbosity`** `{q[uiet]|m[inimal]|n[ormal]|d[etailed]}`
+**`-v|--verbosity`** `{q[uiet]|m[inimal]|n[ormal]|d[etailed]|diag[nostic]}`
 
 Defines the amount of information to display in the log.
 

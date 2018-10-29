@@ -24,7 +24,7 @@ namespace Roslynator.CommandLine
             if (assemblyName.Name.EndsWith(".resources"))
                 return null;
 
-            WriteLine($"Resolve assembly '{args.Name}'", ConsoleColor.DarkGray, Verbosity.Detailed);
+            WriteLine($"Resolve assembly '{args.Name}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
             switch (assemblyName.Name)
             {
@@ -50,7 +50,7 @@ namespace Roslynator.CommandLine
                     }
             }
 
-            WriteLine($"Unable to resolve assembly '{args.Name}'.", ConsoleColor.DarkGray, Verbosity.Detailed);
+            WriteLine($"Unable to resolve assembly '{args.Name}'.", ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
             return null;
 

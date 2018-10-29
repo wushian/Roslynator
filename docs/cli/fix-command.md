@@ -101,7 +101,7 @@ Defines one or more MSBuild properties.
 
 Indicates whether code analysis should use analyzers from nuget package [Roslynator.Analyzers](https://nuget.org/packages/Roslynator.Analyzers).
 
-**`-v|--verbosity`** `{q[uiet]|m[inimal]|n[ormal]|d[etailed]}`
+**`-v|--verbosity`** `{q[uiet]|m[inimal]|n[ormal]|d[etailed]|diag[nostic]}`
 
 Defines the amount of information to display in the log.
 

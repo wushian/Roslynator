@@ -82,7 +82,7 @@ namespace Roslynator.CommandLine
                     {
                         hasChanges = true;
 
-                        WriteLine($"  Format '{PathUtilities.MakeRelativePath(document.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
+                        WriteLine($"  Format '{PathUtilities.TrimStart(document.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
 #if DEBUG
                         await WorkspacesUtilities.VerifySyntaxEquivalenceAsync(project.GetDocument(document.Id), document, cancellationToken);
 #endif
@@ -98,7 +98,7 @@ namespace Roslynator.CommandLine
                     if (!workspace.TryApplyChanges(solution))
                     {
                         Debug.Fail($"Cannot apply changes to solution '{solution.FilePath}'");
-                        WriteLine($"Cannot apply changes to solution '{solution.FilePath}'", ConsoleColor.Yellow, Verbosity.Detailed);
+                        WriteLine($"Cannot apply changes to solution '{solution.FilePath}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
                     }
                 }
             }
@@ -130,7 +130,7 @@ namespace Roslynator.CommandLine
 
                         if (textChanges.Any())
                         {
-                            WriteLine($"  Format '{PathUtilities.MakeRelativePath(document.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
+                            WriteLine($"  Format '{PathUtilities.TrimStart(document.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
 #if DEBUG
                             bool success = WorkspacesUtilities.VerifySyntaxEquivalenceAsync(project.GetDocument(document.Id), document, cancellationToken).Result;
 #endif
@@ -155,7 +155,7 @@ namespace Roslynator.CommandLine
                     if (!workspace.TryApplyChanges(solution))
                     {
                         Debug.Fail($"Cannot apply changes to solution '{solution.FilePath}'");
-                        WriteLine($"Cannot apply changes to solution '{solution.FilePath}'", ConsoleColor.Yellow, Verbosity.Detailed);
+                        WriteLine($"Cannot apply changes to solution '{solution.FilePath}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
                     }
                 }
 

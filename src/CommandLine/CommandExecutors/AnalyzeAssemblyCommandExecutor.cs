@@ -24,17 +24,29 @@ namespace Roslynator.CommandLine
 
         public CommandResult Execute(AnalyzeAssemblyCommandLineOptions options)
         {
-            var analyzerAssemblies = new List<AnalyzerAssembly>();
+            string path = options.Path;
 
-            foreach (AnalyzerAssembly analyzerAssembly in AnalyzerAssembly.LoadFiles(
-                path: options.Path,
-                loadAnalyzers: !options.NoAnalyzers,
-                loadFixers: !options.NoFixers,
-                language: Language))
+            var assemblies = new HashSet<Assembly>();
+
+            foreach ((string filePath, AnalyzerAssembly analyzerAssembly) in AnalyzerAssembly.LoadFiles(
+                    path: path,
+                    loadAnalyzers: !options.NoAnalyzers,
+                    loadFixers: !options.NoFixers,
+                    language: Language)
+                .OrderBy(f => f.analyzerAssembly.GetName().Name)
+                .ThenBy(f => f.filePath))
             {
-                analyzerAssemblies.Add(analyzerAssembly);
+                if (assemblies.Add(analyzerAssembly.Assembly))
+                {
+                    WriteLine(filePath, Verbosity.Normal);
+                }
+                else
+                {
+                    WriteLine(filePath, ConsoleColor.DarkGray, Verbosity.Normal);
+                    continue;
+                }
 
-                WriteLine($"{analyzerAssembly.GetName().Name} ({analyzerAssembly.Location})", ConsoleColor.Green, Verbosity.Minimal);
+                WriteLine($"  {analyzerAssembly.FullName}", ConsoleColor.Cyan, Verbosity.Minimal);
 
                 DiagnosticAnalyzer[] analyzers = analyzerAssembly
                     .Analyzers
@@ -44,22 +56,39 @@ namespace Roslynator.CommandLine
 
                 if (analyzers.Length > 0)
                 {
-                    WriteLine($"  {analyzers.Length} DiagnosticAnalyzers", Verbosity.Normal);
+                    Write($"  {analyzers.Length} DiagnosticAnalyzers (", Verbosity.Normal);
 
-                    foreach (IGrouping<string, DiagnosticAnalyzer> grouping in analyzers
-                        .GroupBy(f => f.GetType().Namespace)
-                        .OrderBy(f => f.Key))
+                    using (IEnumerator<KeyValuePair<string, ImmutableArray<DiagnosticAnalyzer>>> en = analyzerAssembly.Analyzers.OrderBy(f => f.Key).GetEnumerator())
                     {
-                        WriteLine($"    {grouping.Key}", Verbosity.Detailed);
-
-                        foreach (DiagnosticAnalyzer analyzer in grouping.OrderBy(f => f.GetType().Name))
+                        if (en.MoveNext())
                         {
-                            Type type = analyzer.GetType();
+                            while (true)
+                            {
+                                Write($"{en.Current.Value.Length} {GetLanguageShortName(en.Current.Key)}", Verbosity.Normal);
 
-                            DiagnosticAnalyzerAttribute attribute = type.GetCustomAttribute<DiagnosticAnalyzerAttribute>();
-
-                            WriteLine($"      {type.Name} ({string.Join(") (", attribute.Languages.OrderBy(f => f))}) ({string.Join(", ", analyzer.SupportedDiagnostics.Select(f => f.Id).OrderBy(f => f))})", Verbosity.Detailed);
+                                if (en.MoveNext())
+                                {
+                                    Write(", ");
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
                         }
+                    }
+
+                    WriteLine(")", Verbosity.Normal);
+
+                    foreach (DiagnosticAnalyzer analyzer in analyzers.OrderBy(f => f.GetType().FullName))
+                    {
+                        Type type = analyzer.GetType();
+
+                        DiagnosticAnalyzerAttribute attribute = type.GetCustomAttribute<DiagnosticAnalyzerAttribute>();
+
+                        WriteLine($"    {type.FullName}", Verbosity.Detailed);
+                        WriteLine($"      Supported Languages:   {string.Join(", ", attribute.Languages.Select(f => GetLanguageShortName(f)).OrderBy(f => f))}", ConsoleColor.DarkGray, Verbosity.Detailed);
+                        WriteLine($"      Supported Diagnostics: {string.Join(", ", analyzer.SupportedDiagnostics.Select(f => f.Id).OrderBy(f => f))}", ConsoleColor.DarkGray, Verbosity.Detailed);
                     }
                 }
 
@@ -71,54 +100,46 @@ namespace Roslynator.CommandLine
 
                 if (fixers.Length > 0)
                 {
-                    WriteLine($"  {fixers.Length} CodeFixProviders", Verbosity.Normal);
+                    Write($"  {fixers.Length} CodeFixProviders (", Verbosity.Normal);
 
-                    foreach (IGrouping<string, CodeFixProvider> grouping in fixers
-                        .GroupBy(f => f.GetType().Namespace)
-                        .OrderBy(f => f.Key))
+                    using (IEnumerator<KeyValuePair<string, ImmutableArray<CodeFixProvider>>> en = analyzerAssembly.Fixers.OrderBy(f => f.Key).GetEnumerator())
                     {
-                        WriteLine($"    {grouping.Key}", Verbosity.Detailed);
-
-                        foreach (CodeFixProvider fixer in grouping)
+                        if (en.MoveNext())
                         {
-                            Type type = fixer.GetType();
+                            while (true)
+                            {
+                                Write($"{en.Current.Value.Length} {GetLanguageShortName(en.Current.Key)}", Verbosity.Normal);
 
-                            ExportCodeFixProviderAttribute attribute = type.GetCustomAttribute<ExportCodeFixProviderAttribute>();
-
-                            WriteLine($"      {type.Name} ({string.Join(") (", attribute.Languages.Select(f => GetLanguageShortName(f)).OrderBy(f => f))}) ({string.Join(", ", fixer.FixableDiagnosticIds.OrderBy(f => f))})", Verbosity.Detailed);
+                                if (en.MoveNext())
+                                {
+                                    Write(", ");
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
                         }
                     }
+
+                    WriteLine(")", Verbosity.Normal);
+
+                    foreach (CodeFixProvider fixer in fixers.OrderBy(f => f.GetType().FullName))
+                    {
+                        Type type = fixer.GetType();
+
+                        ExportCodeFixProviderAttribute attribute = type.GetCustomAttribute<ExportCodeFixProviderAttribute>();
+
+                        WriteLine($"    {type.FullName}", Verbosity.Detailed);
+                        WriteLine($"      Supported Languages: {string.Join(", ", attribute.Languages.Select(f => GetLanguageShortName(f)).OrderBy(f => f))}", ConsoleColor.DarkGray, Verbosity.Detailed);
+                        WriteLine($"      Fixable Diagnostics: {string.Join(", ", fixer.FixableDiagnosticIds.OrderBy(f => f))}", ConsoleColor.DarkGray, Verbosity.Detailed);
+                    }
                 }
             }
 
-            if (analyzerAssemblies.Count > 0)
-            {
-                WriteLine(Verbosity.Minimal);
-
-                WriteLine($"{analyzerAssemblies.Count} analyzer {((analyzerAssemblies.Count == 1) ? "assembly" : "assemblies")} found", Verbosity.Minimal);
-
-                foreach (AnalyzerAssembly analyzerAssembly in analyzerAssemblies
-                    .OrderBy(f => f.GetName().Name)
-                    .ThenBy(f => f.Location))
-                {
-                    WriteLine($"  {analyzerAssembly.GetName().Name}", ConsoleColor.Green, Verbosity.Normal);
-                    WriteLine($"    Location: {analyzerAssembly.Location}", Verbosity.Normal);
-
-                    foreach (KeyValuePair<string, ImmutableArray<DiagnosticAnalyzer>> kvp in analyzerAssembly.Analyzers
-                        .OrderBy(f => f.Key))
-                    {
-                        WriteLine($"    {GetLanguageShortName(kvp.Key)} Analyzers: {kvp.Value.Length}", Verbosity.Normal);
-                    }
-
-                    foreach (KeyValuePair<string, ImmutableArray<CodeFixProvider>> kvp in analyzerAssembly.Fixers
-                        .OrderBy(f => f.Key))
-                    {
-                        WriteLine($"    {GetLanguageShortName(kvp.Key)} Fixers:    {kvp.Value.Length}", Verbosity.Normal);
-                    }
-                }
-
-                WriteLine(Verbosity.Minimal);
-            }
+            WriteLine(Verbosity.Minimal);
+            WriteLine($"{assemblies.Count} analyzer {((assemblies.Count == 1) ? "assembly" : "assemblies")} found", ConsoleColor.Green, Verbosity.Minimal);
+            WriteLine(Verbosity.Minimal);
 
             return new CommandResult(success: true);
 

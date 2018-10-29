@@ -214,7 +214,7 @@ namespace Roslynator.CodeFixes
                     .Select(f => f.ToString())
                     .Distinct())
                 {
-                    WriteLine(message, ConsoleColor.Yellow, Verbosity.Detailed);
+                    WriteLine(message, ConsoleColor.Yellow, Verbosity.Diagnostic);
                 }
 
                 diagnostics = diagnostics
@@ -360,9 +360,9 @@ namespace Roslynator.CodeFixes
                     else if (Options.DiagnosticFixerMap.IsEmpty
                         || !Options.DiagnosticFixerMap.ContainsKey(diagnosticId))
                     {
-                        WriteLine($"  Diagnostic '{diagnosticId}' is fixable by multiple fixers", ConsoleColor.DarkYellow, Verbosity.Detailed);
-                        WriteLine($"    Fixer 1: '{fixer.GetType().FullName}'", ConsoleColor.DarkYellow, Verbosity.Detailed);
-                        WriteLine($"    Fixer 2: '{fixers[i].GetType().FullName}'", ConsoleColor.DarkYellow, Verbosity.Detailed);
+                        WriteLine($"  Diagnostic '{diagnosticId}' is fixable by multiple fixers", ConsoleColor.DarkYellow, Verbosity.Diagnostic);
+                        WriteLine($"    Fixer 1: '{fixer.GetType().FullName}'", ConsoleColor.DarkYellow, Verbosity.Diagnostic);
+                        WriteLine($"    Fixer 2: '{fixers[i].GetType().FullName}'", ConsoleColor.DarkYellow, Verbosity.Diagnostic);
                         return;
                     }
                 }
@@ -380,7 +380,7 @@ namespace Roslynator.CodeFixes
                 {
                     WriteLine($@"Code action has multiple operations
   Title: {codeAction.Title}
-  Equivalence key: {codeAction.EquivalenceKey}", ConsoleColor.DarkGray, Verbosity.Detailed);
+  Equivalence key: {codeAction.EquivalenceKey}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
                 }
             }
         }
@@ -433,9 +433,9 @@ namespace Roslynator.CodeFixes
                         else if (!string.Equals(a.EquivalenceKey, action.EquivalenceKey, StringComparison.Ordinal)
                             && (Options.DiagnosticFixMap.IsEmpty || !Options.DiagnosticFixMap.ContainsKey(diagnostic.Id)))
                         {
-                            WriteLine($"  Fixer '{fixer.GetType().FullName}' registered multiple actions to fix diagnostic '{diagnosticId}'", ConsoleColor.DarkYellow, Verbosity.Detailed);
-                            WriteLine($"    Equivalence Key 1: '{action.EquivalenceKey}'", ConsoleColor.DarkYellow, Verbosity.Detailed);
-                            WriteLine($"    Equivalence Key 2: '{a.EquivalenceKey}'", ConsoleColor.DarkYellow, Verbosity.Detailed);
+                            WriteLine($"  Fixer '{fixer.GetType().FullName}' registered multiple actions to fix diagnostic '{diagnosticId}'", ConsoleColor.DarkYellow, Verbosity.Diagnostic);
+                            WriteLine($"    Equivalence Key 1: '{action.EquivalenceKey}'", ConsoleColor.DarkYellow, Verbosity.Diagnostic);
+                            WriteLine($"    Equivalence Key 2: '{a.EquivalenceKey}'", ConsoleColor.DarkYellow, Verbosity.Diagnostic);
 
                             action = null;
                         }
@@ -461,8 +461,8 @@ namespace Roslynator.CodeFixes
                 if (fixAllAction == null
                     && diagnosticId.StartsWith("RCS"))
                 {
-                    WriteLine($"Fixer '{fixer.GetType().FullName}' registered no action for diagnostics:", ConsoleColor.DarkGray, Verbosity.Detailed);
-                    WriteDiagnostics(diagnostics, baseDirectoryPath: Path.GetDirectoryName(project.FilePath), formatProvider: FormatProvider, indentation: "  ", maxCount: 10, verbosity: Verbosity.Detailed);
+                    WriteLine($"Fixer '{fixer.GetType().FullName}' registered no action for diagnostics:", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                    WriteDiagnostics(diagnostics, baseDirectoryPath: Path.GetDirectoryName(project.FilePath), formatProvider: FormatProvider, indentation: "  ", maxCount: 10, verbosity: Verbosity.Diagnostic);
                 }
 
                 return fixAllAction;
@@ -575,7 +575,7 @@ namespace Roslynator.CodeFixes
 
                 Document newDocument = document.WithSyntaxRoot(newRoot);
 
-                WriteLine($"  Add banner to '{PathUtilities.MakeRelativePath(document.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
+                WriteLine($"  Add banner to '{PathUtilities.TrimStart(document.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
 
                 project = newDocument.Project;
 
@@ -586,7 +586,7 @@ namespace Roslynator.CodeFixes
                 && !Workspace.TryApplyChanges(project.Solution))
             {
                 Debug.Fail($"Cannot apply changes to solution '{project.FilePath}'");
-                WriteLine($"Cannot apply changes to solution '{project.Solution.FilePath}'", ConsoleColor.Yellow, Verbosity.Detailed);
+                WriteLine($"Cannot apply changes to solution '{project.Solution.FilePath}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
             }
         }
 
@@ -614,7 +614,7 @@ namespace Roslynator.CodeFixes
                 {
                     hasChanges = true;
 
-                    WriteLine($"  Format '{PathUtilities.MakeRelativePath(newDocument.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
+                    WriteLine($"  Format '{PathUtilities.TrimStart(newDocument.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
 #if DEBUG
                     await WorkspacesUtilities.VerifySyntaxEquivalenceAsync(project.GetDocument(newDocument.Id), newDocument, cancellationToken).ConfigureAwait(false);
 #endif
@@ -625,7 +625,7 @@ namespace Roslynator.CodeFixes
                 && !Workspace.TryApplyChanges(newProject.Solution))
             {
                 Debug.Fail($"Cannot apply changes to solution '{newProject.Solution.FilePath}'");
-                WriteLine($"Cannot apply changes to solution '{newProject.Solution.FilePath}'", ConsoleColor.Yellow, Verbosity.Detailed);
+                WriteLine($"Cannot apply changes to solution '{newProject.Solution.FilePath}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.IO;
 using Microsoft.CodeAnalysis;
 
@@ -7,27 +8,32 @@ namespace Roslynator
 {
     internal static class PathUtilities
     {
-        internal static string MakeRelativePath(Document document, Project project, bool trimLeadingDirectorySeparator = true)
+        internal static string TrimStart(Document document, Project project, bool trimLeadingDirectorySeparator = true)
         {
-            return MakeRelativePath(document.FilePath, Path.GetDirectoryName(project.FilePath), trimLeadingDirectorySeparator: trimLeadingDirectorySeparator);
+            return TrimStart(document.FilePath, Path.GetDirectoryName(project.FilePath), trimLeadingDirectorySeparator: trimLeadingDirectorySeparator);
         }
 
-        internal static string MakeRelativePath(string path, string basePath, bool trimLeadingDirectorySeparator = true)
+        internal static string TrimStart(string path, string basePath, bool trimLeadingDirectorySeparator = true)
         {
-            if (basePath != null
-                && path.StartsWith(basePath))
+            if (basePath != null)
             {
-                int length = basePath.Length;
+                if (string.Equals(path, basePath, StringComparison.Ordinal))
+                    return Path.GetFileName(path);
 
-                if (trimLeadingDirectorySeparator)
+                if (path.StartsWith(basePath))
                 {
-                    while (length < path.Length
-                        && path[length] == Path.DirectorySeparatorChar)
-                    {
-                        length++;
-                    }
+                    int length = basePath.Length;
 
-                    return path.Remove(0, length);
+                    if (trimLeadingDirectorySeparator)
+                    {
+                        while (length < path.Length
+                            && path[length] == Path.DirectorySeparatorChar)
+                        {
+                            length++;
+                        }
+
+                        return path.Remove(0, length);
+                    }
                 }
             }
 

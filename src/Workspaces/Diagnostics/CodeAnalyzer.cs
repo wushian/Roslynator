@@ -52,7 +52,7 @@ namespace Roslynator.Diagnostics
 
         public IFormatProvider FormatProvider { get; }
 
-        public async Task AnalyzeSolutionAsync(Solution solution, CancellationToken cancellationToken = default)
+        public async Task<ImmutableArray<ProjectAnalysisResult>> AnalyzeSolutionAsync(Solution solution, CancellationToken cancellationToken = default)
         {
             ImmutableArray<ProjectId> projectIds = solution
                 .GetProjectDependencyGraph()
@@ -98,33 +98,7 @@ namespace Roslynator.Diagnostics
             if (results.Count > 0)
             {
                 if (Options.ExecutionTime)
-                {
-                    var telemetryInfos = new Dictionary<DiagnosticAnalyzer, AnalyzerTelemetryInfo>();
-
-                    foreach (ProjectAnalysisResult result in results)
-                    {
-                        foreach (KeyValuePair<DiagnosticAnalyzer, AnalyzerTelemetryInfo> kvp in result.Telemetry)
-                        {
-                            DiagnosticAnalyzer analyzer = kvp.Key;
-
-                            if (!telemetryInfos.TryGetValue(analyzer, out AnalyzerTelemetryInfo telemetryInfo))
-                                telemetryInfo = new AnalyzerTelemetryInfo();
-
-                            telemetryInfo.Add(kvp.Value);
-
-                            telemetryInfos[analyzer] = telemetryInfo;
-                        }
-                    }
-
-                    WriteLine(Verbosity.Minimal);
-
-                    foreach (KeyValuePair<DiagnosticAnalyzer, AnalyzerTelemetryInfo> kvp in telemetryInfos
-                        .Where(f => f.Value.ExecutionTime >= _minimalExecutionTime)
-                        .OrderByDescending(f => f.Value.ExecutionTime))
-                    {
-                        WriteLine($"{kvp.Value.ExecutionTime:mm\\:ss\\.fff} '{kvp.Key.GetType().FullName}'", Verbosity.Minimal);
-                    }
-                }
+                    WriteExecutionTime(results);
 
                 int totalCount = 0;
 
@@ -160,6 +134,8 @@ namespace Roslynator.Diagnostics
             }
 
             WriteLine($"Done analyzing solution {stopwatch.Elapsed:mm\\:ss\\.ff} '{solution.FilePath}'", ConsoleColor.Green, Verbosity.Minimal);
+
+            return results.ToImmutableArray();
         }
 
         public async Task<ProjectAnalysisResult> AnalyzeProjectAsync(Project project, CancellationToken cancellationToken = default)
@@ -259,6 +235,35 @@ namespace Roslynator.Diagnostics
                     default:
                         return false;
                 }
+            }
+        }
+
+        private static void WriteExecutionTime(List<ProjectAnalysisResult> results)
+        {
+            var telemetryInfos = new Dictionary<DiagnosticAnalyzer, AnalyzerTelemetryInfo>();
+
+            foreach (ProjectAnalysisResult result in results)
+            {
+                foreach (KeyValuePair<DiagnosticAnalyzer, AnalyzerTelemetryInfo> kvp in result.Telemetry)
+                {
+                    DiagnosticAnalyzer analyzer = kvp.Key;
+
+                    if (!telemetryInfos.TryGetValue(analyzer, out AnalyzerTelemetryInfo telemetryInfo))
+                        telemetryInfo = new AnalyzerTelemetryInfo();
+
+                    telemetryInfo.Add(kvp.Value);
+
+                    telemetryInfos[analyzer] = telemetryInfo;
+                }
+            }
+
+            WriteLine(Verbosity.Minimal);
+
+            foreach (KeyValuePair<DiagnosticAnalyzer, AnalyzerTelemetryInfo> kvp in telemetryInfos
+                .Where(f => f.Value.ExecutionTime >= _minimalExecutionTime)
+                .OrderByDescending(f => f.Value.ExecutionTime))
+            {
+                WriteLine($"{kvp.Value.ExecutionTime:mm\\:ss\\.fff} '{kvp.Key.GetType().FullName}'", Verbosity.Minimal);
             }
         }
     }

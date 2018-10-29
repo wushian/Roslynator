@@ -8,6 +8,7 @@ namespace Roslynator
         Quiet = 1,
         Minimal = 2,
         Normal = 3,
-        Detailed = 4
+        Detailed = 4,
+        Diagnostic = 5,
     }
 }

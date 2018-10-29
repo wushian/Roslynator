@@ -125,7 +125,7 @@ namespace Roslynator.CommandLine
                     return null;
                 }
 
-                WriteLine($"MSBuild location is '{instance.MSBuildPath}'", Verbosity.Detailed);
+                WriteLine($"MSBuild location is '{instance.MSBuildPath}'", Verbosity.Diagnostic);
 
                 MSBuildLocator.RegisterInstance(instance);
             }

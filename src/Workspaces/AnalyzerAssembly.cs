@@ -112,7 +112,7 @@ namespace Roslynator
             }
             catch (ReflectionTypeLoadException)
             {
-                WriteLine($"Cannot load types from assembly '{analyzerAssembly.Location}'", ConsoleColor.DarkGray, Verbosity.Detailed);
+                WriteLine($"Cannot load types from assembly '{analyzerAssembly.Location}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
             }
 
             return new AnalyzerAssembly(
@@ -121,7 +121,18 @@ namespace Roslynator
                 fixers?.ToImmutableDictionary(f => f.Key, f => f.Value.ToImmutableArray()) ?? ImmutableDictionary<string, ImmutableArray<CodeFixProvider>>.Empty);
         }
 
-        public static IEnumerable<AnalyzerAssembly> LoadFiles(
+        public static AnalyzerAssembly LoadFile(
+            string filePath,
+            bool loadAnalyzers = true,
+            bool loadFixers = true,
+            string language = null)
+        {
+            Assembly assembly = Assembly.LoadFrom(filePath);
+
+            return Load(assembly, loadAnalyzers: loadAnalyzers, loadFixers: loadFixers, language: language);
+        }
+
+        public static IEnumerable<(string filePath, AnalyzerAssembly analyzerAssembly)> LoadFiles(
             string path,
             bool loadAnalyzers = true,
             bool loadFixers = true,
@@ -132,7 +143,7 @@ namespace Roslynator
                 AnalyzerAssembly analyzerAssembly = Load(path);
 
                 if (analyzerAssembly?.IsEmpty == false)
-                    yield return analyzerAssembly;
+                    yield return (path, analyzerAssembly);
             }
             else if (Directory.Exists(path))
             {
@@ -140,13 +151,15 @@ namespace Roslynator
                 {
                     while (true)
                     {
+                        string filePath = null;
                         AnalyzerAssembly analyzerAssembly = null;
 
                         try
                         {
                             if (en.MoveNext())
                             {
-                                analyzerAssembly = Load(en.Current);
+                                filePath = en.Current;
+                                analyzerAssembly = Load(filePath);
                             }
                             else
                             {
@@ -167,7 +180,7 @@ namespace Roslynator
                         }
 
                         if (analyzerAssembly?.IsEmpty == false)
-                            yield return analyzerAssembly;
+                            yield return (filePath, analyzerAssembly);
                     }
                 }
             }
@@ -178,11 +191,9 @@ namespace Roslynator
 
             AnalyzerAssembly Load(string filePath)
             {
-                Assembly assembly = null;
-
                 try
                 {
-                    assembly = Assembly.LoadFrom(filePath);
+                    return LoadFile(filePath, loadAnalyzers, loadFixers, language);
                 }
                 catch (Exception ex)
                 {
@@ -190,7 +201,7 @@ namespace Roslynator
                         || ex is BadImageFormatException
                         || ex is SecurityException)
                     {
-                        WriteLine($"Cannot load assembly '{filePath}'", ConsoleColor.DarkGray, Verbosity.Detailed);
+                        WriteLine($"Cannot load assembly '{filePath}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
                         return null;
                     }
@@ -199,8 +210,6 @@ namespace Roslynator
                         throw;
                     }
                 }
-
-                return AnalyzerAssembly.Load(assembly, loadAnalyzers: loadAnalyzers, loadFixers: loadFixers, language: language);
             }
         }
 

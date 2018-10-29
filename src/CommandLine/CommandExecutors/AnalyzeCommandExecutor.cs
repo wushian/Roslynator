@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Roslynator.Diagnostics;
 using static Roslynator.Logger;
+using System.Collections.Immutable;
 
 namespace Roslynator.CommandLine
 {
@@ -49,13 +50,13 @@ namespace Roslynator.CommandLine
 
                 WriteLine($"Analyze project '{project.Name}'", Verbosity.Minimal);
 
-                await codeAnalyzer.AnalyzeProjectAsync(project, cancellationToken);
+                ProjectAnalysisResult result = await codeAnalyzer.AnalyzeProjectAsync(project, cancellationToken);
             }
             else
             {
                 Solution solution = projectOrSolution.AsSolution();
 
-                await codeAnalyzer.AnalyzeSolutionAsync(solution, cancellationToken);
+                ImmutableArray<ProjectAnalysisResult> results = await codeAnalyzer.AnalyzeSolutionAsync(solution, cancellationToken);
             }
 
             return new CommandResult(true);
