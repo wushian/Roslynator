@@ -13,7 +13,6 @@ namespace Roslynator
         Message = 4,
         Path = 8,
         Location = 16,
-        PathAndLocation = Path | Location,
         All = Severity | Id | Message | Path | Location
     }
 }
