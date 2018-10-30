@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
@@ -76,9 +75,9 @@ namespace Roslynator.CommandLine
                 {
                     Document document = newProject.GetDocument(documentId);
 
-                    IEnumerable<TextChange> textChanges = await document.GetTextChangesAsync(project.GetDocument(documentId));
-
-                    if (textChanges.Any())
+                    // https://github.com/dotnet/roslyn/issues/30674
+                    if (project.Language != LanguageNames.VisualBasic
+                        || (await document.GetTextChangesAsync(project.GetDocument(documentId))).Any())
                     {
                         hasChanges = true;
 
@@ -126,9 +125,9 @@ namespace Roslynator.CommandLine
                     {
                         Document document = newProject.GetDocument(documentId);
 
-                        IEnumerable<TextChange> textChanges = document.GetTextChangesAsync(project.GetDocument(documentId)).Result;
-
-                        if (textChanges.Any())
+                        // https://github.com/dotnet/roslyn/issues/30674
+                        if (project.Language != LanguageNames.VisualBasic
+                            || (document.GetTextChangesAsync(project.GetDocument(documentId)).Result).Any())
                         {
                             WriteLine($"  Format '{PathUtilities.TrimStart(document.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
 #if DEBUG

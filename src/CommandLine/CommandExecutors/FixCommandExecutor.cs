@@ -17,7 +17,7 @@ namespace Roslynator.CommandLine
 {
     internal class FixCommandExecutor : MSBuildWorkspaceCommandExecutor
     {
-        private static ImmutableHashSet<string> _roslynatorAnalyzerAssemblies;
+        private static ImmutableArray<string> _roslynatorAnalyzerAssemblies;
 
         public FixCommandExecutor(
             FixCommandLineOptions options,
@@ -32,15 +32,20 @@ namespace Roslynator.CommandLine
             DiagnosticFixerMap = diagnosticFixerMap;
         }
 
-        public static ImmutableHashSet<string> RoslynatorAnalyzerAssemblies
+        public static ImmutableArray<string> RoslynatorAnalyzerAssemblies
         {
             get
             {
-                return _roslynatorAnalyzerAssemblies ?? (_roslynatorAnalyzerAssemblies = ImmutableHashSet.CreateRange(new string[]
+                if (_roslynatorAnalyzerAssemblies.IsDefault)
                 {
-                    Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Roslynator.CSharp.Analyzers.dll"),
-                    Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Roslynator.CSharp.Analyzers.CodeFixes.dll"),
-                }));
+                    _roslynatorAnalyzerAssemblies = ImmutableArray.CreateRange(new string[]
+                    {
+                        Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Roslynator.CSharp.Analyzers.dll"),
+                        Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Roslynator.CSharp.Analyzers.CodeFixes.dll"),
+                    });
+                }
+
+                return _roslynatorAnalyzerAssemblies;
             }
         }
 

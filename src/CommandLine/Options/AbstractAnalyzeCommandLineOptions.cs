@@ -26,6 +26,9 @@ namespace Roslynator.CommandLine
         [Option(longName: "supported-diagnostics")]
         public IEnumerable<string> SupportedDiagnostics { get; set; }
 
+        [Option(longName: "use-roslynator-analyzers")]
+        public bool UseRoslynatorAnalyzers { get; set; }
+
         internal bool TryGetMinimalSeverity(DiagnosticSeverity defaultValue, out DiagnosticSeverity value)
         {
             if (MinimalSeverity != null)

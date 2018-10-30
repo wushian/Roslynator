@@ -133,7 +133,7 @@ namespace Roslynator.CodeFixes
 
                 foreach (DiagnosticDescriptor diagnosticDescriptor in fixedDiagnostics)
                 {
-                    WriteLine($"  {diagnosticDescriptor.Id.PadRight(maxIdLength)} '{diagnosticDescriptor.Title}'", Verbosity.Normal);
+                    WriteLine($"  {diagnosticDescriptor.Id.PadRight(maxIdLength)} {diagnosticDescriptor.Title}", Verbosity.Normal);
                 }
             }
 
@@ -608,9 +608,9 @@ namespace Roslynator.CodeFixes
             {
                 Document newDocument = newProject.GetDocument(documentId);
 
-                IEnumerable<TextChange> textChanges = await newDocument.GetTextChangesAsync(project.GetDocument(documentId)).ConfigureAwait(false);
-
-                if (textChanges.Any())
+                // https://github.com/dotnet/roslyn/issues/30674
+                if (project.Language != LanguageNames.VisualBasic
+                    || (await newDocument.GetTextChangesAsync(project.GetDocument(documentId)).ConfigureAwait(false)).Any())
                 {
                     hasChanges = true;
 

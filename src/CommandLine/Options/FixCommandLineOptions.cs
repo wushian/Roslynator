@@ -28,8 +28,5 @@ namespace Roslynator.CommandLine
 
         [Option(longName: "ignored-compiler-diagnostics")]
         public IEnumerable<string> IgnoredCompilerDiagnostics { get; set; }
-
-        [Option(longName: "use-roslynator-analyzers")]
-        public bool UseRoslynatorAnalyzers { get; set; }
     }
 }

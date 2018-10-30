@@ -1,18 +1,24 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Roslynator.Diagnostics;
 using static Roslynator.Logger;
-using System.Collections.Immutable;
 
 namespace Roslynator.CommandLine
 {
     internal class AnalyzeCommandExecutor : MSBuildWorkspaceCommandExecutor
     {
+        private static ImmutableArray<string> _roslynatorAnalyzerAssemblies;
+
         public AnalyzeCommandExecutor(AnalyzeCommandLineOptions options, DiagnosticSeverity minimalSeverity, string language) : base(language)
         {
             Options = options;
@@ -22,6 +28,19 @@ namespace Roslynator.CommandLine
         public AnalyzeCommandLineOptions Options { get; }
 
         public DiagnosticSeverity MinimalSeverity { get; }
+
+        public static ImmutableArray<string> RoslynatorAnalyzerAssemblies
+        {
+            get
+            {
+                if (_roslynatorAnalyzerAssemblies.IsDefault)
+                {
+                    _roslynatorAnalyzerAssemblies = ImmutableArray.Create(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Roslynator.CSharp.Analyzers.dll"));
+                }
+
+                return _roslynatorAnalyzerAssemblies;
+            }
+        }
 
         public override async Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default)
         {
@@ -39,6 +58,11 @@ namespace Roslynator.CommandLine
                 projectNames: Options.Projects,
                 ignoredProjectNames: Options.IgnoredProjects,
                 language: Language);
+
+            IEnumerable<string> analyzerAssemblies = Options.AnalyzerAssemblies;
+
+            if (Options.UseRoslynatorAnalyzers)
+                analyzerAssemblies = analyzerAssemblies.Concat(RoslynatorAnalyzerAssemblies);
 
             CultureInfo culture = (Options.CultureName != null) ? CultureInfo.GetCultureInfo(Options.CultureName) : null;
 

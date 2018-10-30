@@ -24,6 +24,7 @@ roslynator analyze <PROJECT|SOLUTION>
 [--report-fade-diagnostics]
 [--report-suppressed-diagnostics]
 [--supported-diagnostics]
+[--use-roslynator-analyzers]
 [-v|--verbosity]
 ```
 
@@ -103,6 +104,10 @@ Indicates whether suppressed diagnostics should be reported.
 **`--supported-diagnostics`**
 
 Defines diagnostic identifiers that should be reported.
+
+**`--use-roslynator-analyzers`**
+
+Indicates whether code analysis should use analyzers from nuget package [Roslynator.Analyzers](https://nuget.org/packages/Roslynator.Analyzers).
 
 **`-v|--verbosity`** `{q[uiet]|m[inimal]|n[ormal]|d[etailed]|diag[nostic]}`
 

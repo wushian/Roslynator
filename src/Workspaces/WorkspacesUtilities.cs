@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -174,6 +175,22 @@ namespace Roslynator
             }
 
             return true;
+        }
+
+        public static string GetShortLanguageName(string languageName)
+        {
+            switch (languageName)
+            {
+                case LanguageNames.CSharp:
+                case LanguageNames.FSharp:
+                    return languageName;
+                case LanguageNames.VisualBasic:
+                    return "VB";
+            }
+
+            Debug.Fail(languageName);
+
+            return languageName;
         }
     }
 }

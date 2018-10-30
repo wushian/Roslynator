@@ -39,6 +39,7 @@ namespace Roslynator.CommandLine
                     AnalyzeCommandLineOptions,
                     AnalyzeAssemblyCommandLineOptions,
                     FormatCommandLineOptions,
+                    SlnCommandLineOptions,
                     PhysicalLinesOfCodeCommandLineOptions,
                     LogicalLinesOfCodeCommandLineOptions,
                     GenerateDocCommandLineOptions,
@@ -81,7 +82,8 @@ namespace Roslynator.CommandLine
                     (AnalyzeCommandLineOptions options) => AnalyzeAsync(options).Result,
                     (AnalyzeAssemblyCommandLineOptions options) => AnalyzeAssembly(options),
                     (FormatCommandLineOptions options) => FormatAsync(options).Result,
-                    (PhysicalLinesOfCodeCommandLineOptions options) => PhysicalLinesOrCodeAsync(options).Result,
+                    (SlnCommandLineOptions options) => SlnAsync(options).Result,
+                    (PhysicalLinesOfCodeCommandLineOptions options) => PhysicalLinesOfCodeAsync(options).Result,
                     (LogicalLinesOfCodeCommandLineOptions options) => LogicalLinesOrCodeAsync(options).Result,
                     (GenerateDocCommandLineOptions options) => GenerateDoc(options),
                     (GenerateDeclarationsCommandLineOptions options) => GenerateDeclarations(options),
@@ -188,7 +190,19 @@ namespace Roslynator.CommandLine
             return (result.Success) ? 0 : 1;
         }
 
-        private static async Task<int> PhysicalLinesOrCodeAsync(PhysicalLinesOfCodeCommandLineOptions options)
+        private static async Task<int> SlnAsync(SlnCommandLineOptions options)
+        {
+            if (!options.TryGetLanguage(out string language))
+                return 1;
+
+            var executor = new SlnCommandExecutor(options, language);
+
+            CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
+
+            return (result.Success) ? 0 : 1;
+        }
+
+        private static async Task<int> PhysicalLinesOfCodeAsync(PhysicalLinesOfCodeCommandLineOptions options)
         {
             if (!options.TryGetLanguage(out string language))
                 return 1;

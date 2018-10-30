@@ -64,7 +64,7 @@ namespace Roslynator.CommandLine
                 yield return DiagnosticDescriptors.AddEmptyLineAfterEmbeddedStatement;
 
             if (EmptyLineBeforeWhileInDoStatement)
-                yield return DiagnosticDescriptors.AddEmptyLineAfterLastStatementInDoStatement;
+                yield return DiagnosticDescriptors.AddEmptyLineBeforeWhileInDoStatement;
 
             if (EmptyLineBetweenDeclarations)
                 yield return DiagnosticDescriptors.AddEmptyLineBetweenDeclarations;
@@ -79,19 +79,19 @@ namespace Roslynator.CommandLine
                 yield return DiagnosticDescriptors.FormatEmptyBlock;
 
             if (FormatSingleLineBlock)
-                yield return DiagnosticDescriptors.AvoidSingleLineBlock;
+                yield return DiagnosticDescriptors.FormatSingleLineBlock;
 
             if (NewLineAfterSwitchLabel)
-                yield return DiagnosticDescriptors.FormatSwitchSectionStatementOnSeparateLine;
+                yield return DiagnosticDescriptors.AddNewLineAfterSwitchLabel;
 
             if (NewLineBeforeEmbeddedStatement)
-                yield return DiagnosticDescriptors.FormatEmbeddedStatementOnSeparateLine;
+                yield return DiagnosticDescriptors.AddNewLineBeforeEmbeddedStatement;
 
             if (NewLineBeforeEnumMember)
-                yield return DiagnosticDescriptors.FormatEachEnumMemberOnSeparateLine;
+                yield return DiagnosticDescriptors.AddNewLineBeforeEnumMember;
 
             if (NewLineBeforeStatement)
-                yield return DiagnosticDescriptors.FormatEachStatementOnSeparateLine;
+                yield return DiagnosticDescriptors.AddNewLineBeforeStatement;
 
             if (RemoveRedundantEmptyLine)
                 yield return DiagnosticDescriptors.RemoveRedundantEmptyLine;

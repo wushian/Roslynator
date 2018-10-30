@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
@@ -64,7 +63,7 @@ namespace Roslynator.CommandLine
                         {
                             while (true)
                             {
-                                Write($"{en.Current.Value.Length} {GetLanguageShortName(en.Current.Key)}", Verbosity.Normal);
+                                Write($"{en.Current.Value.Length} {WorkspacesUtilities.GetShortLanguageName(en.Current.Key)}", Verbosity.Normal);
 
                                 if (en.MoveNext())
                                 {
@@ -87,7 +86,7 @@ namespace Roslynator.CommandLine
                         DiagnosticAnalyzerAttribute attribute = type.GetCustomAttribute<DiagnosticAnalyzerAttribute>();
 
                         WriteLine($"    {type.FullName}", Verbosity.Detailed);
-                        WriteLine($"      Supported Languages:   {string.Join(", ", attribute.Languages.Select(f => GetLanguageShortName(f)).OrderBy(f => f))}", ConsoleColor.DarkGray, Verbosity.Detailed);
+                        WriteLine($"      Supported Languages:   {string.Join(", ", attribute.Languages.Select(f => WorkspacesUtilities.GetShortLanguageName(f)).OrderBy(f => f))}", ConsoleColor.DarkGray, Verbosity.Detailed);
                         WriteLine($"      Supported Diagnostics: {string.Join(", ", analyzer.SupportedDiagnostics.Select(f => f.Id).OrderBy(f => f))}", ConsoleColor.DarkGray, Verbosity.Detailed);
                     }
                 }
@@ -108,7 +107,7 @@ namespace Roslynator.CommandLine
                         {
                             while (true)
                             {
-                                Write($"{en.Current.Value.Length} {GetLanguageShortName(en.Current.Key)}", Verbosity.Normal);
+                                Write($"{en.Current.Value.Length} {WorkspacesUtilities.GetShortLanguageName(en.Current.Key)}", Verbosity.Normal);
 
                                 if (en.MoveNext())
                                 {
@@ -131,7 +130,7 @@ namespace Roslynator.CommandLine
                         ExportCodeFixProviderAttribute attribute = type.GetCustomAttribute<ExportCodeFixProviderAttribute>();
 
                         WriteLine($"    {type.FullName}", Verbosity.Detailed);
-                        WriteLine($"      Supported Languages: {string.Join(", ", attribute.Languages.Select(f => GetLanguageShortName(f)).OrderBy(f => f))}", ConsoleColor.DarkGray, Verbosity.Detailed);
+                        WriteLine($"      Supported Languages: {string.Join(", ", attribute.Languages.Select(f => WorkspacesUtilities.GetShortLanguageName(f)).OrderBy(f => f))}", ConsoleColor.DarkGray, Verbosity.Detailed);
                         WriteLine($"      Fixable Diagnostics: {string.Join(", ", fixer.FixableDiagnosticIds.OrderBy(f => f))}", ConsoleColor.DarkGray, Verbosity.Detailed);
                     }
                 }
@@ -142,21 +141,6 @@ namespace Roslynator.CommandLine
             WriteLine(Verbosity.Minimal);
 
             return new CommandResult(success: true);
-
-            string GetLanguageShortName(string languageName)
-            {
-                switch (languageName)
-                {
-                    case LanguageNames.CSharp:
-                        return languageName;
-                    case LanguageNames.VisualBasic:
-                        return "VB";
-                }
-
-                Debug.Fail(languageName);
-
-                return languageName;
-            }
         }
     }
 }

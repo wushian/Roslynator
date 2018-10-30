@@ -38,10 +38,6 @@ namespace Roslynator.CommandLine
 
                 workspace.WorkspaceFailed += WorkspaceFailed;
 
-                bool isSolution = string.Equals(Path.GetExtension(path), ".sln", StringComparison.OrdinalIgnoreCase);
-
-                WriteLine($"Load {((isSolution) ? "solution" : "project")} '{path}'", ConsoleColor.Cyan, Verbosity.Minimal);
-
                 try
                 {
                     var cts = new CancellationTokenSource();
@@ -53,26 +49,42 @@ namespace Roslynator.CommandLine
 
                     CancellationToken cancellationToken = cts.Token;
 
-                    ProjectOrSolution projectOrSolution;
+                    ProjectOrSolution projectOrSolution = await OpenProjectOrSolutionAsync(path, workspace, ConsoleProgressReporter.Default, cancellationToken);
 
-                    try
+                    if (projectOrSolution == default)
+                        return CommandResult.Fail;
+
+                    return await ExecuteAsync(projectOrSolution, cancellationToken);
+                }
+                catch (OperationCanceledException ex)
+                {
+                    OperationCanceled(ex);
+                }
+                catch (AggregateException ex)
+                {
+                    OperationCanceledException operationCanceledException = null;
+
+                    foreach (Exception innerException in ex.InnerExceptions)
                     {
-                        if (isSolution)
+                        if (innerException is OperationCanceledException operationCanceledException2)
                         {
-                            projectOrSolution = await workspace.OpenSolutionAsync(path, ConsoleProgressReporter.Instance, cancellationToken);
+                            if (operationCanceledException == null)
+                                operationCanceledException = operationCanceledException2;
                         }
-                        else
+                        else if (innerException is AggregateException aggregateException)
                         {
-                            projectOrSolution = await workspace.OpenProjectAsync(path, ConsoleProgressReporter.Instance, cancellationToken);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        if (ex is FileNotFoundException
-                            || ex is InvalidOperationException)
-                        {
-                            WriteLine(ex.ToString(), ConsoleColor.Red, Verbosity.Minimal);
-                            return CommandResult.Fail;
+                            foreach (Exception innerException2 in aggregateException.InnerExceptions)
+                            {
+                                if (innerException2 is OperationCanceledException operationCanceledException3)
+                                {
+                                    if (operationCanceledException == null)
+                                        operationCanceledException = operationCanceledException3;
+                                }
+                                else
+                                {
+                                    throw;
+                                }
+                            }
                         }
                         else
                         {
@@ -80,13 +92,14 @@ namespace Roslynator.CommandLine
                         }
                     }
 
-                    WriteLine($"Done loading {((isSolution) ? "solution" : "project")} '{path}'", ConsoleColor.Green, Verbosity.Minimal);
-
-                    return await ExecuteAsync(projectOrSolution, cancellationToken);
-                }
-                catch (OperationCanceledException ex)
-                {
-                    OperationCanceled(ex);
+                    if (operationCanceledException != null)
+                    {
+                        OperationCanceled(operationCanceledException);
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
             }
             finally
@@ -105,6 +118,48 @@ namespace Roslynator.CommandLine
         protected virtual void WorkspaceFailed(object sender, WorkspaceDiagnosticEventArgs e)
         {
             WriteLine(e.Diagnostic.Message, ConsoleColor.Yellow, Verbosity.Normal);
+        }
+
+        protected virtual async Task<ProjectOrSolution> OpenProjectOrSolutionAsync(
+            string path,
+            MSBuildWorkspace workspace,
+            IProgress<ProjectLoadProgress> progress = null,
+            CancellationToken cancellationToken = default)
+        {
+            bool isSolution = string.Equals(Path.GetExtension(path), ".sln", StringComparison.OrdinalIgnoreCase);
+
+            WriteLine($"Load {((isSolution) ? "solution" : "project")} '{path}'", ConsoleColor.Cyan, Verbosity.Minimal);
+
+            try
+            {
+                ProjectOrSolution projectOrSolution;
+
+                if (isSolution)
+                {
+                    projectOrSolution = await workspace.OpenSolutionAsync(path, progress, cancellationToken);
+                }
+                else
+                {
+                    projectOrSolution = await workspace.OpenProjectAsync(path, progress, cancellationToken);
+                }
+
+                WriteLine($"Done loading {((projectOrSolution.IsSolution) ? "solution" : "project")} '{projectOrSolution.FilePath}'", ConsoleColor.Green, Verbosity.Minimal);
+
+                return projectOrSolution;
+            }
+            catch (Exception ex)
+            {
+                if (ex is FileNotFoundException
+                    || ex is InvalidOperationException)
+                {
+                    WriteLine(ex.ToString(), ConsoleColor.Red, Verbosity.Minimal);
+                    return default;
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
         private static MSBuildWorkspace CreateMSBuildWorkspace(string msbuildPath, IEnumerable<string> rawProperties)
@@ -174,18 +229,51 @@ namespace Roslynator.CommandLine
             }
         }
 
-        private class ConsoleProgressReporter : IProgress<ProjectLoadProgress>
+        protected class ConsoleProgressReporter : IProgress<ProjectLoadProgress>
         {
-            public static ConsoleProgressReporter Instance { get; } = new ConsoleProgressReporter();
+            public static ConsoleProgressReporter Default { get; } = new ConsoleProgressReporter();
+
+            public Dictionary<string, List<string>> Projects { get; }
+
+            public ConsoleProgressReporter(bool shouldSaveProgress = false)
+            {
+                if (shouldSaveProgress)
+                    Projects = new Dictionary<string, List<string>>();
+            }
 
             public void Report(ProjectLoadProgress value)
             {
                 string text = Path.GetFileName(value.FilePath);
 
-                if (value.TargetFramework != null)
-                    text += $" ({value.TargetFramework})";
+                ProjectLoadOperation operation = value.Operation;
 
-                WriteLine($"  {value.Operation,-9} {value.ElapsedTime:mm\\:ss\\.ff}  {text}", Verbosity.Detailed);
+                if (operation == ProjectLoadOperation.Resolve)
+                {
+                    string targetFramework = value.TargetFramework;
+
+                    if (targetFramework != null)
+                        text += $" ({targetFramework})";
+
+                    if (Projects != null)
+                    {
+                        if (!Projects.TryGetValue(value.FilePath, out List<string> targetFrameworks))
+                        {
+                            if (targetFramework != null)
+                                targetFrameworks = new List<string>();
+
+                            Projects[value.FilePath] = targetFrameworks;
+                        }
+
+                        if (targetFramework != null)
+                            targetFrameworks.Add(targetFramework);
+                    }
+                }
+
+                Verbosity verbosity = (operation == ProjectLoadOperation.Resolve)
+                    ? Verbosity.Detailed
+                    : Verbosity.Diagnostic;
+
+                WriteLine($"  {operation,-9} {value.ElapsedTime:mm\\:ss\\.ff}  {text}", verbosity);
             }
         }
     }
