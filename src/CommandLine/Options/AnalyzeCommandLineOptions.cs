@@ -4,7 +4,6 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: XmlFileLog
     [Verb("analyze")]
     public class AnalyzeCommandLineOptions : AbstractAnalyzeCommandLineOptions
     {
@@ -19,5 +18,8 @@ namespace Roslynator.CommandLine
 
         [Option(longName: "report-suppressed-diagnostics")]
         public bool ReportSuppressedDiagnostics { get; set; }
+
+        [Option(longName: "xml-file-log")]
+        public string XmlFileLog { get; set; }
     }
 }

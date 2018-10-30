@@ -26,6 +26,7 @@ roslynator analyze <PROJECT|SOLUTION>
 [--supported-diagnostics]
 [--use-roslynator-analyzers]
 [-v|--verbosity]
+[--xml-file-log]
 ```
 
 ## Arguments
@@ -112,6 +113,10 @@ Indicates whether code analysis should use analyzers from nuget package [Roslyna
 **`-v|--verbosity`** `{q[uiet]|m[inimal]|n[ormal]|d[etailed]|diag[nostic]}`
 
 Defines the amount of information to display in the log.
+
+**`--xml-file-log`**
+
+Defines path to file that will store reported diagnostics in XML format.
 
 ## See Also
 

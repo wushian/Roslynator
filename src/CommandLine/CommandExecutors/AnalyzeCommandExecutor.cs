@@ -66,7 +66,7 @@ namespace Roslynator.CommandLine
 
             CultureInfo culture = (Options.CultureName != null) ? CultureInfo.GetCultureInfo(Options.CultureName) : null;
 
-            var codeAnalyzer = new CodeAnalyzer(analyzerAssemblies: Options.AnalyzerAssemblies, formatProvider: culture, options: codeAnalyzerOptions);
+            var codeAnalyzer = new CodeAnalyzer(analyzerAssemblies: analyzerAssemblies, formatProvider: culture, options: codeAnalyzerOptions);
 
             if (projectOrSolution.IsProject)
             {
@@ -75,12 +75,24 @@ namespace Roslynator.CommandLine
                 WriteLine($"Analyze project '{project.Name}'", Verbosity.Minimal);
 
                 ProjectAnalysisResult result = await codeAnalyzer.AnalyzeProjectAsync(project, cancellationToken);
+
+                if (Options.XmlFileLog != null
+                    && result.Diagnostics.Any())
+                {
+                    DiagnosticXmlSerializer.Serialize(result, project, Options.XmlFileLog, culture);
+                }
             }
             else
             {
                 Solution solution = projectOrSolution.AsSolution();
 
                 ImmutableArray<ProjectAnalysisResult> results = await codeAnalyzer.AnalyzeSolutionAsync(solution, cancellationToken);
+
+                if (Options.XmlFileLog != null
+                    && results.Any(f => f.Diagnostics.Any()))
+                {
+                    DiagnosticXmlSerializer.Serialize(results, solution, Options.XmlFileLog, culture);
+                }
             }
 
             return new CommandResult(true);

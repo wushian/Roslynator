@@ -142,8 +142,8 @@ namespace Roslynator.Diagnostics
         {
             ImmutableArray<DiagnosticAnalyzer> analyzers = WorkspacesUtilities.GetAnalyzers(
                 project: project,
-                analyzerAssemblies: _analyzerReferences,
-                analyzerReferences: _analyzerAssemblies,
+                analyzerAssemblies: _analyzerAssemblies,
+                analyzerReferences: _analyzerReferences,
                 supportedDiagnosticIds: Options.SupportedDiagnosticIds,
                 ignoredDiagnosticIds: Options.IgnoredDiagnosticIds,
                 ignoreAnalyzerReferences: Options.IgnoreAnalyzerReferences,
@@ -186,15 +186,17 @@ namespace Roslynator.Diagnostics
 
             string projectDirectoryPath = Path.GetDirectoryName(project.FilePath);
 
-            WriteDiagnostics(FilterDiagnostics(diagnostics.Where(f => f.IsAnalyzerExceptionDiagnostic()), cancellationToken).ToImmutableArray(), baseDirectoryPath: projectDirectoryPath, formatProvider: FormatProvider, indentation: "  ", verbosity: Verbosity.Detailed);
+            WriteDiagnostics(FilterDiagnostics(diagnostics.Where(f => f.IsAnalyzerExceptionDiagnostic()), cancellationToken).ToImmutableArray(), baseDirectoryPath: projectDirectoryPath, formatProvider: FormatProvider, indentation: "  ", verbosity: Verbosity.Diagnostic);
 
             IEnumerable<Diagnostic> allDiagnostics = diagnostics
                 .Where(f => !f.IsAnalyzerExceptionDiagnostic())
                 .Concat(compilerDiagnostics);
 
-            WriteDiagnostics(FilterDiagnostics(allDiagnostics, cancellationToken).ToImmutableArray(), baseDirectoryPath: projectDirectoryPath, formatProvider: FormatProvider, indentation: "  ", verbosity: Verbosity.Normal);
+            ImmutableArray<Diagnostic> filteredDiagnostics = FilterDiagnostics(allDiagnostics, cancellationToken).ToImmutableArray();
 
-            return new ProjectAnalysisResult(project.Id, analyzers, diagnostics, compilerDiagnostics, telemetry);
+            WriteDiagnostics(filteredDiagnostics, baseDirectoryPath: projectDirectoryPath, formatProvider: FormatProvider, indentation: "  ", verbosity: Verbosity.Normal);
+
+            return new ProjectAnalysisResult(project.Id, analyzers, filteredDiagnostics, compilerDiagnostics, telemetry);
         }
 
         private IEnumerable<Diagnostic> FilterDiagnostics(IEnumerable<Diagnostic> diagnostics, CancellationToken cancellationToken = default)

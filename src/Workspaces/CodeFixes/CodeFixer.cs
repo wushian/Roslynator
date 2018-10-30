@@ -12,7 +12,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.CodeAnalysis.Text;
 using Roslynator.Formatting;
 using static Roslynator.Logger;
 
@@ -177,9 +176,12 @@ namespace Roslynator.CodeFixes
                 .GroupBy(f => f.id)
                 .ToDictionary(f => f.Key, g => g.Select(f => f.fixer).ToImmutableArray());
 
-            ImmutableHashSet<string>.Builder diagnosticIds = ImmutableHashSet.CreateBuilder<string>(StringComparer.Ordinal);
+            var fixKind = ProjectFixKind.Success;
+
+            ImmutableHashSet<string>.Builder diagnosticIds = ImmutableHashSet.CreateBuilder(StringComparer.Ordinal);
 
             ImmutableArray<Diagnostic> previousDiagnostics = ImmutableArray<Diagnostic>.Empty;
+            ImmutableArray<Diagnostic> previousPreviousDiagnostics = ImmutableArray<Diagnostic>.Empty;
 
             int iterationCount = 1;
 
@@ -194,7 +196,10 @@ namespace Roslynator.CodeFixes
                 Compilation compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
                 if (!VerifyCompilerDiagnostics(compilation, cancellationToken))
-                    return new ProjectFixResult(diagnosticIds.ToImmutableArray(), analyzers, fixers, ProjectFixKind.CompilerError);
+                {
+                    fixKind = ProjectFixKind.CompilerError;
+                    break;
+                }
 
                 var compilationWithAnalyzers = new CompilationWithAnalyzers(compilation, analyzers, _defaultCompilationWithAnalyzersOptions);
 
@@ -234,6 +239,25 @@ namespace Roslynator.CodeFixes
                     break;
                 }
 
+                if (length == previousPreviousDiagnostics.Length
+                    && !diagnostics.Except(previousPreviousDiagnostics, DiagnosticDeepEqualityComparer.Instance).Any())
+                {
+                    WriteLine("  Endless loop detected: Reported diagnostics have been previously fixed.", ConsoleColor.Yellow, Verbosity.Minimal);
+
+                    string baseDirectoryPath = Path.GetDirectoryName(project.FilePath);
+
+                    WriteLine(Verbosity.Detailed);
+                    WriteLine("  Diagnostics:", Verbosity.Detailed);
+                    WriteDiagnostics(diagnostics, baseDirectoryPath: baseDirectoryPath, formatProvider: FormatProvider, indentation: "    ", verbosity: Verbosity.Detailed);
+                    WriteLine(Verbosity.Detailed);
+                    WriteLine("  Previous diagnostics:", Verbosity.Detailed);
+                    WriteDiagnostics(previousDiagnostics, baseDirectoryPath: baseDirectoryPath, formatProvider: FormatProvider, indentation: "    ", verbosity: Verbosity.Detailed);
+                    WriteLine(Verbosity.Detailed);
+
+                    fixKind = ProjectFixKind.EndlessLoop;
+                    break;
+                }
+
                 WriteLine($"  Found {length} {((length == 1) ? "diagnostic" : "diagnostics")} in '{project.Name}'", Verbosity.Normal);
 
                 foreach (string diagnosticId in diagnostics
@@ -243,7 +267,7 @@ namespace Roslynator.CodeFixes
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    ProjectFixKind result = await FixDiagnosticsAsync(
+                    ProjectFixKind fixKind2 = await FixDiagnosticsAsync(
                         diagnosticId,
                         CurrentSolution.GetProject(project.Id),
                         analyzersById[diagnosticId],
@@ -252,15 +276,19 @@ namespace Roslynator.CodeFixes
 
                     diagnosticIds.Add(diagnosticId);
 
-                    if (result == ProjectFixKind.CompilerError)
-                        return new ProjectFixResult(diagnosticIds.ToImmutableArray(), analyzers, fixers, ProjectFixKind.CompilerError);
+                    if (fixKind2 == ProjectFixKind.CompilerError)
+                    {
+                        fixKind = fixKind2;
+                        break;
+                    }
                 }
 
+                previousPreviousDiagnostics = previousDiagnostics;
                 previousDiagnostics = diagnostics;
                 iterationCount++;
             }
 
-            return new ProjectFixResult(diagnosticIds.ToImmutableArray(), analyzers, fixers, ProjectFixKind.Success);
+            return new ProjectFixResult(diagnosticIds.ToImmutableArray(), analyzers, fixers, fixKind);
         }
 
         private async Task<ProjectFixKind> FixDiagnosticsAsync(

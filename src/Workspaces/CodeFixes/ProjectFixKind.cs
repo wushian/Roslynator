@@ -9,5 +9,6 @@ namespace Roslynator.CodeFixes
         NoFixers = 2,
         CompilerError = 3,
         Skipped = 4,
+        EndlessLoop = 5,
     }
 }
