@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator.Diagnostics
 {
-    //TODO: MaxDiagnosticsCount
+    //TODO: MaxDiagnosticsCount (Project/Solution?)
     public class CodeAnalyzerOptions : CodeAnalysisOptions
     {
         public static CodeAnalyzerOptions Default { get; } = new CodeAnalyzerOptions();

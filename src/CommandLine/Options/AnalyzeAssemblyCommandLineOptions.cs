@@ -4,6 +4,7 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
+    //TODO: AdditionalPaths
     [Verb("analyze-assembly")]
     public class AnalyzeAssemblyCommandLineOptions : BaseCommandLineOptions
     {

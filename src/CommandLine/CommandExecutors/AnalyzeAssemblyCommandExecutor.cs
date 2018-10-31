@@ -37,15 +37,15 @@ namespace Roslynator.CommandLine
             {
                 if (assemblies.Add(analyzerAssembly.Assembly))
                 {
-                    WriteLine(filePath, Verbosity.Normal);
+                    Write($"{analyzerAssembly.FullName}", ConsoleColor.Cyan, Verbosity.Minimal);
+                    WriteLine($" [{filePath}]", Verbosity.Minimal);
                 }
                 else
                 {
-                    WriteLine(filePath, ConsoleColor.DarkGray, Verbosity.Normal);
+                    Write($"{analyzerAssembly.FullName}", ConsoleColor.DarkGray, Verbosity.Minimal);
+                    WriteLine($" [{filePath}]", ConsoleColor.DarkGray, Verbosity.Minimal);
                     continue;
                 }
-
-                WriteLine($"  {analyzerAssembly.FullName}", ConsoleColor.Cyan, Verbosity.Minimal);
 
                 DiagnosticAnalyzer[] analyzers = analyzerAssembly
                     .Analyzers

@@ -186,7 +186,7 @@ namespace Roslynator
             }
             else
             {
-                WriteLine($"File or directory not found '{path}'", ConsoleColor.DarkGray, Verbosity.Normal);
+                WriteLine($"File or directory not found: '{path}'", ConsoleColor.DarkGray, Verbosity.Normal);
             }
 
             AnalyzerAssembly Load(string filePath)

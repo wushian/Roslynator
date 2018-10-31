@@ -62,7 +62,7 @@ namespace Roslynator.Diagnostics
             foreach (string id in Options.IgnoredDiagnosticIds.OrderBy(f => f))
                 WriteLine($"Ignore diagnostic '{id}'", Verbosity.Detailed);
 
-            WriteLine($"Analyze solution '{solution.FilePath}'", Verbosity.Minimal);
+            WriteLine($"Analyze solution '{solution.FilePath}'", ConsoleColor.Cyan, Verbosity.Minimal);
 
             var results = new List<ProjectAnalysisResult>();
 
@@ -133,7 +133,7 @@ namespace Roslynator.Diagnostics
                 }
             }
 
-            WriteLine($"Done analyzing solution {stopwatch.Elapsed:mm\\:ss\\.ff} '{solution.FilePath}'", ConsoleColor.Green, Verbosity.Minimal);
+            WriteLine($"Done analyzing solution '{solution.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Minimal);
 
             return results.ToImmutableArray();
         }

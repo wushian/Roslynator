@@ -34,7 +34,7 @@ namespace Roslynator.CommandLine
 
                 if (counter != null)
                 {
-                    WriteLine($"Count logical lines for '{project.FilePath}'", ConsoleColor.Cyan, Verbosity.Minimal);
+                    WriteLine($"Count logical lines for '{project.Name}'", ConsoleColor.Cyan, Verbosity.Minimal);
 
                     Stopwatch stopwatch = Stopwatch.StartNew();
 
@@ -52,7 +52,7 @@ namespace Roslynator.CommandLine
                         metrics.TotalLineCount);
 
                     WriteLine(Verbosity.Minimal);
-                    WriteLine($"Done counting logical lines for '{project.FilePath}' {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Normal);
+                    WriteLine($"Done counting logical lines for '{project.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Normal);
                 }
                 else
                 {
@@ -92,7 +92,7 @@ namespace Roslynator.CommandLine
                     projectsMetrics.Sum(f => f.Value.TotalLineCount));
 
                 WriteLine(Verbosity.Minimal);
-                WriteLine($"Done counting logical lines for solution '{solution.FilePath}' {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Normal);
+                WriteLine($"Done counting logical lines for solution '{solution.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Normal);
             }
 
             return new CommandResult(true);

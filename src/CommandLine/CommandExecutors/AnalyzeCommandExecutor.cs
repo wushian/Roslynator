@@ -72,7 +72,7 @@ namespace Roslynator.CommandLine
             {
                 Project project = projectOrSolution.AsProject();
 
-                WriteLine($"Analyze project '{project.Name}'", Verbosity.Minimal);
+                WriteLine($"Analyze project '{project.Name}'", ConsoleColor.Cyan, Verbosity.Minimal);
 
                 ProjectAnalysisResult result = await codeAnalyzer.AnalyzeProjectAsync(project, cancellationToken);
 

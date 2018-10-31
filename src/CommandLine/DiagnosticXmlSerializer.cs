@@ -22,8 +22,7 @@ namespace Roslynator.CommandLine
             IFormatProvider formatProvider = null)
         {
             var document = new XDocument(
-                new XElement(
-                    "Projects",
+                new XElement("Projects",
                     Serialize(result, project, formatProvider)));
 
             Serialize(document, filePath);
@@ -36,8 +35,7 @@ namespace Roslynator.CommandLine
             IFormatProvider formatProvider = null)
         {
             var document = new XDocument(
-                new XElement(
-                    "Projects",
+                new XElement("Projects",
                     results
                         .Where(f => f.Diagnostics.Any())
                         .Select(result => Serialize(result, solution.GetProject(result.ProjectId), formatProvider))));
@@ -62,38 +60,42 @@ namespace Roslynator.CommandLine
             return new XElement(
                 "Project",
                 new XAttribute("Name", project.Name),
-                new XElement("FilePath", project.FilePath),
+                new XAttribute("FilePath", project.FilePath),
                 new XElement("Diagnostics",
                     result.Diagnostics
-                        .OrderBy(f => f.Id)
-                        .ThenBy(f => f.Location.SourceTree.FilePath)
+                        .OrderBy(f => f.Location.SourceTree?.FilePath)
+                        .ThenBy(f => f.Id)
                         .ThenBy(f => f.Location.SourceSpan.Start)
-                        .Select(f =>
-                        {
-                            XElement filePathElement = null;
-                            XElement locationElement = null;
+                        .Select(f => Serialize(f, formatProvider))
+                )
+            );
+        }
 
-                            FileLinePositionSpan span = f.Location.GetMappedLineSpan();
+        private static XElement Serialize(Diagnostic diagnostic, IFormatProvider formatProvider)
+        {
+            XElement filePathElement = null;
+            XElement locationElement = null;
 
-                            if (span.IsValid)
-                            {
-                                filePathElement = new XElement("FilePath", span.Path);
+            FileLinePositionSpan span = diagnostic.Location.GetMappedLineSpan();
 
-                                LinePosition linePosition = span.Span.Start;
+            if (span.IsValid)
+            {
+                filePathElement = new XElement("FilePath", span.Path);
 
-                                locationElement = new XElement("Location",
-                                    new XAttribute("Line", linePosition.Line + 1),
-                                    new XAttribute("Character", linePosition.Character + 1));
-                            }
+                LinePosition linePosition = span.Span.Start;
 
-                            return new XElement(
-                                "Diagnostic",
-                                new XElement("Id", f.Id),
-                                new XElement("Severity", f.Severity),
-                                new XElement("Message", f.GetMessage(formatProvider)),
-                                filePathElement,
-                                locationElement);
-                        })));
+                locationElement = new XElement("Location",
+                    new XAttribute("Line", linePosition.Line + 1),
+                    new XAttribute("Character", linePosition.Character + 1));
+            }
+
+            return new XElement(
+                "Diagnostic",
+                new XAttribute("Id", diagnostic.Id),
+                new XElement("Severity", diagnostic.Severity),
+                new XElement("Message", diagnostic.GetMessage(formatProvider)),
+                filePathElement,
+                locationElement);
         }
     }
 }

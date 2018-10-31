@@ -68,7 +68,7 @@ namespace Roslynator.CommandLine
             bool anyHasTargetFrameworks = projects.Any(f => f.Value != null);
 
             WriteLine();
-            WriteLine($"{projects.Count} {((projects.Count == 1) ? "project" : "projects")} found in solution '{Path.GetFileNameWithoutExtension(solution.FilePath)}' ({solution.FilePath})", ConsoleColor.Green, Verbosity.Minimal);
+            WriteLine($"{projects.Count} {((projects.Count == 1) ? "project" : "projects")} found in solution '{Path.GetFileNameWithoutExtension(solution.FilePath)}' [{solution.FilePath}]", ConsoleColor.Green, Verbosity.Minimal);
 
             foreach (KeyValuePair<string, List<string>> kvp in projects
                 .OrderBy(f => Path.GetFileName(f.Key)))

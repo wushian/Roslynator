@@ -128,7 +128,7 @@ namespace Roslynator.CommandLine
         {
             bool isSolution = string.Equals(Path.GetExtension(path), ".sln", StringComparison.OrdinalIgnoreCase);
 
-            WriteLine($"Load {((isSolution) ? "solution" : "project")} '{path}'", ConsoleColor.Cyan, Verbosity.Minimal);
+            WriteLine($"Load {((isSolution) ? "solution" : "project")} '{path}'", Verbosity.Minimal);
 
             try
             {
@@ -143,7 +143,7 @@ namespace Roslynator.CommandLine
                     projectOrSolution = await workspace.OpenProjectAsync(path, progress, cancellationToken);
                 }
 
-                WriteLine($"Done loading {((projectOrSolution.IsSolution) ? "solution" : "project")} '{projectOrSolution.FilePath}'", ConsoleColor.Green, Verbosity.Minimal);
+                WriteLine($"Done loading {((projectOrSolution.IsSolution) ? "solution" : "project")} '{projectOrSolution.FilePath}'", Verbosity.Minimal);
 
                 return projectOrSolution;
             }
