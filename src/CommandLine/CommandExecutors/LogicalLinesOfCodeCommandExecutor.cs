@@ -82,7 +82,6 @@ namespace Roslynator.CommandLine
                 }
 
                 WriteLine(Verbosity.Minimal);
-                WriteLine("Summary:", Verbosity.Minimal);
 
                 WriteMetrics(
                     projectsMetrics.Sum(f => f.Value.CodeLineCount),
@@ -95,7 +94,7 @@ namespace Roslynator.CommandLine
                 WriteLine($"Done counting logical lines for solution '{solution.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Normal);
             }
 
-            return new CommandResult(true);
+            return CommandResult.Success;
         }
 
         private static void WriteMetrics(
@@ -116,7 +115,7 @@ namespace Roslynator.CommandLine
                     Math.Max(totalCommentLines.Length,
                         Math.Max(totalPreprocessorDirectiveLines.Length, totalLines.Length))));
 
-            WriteLine($"{totalCodeLines.PadLeft(maxDigits)} {totalCodeLineCount / (double)totalLineCount,4:P0} logical lines of code", Verbosity.Minimal);
+            WriteLine($"{totalCodeLines.PadLeft(maxDigits)} {totalCodeLineCount / (double)totalLineCount,4:P0} logical lines of code", ConsoleColor.Green, Verbosity.Minimal);
             WriteLine($"{totalWhitespaceLines.PadLeft(maxDigits)} {totalWhitespaceLineCount / (double)totalLineCount,4:P0} white-space lines", Verbosity.Minimal);
             WriteLine($"{totalCommentLines.PadLeft(maxDigits)} {totalCommentLineCount / (double)totalLineCount,4:P0} comment lines", Verbosity.Minimal);
             WriteLine($"{totalPreprocessorDirectiveLines.PadLeft(maxDigits)} {totalPreprocessorDirectiveLineCount / (double)totalLineCount,4:P0} preprocessor directive lines", Verbosity.Minimal);

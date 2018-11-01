@@ -161,7 +161,7 @@ namespace Roslynator.CommandLine
                 WriteLine($"Done formatting solution '{solution.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Minimal);
             }
 
-            return new CommandResult(true);
+            return CommandResult.Success;
         }
 
         protected override void OperationCanceled(OperationCanceledException ex)

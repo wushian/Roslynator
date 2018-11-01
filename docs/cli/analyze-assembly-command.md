@@ -7,6 +7,7 @@ Searches file or directory for analyzer assemblies.
 
 ```
 roslynator analyze-assembly <PATH>
+[--additional-paths]
 [--language]
 [--file-log]
 [--file-log-verbosity]
@@ -22,6 +23,10 @@ roslynator analyze-assembly <PATH>
 The path to file or directory to analyze.
 
 ### Optional Options
+
+**`--additional-paths`**
+
+Defines additional paths to search.
 
 **`--language`** `{cs[harp]|v[isual-]b[asic])}`
 

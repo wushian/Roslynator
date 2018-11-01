@@ -132,7 +132,7 @@ namespace Roslynator
             return Load(assembly, loadAnalyzers: loadAnalyzers, loadFixers: loadFixers, language: language);
         }
 
-        public static IEnumerable<(string filePath, AnalyzerAssembly analyzerAssembly)> LoadFiles(
+        public static IEnumerable<(string filePath, AnalyzerAssembly analyzerAssembly)> LoadFrom(
             string path,
             bool loadAnalyzers = true,
             bool loadFixers = true,

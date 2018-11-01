@@ -1,15 +1,18 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Collections.Generic;
 using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: AdditionalPaths
     [Verb("analyze-assembly")]
     public class AnalyzeAssemblyCommandLineOptions : BaseCommandLineOptions
     {
         [Value(index: 0, Required = true)]
         public string Path { get; set; }
+
+        [Option(longName: "additional-paths")]
+        public IEnumerable<string> AdditionalPaths { get; set; }
 
         [Option(longName: "language")]
         public string Language { get; set; }
@@ -19,5 +22,13 @@ namespace Roslynator.CommandLine
 
         [Option(longName: "no-fixers")]
         public bool NoFixers { get; set; }
+
+        internal IEnumerable<string> GetPaths()
+        {
+            yield return Path;
+
+            foreach (string path in AdditionalPaths)
+                yield return path;
+        }
     }
 }

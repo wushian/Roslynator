@@ -95,7 +95,7 @@ namespace Roslynator.CommandLine
                 }
             }
 
-            return new CommandResult(true);
+            return CommandResult.Success;
         }
 
         protected override void OperationCanceled(OperationCanceledException ex)

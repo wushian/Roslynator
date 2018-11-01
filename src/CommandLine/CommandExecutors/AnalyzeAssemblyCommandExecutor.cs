@@ -23,15 +23,14 @@ namespace Roslynator.CommandLine
 
         public CommandResult Execute(AnalyzeAssemblyCommandLineOptions options)
         {
-            string path = options.Path;
-
             var assemblies = new HashSet<Assembly>();
 
-            foreach ((string filePath, AnalyzerAssembly analyzerAssembly) in AnalyzerAssembly.LoadFiles(
+            foreach ((string filePath, AnalyzerAssembly analyzerAssembly) in options.GetPaths()
+                .SelectMany(path => AnalyzerAssembly.LoadFrom(
                     path: path,
                     loadAnalyzers: !options.NoAnalyzers,
                     loadFixers: !options.NoFixers,
-                    language: Language)
+                    language: Language))
                 .OrderBy(f => f.analyzerAssembly.GetName().Name)
                 .ThenBy(f => f.filePath))
             {
@@ -140,7 +139,7 @@ namespace Roslynator.CommandLine
             WriteLine($"{assemblies.Count} analyzer {((assemblies.Count == 1) ? "assembly" : "assemblies")} found", ConsoleColor.Green, Verbosity.Minimal);
             WriteLine(Verbosity.Minimal);
 
-            return new CommandResult(success: true);
+            return CommandResult.Success;
         }
     }
 }

@@ -5,7 +5,7 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: NoIteration
+    //TODO: NoIterations
     [Verb("fix")]
     public class FixCommandLineOptions : AbstractAnalyzeCommandLineOptions
     {

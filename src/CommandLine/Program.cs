@@ -124,7 +124,7 @@ namespace Roslynator.CommandLine
 
             CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
 
-            return (result.Success) ? 0 : 1;
+            return (result.Kind == CommandResultKind.Success) ? 0 : 1;
         }
 
         private static async Task<int> AnalyzeAsync(AnalyzeCommandLineOptions options)
@@ -139,7 +139,7 @@ namespace Roslynator.CommandLine
 
             CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
 
-            return (result.Success) ? 0 : 1;
+            return (result.Kind == CommandResultKind.Success) ? 0 : 1;
         }
 
         private static int AnalyzeAssembly(AnalyzeAssemblyCommandLineOptions options)
@@ -156,7 +156,7 @@ namespace Roslynator.CommandLine
 
             CommandResult result = executor.Execute(options);
 
-            return (result.Success) ? 0 : 1;
+            return (result.Kind == CommandResultKind.Success) ? 0 : 1;
         }
 
         private static async Task<int> FormatAsync(FormatCommandLineOptions options)
@@ -187,7 +187,7 @@ namespace Roslynator.CommandLine
 
             CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, properties);
 
-            return (result.Success) ? 0 : 1;
+            return (result.Kind == CommandResultKind.Success) ? 0 : 1;
         }
 
         private static async Task<int> SlnAsync(SlnCommandLineOptions options)
@@ -199,7 +199,7 @@ namespace Roslynator.CommandLine
 
             CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
 
-            return (result.Success) ? 0 : 1;
+            return (result.Kind == CommandResultKind.Success) ? 0 : 1;
         }
 
         private static async Task<int> PhysicalLinesOfCodeAsync(PhysicalLinesOfCodeCommandLineOptions options)
@@ -211,7 +211,7 @@ namespace Roslynator.CommandLine
 
             CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
 
-            return (result.Success) ? 0 : 1;
+            return (result.Kind == CommandResultKind.Success) ? 0 : 1;
         }
 
         private static async Task<int> LogicalLinesOrCodeAsync(LogicalLinesOfCodeCommandLineOptions options)
@@ -223,7 +223,7 @@ namespace Roslynator.CommandLine
 
             CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
 
-            return (result.Success) ? 0 : 1;
+            return (result.Kind == CommandResultKind.Success) ? 0 : 1;
         }
 
         private static int GenerateDoc(GenerateDocCommandLineOptions options)

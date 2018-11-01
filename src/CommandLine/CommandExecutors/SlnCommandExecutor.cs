@@ -24,35 +24,32 @@ namespace Roslynator.CommandLine
 
         public override Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(new CommandResult(success: true));
+            return Task.FromResult(CommandResult.Success);
         }
 
-        protected override async Task<ProjectOrSolution> OpenProjectOrSolutionAsync(string path, MSBuildWorkspace workspace, IProgress<ProjectLoadProgress> progress = null, CancellationToken cancellationToken = default(CancellationToken))
+        protected override async Task<CommandResult> ExecuteAsync(
+            string path,
+            MSBuildWorkspace workspace,
+            IProgress<ProjectLoadProgress> progress = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (!string.Equals(Path.GetExtension(path), ".sln", StringComparison.OrdinalIgnoreCase))
             {
-                WriteLine("Specified file is not a solution file.", ConsoleColor.Red, Verbosity.Minimal);
-                return default;
+                WriteLine($"File is not a solution file: '{path}'.", ConsoleColor.Red, Verbosity.Minimal);
+                return CommandResult.Fail;
             }
 
             var consoleProgress = new ConsoleProgressReporter(shouldSaveProgress: true);
 
-            ProjectOrSolution projectOrSolution = await base.OpenProjectOrSolutionAsync(path, workspace, consoleProgress, cancellationToken);
+            var loader = new MSBuildProjectLoader(workspace);
 
-            if (projectOrSolution == default)
-            {
-                return projectOrSolution;
-            }
+            SolutionInfo solutionInfo = await loader.LoadSolutionInfoAsync(path, consoleProgress, cancellationToken);
 
-            Solution solution = projectOrSolution.AsSolution();
+            string solutionDirectory = Path.GetDirectoryName(solutionInfo.FilePath);
 
-            string solutionDirectory = Path.GetDirectoryName(solution.FilePath);
-
-            Dictionary<string, ImmutableArray<Project>> projectsByPath = solution.Projects
+            Dictionary<string, ImmutableArray<ProjectInfo>> projectInfos = solutionInfo.Projects
                 .GroupBy(f => f.FilePath)
                 .ToDictionary(f => f.Key, f => f.ToImmutableArray());
-
-            IReadOnlyList<ProjectId> projectIds = solution.ProjectIds;
 
             Dictionary<string, List<string>> projects = consoleProgress.Projects;
 
@@ -68,7 +65,7 @@ namespace Roslynator.CommandLine
             bool anyHasTargetFrameworks = projects.Any(f => f.Value != null);
 
             WriteLine();
-            WriteLine($"{projects.Count} {((projects.Count == 1) ? "project" : "projects")} found in solution '{Path.GetFileNameWithoutExtension(solution.FilePath)}' [{solution.FilePath}]", ConsoleColor.Green, Verbosity.Minimal);
+            WriteLine($"{projects.Count} {((projects.Count == 1) ? "project" : "projects")} found in solution '{Path.GetFileNameWithoutExtension(solutionInfo.FilePath)}' [{solutionInfo.FilePath}]", ConsoleColor.Green, Verbosity.Minimal);
 
             foreach (KeyValuePair<string, List<string>> kvp in projects
                 .OrderBy(f => Path.GetFileName(f.Key)))
@@ -76,11 +73,11 @@ namespace Roslynator.CommandLine
                 string projectPath = kvp.Key;
                 List<string> targetFrameworks = kvp.Value;
 
-                Project project = projectsByPath[projectPath][0];
+                ProjectInfo projectInfo = projectInfos[projectPath][0];
 
                 string projectName = Path.GetFileNameWithoutExtension(projectPath);
 
-                Write($"  {projectName.PadRight(nameMaxLength)}  {project.Language}", Verbosity.Normal);
+                Write($"  {projectName.PadRight(nameMaxLength)}  {projectInfo.Language}", Verbosity.Normal);
 
                 if (anyHasTargetFrameworks)
                     Write("  ", Verbosity.Normal);
@@ -95,12 +92,12 @@ namespace Roslynator.CommandLine
                     Write(new string(' ', targetFrameworksMaxLength), Verbosity.Normal);
                 }
 
-                WriteLine($"  {PathUtilities.TrimStart(projectPath, solutionDirectory)}", Verbosity.Normal);
+                WriteLine($"  [{PathUtilities.TrimStart(projectPath, solutionDirectory)}]", Verbosity.Normal);
             }
 
             WriteLine();
 
-            return projectOrSolution;
+            return CommandResult.Success;
         }
     }
 }

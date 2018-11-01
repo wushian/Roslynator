@@ -4,13 +4,15 @@ namespace Roslynator.CommandLine
 {
     internal readonly struct CommandResult
     {
-        public static CommandResult Fail { get; } = new CommandResult(success: false);
+        public static CommandResult Success { get; } = new CommandResult(CommandResultKind.Success);
 
-        public CommandResult(bool success)
+        public static CommandResult Fail { get; } = new CommandResult(CommandResultKind.Fail);
+
+        public CommandResult(CommandResultKind kind)
         {
-            Success = success;
+            Kind = kind;
         }
 
-        public bool Success { get; }
+        public CommandResultKind Kind { get; }
     }
 }

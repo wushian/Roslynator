@@ -38,23 +38,26 @@ namespace Roslynator.CommandLine
 
                 workspace.WorkspaceFailed += WorkspaceFailed;
 
+                var cts = new CancellationTokenSource();
+                Console.CancelKeyPress += (sender, e) =>
+                {
+                    e.Cancel = true;
+                    cts.Cancel();
+                };
+
+                CancellationToken cancellationToken = cts.Token;
+
                 try
                 {
-                    var cts = new CancellationTokenSource();
-                    Console.CancelKeyPress += (sender, e) =>
-                    {
-                        e.Cancel = true;
-                        cts.Cancel();
-                    };
+                    CommandResult result = await ExecuteAsync(path, workspace, ConsoleProgressReporter.Default, cancellationToken);
 
-                    CancellationToken cancellationToken = cts.Token;
+                    if (result.Kind != CommandResultKind.None)
+                        return result;
 
                     ProjectOrSolution projectOrSolution = await OpenProjectOrSolutionAsync(path, workspace, ConsoleProgressReporter.Default, cancellationToken);
 
-                    if (projectOrSolution == default)
-                        return CommandResult.Fail;
-
-                    return await ExecuteAsync(projectOrSolution, cancellationToken);
+                    if (projectOrSolution != default)
+                        return await ExecuteAsync(projectOrSolution, cancellationToken);
                 }
                 catch (OperationCanceledException ex)
                 {
@@ -62,35 +65,7 @@ namespace Roslynator.CommandLine
                 }
                 catch (AggregateException ex)
                 {
-                    OperationCanceledException operationCanceledException = null;
-
-                    foreach (Exception innerException in ex.InnerExceptions)
-                    {
-                        if (innerException is OperationCanceledException operationCanceledException2)
-                        {
-                            if (operationCanceledException == null)
-                                operationCanceledException = operationCanceledException2;
-                        }
-                        else if (innerException is AggregateException aggregateException)
-                        {
-                            foreach (Exception innerException2 in aggregateException.InnerExceptions)
-                            {
-                                if (innerException2 is OperationCanceledException operationCanceledException3)
-                                {
-                                    if (operationCanceledException == null)
-                                        operationCanceledException = operationCanceledException3;
-                                }
-                                else
-                                {
-                                    throw;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            throw;
-                        }
-                    }
+                    OperationCanceledException operationCanceledException = ex.GetOperationCanceledException();
 
                     if (operationCanceledException != null)
                     {
@@ -118,6 +93,15 @@ namespace Roslynator.CommandLine
         protected virtual void WorkspaceFailed(object sender, WorkspaceDiagnosticEventArgs e)
         {
             WriteLine(e.Diagnostic.Message, ConsoleColor.Yellow, Verbosity.Normal);
+        }
+
+        protected virtual Task<CommandResult> ExecuteAsync(
+            string path,
+            MSBuildWorkspace workspace,
+            IProgress<ProjectLoadProgress> progress = null,
+            CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(default(CommandResult));
         }
 
         protected virtual async Task<ProjectOrSolution> OpenProjectOrSolutionAsync(

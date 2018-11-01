@@ -19,7 +19,7 @@ namespace Roslynator.CommandLine
         [Option(longName: "report-suppressed-diagnostics")]
         public bool ReportSuppressedDiagnostics { get; set; }
 
-        //TODO: rename XmlFileLog
+        //TODO: rename XmlFileLog to DiagnosticsXmlFile
         [Option(longName: "xml-file-log")]
         public string XmlFileLog { get; set; }
     }

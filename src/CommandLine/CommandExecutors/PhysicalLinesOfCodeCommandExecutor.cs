@@ -88,7 +88,6 @@ namespace Roslynator.CommandLine
                 }
 
                 WriteLine(Verbosity.Minimal);
-                WriteLine("Summary:", Verbosity.Minimal);
 
                 WriteMetrics(
                     projectsMetrics.Sum(f => f.Value.CodeLineCount),
@@ -102,7 +101,7 @@ namespace Roslynator.CommandLine
                 WriteLine($"Done counting lines for solution '{solution.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Minimal);
             }
 
-            return new CommandResult(true);
+            return CommandResult.Success;
         }
 
         private void WriteMetrics(int totalCodeLineCount, int totalBlockBoundaryLineCount, int totalWhitespaceLineCount, int totalCommentLineCount, int totalPreprocessorDirectiveLineCount, int totalLineCount)
@@ -125,11 +124,11 @@ namespace Roslynator.CommandLine
                 || !Options.IncludeComments
                 || !Options.IncludePreprocessorDirectives)
             {
-                WriteLine($"{totalCodeLines.PadLeft(maxDigits)} {totalCodeLineCount / (double)totalLineCount,4:P0} lines of code", Verbosity.Minimal);
+                WriteLine($"{totalCodeLines.PadLeft(maxDigits)} {totalCodeLineCount / (double)totalLineCount,4:P0} lines of code", ConsoleColor.Green, Verbosity.Minimal);
             }
             else
             {
-                WriteLine($"{totalCodeLines.PadLeft(maxDigits)} lines of code", Verbosity.Minimal);
+                WriteLine($"{totalCodeLines.PadLeft(maxDigits)} lines of code", ConsoleColor.Green, Verbosity.Minimal);
             }
 
             if (Options.IgnoreBlockBoundary)
