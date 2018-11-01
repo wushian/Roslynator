@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 namespace Roslynator.CommandLine
 {
+    //TODO: Culture
     [Verb("format")]
     public class FormatCommandLineOptions : MSBuildCommandLineOptions
     {

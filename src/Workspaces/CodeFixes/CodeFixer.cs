@@ -143,14 +143,11 @@ namespace Roslynator.CodeFixes
         {
             string language = project.Language;
 
-            (ImmutableArray<DiagnosticAnalyzer> analyzers, ImmutableArray<CodeFixProvider> fixers) = WorkspacesUtilities.GetAnalyzersAndFixers(
+            (ImmutableArray<DiagnosticAnalyzer> analyzers, ImmutableArray<CodeFixProvider> fixers) = Utilities.GetAnalyzersAndFixers(
                 project: project,
                 analyzerAssemblies: _analyzerAssemblies,
                 analyzerReferences: _analyzerReferences,
-                supportedDiagnosticIds: Options.SupportedDiagnosticIds,
-                ignoredDiagnosticIds: Options.IgnoredDiagnosticIds,
-                ignoreAnalyzerReferences: Options.IgnoreAnalyzerReferences,
-                minimalSeverity: Options.MinimalSeverity);
+                options: Options);
 
             if (!analyzers.Any())
             {
@@ -255,7 +252,7 @@ namespace Roslynator.CodeFixes
                     WriteDiagnostics(previousDiagnostics, baseDirectoryPath: baseDirectoryPath, formatProvider: FormatProvider, indentation: "    ", verbosity: Verbosity.Detailed);
                     WriteLine(Verbosity.Detailed);
 
-                    fixKind = ProjectFixKind.EndlessLoop;
+                    fixKind = ProjectFixKind.InfiniteLoop;
                     break;
                 }
 
@@ -427,7 +424,7 @@ namespace Roslynator.CodeFixes
                 {
                     WriteLine($@"Code action has multiple operations
   Title: {codeAction.Title}
-  Equivalence key: {codeAction.EquivalenceKey}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+  Equivalence key: {codeAction.EquivalenceKey}", ConsoleColor.Yellow, Verbosity.Diagnostic);
                 }
             }
         }
@@ -446,6 +443,8 @@ namespace Roslynator.CodeFixes
 
             if (!fixAll.GetSupportedFixAllScopes().Any(f => f == FixAllScope.Project))
                 return null;
+
+            HashSet<(string fullName, string diagnosticId, string equivalenceKey1, string equivalenceKey2)> multipleActionsInfos = null;
 
             foreach (Diagnostic diagnostic in diagnostics)
             {
@@ -480,9 +479,19 @@ namespace Roslynator.CodeFixes
                         else if (!string.Equals(a.EquivalenceKey, action.EquivalenceKey, StringComparison.Ordinal)
                             && (Options.DiagnosticFixMap.IsEmpty || !Options.DiagnosticFixMap.ContainsKey(diagnostic.Id)))
                         {
-                            WriteLine($"  Fixer '{fixer.GetType().FullName}' registered multiple actions to fix diagnostic '{diagnosticId}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
-                            WriteLine($"    Equivalence Key 1: '{action.EquivalenceKey}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
-                            WriteLine($"    Equivalence Key 2: '{a.EquivalenceKey}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
+                            string fullName = fixer.GetType().FullName;
+
+                            (string, string, string, string) multipleActionsInfo = (fullName, diagnosticId, action.EquivalenceKey, a.EquivalenceKey);
+
+                            if (multipleActionsInfos == null)
+                                multipleActionsInfos = new HashSet<(string fullName, string diagnosticId, string equivalenceKey1, string equivalenceKey2)>();
+
+                            if (multipleActionsInfos.Add(multipleActionsInfo))
+                            {
+                                WriteLine($"  Fixer '{fullName}' registered multiple actions to fix diagnostic '{diagnosticId}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
+                                WriteLine($"    Equivalence Key 1: '{action.EquivalenceKey}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
+                                WriteLine($"    Equivalence Key 2: '{a.EquivalenceKey}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
+                            }
 
                             action = null;
                         }
@@ -537,6 +546,7 @@ namespace Roslynator.CodeFixes
 
                         if (count <= maxCount)
                         {
+                            //TODO: format diagnostic
                             WriteDiagnostic(en.Current, verbosity: Verbosity.Normal);
                         }
                         else
@@ -661,7 +671,7 @@ namespace Roslynator.CodeFixes
 
                     WriteLine($"  Format '{PathUtilities.TrimStart(newDocument.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
 #if DEBUG
-                    await WorkspacesUtilities.VerifySyntaxEquivalenceAsync(project.GetDocument(newDocument.Id), newDocument, cancellationToken).ConfigureAwait(false);
+                    await Utilities.VerifySyntaxEquivalenceAsync(project.GetDocument(newDocument.Id), newDocument, cancellationToken).ConfigureAwait(false);
 #endif
                 }
             }

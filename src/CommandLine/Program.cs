@@ -17,7 +17,7 @@ using Roslynator.CodeFixes;
 using Roslynator.Diagnostics;
 using Roslynator.Documentation;
 using Roslynator.Documentation.Markdown;
-using static Roslynator.CommandLine.CommandLineHelpers;
+using static Roslynator.CommandLine.ParseHelpers;
 using static Roslynator.CommandLine.DocumentationHelpers;
 using static Roslynator.Logger;
 

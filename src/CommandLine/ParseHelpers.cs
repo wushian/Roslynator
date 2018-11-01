@@ -9,7 +9,7 @@ using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
-    internal static class CommandLineHelpers
+    internal static class ParseHelpers
     {
         public static bool TryParseMSBuildProperties(IEnumerable<string> values, out Dictionary<string, string> properties)
         {

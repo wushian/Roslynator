@@ -16,45 +16,35 @@ using static Roslynator.Logger;
 
 namespace Roslynator
 {
-    internal static class WorkspacesUtilities
+    internal static class Utilities
     {
         public static ImmutableArray<DiagnosticAnalyzer> GetAnalyzers(
             Project project,
             AnalyzerAssemblyList analyzerAssemblies,
             AnalyzerAssemblyList analyzerReferences,
-            ImmutableHashSet<string> supportedDiagnosticIds,
-            ImmutableHashSet<string> ignoredDiagnosticIds,
-            bool ignoreAnalyzerReferences = false,
-            DiagnosticSeverity minimalSeverity = DiagnosticSeverity.Info)
+            CodeAnalysisOptions options)
         {
-            return GetAnalyzersAndFixers(
+            (ImmutableArray<DiagnosticAnalyzer> analyzers, ImmutableArray<CodeFixProvider> fixers) = GetAnalyzersAndFixers(
                 project: project,
                 analyzerAssemblies: analyzerAssemblies,
                 analyzerReferences: analyzerReferences,
-                supportedDiagnosticIds: supportedDiagnosticIds,
-                ignoredDiagnosticIds: ignoredDiagnosticIds,
-                ignoreAnalyzerReferences: ignoreAnalyzerReferences,
-                minimalSeverity: minimalSeverity,
-                loadFixers: false).analyzers;
+                options: options,
+                loadFixers: false);
+
+            return analyzers;
         }
 
         public static (ImmutableArray<DiagnosticAnalyzer> analyzers, ImmutableArray<CodeFixProvider> fixers) GetAnalyzersAndFixers(
             Project project,
             AnalyzerAssemblyList analyzerAssemblies,
             AnalyzerAssemblyList analyzerReferences,
-            ImmutableHashSet<string> supportedDiagnosticIds,
-            ImmutableHashSet<string> ignoredDiagnosticIds,
-            bool ignoreAnalyzerReferences = false,
-            DiagnosticSeverity minimalSeverity = DiagnosticSeverity.Info)
+            CodeAnalysisOptions options)
         {
             return GetAnalyzersAndFixers(
                 project: project,
                 analyzerAssemblies: analyzerAssemblies,
                 analyzerReferences: analyzerReferences,
-                supportedDiagnosticIds: supportedDiagnosticIds,
-                ignoredDiagnosticIds: ignoredDiagnosticIds,
-                ignoreAnalyzerReferences: ignoreAnalyzerReferences,
-                minimalSeverity: minimalSeverity,
+                options: options,
                 loadFixers: true);
         }
 
@@ -62,15 +52,12 @@ namespace Roslynator
             Project project,
             AnalyzerAssemblyList analyzerAssemblies,
             AnalyzerAssemblyList analyzerReferences,
-            ImmutableHashSet<string> supportedDiagnosticIds,
-            ImmutableHashSet<string> ignoredDiagnosticIds,
-            bool ignoreAnalyzerReferences = false,
-            DiagnosticSeverity minimalSeverity = DiagnosticSeverity.Info,
+            CodeAnalysisOptions options,
             bool loadFixers = true)
         {
             string language = project.Language;
 
-            ImmutableArray<Assembly> assemblies = (ignoreAnalyzerReferences) ? ImmutableArray<Assembly>.Empty : project.AnalyzerReferences
+            ImmutableArray<Assembly> assemblies = (options.IgnoreAnalyzerReferences) ? ImmutableArray<Assembly>.Empty : project.AnalyzerReferences
                 .Distinct()
                 .OfType<AnalyzerFileReference>()
                 .Select(f => f.GetAssembly())
@@ -84,13 +71,13 @@ namespace Roslynator
                 {
                     ImmutableArray<DiagnosticDescriptor> supportedDiagnostics = analyzer.SupportedDiagnostics;
 
-                    if (supportedDiagnosticIds.Count > 0)
+                    if (options.SupportedDiagnosticIds.Count > 0)
                     {
                         bool success = false;
 
                         foreach (DiagnosticDescriptor supportedDiagnostic in supportedDiagnostics)
                         {
-                            if (supportedDiagnosticIds.Contains(supportedDiagnostic.Id))
+                            if (options.SupportedDiagnosticIds.Contains(supportedDiagnostic.Id))
                             {
                                 success = true;
                                 break;
@@ -100,13 +87,13 @@ namespace Roslynator
                         if (!success)
                             return false;
                     }
-                    else if (ignoredDiagnosticIds.Count > 0)
+                    else if (options.IgnoredDiagnosticIds.Count > 0)
                     {
                         bool success = false;
 
                         foreach (DiagnosticDescriptor supportedDiagnostic in supportedDiagnostics)
                         {
-                            if (!ignoredDiagnosticIds.Contains(supportedDiagnostic.Id))
+                            if (!options.IgnoredDiagnosticIds.Contains(supportedDiagnostic.Id))
                             {
                                 success = true;
                                 break;
@@ -122,7 +109,7 @@ namespace Roslynator
                         ReportDiagnostic reportDiagnostic = supportedDiagnostic.GetEffectiveSeverity(project.CompilationOptions);
 
                         if (reportDiagnostic != ReportDiagnostic.Suppress
-                            && reportDiagnostic.ToDiagnosticSeverity() >= minimalSeverity)
+                            && reportDiagnostic.ToDiagnosticSeverity() >= options.MinimalSeverity)
                         {
                             return true;
                         }

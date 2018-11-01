@@ -5,7 +5,7 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: IgnoredFiles
+    //TODO: Files, IgnoredFiles
     public abstract class MSBuildCommandLineOptions : BaseCommandLineOptions
     {
         [Value(index: 0, Required = true)]
@@ -29,7 +29,7 @@ namespace Roslynator.CommandLine
         internal bool TryGetLanguage(out string value)
         {
             if (Language != null)
-                return CommandLineHelpers.TryParseLanguage(Language, out value);
+                return ParseHelpers.TryParseLanguage(Language, out value);
 
             value = null;
             return true;

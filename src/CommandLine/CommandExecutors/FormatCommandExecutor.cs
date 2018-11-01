@@ -83,7 +83,7 @@ namespace Roslynator.CommandLine
 
                         WriteLine($"  Format '{PathUtilities.TrimStart(document.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
 #if DEBUG
-                        await WorkspacesUtilities.VerifySyntaxEquivalenceAsync(project.GetDocument(document.Id), document, cancellationToken);
+                        await Utilities.VerifySyntaxEquivalenceAsync(project.GetDocument(document.Id), document, cancellationToken);
 #endif
                     }
                 }
@@ -131,7 +131,7 @@ namespace Roslynator.CommandLine
                         {
                             WriteLine($"  Format '{PathUtilities.TrimStart(document.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
 #if DEBUG
-                            bool success = WorkspacesUtilities.VerifySyntaxEquivalenceAsync(project.GetDocument(document.Id), document, cancellationToken).Result;
+                            bool success = Utilities.VerifySyntaxEquivalenceAsync(project.GetDocument(document.Id), document, cancellationToken).Result;
 #endif
                             SourceText sourceText = document.GetTextAsync(cancellationToken).Result;
 

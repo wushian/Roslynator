@@ -23,9 +23,9 @@ namespace Roslynator.CommandLine
         {
             var document = new XDocument(
                 new XElement("Projects",
-                    Serialize(result, project, formatProvider)));
+                    SerializeProjectAnalysisResult(result, project, formatProvider)));
 
-            Serialize(document, filePath);
+            SerializeDocument(document, filePath);
         }
 
         public static void Serialize(
@@ -38,21 +38,12 @@ namespace Roslynator.CommandLine
                 new XElement("Projects",
                     results
                         .Where(f => f.Diagnostics.Any())
-                        .Select(result => Serialize(result, solution.GetProject(result.ProjectId), formatProvider))));
+                        .Select(result => SerializeProjectAnalysisResult(result, solution.GetProject(result.ProjectId), formatProvider))));
 
-            Serialize(document, filePath);
+            SerializeDocument(document, filePath);
         }
 
-        private static void Serialize(XDocument document, string filePath)
-        {
-            WriteLine($"Save diagnostics to '{filePath}'", Verbosity.Detailed);
-
-            using (var fs = new FileStream(filePath, FileMode.Create))
-            using (XmlWriter xw = XmlWriter.Create(fs, new XmlWriterSettings() { Indent = true }))
-                document.Save(xw);
-        }
-
-        private static XElement Serialize(
+        private static XElement SerializeProjectAnalysisResult(
             ProjectAnalysisResult result,
             Project project,
             IFormatProvider formatProvider)
@@ -66,12 +57,12 @@ namespace Roslynator.CommandLine
                         .OrderBy(f => f.Location.SourceTree?.FilePath)
                         .ThenBy(f => f.Id)
                         .ThenBy(f => f.Location.SourceSpan.Start)
-                        .Select(f => Serialize(f, formatProvider))
+                        .Select(f => SerializeDiagnostic(f, formatProvider))
                 )
             );
         }
 
-        private static XElement Serialize(Diagnostic diagnostic, IFormatProvider formatProvider)
+        private static XElement SerializeDiagnostic(Diagnostic diagnostic, IFormatProvider formatProvider)
         {
             XElement filePathElement = null;
             XElement locationElement = null;
@@ -96,6 +87,15 @@ namespace Roslynator.CommandLine
                 new XElement("Message", diagnostic.GetMessage(formatProvider)),
                 filePathElement,
                 locationElement);
+        }
+
+        private static void SerializeDocument(XDocument document, string filePath)
+        {
+            WriteLine($"Save diagnostics to '{filePath}'", ConsoleColor.DarkGray, Verbosity.Detailed);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            using (XmlWriter xmlWriter = XmlWriter.Create(fileStream, new XmlWriterSettings() { Indent = true, CloseOutput = false }))
+                document.Save(xmlWriter);
         }
     }
 }

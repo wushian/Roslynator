@@ -140,14 +140,11 @@ namespace Roslynator.Diagnostics
 
         public async Task<ProjectAnalysisResult> AnalyzeProjectAsync(Project project, CancellationToken cancellationToken = default)
         {
-            ImmutableArray<DiagnosticAnalyzer> analyzers = WorkspacesUtilities.GetAnalyzers(
+            ImmutableArray<DiagnosticAnalyzer> analyzers = Utilities.GetAnalyzers(
                 project: project,
                 analyzerAssemblies: _analyzerAssemblies,
                 analyzerReferences: _analyzerReferences,
-                supportedDiagnosticIds: Options.SupportedDiagnosticIds,
-                ignoredDiagnosticIds: Options.IgnoredDiagnosticIds,
-                ignoreAnalyzerReferences: Options.IgnoreAnalyzerReferences,
-                minimalSeverity: Options.MinimalSeverity);
+                options: Options);
 
             if (!analyzers.Any())
             {

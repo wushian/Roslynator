@@ -36,6 +36,10 @@ namespace Roslynator.CommandLine
                 if (workspace == null)
                     return CommandResult.Fail;
 
+                //TODO: 
+                workspace.LoadMetadataForReferencedProjects = true;
+                workspace.SkipUnrecognizedProjects = false;
+
                 workspace.WorkspaceFailed += WorkspaceFailed;
 
                 var cts = new CancellationTokenSource();
@@ -169,7 +173,7 @@ namespace Roslynator.CommandLine
                 MSBuildLocator.RegisterInstance(instance);
             }
 
-            if (!CommandLineHelpers.TryParseMSBuildProperties(rawProperties, out Dictionary<string, string> properties))
+            if (!ParseHelpers.TryParseMSBuildProperties(rawProperties, out Dictionary<string, string> properties))
                 return null;
 
             if (properties == null)

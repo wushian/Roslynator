@@ -323,7 +323,7 @@ namespace Roslynator
             if (!diagnostics.Any())
                 return;
 
-            if (!VerifyVerbosity(verbosity))
+            if (!CheckVerbosity(verbosity))
                 return;
 
             int count = 0;
@@ -351,11 +351,11 @@ namespace Roslynator
 
         public static void WriteAnalyzers(ImmutableArray<DiagnosticAnalyzer> analyzers, ConsoleColor color)
         {
-            if (VerifyVerbosity(Verbosity.Detailed))
+            if (CheckVerbosity(Verbosity.Detailed))
             {
                 WriteLine($"  Use {analyzers.Length} {((analyzers.Length == 1) ? "analyzer" : "analyzers")}", color, Verbosity.Detailed);
 
-                if (VerifyVerbosity(Verbosity.Diagnostic))
+                if (CheckVerbosity(Verbosity.Diagnostic))
                 {
                     foreach ((string prefix, int count) in GetDiagnosticIdPrefixes(analyzers.SelectMany(f => f.SupportedDiagnostics).Select(f => f.Id).Distinct()))
                     {
@@ -367,11 +367,11 @@ namespace Roslynator
 
         public static void WriteFixers(ImmutableArray<CodeFixProvider> fixers, ConsoleColor color)
         {
-            if (VerifyVerbosity(Verbosity.Detailed))
+            if (CheckVerbosity(Verbosity.Detailed))
             {
                 WriteLine($"  Use {fixers.Length} {((fixers.Length == 1) ? "fixer" : "fixers")}", color, Verbosity.Detailed);
 
-                if (VerifyVerbosity(Verbosity.Diagnostic))
+                if (CheckVerbosity(Verbosity.Diagnostic))
                 {
                     foreach ((string prefix, int count) in GetDiagnosticIdPrefixes(fixers.SelectMany(f => f.FixableDiagnosticIds).Distinct()))
                     {
@@ -409,7 +409,7 @@ namespace Roslynator
             }
         }
 
-        private static bool VerifyVerbosity(Verbosity verbosity)
+        private static bool CheckVerbosity(Verbosity verbosity)
         {
             return verbosity <= ConsoleOut.Verbosity
                 || (Out != null && verbosity <= Out.Verbosity);

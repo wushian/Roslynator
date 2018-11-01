@@ -32,7 +32,7 @@ namespace Roslynator.CommandLine
         internal bool TryGetMinimalSeverity(DiagnosticSeverity defaultValue, out DiagnosticSeverity value)
         {
             if (MinimalSeverity != null)
-                return CommandLineHelpers.TryParseDiagnosticSeverity(MinimalSeverity, out value);
+                return ParseHelpers.TryParseDiagnosticSeverity(MinimalSeverity, out value);
 
             value = defaultValue;
             return true;
