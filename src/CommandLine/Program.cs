@@ -57,16 +57,16 @@ namespace Roslynator.CommandLine
                     {
                         ConsoleOut.Verbosity = consoleVerbosity;
 
-                        Verbosity logFileVerbosity = consoleVerbosity;
+                        Verbosity fileLogVerbosity = consoleVerbosity;
 
                         if (options.FileLogVerbosity == null
-                            || TryParseVerbosity(options.FileLogVerbosity, out logFileVerbosity))
+                            || TryParseVerbosity(options.FileLogVerbosity, out fileLogVerbosity))
                         {
                             if (options.FileLog != null)
                             {
                                 var fs = new FileStream(options.FileLog, FileMode.Create, FileAccess.Write, FileShare.Read);
                                 var sw = new StreamWriter(fs, Encoding.UTF8, bufferSize: 4096, leaveOpen: false);
-                                Out = new TextWriterWithVerbosity(sw) { Verbosity = logFileVerbosity };
+                                Out = new TextWriterWithVerbosity(sw) { Verbosity = fileLogVerbosity };
                             }
 
                             verbosityParsed = true;

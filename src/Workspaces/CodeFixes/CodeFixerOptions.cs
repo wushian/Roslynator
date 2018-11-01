@@ -26,6 +26,7 @@ namespace Roslynator.CodeFixes
             IEnumerable<KeyValuePair<string, string>> diagnosticFixerMap = null,
             string fileBanner = null,
             string language = null,
+            int maxIterations = -1,
             int batchSize = -1,
             bool format = false) : base(minimalSeverity, ignoreAnalyzerReferences, supportedDiagnosticIds, ignoredDiagnosticIds, projectNames, ignoredProjectNames, language)
         {
@@ -34,6 +35,7 @@ namespace Roslynator.CodeFixes
             DiagnosticFixMap = diagnosticFixMap?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty;
             DiagnosticFixerMap = diagnosticFixerMap?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty;
             FileBanner = fileBanner;
+            MaxIterations = maxIterations;
             BatchSize = batchSize;
             Format = format;
         }
@@ -74,6 +76,8 @@ namespace Roslynator.CodeFixes
                 return _fileBannerLines;
             }
         }
+
+        public int MaxIterations { get; }
 
         public int BatchSize { get; }
 

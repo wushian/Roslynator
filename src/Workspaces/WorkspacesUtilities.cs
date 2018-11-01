@@ -145,7 +145,6 @@ namespace Roslynator
                 fixers = analyzerAssemblies
                     .GetFixers(language)
                     .Concat(analyzerReferences.GetOrAddFixers(assemblies, language))
-                    .Where(f => f.FixableDiagnosticIds.Any(id => diagnosticIds.Contains(id)))
                     .ToImmutableArray();
             }
 

@@ -253,11 +253,16 @@ namespace Roslynator.CommandLine
                     }
                 }
 
-                Verbosity verbosity = (operation == ProjectLoadOperation.Resolve)
-                    ? Verbosity.Detailed
-                    : Verbosity.Diagnostic;
+                text = $"  {operation,-9} {value.ElapsedTime:mm\\:ss\\.ff}  {text}";
 
-                WriteLine($"  {operation,-9} {value.ElapsedTime:mm\\:ss\\.ff}  {text}", verbosity);
+                if (operation == ProjectLoadOperation.Resolve)
+                {
+                    WriteLine(text, Verbosity.Detailed);
+                }
+                else
+                {
+                    WriteLine(text, ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                }
             }
         }
     }

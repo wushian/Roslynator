@@ -5,7 +5,6 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: NoIterations
     [Verb("fix")]
     public class FixCommandLineOptions : AbstractAnalyzeCommandLineOptions
     {
@@ -29,5 +28,8 @@ namespace Roslynator.CommandLine
 
         [Option(longName: "ignored-compiler-diagnostics")]
         public IEnumerable<string> IgnoredCompilerDiagnostics { get; set; }
+
+        [Option(longName: "max-iterations", Default = -1)]
+        public int MaxIterations { get; set; }
     }
 }

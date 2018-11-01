@@ -42,6 +42,7 @@ namespace Roslynator.CommandLine
                     {
                         Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Roslynator.CSharp.Analyzers.dll"),
                         Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Roslynator.CSharp.Analyzers.CodeFixes.dll"),
+                        Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Roslynator.CSharp.CodeFixes.dll"),
                     });
                 }
 
@@ -74,6 +75,7 @@ namespace Roslynator.CommandLine
                 diagnosticFixerMap: DiagnosticFixerMap,
                 fileBanner: Options.FileBanner,
                 language: Language,
+                maxIterations: Options.MaxIterations,
                 batchSize: Options.BatchSize,
                 format: Options.Format);
 

@@ -19,6 +19,7 @@ roslynator fix <PROJECT|SOLUTION>
 [--language]
 [--file-log]
 [--file-log-verbosity]
+[--max-iterations]
 [--minimal-severity]
 [--msbuild-path]
 [--projects]
@@ -78,6 +79,10 @@ Defines projects that should not be fixed.
 **`--language`** `{cs[harp]|v[isual-]b[asic])}`
 
 Defines project language.
+
+**`--max-iterations`**
+
+Defines maximum numbers of fixing iterations.
 
 **`--minimal-severity`** `{hidden|info|warning|error}`
 

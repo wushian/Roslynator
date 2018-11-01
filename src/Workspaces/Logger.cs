@@ -1,9 +1,12 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Roslynator
 {
@@ -320,11 +323,8 @@ namespace Roslynator
             if (!diagnostics.Any())
                 return;
 
-            if (verbosity > ConsoleOut.Verbosity
-                && (Out == null || verbosity > Out.Verbosity))
-            {
+            if (!VerifyVerbosity(verbosity))
                 return;
-            }
 
             int count = 0;
 
@@ -347,6 +347,72 @@ namespace Roslynator
                     }
                 }
             }
+        }
+
+        public static void WriteAnalyzers(ImmutableArray<DiagnosticAnalyzer> analyzers, ConsoleColor color)
+        {
+            if (VerifyVerbosity(Verbosity.Detailed))
+            {
+                WriteLine($"  Use {analyzers.Length} {((analyzers.Length == 1) ? "analyzer" : "analyzers")}", color, Verbosity.Detailed);
+
+                if (VerifyVerbosity(Verbosity.Diagnostic))
+                {
+                    foreach ((string prefix, int count) in GetDiagnosticIdPrefixes(analyzers.SelectMany(f => f.SupportedDiagnostics).Select(f => f.Id).Distinct()))
+                    {
+                        WriteLine($"  {count} supported {((count == 1) ? "diagnostic" : "diagnostics")} with prefix '{prefix}'", color, Verbosity.Diagnostic);
+                    }
+                }
+            }
+        }
+
+        public static void WriteFixers(ImmutableArray<CodeFixProvider> fixers, ConsoleColor color)
+        {
+            if (VerifyVerbosity(Verbosity.Detailed))
+            {
+                WriteLine($"  Use {fixers.Length} {((fixers.Length == 1) ? "fixer" : "fixers")}", color, Verbosity.Detailed);
+
+                if (VerifyVerbosity(Verbosity.Diagnostic))
+                {
+                    foreach ((string prefix, int count) in GetDiagnosticIdPrefixes(fixers.SelectMany(f => f.FixableDiagnosticIds).Distinct()))
+                    {
+                        WriteLine($"  {count} fixable {((count == 1) ? "diagnostic" : "diagnostics")} with prefix '{prefix}'", color, Verbosity.Diagnostic);
+                    }
+                }
+            }
+        }
+
+        private static IEnumerable<(string, int)> GetDiagnosticIdPrefixes(IEnumerable<string> ids)
+        {
+            foreach (IGrouping<string, string> grouping in ids
+                .Select(id =>
+                {
+                    int length = 0;
+
+                    for (int i = 0; i < id.Length; i++)
+                    {
+                        if (char.IsLetter(id[i]))
+                        {
+                            length++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    return id.Substring(0, length);
+                })
+                .GroupBy(f => f)
+                .OrderBy(f => f.Key))
+            {
+                yield return (grouping.Key, grouping.Count());
+            }
+        }
+
+        private static bool VerifyVerbosity(Verbosity verbosity)
+        {
+            return verbosity <= ConsoleOut.Verbosity
+                || (Out != null && verbosity <= Out.Verbosity);
         }
     }
 }

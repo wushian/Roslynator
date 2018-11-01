@@ -155,6 +155,8 @@ namespace Roslynator.Diagnostics
                 return default;
             }
 
+            WriteAnalyzers(analyzers, ConsoleColor.DarkGray);
+
             cancellationToken.ThrowIfCancellationRequested();
 
             Compilation compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
