@@ -36,10 +36,6 @@ namespace Roslynator.CommandLine
                 if (workspace == null)
                     return CommandResult.Fail;
 
-                //TODO: 
-                workspace.LoadMetadataForReferencedProjects = true;
-                workspace.SkipUnrecognizedProjects = false;
-
                 workspace.WorkspaceFailed += WorkspaceFailed;
 
                 var cts = new CancellationTokenSource();
@@ -96,7 +92,7 @@ namespace Roslynator.CommandLine
 
         protected virtual void WorkspaceFailed(object sender, WorkspaceDiagnosticEventArgs e)
         {
-            WriteLine(e.Diagnostic.Message, ConsoleColor.Yellow, Verbosity.Normal);
+            WriteLine($"  {e.Diagnostic.Message}", e.Diagnostic.Kind.GetColor(), Verbosity.Detailed);
         }
 
         protected virtual Task<CommandResult> ExecuteAsync(
@@ -158,20 +154,22 @@ namespace Roslynator.CommandLine
             }
             else
             {
-                VisualStudioInstance instance = MSBuildLocator.QueryVisualStudioInstances()
-                    .OrderBy(f => f.Version)
-                    .LastOrDefault();
+                VisualStudioInstance instance;
 
-                if (instance == null)
+                try
+                {
+                    instance = MSBuildLocator.RegisterDefaults();
+                }
+                catch (InvalidOperationException)
                 {
                     WriteLine("MSBuild location not found. Use option '--msbuild-path' to specify MSBuild location", ConsoleColor.Red, Verbosity.Quiet);
                     return null;
                 }
 
-                WriteLine($"MSBuild location is '{instance.MSBuildPath}'", Verbosity.Diagnostic);
-
-                MSBuildLocator.RegisterInstance(instance);
+                msbuildPath = instance.MSBuildPath;
             }
+
+            WriteLine($"MSBuild location is '{msbuildPath}'", Verbosity.Diagnostic);
 
             if (!ParseHelpers.TryParseMSBuildProperties(rawProperties, out Dictionary<string, string> properties))
                 return null;

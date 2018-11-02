@@ -39,9 +39,13 @@ namespace Roslynator.CommandLine
                 return CommandResult.Fail;
             }
 
+            workspace.LoadMetadataForReferencedProjects = true;
+
             var consoleProgress = new ConsoleProgressReporter(shouldSaveProgress: true);
 
             var loader = new MSBuildProjectLoader(workspace);
+
+            WriteLine($"Load solution '{path}'", Verbosity.Minimal);
 
             SolutionInfo solutionInfo = await loader.LoadSolutionInfoAsync(path, consoleProgress, cancellationToken);
 

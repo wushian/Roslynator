@@ -40,6 +40,7 @@ namespace Roslynator.CommandLine
                     AnalyzeAssemblyCommandLineOptions,
                     FormatCommandLineOptions,
                     SlnCommandLineOptions,
+                    ListVisualStudioCommandLineOptions,
                     PhysicalLinesOfCodeCommandLineOptions,
                     LogicalLinesOfCodeCommandLineOptions,
                     GenerateDocCommandLineOptions,
@@ -83,6 +84,7 @@ namespace Roslynator.CommandLine
                     (AnalyzeAssemblyCommandLineOptions options) => AnalyzeAssembly(options),
                     (FormatCommandLineOptions options) => FormatAsync(options).Result,
                     (SlnCommandLineOptions options) => SlnAsync(options).Result,
+                    (ListVisualStudioCommandLineOptions options) => ListMSBuild(options),
                     (PhysicalLinesOfCodeCommandLineOptions options) => PhysicalLinesOfCodeAsync(options).Result,
                     (LogicalLinesOfCodeCommandLineOptions options) => LogicalLinesOrCodeAsync(options).Result,
                     (GenerateDocCommandLineOptions options) => GenerateDoc(options),
@@ -198,6 +200,15 @@ namespace Roslynator.CommandLine
             var executor = new SlnCommandExecutor(options, language);
 
             CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
+
+            return (result.Kind == CommandResultKind.Success) ? 0 : 1;
+        }
+
+        private static int ListMSBuild(ListVisualStudioCommandLineOptions options)
+        {
+            var executor = new ListVisualStudioCommandExecutor(options);
+
+            CommandResult result = executor.Execute();
 
             return (result.Kind == CommandResultKind.Success) ? 0 : 1;
         }

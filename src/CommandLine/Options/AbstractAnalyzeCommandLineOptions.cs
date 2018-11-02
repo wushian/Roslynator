@@ -12,7 +12,7 @@ namespace Roslynator.CommandLine
         public IEnumerable<string> AnalyzerAssemblies { get; set; }
 
         [Option(longName: "culture")]
-        public string CultureName { get; set; }
+        public string Culture { get; set; }
 
         [Option(longName: "ignore-analyzer-references")]
         public bool IgnoreAnalyzerReferences { get; set; }

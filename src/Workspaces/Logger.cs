@@ -300,15 +300,17 @@ namespace Roslynator
 
         public static void WriteDiagnostic(
             Diagnostic diagnostic,
+            string baseDirectoryPath = null,
+            IFormatProvider formatProvider = null,
             string indentation = null,
             Verbosity verbosity = Verbosity.None)
         {
             Write(indentation, verbosity);
 
-            string message = diagnostic.ToString();
+            string text = DiagnosticFormatter.FormatDiagnostic(diagnostic, baseDirectoryPath, formatProvider);
 
-            ConsoleOut.WriteLine(message, diagnostic.Severity.GetColor(), verbosity);
-            Out?.WriteLine(message, verbosity);
+            ConsoleOut.WriteLine(text, diagnostic.Severity.GetColor(), verbosity);
+            Out?.WriteLine(text, verbosity);
         }
 
         public static void WriteDiagnostics(
@@ -317,7 +319,6 @@ namespace Roslynator
             IFormatProvider formatProvider = null,
             string indentation = null,
             int maxCount = int.MaxValue,
-            DiagnosticDisplayParts parts = DiagnosticDisplayParts.All,
             Verbosity verbosity = Verbosity.None)
         {
             if (!diagnostics.Any())
@@ -328,7 +329,7 @@ namespace Roslynator
 
             int count = 0;
 
-            foreach ((Diagnostic diagnostic, string message) in DiagnosticFormatter.FormatDiagnostics(diagnostics, baseDirectoryPath, formatProvider, parts))
+            foreach ((Diagnostic diagnostic, string message) in DiagnosticFormatter.FormatDiagnostics(diagnostics, baseDirectoryPath, formatProvider))
             {
                 Write(indentation, verbosity);
                 ConsoleOut.WriteLine(message, diagnostic.Severity.GetColor(), verbosity);

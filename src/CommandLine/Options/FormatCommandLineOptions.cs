@@ -7,10 +7,12 @@ using System.Collections.Generic;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: Culture
     [Verb("format")]
     public class FormatCommandLineOptions : MSBuildCommandLineOptions
     {
+        [Option(longName: "culture")]
+        public string Culture { get; set; }
+
         [Option(longName: "empty-line-after-closing-brace")]
         public bool EmptyLineAfterClosingBrace { get; set; }
 

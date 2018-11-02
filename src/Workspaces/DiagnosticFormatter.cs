@@ -16,22 +16,14 @@ namespace Roslynator
         public static IEnumerable<(Diagnostic diagnostic, string message)> FormatDiagnostics(
             ImmutableArray<Diagnostic> diagnostics,
             string baseDirectoryPath = null,
-            IFormatProvider formatProvider = null,
-            DiagnosticDisplayParts parts = DiagnosticDisplayParts.All)
+            IFormatProvider formatProvider = null)
         {
-            if (!diagnostics.Any())
-                yield break;
-
-            int maxIdLength = diagnostics.Max(f => f.Id.Length);
-            int maxSeverityLength = diagnostics.Max(f => GetSeverityText(f.Severity).Length);
-            int maxMessageLength = diagnostics.Max(f => f.GetMessage(formatProvider).Length);
-
             foreach (Diagnostic diagnostic in diagnostics
                 .OrderBy(f => f.Id)
                 .ThenBy(f => f.Location.SourceTree.FilePath)
                 .ThenBy(f => f.Location.SourceSpan.Start))
             {
-                string message = FormatDiagnostic(diagnostic, baseDirectoryPath, formatProvider, parts, maxIdLength, maxSeverityLength, maxMessageLength);
+                string message = FormatDiagnostic(diagnostic, baseDirectoryPath, formatProvider);
 
                 yield return (diagnostic, message);
             }
@@ -40,50 +32,9 @@ namespace Roslynator
         public static string FormatDiagnostic(
             Diagnostic diagnostic,
             string baseDirectoryPath = null,
-            IFormatProvider formatProvider = null,
-            DiagnosticDisplayParts parts = DiagnosticDisplayParts.All)
-        {
-            return FormatDiagnostic(diagnostic, baseDirectoryPath, formatProvider, parts, 0, 0, 0);
-        }
-
-        private static string FormatDiagnostic(
-            Diagnostic diagnostic,
-            string baseDirectoryPath,
-            IFormatProvider formatProvider,
-            DiagnosticDisplayParts parts,
-            int maxIdLength,
-            int maxSeverityLength,
-            int maxMessageLength)
+            IFormatProvider formatProvider = null)
         {
             StringBuilder sb = StringBuilderCache.GetInstance();
-
-            string severity = GetSeverityText(diagnostic.Severity);
-
-            if ((parts & DiagnosticDisplayParts.Severity) != 0)
-            {
-                sb.Append(severity);
-                sb.Append(' ', maxSeverityLength - severity.Length);
-            }
-
-            if ((parts & DiagnosticDisplayParts.Id) != 0)
-            {
-                if ((parts & DiagnosticDisplayParts.Severity) != 0)
-                    sb.Append(' ');
-
-                sb.Append(diagnostic.Id);
-                sb.Append(' ', maxIdLength - diagnostic.Id.Length);
-            }
-
-            string message = diagnostic.GetMessage(formatProvider);
-
-            if ((parts & DiagnosticDisplayParts.Message) != 0)
-            {
-                if ((parts & (DiagnosticDisplayParts.Severity | DiagnosticDisplayParts.Id)) != 0)
-                    sb.Append(' ');
-
-                sb.Append(message);
-                sb.Append(' ', maxMessageLength - message.Length);
-            }
 
             switch (diagnostic.Location.Kind)
             {
@@ -95,29 +46,31 @@ namespace Roslynator
 
                         if (span.IsValid)
                         {
-                            if ((parts & DiagnosticDisplayParts.Path) != 0)
-                            {
-                                if ((parts & (DiagnosticDisplayParts.Severity | DiagnosticDisplayParts.Id | DiagnosticDisplayParts.Message)) != 0)
-                                    sb.Append(' ');
+                            sb.Append(PathUtilities.TrimStart(span.Path, baseDirectoryPath));
 
-                                sb.Append(PathUtilities.TrimStart(span.Path, baseDirectoryPath));
-                            }
+                            LinePosition linePosition = span.Span.Start;
 
-                            if ((parts & DiagnosticDisplayParts.Location) != 0)
-                            {
-                                LinePosition linePosition = span.Span.Start;
-
-                                sb.Append('(');
-                                sb.Append(linePosition.Line + 1);
-                                sb.Append(',');
-                                sb.Append(linePosition.Character + 1);
-                                sb.Append(')');
-                            }
+                            sb.Append('(');
+                            sb.Append(linePosition.Line + 1);
+                            sb.Append(',');
+                            sb.Append(linePosition.Character + 1);
+                            sb.Append("): ");
                         }
 
                         break;
                     }
             }
+
+            string severity = GetSeverityText(diagnostic.Severity);
+
+            sb.Append(severity);
+            sb.Append(' ');
+            sb.Append(diagnostic.Id);
+            sb.Append(": ");
+
+            string message = diagnostic.GetMessage(formatProvider);
+
+            sb.Append(message);
 
             return StringBuilderCache.GetStringAndFree(sb);
         }

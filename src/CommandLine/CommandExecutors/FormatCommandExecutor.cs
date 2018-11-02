@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -45,11 +46,13 @@ namespace Roslynator.CommandLine
                     batchSize: 1000,
                     format: true);
 
+                CultureInfo culture = (Options.Culture != null) ? CultureInfo.GetCultureInfo(Options.Culture) : null;
+
                 return await FixCommandExecutor.FixAsync(
                     projectOrSolution,
-                    FixCommandExecutor.RoslynatorAnalyzerAssemblies,
+                    FixCommandExecutor.RoslynatorAnalyzersAssemblies,
                     codeFixerOptions,
-                    default(IFormatProvider),
+                    culture,
                     cancellationToken);
             }
 
@@ -76,8 +79,7 @@ namespace Roslynator.CommandLine
                     Document document = newProject.GetDocument(documentId);
 
                     // https://github.com/dotnet/roslyn/issues/30674
-                    if (project.Language != LanguageNames.VisualBasic
-                        || (await document.GetTextChangesAsync(project.GetDocument(documentId))).Any())
+                    if ((await document.GetTextChangesAsync(project.GetDocument(documentId))).Any())
                     {
                         hasChanges = true;
 
@@ -126,8 +128,7 @@ namespace Roslynator.CommandLine
                         Document document = newProject.GetDocument(documentId);
 
                         // https://github.com/dotnet/roslyn/issues/30674
-                        if (project.Language != LanguageNames.VisualBasic
-                            || (document.GetTextChangesAsync(project.GetDocument(documentId)).Result).Any())
+                        if ((document.GetTextChangesAsync(project.GetDocument(documentId)).Result).Any())
                         {
                             WriteLine($"  Format '{PathUtilities.TrimStart(document.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
 #if DEBUG

@@ -31,5 +31,8 @@ namespace Roslynator.CommandLine
 
         [Option(longName: "max-iterations", Default = -1)]
         public int MaxIterations { get; set; }
+
+        [Option(longName: "use-roslynator-code-fixes")]
+        public bool UseRoslynatorCodeFixes { get; set; }
     }
 }

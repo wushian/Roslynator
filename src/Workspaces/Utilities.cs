@@ -148,7 +148,7 @@ namespace Roslynator
                 (await oldDocument.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false)).NormalizeWhitespace("", false).ToFullString(),
                 StringComparison.Ordinal))
             {
-                WriteLine("Syntax roots with normalized white-space are not equivalent", ConsoleColor.Magenta);
+                WriteLine($"Syntax roots with normalized white-space are not equivalent '{oldDocument.FilePath}'", ConsoleColor.Magenta);
                 return false;
             }
 
@@ -156,7 +156,7 @@ namespace Roslynator
                 await newDocument.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false),
                 await oldDocument.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false)))
             {
-                WriteLine("Syntax trees are not equivalent", ConsoleColor.Magenta);
+                WriteLine($"Syntax trees are not equivalent '{oldDocument.FilePath}'", ConsoleColor.Magenta);
                 return false;
             }
 

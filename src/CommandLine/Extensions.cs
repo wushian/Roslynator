@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using Microsoft.CodeAnalysis;
 
 namespace Roslynator.CommandLine
 {
@@ -41,6 +42,19 @@ namespace Roslynator.CommandLine
             }
 
             return null;
+        }
+
+        public static ConsoleColor GetColor(this WorkspaceDiagnosticKind kind)
+        {
+            switch (kind)
+            {
+                case WorkspaceDiagnosticKind.Failure:
+                    return ConsoleColor.Red;
+                case WorkspaceDiagnosticKind.Warning:
+                    return ConsoleColor.Yellow;
+                default:
+                    throw new InvalidOperationException($"Unknown value '{kind}'.");
+            }
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Roslynator.CommandLine
 {
     internal class AnalyzeCommandExecutor : MSBuildWorkspaceCommandExecutor
     {
-        private static ImmutableArray<string> _roslynatorAnalyzerAssemblies;
+        private static ImmutableArray<string> _roslynatorAnalyzersAssemblies;
 
         public AnalyzeCommandExecutor(AnalyzeCommandLineOptions options, DiagnosticSeverity minimalSeverity, string language) : base(language)
         {
@@ -29,16 +29,16 @@ namespace Roslynator.CommandLine
 
         public DiagnosticSeverity MinimalSeverity { get; }
 
-        public static ImmutableArray<string> RoslynatorAnalyzerAssemblies
+        public static ImmutableArray<string> RoslynatorAnalyzersAssemblies
         {
             get
             {
-                if (_roslynatorAnalyzerAssemblies.IsDefault)
+                if (_roslynatorAnalyzersAssemblies.IsDefault)
                 {
-                    _roslynatorAnalyzerAssemblies = ImmutableArray.Create(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Roslynator.CSharp.Analyzers.dll"));
+                    _roslynatorAnalyzersAssemblies = ImmutableArray.Create(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Roslynator.CSharp.Analyzers.dll"));
                 }
 
-                return _roslynatorAnalyzerAssemblies;
+                return _roslynatorAnalyzersAssemblies;
             }
         }
 
@@ -62,9 +62,9 @@ namespace Roslynator.CommandLine
             IEnumerable<string> analyzerAssemblies = Options.AnalyzerAssemblies;
 
             if (Options.UseRoslynatorAnalyzers)
-                analyzerAssemblies = analyzerAssemblies.Concat(RoslynatorAnalyzerAssemblies);
+                analyzerAssemblies = analyzerAssemblies.Concat(RoslynatorAnalyzersAssemblies);
 
-            CultureInfo culture = (Options.CultureName != null) ? CultureInfo.GetCultureInfo(Options.CultureName) : null;
+            CultureInfo culture = (Options.Culture != null) ? CultureInfo.GetCultureInfo(Options.Culture) : null;
 
             var codeAnalyzer = new CodeAnalyzer(analyzerAssemblies: analyzerAssemblies, formatProvider: culture, options: codeAnalyzerOptions);
 

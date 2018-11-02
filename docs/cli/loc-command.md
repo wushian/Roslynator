@@ -66,7 +66,7 @@ Defines project language.
 
 Defines a path to MSBuild.
 
-*Note: If the path to MSBuild is not specified and there are installed multiple instances of MSBuild the instance with the highest version will be used.*
+*Note: First found instance of MSBuild will be used if the path to MSBuild is not specified.*
 
 **`--projects`**
 

@@ -7,6 +7,7 @@ Formats documents in the specified project or solution.
 
 ```
 roslynator format <PROJECT|SOLUTION>
+[--culture]
 [--empty-line-after-closing-brace]
 [--empty-line-after-embedded-statement]
 [--empty-line-before-while-in-do-statement]
@@ -38,6 +39,10 @@ roslynator format <PROJECT|SOLUTION>
 The project or solution to fix.
 
 ### Optional Options
+
+**`--culture`**
+
+Defines culture that should be used to display diagnostic message.
 
 **`--empty-line-after-closing-brace`**
 
@@ -109,7 +114,7 @@ Defines project language.
 
 Defines a path to MSBuild.
 
-*Note: If the path to MSBuild is not specified and there are installed multiple instances of MSBuild the instance with the highest version will be used.*
+*Note: First found instance of MSBuild will be used if the path to MSBuild is not specified.*
 
 **`--new-line-after-switch-label`**
 

@@ -35,12 +35,10 @@ namespace Roslynator.CommandLine
 
             if (properties?.Count > 0)
             {
-                WriteLine("Add MSBuild properties", Verbosity.Normal);
-
                 int maxLength = properties.Max(f => f.Key.Length);
 
                 foreach (KeyValuePair<string, string> kvp in properties)
-                    WriteLine($"  {kvp.Key.PadRight(maxLength)} = {kvp.Value}", Verbosity.Normal);
+                    WriteLine($"Add MSBuild property {kvp.Key.PadRight(maxLength)} = {kvp.Value}", ConsoleColor.DarkGray, Verbosity.Detailed);
             }
 
             return true;
