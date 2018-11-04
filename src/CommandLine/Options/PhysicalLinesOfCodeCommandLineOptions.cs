@@ -4,7 +4,7 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    [Verb("loc")]
+    [Verb("loc", HelpText = "Counts physical lines of code in the specified project or solution.")]
     public class PhysicalLinesOfCodeCommandLineOptions : AbstractLinesOfCodeCommandLineOptions
     {
         [Option(longName: "ignore-block-boundary")]

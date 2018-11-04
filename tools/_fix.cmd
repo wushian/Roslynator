@@ -7,7 +7,7 @@ set _analyzersDir=..\src\Analyzers.CodeFixes\bin\Debug\netstandard1.3\
 "..\src\CommandLine\bin\Debug\net461\roslynator" fix "..\src\CommandLine.sln" ^
  --use-roslynator-analyzers ^
  --format ^
- --verbosity n ^
+ --verbosity d ^
  --file-log "roslynator.log" ^
  --file-log-verbosity diag ^
  --diagnostic-fix-map "RCS1155=Roslynator.RCS1155.OrdinalIgnoreCase" ^

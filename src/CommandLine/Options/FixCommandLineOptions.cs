@@ -5,7 +5,8 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    [Verb("fix")]
+    //TODO: SupportedDiagnosticsWithoutFixAllProvider
+    [Verb("fix", HelpText = "Fixes diagnostics in the specified project or solution.")]
     public class FixCommandLineOptions : AbstractAnalyzeCommandLineOptions
     {
         [Option(longName: "batch-size", Default = -1)]

@@ -7,7 +7,7 @@ using static Roslynator.Documentation.DeclarationListOptions;
 
 namespace Roslynator.CommandLine
 {
-    [Verb("generate-declarations")]
+    [Verb("generate-declarations", HelpText = "Generates a single file that contains all declarations from specified assemblies.")]
     public class GenerateDeclarationsCommandLineOptions
     {
         [Option(longName: "assemblies", shortName: 'a', Required = true)]

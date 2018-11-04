@@ -2,13 +2,28 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Diagnostics.Telemetry;
 
 namespace Roslynator
 {
     internal static class Extensions
     {
+        public static Task<ImmutableArray<Diagnostic>> GetAnalyzerDiagnosticsAsync(
+            this Compilation compilation,
+            ImmutableArray<DiagnosticAnalyzer> analyzers,
+            CompilationWithAnalyzersOptions analysisOptions,
+            CancellationToken cancellationToken = default)
+        {
+            var compilationWithAnalyzers = new CompilationWithAnalyzers(compilation, analyzers, analysisOptions);
+
+            return compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(cancellationToken);
+        }
+
         public static bool IsAnalyzerExceptionDiagnostic(this Diagnostic diagnostic)
         {
             if (diagnostic.Id == "AD0001"

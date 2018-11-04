@@ -1,7 +1,7 @@
 
 # `fix` Command
 
-Fixes all diagnostics in the specified project or solution.
+Fixes diagnostics in the specified project or solution.
 
 ## Synopsis
 

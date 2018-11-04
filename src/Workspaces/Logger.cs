@@ -350,6 +350,49 @@ namespace Roslynator
             }
         }
 
+        public static bool WriteDiagnosticDescriptors(
+            IEnumerable<DiagnosticDescriptor> diagnosticDescriptors,
+            string title,
+            ConsoleColor? titleColor = null,
+            string indent = null,
+            bool addEmptyLine = false,
+            Verbosity verbosity = Verbosity.None)
+        {
+            DiagnosticDescriptor[] fixedDiagnostics = diagnosticDescriptors
+                .Distinct(DiagnosticDescriptorComparer.Id)
+                .OrderBy(f => f.Id)
+                .ToArray();
+
+            if (fixedDiagnostics.Length > 0)
+            {
+                if (addEmptyLine)
+                    WriteLine(verbosity);
+
+                Write(indent, verbosity);
+
+                if (titleColor != null)
+                {
+                    WriteLine(title, titleColor.Value, verbosity);
+                }
+                else
+                {
+                    WriteLine(title, verbosity);
+                }
+
+                int maxIdLength = fixedDiagnostics.Max(f => f.Id.Length);
+
+                foreach (DiagnosticDescriptor diagnosticDescriptor in fixedDiagnostics)
+                {
+                    Write(indent, verbosity);
+                    WriteLine($"  {diagnosticDescriptor.Id.PadRight(maxIdLength)} {diagnosticDescriptor.Title}", verbosity);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
         public static void WriteAnalyzers(ImmutableArray<DiagnosticAnalyzer> analyzers, ConsoleColor color)
         {
             if (CheckVerbosity(Verbosity.Detailed))
@@ -360,7 +403,7 @@ namespace Roslynator
                 {
                     foreach ((string prefix, int count) in GetDiagnosticIdPrefixes(analyzers.SelectMany(f => f.SupportedDiagnostics).Select(f => f.Id).Distinct()))
                     {
-                        WriteLine($"  {count} supported {((count == 1) ? "diagnostic" : "diagnostics")} with prefix '{prefix}'", color, Verbosity.Diagnostic);
+                        WriteLine($"    {count} supported {((count == 1) ? "diagnostic" : "diagnostics")} with prefix '{prefix}'", color, Verbosity.Diagnostic);
                     }
                 }
             }
@@ -376,7 +419,7 @@ namespace Roslynator
                 {
                     foreach ((string prefix, int count) in GetDiagnosticIdPrefixes(fixers.SelectMany(f => f.FixableDiagnosticIds).Distinct()))
                     {
-                        WriteLine($"  {count} fixable {((count == 1) ? "diagnostic" : "diagnostics")} with prefix '{prefix}'", color, Verbosity.Diagnostic);
+                        WriteLine($"    {count} fixable {((count == 1) ? "diagnostic" : "diagnostics")} with prefix '{prefix}'", color, Verbosity.Diagnostic);
                     }
                 }
             }

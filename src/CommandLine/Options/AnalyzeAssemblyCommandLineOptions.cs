@@ -5,7 +5,7 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    [Verb("analyze-assembly")]
+    [Verb("analyze-assembly", HelpText = "Searches file or directory for analyzer assemblies.")]
     public class AnalyzeAssemblyCommandLineOptions : BaseCommandLineOptions
     {
         [Value(index: 0, Required = true)]

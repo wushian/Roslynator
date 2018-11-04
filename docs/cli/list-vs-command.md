@@ -1,7 +1,7 @@
 
 # `list-vs` Command
 
-Lists all Visual Studio installations.
+Lists Visual Studio installations.
 
 ## Synopsis
 

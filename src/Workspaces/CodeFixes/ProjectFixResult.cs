@@ -11,11 +11,13 @@ namespace Roslynator.CodeFixes
     {
         public static ProjectFixResult Skipped { get; } = new ProjectFixResult(
             ImmutableArray<DiagnosticDescriptor>.Empty,
+            ImmutableArray<DiagnosticDescriptor>.Empty,
             ImmutableArray<DiagnosticAnalyzer>.Empty,
             ImmutableArray<CodeFixProvider>.Empty,
             ProjectFixKind.Skipped);
 
         public static ProjectFixResult NoAnalyzers { get; } = new ProjectFixResult(
+            ImmutableArray<DiagnosticDescriptor>.Empty,
             ImmutableArray<DiagnosticDescriptor>.Empty,
             ImmutableArray<DiagnosticAnalyzer>.Empty,
             ImmutableArray<CodeFixProvider>.Empty,
@@ -23,17 +25,21 @@ namespace Roslynator.CodeFixes
 
         public ProjectFixResult(
             ImmutableArray<DiagnosticDescriptor> fixedDiagnostics,
+            ImmutableArray<DiagnosticDescriptor> unfixedDiagnostics,
             ImmutableArray<DiagnosticAnalyzer> analyzers,
             ImmutableArray<CodeFixProvider> fixers,
             ProjectFixKind kind)
         {
             FixedDiagnostics = fixedDiagnostics;
+            UnfixedDiagnostics = unfixedDiagnostics;
             Analyzers = analyzers;
             Fixers = fixers;
             Kind = kind;
         }
 
         public ImmutableArray<DiagnosticDescriptor> FixedDiagnostics { get; }
+
+        public ImmutableArray<DiagnosticDescriptor> UnfixedDiagnostics { get; }
 
         public ImmutableArray<DiagnosticAnalyzer> Analyzers { get; }
 

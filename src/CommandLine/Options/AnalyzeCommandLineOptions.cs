@@ -4,7 +4,7 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    [Verb("analyze")]
+    [Verb("analyze", HelpText = "Analyzes specified project or solution and reports diagnostics.")]
     public class AnalyzeCommandLineOptions : AbstractAnalyzeCommandLineOptions
     {
         [Option(longName: "execution-time")]

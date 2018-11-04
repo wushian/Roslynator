@@ -4,7 +4,7 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    [Verb("list-vs")]
+    [Verb("list-vs", HelpText = "Lists Visual Studio installations.")]
     public class ListVisualStudioCommandLineOptions : BaseCommandLineOptions
     {
     }

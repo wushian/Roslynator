@@ -84,6 +84,9 @@ namespace Roslynator.CodeFixes
 
                     results.Add(result);
 
+                    WriteDiagnosticDescriptors(result.UnfixedDiagnostics, "Unfixed diagnostics:", indent: "  ", verbosity: Verbosity.Detailed);
+                    WriteDiagnosticDescriptors(result.FixedDiagnostics, "Fixed diagnostics:", indent: "  ", verbosity: Verbosity.Detailed);
+
                     if (result.Kind == ProjectFixKind.CompilerError)
                         break;
                 }
@@ -103,24 +106,8 @@ namespace Roslynator.CodeFixes
 
             stopwatch.Stop();
 
-            DiagnosticDescriptor[] fixedDiagnostics = results
-                .SelectMany(f => f.FixedDiagnostics)
-                .Distinct(DiagnosticDescriptorComparer.Id)
-                .OrderBy(f => f.Id)
-                .ToArray();
-
-            if (fixedDiagnostics.Length > 0)
-            {
-                WriteLine(Verbosity.Normal);
-                WriteLine("Fixed diagnostics:", Verbosity.Normal);
-
-                int maxIdLength = fixedDiagnostics.Max(f => f.Id.Length);
-
-                foreach (DiagnosticDescriptor diagnosticDescriptor in fixedDiagnostics)
-                {
-                    WriteLine($"  {diagnosticDescriptor.Id.PadRight(maxIdLength)} {diagnosticDescriptor.Title}", Verbosity.Normal);
-                }
-            }
+            WriteDiagnosticDescriptors(results.SelectMany(f => f.UnfixedDiagnostics), "Unfixed diagnostics:", addEmptyLine: true, verbosity: Verbosity.Normal);
+            WriteDiagnosticDescriptors(results.SelectMany(f => f.FixedDiagnostics), "Fixed diagnostics:", titleColor: ConsoleColor.Green, addEmptyLine: true, verbosity: Verbosity.Normal);
 
             WriteLine(Verbosity.Minimal);
             WriteLine($"Done fixing solution '{CurrentSolution.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Minimal);
@@ -145,29 +132,37 @@ namespace Roslynator.CodeFixes
             if (!fixers.Any())
             {
                 WriteLine($"  No fixers found to fix '{project.Name}'", ConsoleColor.DarkGray, Verbosity.Normal);
-                return new ProjectFixResult(ImmutableArray<DiagnosticDescriptor>.Empty, analyzers, fixers, ProjectFixKind.NoFixers);
+                return new ProjectFixResult(ImmutableArray<DiagnosticDescriptor>.Empty, ImmutableArray<DiagnosticDescriptor>.Empty, analyzers, fixers, ProjectFixKind.NoFixers);
             }
+
+            Dictionary<string, ImmutableArray<CodeFixProvider>> fixersById = fixers
+                .Where(f => f.GetFixAllProvider()?.GetSupportedFixAllScopes().Contains(FixAllScope.Project) == true)
+                .SelectMany(f => f.FixableDiagnosticIds.Select(id => (id, fixer: f)))
+                .GroupBy(f => f.id)
+                .ToDictionary(f => f.Key, g => g.Select(f => f.fixer).Distinct().ToImmutableArray());
+
+            ImmutableArray<DiagnosticAnalyzer> allAnalyzers = analyzers;
+
+            analyzers = analyzers
+                .Where(analyzer => analyzer.SupportedDiagnostics.Any(descriptor => fixersById.ContainsKey(descriptor.Id)))
+                .ToImmutableArray();
 
             Dictionary<string, ImmutableArray<DiagnosticAnalyzer>> analyzersById = analyzers
                 .SelectMany(f => f.SupportedDiagnostics.Select(d => (id: d.Id, analyzer: f)))
                 .GroupBy(f => f.id, f => f.analyzer)
                 .ToDictionary(g => g.Key, g => g.Select(analyzer => analyzer).Distinct().ToImmutableArray());
 
-            Dictionary<string, ImmutableArray<CodeFixProvider>> fixersById = fixers
-                .Where(f => f.GetFixAllProvider() != null)
-                .SelectMany(f => f.FixableDiagnosticIds.Select(id => (id, fixer: f)))
-                .GroupBy(f => f.id)
-                .ToDictionary(f => f.Key, g => g.Select(f => f.fixer).ToImmutableArray());
-
             WriteAnalyzers(analyzers, ConsoleColor.DarkGray);
             WriteFixers(fixers, ConsoleColor.DarkGray);
-
-            var fixKind = ProjectFixKind.Success;
 
             ImmutableHashSet<DiagnosticDescriptor>.Builder fixedDiagnostics = ImmutableHashSet.CreateBuilder(DiagnosticDescriptorComparer.Id);
 
             ImmutableArray<Diagnostic> previousDiagnostics = ImmutableArray<Diagnostic>.Empty;
             ImmutableArray<Diagnostic> previousPreviousDiagnostics = ImmutableArray<Diagnostic>.Empty;
+
+            Compilation compilation;
+
+            var fixKind = ProjectFixKind.Success;
 
             int iterationCount = 1;
 
@@ -179,18 +174,16 @@ namespace Roslynator.CodeFixes
 
                 WriteLine($"  Compile '{project.Name}'{((iterationCount > 1) ? $" iteration {iterationCount}" : "")}", Verbosity.Normal);
 
-                Compilation compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
+                compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
                 ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
 
                 if (!VerifyCompilerDiagnostics(compilerDiagnostics, project))
-                    return new ProjectFixResult(fixedDiagnostics.ToImmutableArray(), analyzers, fixers, ProjectFixKind.CompilerError);
-
-                var compilationWithAnalyzers = new CompilationWithAnalyzers(compilation, analyzers, _defaultCompilationWithAnalyzersOptions);
+                    return new ProjectFixResult(fixedDiagnostics.ToImmutableArray(), ImmutableArray<DiagnosticDescriptor>.Empty, analyzers, fixers, ProjectFixKind.CompilerError);
 
                 WriteLine($"  Analyze '{project.Name}'", Verbosity.Normal);
 
-                ImmutableArray<Diagnostic> diagnostics = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
+                ImmutableArray<Diagnostic> diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(analyzers, _defaultCompilationWithAnalyzersOptions, cancellationToken).ConfigureAwait(false);
 
                 foreach (string message in diagnostics
                     .Where(f => f.IsAnalyzerExceptionDiagnostic())
@@ -200,14 +193,16 @@ namespace Roslynator.CodeFixes
                     WriteLine(message, ConsoleColor.Yellow, Verbosity.Diagnostic);
                 }
 
+                IEnumerable<Diagnostic> fixableCompilerDiagnostics = compilerDiagnostics
+                    .Where(f => f.Severity != DiagnosticSeverity.Error
+                        && !Options.IgnoredCompilerDiagnosticIds.Contains(f.Id)
+                        && fixersById.ContainsKey(f.Id));
+
                 diagnostics = diagnostics
                     .Where(f => Options.IsSupportedDiagnostic(f)
                         && analyzersById.ContainsKey(f.Id)
                         && fixersById.ContainsKey(f.Id))
-                    .Concat(compilerDiagnostics
-                        .Where(f => f.Severity != DiagnosticSeverity.Error
-                            && !Options.IgnoredCompilerDiagnosticIds.Contains(f.Id)
-                            && fixersById.ContainsKey(f.Id)))
+                    .Concat(fixableCompilerDiagnostics)
                     .ToImmutableArray();
 
                 int length = diagnostics.Length;
@@ -224,7 +219,7 @@ namespace Roslynator.CodeFixes
                 if (length == previousPreviousDiagnostics.Length
                     && !diagnostics.Except(previousPreviousDiagnostics, DiagnosticDeepEqualityComparer.Instance).Any())
                 {
-                    WriteLine("  Infinite loop detected: Reported diagnostics have been previously fixed.", ConsoleColor.Yellow, Verbosity.Minimal);
+                    WriteLine("  Infinite loop detected: Reported diagnostics have been previously fixed", ConsoleColor.Yellow, Verbosity.Minimal);
 
                     string baseDirectoryPath = Path.GetDirectoryName(project.FilePath);
 
@@ -266,7 +261,7 @@ namespace Roslynator.CodeFixes
                     }
                     else if (diagnosticFixKind == DiagnosticFixKind.CompilerError)
                     {
-                        return new ProjectFixResult(fixedDiagnostics.ToImmutableArray(), analyzers, fixers, ProjectFixKind.CompilerError);
+                        return new ProjectFixResult(fixedDiagnostics.ToImmutableArray(), ImmutableArray<DiagnosticDescriptor>.Empty, analyzers, fixers, ProjectFixKind.CompilerError);
                     }
                 }
 
@@ -278,13 +273,57 @@ namespace Roslynator.CodeFixes
                 iterationCount++;
             }
 
+            ImmutableArray<DiagnosticDescriptor> unfixedDiagnostics = await GetUnfixedDiagnosticsAsync(
+                allAnalyzers,
+                fixers,
+                fixedDiagnostics,
+                compilation,
+                cancellationToken).ConfigureAwait(false);
+
             if (Options.FileBannerLines.Length > 0)
                 await AddFileBannerAsync(project, Options.FileBannerLines, cancellationToken).ConfigureAwait(false);
 
             if (Options.Format)
                 await FormatProjectAsync(project, cancellationToken).ConfigureAwait(false);
 
-            return new ProjectFixResult(fixedDiagnostics.ToImmutableArray(), analyzers, fixers, fixKind);
+            return new ProjectFixResult(fixedDiagnostics.ToImmutableArray(), unfixedDiagnostics, analyzers, fixers, fixKind);
+        }
+
+        private async Task<ImmutableArray<DiagnosticDescriptor>> GetUnfixedDiagnosticsAsync(
+            ImmutableArray<DiagnosticAnalyzer> analyzers,
+            ImmutableArray<CodeFixProvider> fixers,
+            IEnumerable<DiagnosticDescriptor> fixedDiagnostics,
+            Compilation compilation,
+            CancellationToken cancellationToken)
+        {
+            Dictionary<string, ImmutableArray<CodeFixProvider>> fixersById = fixers
+                .SelectMany(f => f.FixableDiagnosticIds.Select(id => (id, fixer: f)))
+                .GroupBy(f => f.id)
+                .ToDictionary(f => f.Key, g => g.Select(f => f.fixer).Distinct().ToImmutableArray());
+
+            Dictionary<string, ImmutableArray<DiagnosticAnalyzer>> analyzersById = analyzers
+                .SelectMany(f => f.SupportedDiagnostics.Select(d => (id: d.Id, analyzer: f)))
+                .Where(f =>
+                {
+                    return !fixersById.TryGetValue(f.id, out ImmutableArray<CodeFixProvider> fixers2)
+                    || !fixers2.Any(fixer => fixer.GetFixAllProvider()?.GetSupportedFixAllScopes().Contains(FixAllScope.Project) == true);
+                })
+                .GroupBy(f => f.id, f => f.analyzer)
+                .ToDictionary(g => g.Key, g => g.Select(analyzer => analyzer).Distinct().ToImmutableArray());
+
+            analyzers = analyzersById
+                .SelectMany(f => f.Value)
+                .Distinct()
+                .ToImmutableArray();
+
+            ImmutableArray<Diagnostic> diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(analyzers, _defaultCompilationWithAnalyzersOptions, cancellationToken).ConfigureAwait(false);
+
+            return diagnostics
+                .Where(f => Options.IsSupportedDiagnostic(f)
+                    && analyzersById.ContainsKey(f.Id))
+                .Select(f => f.Descriptor)
+                .Except(fixedDiagnostics, DiagnosticDescriptorComparer.Id)
+                .ToImmutableArray();
         }
 
         private async Task<DiagnosticFixKind> FixDiagnosticsAsync(
@@ -315,9 +354,7 @@ namespace Roslynator.CodeFixes
                 }
                 else
                 {
-                    var compilationWithAnalyzers = new CompilationWithAnalyzers(compilation, analyzers, _defaultCompilationWithAnalyzersOptions);
-
-                    diagnostics = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
+                    diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(analyzers, _defaultCompilationWithAnalyzersOptions, cancellationToken).ConfigureAwait(false);
                 }
 
                 diagnostics = diagnostics
@@ -343,7 +380,7 @@ namespace Roslynator.CodeFixes
                     diagnostics = ImmutableArray.CreateRange(diagnostics, 0, Options.BatchSize, f => f);
                 }
 
-                bool success = await FixDiagnosticsAsync(diagnosticDescriptor, project, diagnostics, fixers, cancellationToken).ConfigureAwait(false);
+                bool success = await FixDiagnosticsAsync(diagnostics, diagnosticDescriptor, project, fixers, cancellationToken).ConfigureAwait(false);
 
                 if (success)
                     fixKind = DiagnosticFixKind.Success;
@@ -361,9 +398,9 @@ namespace Roslynator.CodeFixes
         }
 
         private async Task<bool> FixDiagnosticsAsync(
+            ImmutableArray<Diagnostic> diagnostics,
             DiagnosticDescriptor diagnosticDescriptor,
             Project project,
-            ImmutableArray<Diagnostic> diagnostics,
             ImmutableArray<CodeFixProvider> fixers,
             CancellationToken cancellationToken)
         {
@@ -381,9 +418,9 @@ namespace Roslynator.CodeFixes
                 cancellationToken.ThrowIfCancellationRequested();
 
                 CodeAction codeAction2 = await GetFixAsync(
+                    diagnostics,
                     diagnosticId,
                     project,
-                    diagnostics,
                     fixers[i],
                     cancellationToken).ConfigureAwait(false);
 
@@ -422,8 +459,8 @@ namespace Roslynator.CodeFixes
                 else if (operations.Length > 1)
                 {
                     WriteLine($@"Code action has multiple operations
-  Title: {codeAction.Title}
-  Equivalence key: {codeAction.EquivalenceKey}", ConsoleColor.Yellow, Verbosity.Diagnostic);
+  Title:           {codeAction.Title}
+  EquivalenceKey: {codeAction.EquivalenceKey}", ConsoleColor.Yellow, Verbosity.Diagnostic);
                 }
             }
 
@@ -431,19 +468,25 @@ namespace Roslynator.CodeFixes
         }
 
         private async Task<CodeAction> GetFixAsync(
+            ImmutableArray<Diagnostic> diagnostics,
             string diagnosticId,
             Project project,
-            ImmutableArray<Diagnostic> diagnostics,
             CodeFixProvider fixer,
             CancellationToken cancellationToken)
         {
             FixAllProvider fixAll = fixer.GetFixAllProvider();
 
             if (!fixAll.GetSupportedFixAllDiagnosticIds(fixer).Any(f => f == diagnosticId))
+            {
+                WriteLine($"  '{fixAll.GetType().FullName}' does not support diagnostic '{diagnosticId}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
                 return null;
+            }
 
             if (!fixAll.GetSupportedFixAllScopes().Any(f => f == FixAllScope.Project))
+            {
+                WriteLine($"  '{fixAll.GetType().FullName}' does not support scope '{FixAllScope.Project}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
                 return null;
+            }
 
             HashSet<(string fullName, string diagnosticId, string equivalenceKey1, string equivalenceKey2)> multipleActionsInfos = null;
 
@@ -489,9 +532,9 @@ namespace Roslynator.CodeFixes
 
                             if (multipleActionsInfos.Add(multipleActionsInfo))
                             {
-                                WriteLine($"  Fixer '{fullName}' registered multiple actions to fix diagnostic '{diagnosticId}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
-                                WriteLine($"    Equivalence Key 1: '{action.EquivalenceKey}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
-                                WriteLine($"    Equivalence Key 2: '{a.EquivalenceKey}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
+                                WriteLine($"  '{fullName}' registered multiple actions to fix diagnostic '{diagnosticId}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
+                                WriteLine($"    EquivalenceKey 1: '{action.EquivalenceKey}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
+                                WriteLine($"    EquivalenceKey 2: '{a.EquivalenceKey}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
                             }
 
                             action = null;
@@ -515,14 +558,19 @@ namespace Roslynator.CodeFixes
 
                 CodeAction fixAllAction = await fixAll.GetFixAsync(fixAllContext).ConfigureAwait(false);
 
-                if (fixAllAction == null
-                    && diagnosticId.StartsWith("RCS"))
+                if (fixAllAction != null)
                 {
-                    WriteLine($"Fixer '{fixer.GetType().FullName}' registered no action for diagnostics:", ConsoleColor.DarkGray, Verbosity.Diagnostic);
-                    WriteDiagnostics(diagnostics, baseDirectoryPath: Path.GetDirectoryName(project.FilePath), formatProvider: FormatProvider, indentation: "  ", maxCount: 10, verbosity: Verbosity.Diagnostic);
+                    WriteLine($"  FixAllProvider:  '{fixAll.GetType().FullName}'", ConsoleColor.DarkGray, Verbosity.Detailed);
+                    WriteLine($"  CodeFixProvider: '{fixer.GetType().FullName}'", ConsoleColor.DarkGray, Verbosity.Detailed);
+
+                    if (!string.IsNullOrEmpty(action.EquivalenceKey))
+                        WriteLine($"  EquivalenceKey:  '{action.EquivalenceKey}'", ConsoleColor.DarkGray, Verbosity.Detailed);
+
+                    return fixAllAction;
                 }
 
-                return fixAllAction;
+                WriteLine($"  Fixer '{fixer.GetType().FullName}' registered no action for diagnostic '{diagnosticId}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                WriteDiagnostics(diagnostics, baseDirectoryPath: Path.GetDirectoryName(project.FilePath), formatProvider: FormatProvider, indentation: "  ", maxCount: 10, verbosity: Verbosity.Diagnostic);
             }
 
             return null;

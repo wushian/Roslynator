@@ -7,7 +7,7 @@ using static Roslynator.Documentation.DocumentationOptions;
 
 namespace Roslynator.CommandLine
 {
-    [Verb("generate-doc")]
+    [Verb("generate-doc", HelpText = "Generates documentation files from specified assemblies.")]
     public class GenerateDocCommandLineOptions : AbstractGenerateDocCommandLineOptions
     {
         [Option(longName: "additional-xml-documentation")]

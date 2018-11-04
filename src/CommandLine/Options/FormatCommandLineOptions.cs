@@ -7,7 +7,8 @@ using System.Collections.Generic;
 
 namespace Roslynator.CommandLine
 {
-    [Verb("format")]
+    //TODO: AddNewLineBeforeBinaryOperator, AddNewLineBeforeConditionalExpressionOperators
+    [Verb("format", HelpText = "Formats documents in the specified project or solution.")]
     public class FormatCommandLineOptions : MSBuildCommandLineOptions
     {
         [Option(longName: "culture")]

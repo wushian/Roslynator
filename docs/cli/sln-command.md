@@ -1,12 +1,12 @@
 
 # `sln` Command
 
-Gets in information about solution and its projects.
+Gets an information about specified solution and its projects.
 
 ## Synopsis
 
 ```
-roslynator sln <PROJECT|SOLUTION>
+roslynator sln <SOLUTION>
 [--ignored-projects]
 [--language]
 [--file-log]
@@ -19,9 +19,9 @@ roslynator sln <PROJECT|SOLUTION>
 
 ## Arguments
 
-**`PROJECT|SOLUTION`**
+**`SOLUTION`**
 
-The project or solution to open.
+The solution to open.
 
 ### Optional Options
 
