@@ -24,6 +24,8 @@ roslynator format <PROJECT|SOLUTION>
 [--file-log-verbosity]
 [--msbuild-path]
 [--new-line-after-switch-label]
+[--new-line-before-binary-operator]
+[--new-line-before-conditional-expression-operator]
 [--new-line-before-embedded-statement]
 [--new-line-before-enum-member]
 [--new-line-before-statement]
@@ -118,25 +120,37 @@ Defines a path to MSBuild.
 
 **`--new-line-after-switch-label`**
 
-Indicates whether switch label should be followed with empty line.
+Indicates whether switch label should be followed with new line.
 
 *Note: This option is available only for C#. For details see [RCS1028](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1028.md).*
 
+**`--new-line-before-binary-operator`**
+
+Indicates whether a binary operator be preceded with new line.
+
+*Note: This option is available only for C#. For details see [RCS1029](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1029.md).*
+
+**`--new-line-before-conditional-expression-operator`**
+
+Indicates whether operator in a conditional expression be preceded with new line.
+
+*Note: This option is available only for C#. For details see [RCS1184](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1184.md).*
+
 **`--new-line-before-embedded-statement`**
 
-Indicates whether an embedded statement should be preceded with empty line.
+Indicates whether an embedded statement should be preceded with new line.
 
 *Note: This option is available only for C#. For details see [RCS1027](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1027.md).*
 
 **`--new-line-before-enum-member`**
 
-Indicates whether an enum member declaration should be preceded with empty line.
+Indicates whether an enum member declaration should be preceded with new line.
 
 *Note: This option is available only for C#. For details see [RCS1025](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1025.md).*
 
 **`--new-line-before-statement`**
 
-Indicates whether a statement should be preceded with newline.
+Indicates whether a statement should be preceded with new line.
 
 *Note: This option is available only for C#. For details see [RCS1026](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1026.md).*
 

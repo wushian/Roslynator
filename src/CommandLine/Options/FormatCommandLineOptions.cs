@@ -7,7 +7,6 @@ using System.Collections.Generic;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: AddNewLineBeforeBinaryOperator, AddNewLineBeforeConditionalExpressionOperators
     [Verb("format", HelpText = "Formats documents in the specified project or solution.")]
     public class FormatCommandLineOptions : MSBuildCommandLineOptions
     {
@@ -53,6 +52,12 @@ namespace Roslynator.CommandLine
         [Option(longName: "new-line-before-enum-member")]
         public bool NewLineBeforeEnumMember { get; set; }
 
+        [Option(longName: "new-line-before-binary-operator")]
+        public bool NewLineBeforeBinaryOperator { get; set; }
+
+        [Option(longName: "new-line-before-conditional-expression-operator")]
+        public bool NewLineBeforeConditionalExpressionOperator { get; set; }
+
         [Option(longName: "new-line-before-statement")]
         public bool NewLineBeforeStatement { get; set; }
 
@@ -87,6 +92,12 @@ namespace Roslynator.CommandLine
 
             if (NewLineAfterSwitchLabel)
                 yield return DiagnosticDescriptors.AddNewLineAfterSwitchLabel;
+
+            if (NewLineBeforeBinaryOperator)
+                yield return DiagnosticDescriptors.FormatBinaryOperatorOnNextLine;
+
+            if (NewLineBeforeConditionalExpressionOperator)
+                yield return DiagnosticDescriptors.FormatConditionalExpression;
 
             if (NewLineBeforeEmbeddedStatement)
                 yield return DiagnosticDescriptors.AddNewLineBeforeEmbeddedStatement;

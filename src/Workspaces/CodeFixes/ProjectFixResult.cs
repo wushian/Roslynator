@@ -46,5 +46,10 @@ namespace Roslynator.CodeFixes
         public ImmutableArray<CodeFixProvider> Fixers { get; }
 
         public ProjectFixKind Kind { get; }
+
+        internal ProjectFixResult WithUnfixedDiagnostics(ImmutableArray<DiagnosticDescriptor> unfixedDiagnostics)
+        {
+            return new ProjectFixResult(FixedDiagnostics, unfixedDiagnostics, Analyzers, Fixers, Kind);
+        }
     }
 }
