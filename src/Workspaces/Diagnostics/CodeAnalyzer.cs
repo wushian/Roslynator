@@ -60,7 +60,7 @@ namespace Roslynator.Diagnostics
                 .ToImmutableArray();
 
             foreach (string id in Options.IgnoredDiagnosticIds.OrderBy(f => f))
-                WriteLine($"Ignore diagnostic '{id}'", Verbosity.Detailed);
+                WriteLine($"Ignore diagnostic '{id}'", Verbosity.Diagnostic);
 
             WriteLine($"Analyze solution '{solution.FilePath}'", ConsoleColor.Cyan, Verbosity.Minimal);
 

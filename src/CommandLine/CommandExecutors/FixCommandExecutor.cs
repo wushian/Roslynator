@@ -123,7 +123,7 @@ namespace Roslynator.CommandLine
 
                 var codeFixer = new CodeFixer(solution, analyzerAssemblies: analyzerAssemblies, formatProvider: formatProvider, options: codeFixerOptions);
 
-                WriteLine($"Fix project '{project.Name}'", ConsoleColor.Cyan, Verbosity.Minimal);
+                WriteLine($"Fix '{project.Name}'", ConsoleColor.Cyan, Verbosity.Minimal);
 
                 await codeFixer.FixProjectAsync(project, cancellationToken);
             }

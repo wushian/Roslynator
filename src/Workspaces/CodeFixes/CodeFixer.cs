@@ -56,11 +56,11 @@ namespace Roslynator.CodeFixes
                 .GetTopologicallySortedProjects(cancellationToken)
                 .ToImmutableArray();
 
-            foreach (string id in Options.IgnoredDiagnosticIds.OrderBy(f => f))
-                WriteLine($"Ignore diagnostic '{id}'", Verbosity.Diagnostic);
-
             foreach (string id in Options.IgnoredCompilerDiagnosticIds.OrderBy(f => f))
                 WriteLine($"Ignore compiler diagnostic '{id}'", Verbosity.Diagnostic);
+
+            foreach (string id in Options.IgnoredDiagnosticIds.OrderBy(f => f))
+                WriteLine($"Ignore diagnostic '{id}'", Verbosity.Diagnostic);
 
             var results = new List<ProjectFixResult>();
 
@@ -244,7 +244,7 @@ namespace Roslynator.CodeFixes
                 if (length == previousPreviousDiagnostics.Length
                     && !diagnostics.Except(previousPreviousDiagnostics, DiagnosticDeepEqualityComparer.Instance).Any())
                 {
-                    WriteLine("  Infinite loop detected: Reported diagnostics have been previously fixed", ConsoleColor.Yellow, Verbosity.Minimal);
+                    WriteLine("  Infinite loop detected: Reported diagnostics have been previously fixed", ConsoleColor.Yellow, Verbosity.Normal);
 
                     string baseDirectoryPath = Path.GetDirectoryName(project.FilePath);
 
@@ -575,11 +575,12 @@ namespace Roslynator.CodeFixes
 
                 if (fixAllAction != null)
                 {
-                    WriteLine($"  FixAllProvider:  '{fixAll.GetType().FullName}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
                     WriteLine($"  CodeFixProvider: '{fixer.GetType().FullName}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
                     if (!string.IsNullOrEmpty(action.EquivalenceKey))
                         WriteLine($"  EquivalenceKey:  '{action.EquivalenceKey}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+
+                    WriteLine($"  FixAllProvider:  '{fixAll.GetType().FullName}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
                     return fixAllAction;
                 }
@@ -600,6 +601,8 @@ namespace Roslynator.CodeFixes
             {
                 if (en.MoveNext())
                 {
+                    WriteLine("Compilation errors:");
+
                     string baseDirectoryPath = Path.GetDirectoryName(project.FilePath);
 
                     const int maxCount = 10;
@@ -616,7 +619,7 @@ namespace Roslynator.CodeFixes
                                 en.Current,
                                 baseDirectoryPath: baseDirectoryPath,
                                 formatProvider: FormatProvider,
-                                indentation: "  ",
+                                indentation: "    ",
                                 verbosity: Verbosity.Normal);
                         }
                         else
