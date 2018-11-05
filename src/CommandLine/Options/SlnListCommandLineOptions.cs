@@ -4,9 +4,8 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: sln-list, list-projects
-    [Verb("sln", HelpText = "Gets an information about specified solution and its projects.")]
-    public class SlnCommandLineOptions : MSBuildCommandLineOptions
+    [Verb("sln-list", HelpText = "Gets an information about specified solution and its projects.")]
+    public class SlnListCommandLineOptions : MSBuildCommandLineOptions
     {
     }
 }

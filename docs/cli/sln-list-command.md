@@ -1,12 +1,12 @@
 
-# `sln` Command
+# `sln-list` Command
 
 Gets an information about specified solution and its projects.
 
 ## Synopsis
 
 ```
-roslynator sln <SOLUTION>
+roslynator sln-list <SOLUTION>
 [--ignored-projects]
 [--language]
 [--file-log]

@@ -39,7 +39,7 @@ namespace Roslynator.CommandLine
                     AnalyzeCommandLineOptions,
                     AnalyzeAssemblyCommandLineOptions,
                     FormatCommandLineOptions,
-                    SlnCommandLineOptions,
+                    SlnListCommandLineOptions,
                     ListVisualStudioCommandLineOptions,
                     PhysicalLinesOfCodeCommandLineOptions,
                     LogicalLinesOfCodeCommandLineOptions,
@@ -83,7 +83,7 @@ namespace Roslynator.CommandLine
                     (AnalyzeCommandLineOptions options) => AnalyzeAsync(options).Result,
                     (AnalyzeAssemblyCommandLineOptions options) => AnalyzeAssembly(options),
                     (FormatCommandLineOptions options) => FormatAsync(options).Result,
-                    (SlnCommandLineOptions options) => SlnAsync(options).Result,
+                    (SlnListCommandLineOptions options) => SlnListAsync(options).Result,
                     (ListVisualStudioCommandLineOptions options) => ListMSBuild(options),
                     (PhysicalLinesOfCodeCommandLineOptions options) => PhysicalLinesOfCodeAsync(options).Result,
                     (LogicalLinesOfCodeCommandLineOptions options) => LogicalLinesOrCodeAsync(options).Result,
@@ -192,12 +192,12 @@ namespace Roslynator.CommandLine
             return (result.Kind == CommandResultKind.Success) ? 0 : 1;
         }
 
-        private static async Task<int> SlnAsync(SlnCommandLineOptions options)
+        private static async Task<int> SlnListAsync(SlnListCommandLineOptions options)
         {
             if (!options.TryGetLanguage(out string language))
                 return 1;
 
-            var executor = new SlnCommandExecutor(options, language);
+            var executor = new SlnListCommandExecutor(options, language);
 
             CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
 

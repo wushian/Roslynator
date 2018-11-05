@@ -15,7 +15,7 @@
 * [list-msbuild](list-msbuild-command.md)
 * [loc](loc-command.md)
 * [lloc](lloc-command.md)
-* [sln](sln-command.md)
+* [sln-list](sln-list-command.md)
 
 ## See Also
 

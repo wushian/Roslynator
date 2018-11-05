@@ -59,6 +59,7 @@ namespace Roslynator
                 foreach (TypeInfo typeInfo in analyzerAssembly.DefinedTypes)
                 {
                     if (loadAnalyzers
+                        && !typeInfo.IsAbstract
                         && typeInfo.IsSubclassOf(typeof(DiagnosticAnalyzer)))
                     {
                         DiagnosticAnalyzerAttribute attribute = typeInfo.GetCustomAttribute<DiagnosticAnalyzerAttribute>();
@@ -84,6 +85,7 @@ namespace Roslynator
                         }
                     }
                     else if (loadFixers
+                        && !typeInfo.IsAbstract
                         && typeInfo.IsSubclassOf(typeof(CodeFixProvider)))
                     {
                         ExportCodeFixProviderAttribute attribute = typeInfo.GetCustomAttribute<ExportCodeFixProviderAttribute>();

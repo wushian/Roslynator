@@ -13,14 +13,14 @@ using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
-    internal class SlnCommandExecutor : MSBuildWorkspaceCommandExecutor
+    internal class SlnListCommandExecutor : MSBuildWorkspaceCommandExecutor
     {
-        public SlnCommandExecutor(SlnCommandLineOptions options, string language) : base(language)
+        public SlnListCommandExecutor(SlnListCommandLineOptions options, string language) : base(language)
         {
             Options = options;
         }
 
-        public SlnCommandLineOptions Options { get; }
+        public SlnListCommandLineOptions Options { get; }
 
         public override Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default)
         {
