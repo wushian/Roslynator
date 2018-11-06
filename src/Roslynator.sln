@@ -103,9 +103,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CLI", "CLI", "{A16068FE-9E6
 		..\docs\cli\generate-declarations-command.md = ..\docs\cli\generate-declarations-command.md
 		..\docs\cli\generate-doc-command.md = ..\docs\cli\generate-doc-command.md
 		..\docs\cli\generate-doc-root-command.md = ..\docs\cli\generate-doc-root-command.md
+		..\docs\cli\list-vs-command.md = ..\docs\cli\list-vs-command.md
 		..\docs\cli\lloc-command.md = ..\docs\cli\lloc-command.md
 		..\docs\cli\loc-command.md = ..\docs\cli\loc-command.md
 		..\docs\cli\README.md = ..\docs\cli\README.md
+		..\docs\cli\sln-list-command.md = ..\docs\cli\sln-list-command.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Workspaces", "Workspaces\Workspaces.csproj", "{4FD3D777-11FC-4FF9-985B-2756E39F7AD7}"

@@ -8,7 +8,7 @@ namespace Roslynator.CommandLine
     [Verb("analyze-assembly", HelpText = "Searches file or directory for analyzer assemblies.")]
     public class AnalyzeAssemblyCommandLineOptions : BaseCommandLineOptions
     {
-        [Value(index: 0, Required = true)]
+        [Value(index: 0, Required = true, HelpText = "The path to file or directory to analyze.", MetaValue = "<PATH>")]
         public string Path { get; set; }
 
         [Option(longName: "additional-paths")]

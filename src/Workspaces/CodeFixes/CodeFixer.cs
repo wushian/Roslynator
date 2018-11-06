@@ -51,16 +51,16 @@ namespace Roslynator.CodeFixes
 
         public async Task FixSolutionAsync(CancellationToken cancellationToken = default)
         {
-            ImmutableArray<ProjectId> projects = CurrentSolution
-                .GetProjectDependencyGraph()
-                .GetTopologicallySortedProjects(cancellationToken)
-                .ToImmutableArray();
-
             foreach (string id in Options.IgnoredCompilerDiagnosticIds.OrderBy(f => f))
                 WriteLine($"Ignore compiler diagnostic '{id}'", Verbosity.Diagnostic);
 
             foreach (string id in Options.IgnoredDiagnosticIds.OrderBy(f => f))
                 WriteLine($"Ignore diagnostic '{id}'", Verbosity.Diagnostic);
+
+            ImmutableArray<ProjectId> projects = CurrentSolution
+                .GetProjectDependencyGraph()
+                .GetTopologicallySortedProjects(cancellationToken)
+                .ToImmutableArray();
 
             var results = new List<ProjectFixResult>();
 
@@ -106,6 +106,13 @@ namespace Roslynator.CodeFixes
 
             stopwatch.Stop();
 
+            if (Options.Format)
+            {
+                int count = results.Sum(f => f.FormattedDocumentCount);
+                WriteLine();
+                WriteLine($"{count} {((count == 1) ? "document" : "documents")} formatted", ConsoleColor.Green, Verbosity.Normal);
+            }
+
             WriteDiagnosticDescriptors(results.SelectMany(f => f.UnfixedDiagnostics), "Unfixed diagnostics:", addEmptyLine: true, verbosity: Verbosity.Normal);
             WriteDiagnosticDescriptors(results.SelectMany(f => f.FixedDiagnostics), "Fixed diagnostics:", titleColor: ConsoleColor.Green, addEmptyLine: true, verbosity: Verbosity.Normal);
 
@@ -138,7 +145,12 @@ namespace Roslynator.CodeFixes
                 await AddFileBannerAsync(CurrentSolution.GetProject(project.Id), Options.FileBannerLines, cancellationToken).ConfigureAwait(false);
 
             if (Options.Format)
-                await FormatProjectAsync(CurrentSolution.GetProject(project.Id), cancellationToken).ConfigureAwait(false);
+            {
+                int count = await FormatProjectAsync(CurrentSolution.GetProject(project.Id), cancellationToken).ConfigureAwait(false);
+
+                if (count > 0)
+                    fixResult = fixResult.WithFormattedDocumentCount(count);
+            }
 
             return fixResult;
         }
@@ -718,42 +730,26 @@ namespace Roslynator.CodeFixes
             }
         }
 
-        private async Task FormatProjectAsync(Project project, CancellationToken cancellationToken)
+        private async Task<int> FormatProjectAsync(Project project, CancellationToken cancellationToken)
         {
-            project = CurrentSolution.GetProject(project.Id);
-
             WriteLine($"  Format  '{project.Name}'", Verbosity.Normal);
 
             Project newProject = await CodeFormatter.FormatProjectAsync(project, cancellationToken).ConfigureAwait(false);
 
             string solutionDirectory = Path.GetDirectoryName(project.Solution.FilePath);
 
-            bool hasChanges = false;
+            ImmutableArray<DocumentId> formattedDocuments = await CodeFormatter.GetFormattedDocumentsAsync(project, newProject).ConfigureAwait(false);
 
-            foreach (DocumentId documentId in newProject
-                .GetChanges(project)
-                .GetChangedDocuments(onlyGetDocumentsWithTextChanges: true))
-            {
-                Document newDocument = newProject.GetDocument(documentId);
+            WriteFormattedDocuments(formattedDocuments, project, solutionDirectory);
 
-                // https://github.com/dotnet/roslyn/issues/30674
-                if ((await newDocument.GetTextChangesAsync(project.GetDocument(documentId)).ConfigureAwait(false)).Any())
-                {
-                    hasChanges = true;
-
-                    WriteLine($"  Format '{PathUtilities.TrimStart(newDocument.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
-#if DEBUG
-                    await Utilities.VerifySyntaxEquivalenceAsync(project.GetDocument(newDocument.Id), newDocument, cancellationToken).ConfigureAwait(false);
-#endif
-                }
-            }
-
-            if (hasChanges
+            if (formattedDocuments.Length > 0
                 && !Workspace.TryApplyChanges(newProject.Solution))
             {
                 Debug.Fail($"Cannot apply changes to solution '{newProject.Solution.FilePath}'");
                 WriteLine($"Cannot apply changes to solution '{newProject.Solution.FilePath}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
             }
+
+            return formattedDocuments.Length;
         }
     }
 }

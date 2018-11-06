@@ -393,6 +393,15 @@ namespace Roslynator
             return false;
         }
 
+        public static void WriteFormattedDocuments(ImmutableArray<DocumentId> documentIds, Project project, string solutionDirectory)
+        {
+            foreach (DocumentId documentId in documentIds)
+            {
+                Document document = project.GetDocument(documentId);
+                WriteLine($"  Format '{PathUtilities.TrimStart(document.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
+            }
+        }
+
         public static void WriteAnalyzers(ImmutableArray<DiagnosticAnalyzer> analyzers, ConsoleColor color)
         {
             if (CheckVerbosity(Verbosity.Detailed))

@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Collections.Immutable;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -42,6 +44,29 @@ namespace Roslynator.Formatting
             }
 
             return project;
+        }
+
+        internal static async Task<ImmutableArray<DocumentId>> GetFormattedDocumentsAsync(Project project, Project newProject)
+        {
+            ImmutableArray<DocumentId>.Builder builder = null;
+
+            foreach (DocumentId documentId in newProject
+                .GetChanges(project)
+                .GetChangedDocuments(onlyGetDocumentsWithTextChanges: true))
+            {
+                Document document = newProject.GetDocument(documentId);
+
+                // https://github.com/dotnet/roslyn/issues/30674
+                if ((await document.GetTextChangesAsync(project.GetDocument(documentId)).ConfigureAwait(false)).Any())
+                {
+#if DEBUG
+                    bool success = await Utilities.VerifySyntaxEquivalenceAsync(project.GetDocument(document.Id), document).ConfigureAwait(false);
+#endif
+                    (builder ?? (builder = ImmutableArray.CreateBuilder<DocumentId>())).Add(document.Id);
+                }
+            }
+
+            return builder?.ToImmutableArray() ?? ImmutableArray<DocumentId>.Empty;
         }
     }
 }

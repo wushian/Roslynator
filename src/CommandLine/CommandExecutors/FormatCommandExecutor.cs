@@ -55,114 +55,110 @@ namespace Roslynator.CommandLine
                     culture,
                     cancellationToken);
             }
-
-            var options = new CodeFormatterOptions(includeGeneratedCode: Options.IncludeGeneratedCode);
-
-            Workspace workspace = projectOrSolution.Workspace;
-
-            if (projectOrSolution.IsProject)
+            else if (projectOrSolution.IsProject)
             {
                 Project project = projectOrSolution.AsProject();
 
-                string solutionDirectory = Path.GetDirectoryName(project.Solution.FilePath);
+                var options = new CodeFormatterOptions(includeGeneratedCode: Options.IncludeGeneratedCode);
 
-                WriteLine($"  Analyze '{project.Name}'", Verbosity.Minimal);
-
-                Project newProject = await CodeFormatter.FormatProjectAsync(project, options, cancellationToken);
-
-                bool hasChanges = false;
-
-                foreach (DocumentId documentId in newProject
-                    .GetChanges(project)
-                    .GetChangedDocuments(onlyGetDocumentsWithTextChanges: true))
-                {
-                    Document document = newProject.GetDocument(documentId);
-
-                    // https://github.com/dotnet/roslyn/issues/30674
-                    if ((await document.GetTextChangesAsync(project.GetDocument(documentId))).Any())
-                    {
-                        hasChanges = true;
-
-                        WriteLine($"  Format '{PathUtilities.TrimStart(document.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
-#if DEBUG
-                        await Utilities.VerifySyntaxEquivalenceAsync(project.GetDocument(document.Id), document, cancellationToken);
-#endif
-                    }
-                }
-
-                if (hasChanges)
-                {
-                    Solution solution = newProject.Solution;
-
-                    WriteLine($"Apply changes to solution '{solution.FilePath}'", Verbosity.Normal);
-
-                    if (!workspace.TryApplyChanges(solution))
-                    {
-                        Debug.Fail($"Cannot apply changes to solution '{solution.FilePath}'");
-                        WriteLine($"Cannot apply changes to solution '{solution.FilePath}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
-                    }
-                }
+                await FormatProjectAsync(project, options, cancellationToken);
             }
             else
             {
                 Solution solution = projectOrSolution.AsSolution();
 
-                string solutionDirectory = Path.GetDirectoryName(solution.FilePath);
+                var options = new CodeFormatterOptions(includeGeneratedCode: Options.IncludeGeneratedCode);
 
-                WriteLine($"Analyze solution '{projectOrSolution.FilePath}'", ConsoleColor.Cyan, Verbosity.Minimal);
-
-                Stopwatch stopwatch = Stopwatch.StartNew();
-
-                var changedDocumentIds = new ConcurrentBag<(DocumentId, SourceText)>();
-
-                Parallel.ForEach(FilterProjects(solution, Options), project =>
-                {
-                    WriteLine($"  Analyze '{project.Name}'", Verbosity.Minimal);
-
-                    Project newProject = CodeFormatter.FormatProjectAsync(project, options, cancellationToken).Result;
-
-                    foreach (DocumentId documentId in newProject
-                        .GetChanges(project)
-                        .GetChangedDocuments(onlyGetDocumentsWithTextChanges: true))
-                    {
-                        Document document = newProject.GetDocument(documentId);
-
-                        // https://github.com/dotnet/roslyn/issues/30674
-                        if ((document.GetTextChangesAsync(project.GetDocument(documentId)).Result).Any())
-                        {
-                            WriteLine($"  Format '{PathUtilities.TrimStart(document.FilePath, solutionDirectory)}'", ConsoleColor.DarkGray, Verbosity.Detailed);
-#if DEBUG
-                            bool success = Utilities.VerifySyntaxEquivalenceAsync(project.GetDocument(document.Id), document, cancellationToken).Result;
-#endif
-                            SourceText sourceText = document.GetTextAsync(cancellationToken).Result;
-
-                            changedDocumentIds.Add((document.Id, sourceText));
-                        }
-                    }
-
-                    WriteLine($"  Done analyzing '{project.Name}'", Verbosity.Normal);
-                });
-
-                if (changedDocumentIds.Count > 0)
-                {
-                    foreach ((DocumentId documentId, SourceText sourceText) in changedDocumentIds)
-                    {
-                        solution = solution.WithDocumentText(documentId, sourceText);
-                    }
-
-                    WriteLine($"Apply changes to solution '{solution.FilePath}'", Verbosity.Normal);
-
-                    if (!workspace.TryApplyChanges(solution))
-                    {
-                        Debug.Fail($"Cannot apply changes to solution '{solution.FilePath}'");
-                        WriteLine($"Cannot apply changes to solution '{solution.FilePath}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
-                    }
-                }
-
-                WriteLine($"Done formatting solution '{solution.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Minimal);
+                await FormatSolutionAsync(solution, options, cancellationToken);
             }
 
             return CommandResult.Success;
+        }
+
+        private async Task FormatSolutionAsync(Solution solution, CodeFormatterOptions options, CancellationToken cancellationToken)
+        {
+            string solutionDirectory = Path.GetDirectoryName(solution.FilePath);
+
+            WriteLine($"Analyze solution '{solution.FilePath}'", ConsoleColor.Cyan, Verbosity.Minimal);
+
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            var changedDocuments = new ConcurrentBag<ImmutableArray<DocumentId>>();
+
+            Parallel.ForEach(FilterProjects(solution, Options), project =>
+            {
+                WriteLine($"  Analyze '{project.Name}'", Verbosity.Minimal);
+
+                Project newProject = CodeFormatter.FormatProjectAsync(project, options, cancellationToken).Result;
+
+                ImmutableArray<DocumentId> formattedDocuments = CodeFormatter.GetFormattedDocumentsAsync(project, newProject).Result;
+
+                if (formattedDocuments.Any())
+                {
+                    changedDocuments.Add(formattedDocuments);
+                    WriteFormattedDocuments(formattedDocuments, project, solutionDirectory);
+                }
+
+                WriteLine($"  Done analyzing '{project.Name}'", Verbosity.Normal);
+            });
+
+            if (changedDocuments.Count > 0)
+            {
+                Solution newSolution = solution;
+
+                foreach (DocumentId documentId in changedDocuments.SelectMany(f => f))
+                {
+                    SourceText sourceText = await solution.GetDocument(documentId).GetTextAsync(cancellationToken);
+
+                    newSolution = newSolution.WithDocumentText(documentId, sourceText);
+                }
+
+                WriteLine($"Apply changes to solution '{solution.FilePath}'", Verbosity.Normal);
+
+                if (!solution.Workspace.TryApplyChanges(newSolution))
+                {
+                    Debug.Fail($"Cannot apply changes to solution '{solution.FilePath}'");
+                    WriteLine($"Cannot apply changes to solution '{solution.FilePath}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
+                }
+            }
+
+            WriteLine();
+            WriteLine($"{changedDocuments.Count} {((changedDocuments.Count == 1) ? "document" : "documents")} formatted", ConsoleColor.Green, Verbosity.Normal);
+            WriteLine();
+
+            WriteLine($"Done formatting solution '{solution.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Minimal);
+        }
+
+        private static async Task FormatProjectAsync(Project project, CodeFormatterOptions options, CancellationToken cancellationToken)
+        {
+            Solution solution = project.Solution;
+
+            string solutionDirectory = Path.GetDirectoryName(solution.FilePath);
+
+            WriteLine($"  Analyze '{project.Name}'", Verbosity.Minimal);
+
+            Project newProject = await CodeFormatter.FormatProjectAsync(project, options, cancellationToken);
+
+            ImmutableArray<DocumentId> formattedDocuments = await CodeFormatter.GetFormattedDocumentsAsync(project, newProject);
+
+            WriteFormattedDocuments(formattedDocuments, project, solutionDirectory);
+
+            if (formattedDocuments.Length > 0)
+            {
+                Solution newSolution = newProject.Solution;
+
+                WriteLine($"Apply changes to solution '{newSolution.FilePath}'", Verbosity.Normal);
+
+                if (!solution.Workspace.TryApplyChanges(newSolution))
+                {
+                    Debug.Fail($"Cannot apply changes to solution '{newSolution.FilePath}'");
+                    WriteLine($"Cannot apply changes to solution '{newSolution.FilePath}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
+                }
+            }
+
+            WriteLine();
+            WriteLine($"{formattedDocuments.Length} {((formattedDocuments.Length == 1) ? "document" : "documents")} formatted", ConsoleColor.Green, Verbosity.Normal);
+            WriteLine();
         }
 
         protected override void OperationCanceled(OperationCanceledException ex)

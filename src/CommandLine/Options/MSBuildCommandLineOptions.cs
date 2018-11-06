@@ -8,7 +8,7 @@ namespace Roslynator.CommandLine
     //TODO: Files, IgnoredFiles
     public abstract class MSBuildCommandLineOptions : BaseCommandLineOptions
     {
-        [Value(index: 0, Required = true)]
+        [Value(index: 0, Required = true, HelpText = "The project or solution file.", MetaValue = "<PROJECT|SOLUTION>")]
         public string Path { get; set; }
 
         [Option(longName: "ignored-projects")]

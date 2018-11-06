@@ -37,7 +37,9 @@ namespace Roslynator.CommandLine
             {
                 ParserResult<object> parserResult = Parser.Default.ParseArguments<FixCommandLineOptions,
                     AnalyzeCommandLineOptions,
+#if DEBUG
                     AnalyzeAssemblyCommandLineOptions,
+#endif
                     FormatCommandLineOptions,
                     SlnListCommandLineOptions,
                     ListVisualStudioCommandLineOptions,
@@ -81,7 +83,9 @@ namespace Roslynator.CommandLine
                 return parserResult.MapResult(
                     (FixCommandLineOptions options) => FixAsync(options).Result,
                     (AnalyzeCommandLineOptions options) => AnalyzeAsync(options).Result,
+#if DEBUG
                     (AnalyzeAssemblyCommandLineOptions options) => AnalyzeAssembly(options),
+#endif
                     (FormatCommandLineOptions options) => FormatAsync(options).Result,
                     (SlnListCommandLineOptions options) => SlnListAsync(options).Result,
                     (ListVisualStudioCommandLineOptions options) => ListMSBuild(options),

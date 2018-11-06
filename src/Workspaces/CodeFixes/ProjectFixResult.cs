@@ -28,13 +28,15 @@ namespace Roslynator.CodeFixes
             ImmutableArray<DiagnosticDescriptor> unfixedDiagnostics,
             ImmutableArray<DiagnosticAnalyzer> analyzers,
             ImmutableArray<CodeFixProvider> fixers,
-            ProjectFixKind kind)
+            ProjectFixKind kind,
+            int formattedDocumentCount = 0)
         {
             FixedDiagnostics = fixedDiagnostics;
             UnfixedDiagnostics = unfixedDiagnostics;
             Analyzers = analyzers;
             Fixers = fixers;
             Kind = kind;
+            FormattedDocumentCount = formattedDocumentCount;
         }
 
         public ImmutableArray<DiagnosticDescriptor> FixedDiagnostics { get; }
@@ -45,11 +47,18 @@ namespace Roslynator.CodeFixes
 
         public ImmutableArray<CodeFixProvider> Fixers { get; }
 
+        public int FormattedDocumentCount { get; }
+
         public ProjectFixKind Kind { get; }
 
         internal ProjectFixResult WithUnfixedDiagnostics(ImmutableArray<DiagnosticDescriptor> unfixedDiagnostics)
         {
-            return new ProjectFixResult(FixedDiagnostics, unfixedDiagnostics, Analyzers, Fixers, Kind);
+            return new ProjectFixResult(FixedDiagnostics, unfixedDiagnostics, Analyzers, Fixers, Kind, FormattedDocumentCount);
+        }
+
+        internal ProjectFixResult WithFormattedDocumentCount(int formattedDocumentCount)
+        {
+            return new ProjectFixResult(FixedDiagnostics, UnfixedDiagnostics, Analyzers, Fixers, Kind, formattedDocumentCount);
         }
     }
 }

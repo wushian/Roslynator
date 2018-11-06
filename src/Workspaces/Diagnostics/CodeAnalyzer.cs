@@ -54,13 +54,13 @@ namespace Roslynator.Diagnostics
 
         public async Task<ImmutableArray<ProjectAnalysisResult>> AnalyzeSolutionAsync(Solution solution, CancellationToken cancellationToken = default)
         {
+            foreach (string id in Options.IgnoredDiagnosticIds.OrderBy(f => f))
+                WriteLine($"Ignore diagnostic '{id}'", Verbosity.Diagnostic);
+
             ImmutableArray<ProjectId> projectIds = solution
                 .GetProjectDependencyGraph()
                 .GetTopologicallySortedProjects(cancellationToken)
                 .ToImmutableArray();
-
-            foreach (string id in Options.IgnoredDiagnosticIds.OrderBy(f => f))
-                WriteLine($"Ignore diagnostic '{id}'", Verbosity.Diagnostic);
 
             WriteLine($"Analyze solution '{solution.FilePath}'", ConsoleColor.Cyan, Verbosity.Minimal);
 
