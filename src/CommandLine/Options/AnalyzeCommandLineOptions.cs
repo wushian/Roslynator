@@ -7,9 +7,11 @@ namespace Roslynator.CommandLine
     [Verb("analyze", HelpText = "Analyzes specified project or solution and reports diagnostics.")]
     public class AnalyzeCommandLineOptions : AbstractAnalyzeCommandLineOptions
     {
+        //TODO: MeasureExecutionTime, Telemetry
         [Option(longName: "execution-time")]
         public bool ExecutionTime { get; set; }
 
+        //TODO: skip, omit
         [Option(longName: "ignore-compiler-diagnostics")]
         public bool IgnoreCompilerDiagnostics { get; set; }
 
@@ -19,6 +21,7 @@ namespace Roslynator.CommandLine
         [Option(longName: "report-suppressed-diagnostics")]
         public bool ReportSuppressedDiagnostics { get; set; }
 
+        //TODO: rename XmlFileLog
         [Option(longName: "xml-file-log")]
         public string XmlFileLog { get; set; }
     }

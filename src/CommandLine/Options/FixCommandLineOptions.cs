@@ -5,10 +5,11 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: SupportedDiagnosticsWithoutFixAllProvider
+    //TODO: SupportedDiagnosticsWithoutFixAllProvider (DiagnosticsFixableOneByOne)
     [Verb("fix", HelpText = "Fixes diagnostics in the specified project or solution.")]
     public class FixCommandLineOptions : AbstractAnalyzeCommandLineOptions
     {
+        //TODO: Batch
         [Option(longName: "batch-size", Default = -1)]
         public int BatchSize { get; set; }
 
@@ -33,6 +34,7 @@ namespace Roslynator.CommandLine
         [Option(longName: "max-iterations", Default = -1)]
         public int MaxIterations { get; set; }
 
+        //TODO: UseCodeFixes, UseEmbeddedCodeFixes
         [Option(longName: "use-roslynator-code-fixes")]
         public bool UseRoslynatorCodeFixes { get; set; }
     }

@@ -152,7 +152,7 @@ namespace Roslynator.Diagnostics
                 return default;
             }
 
-            WriteAnalyzers(analyzers, ConsoleColor.DarkGray);
+            WriteAnalyzers(analyzers, ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
             cancellationToken.ThrowIfCancellationRequested();
 

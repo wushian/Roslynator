@@ -11,6 +11,7 @@ namespace Roslynator.CommandLine
         [Value(index: 0, Required = true, HelpText = "The project or solution file.", MetaValue = "<PROJECT|SOLUTION>")]
         public string Path { get; set; }
 
+        //TODO: skip, omit, disregard
         [Option(longName: "ignored-projects")]
         public IEnumerable<string> IgnoredProjects { get; set; }
 
@@ -20,6 +21,7 @@ namespace Roslynator.CommandLine
         [Option(longName: "msbuild-path")]
         public string MSBuildPath { get; set; }
 
+        //TODO: IncludedProjects
         [Option(longName: "projects")]
         public IEnumerable<string> Projects { get; set; }
 

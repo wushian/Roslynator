@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
@@ -9,56 +10,40 @@ namespace Roslynator.CodeFixes
 {
     public class ProjectFixResult
     {
-        public static ProjectFixResult Skipped { get; } = new ProjectFixResult(
-            ImmutableArray<DiagnosticDescriptor>.Empty,
-            ImmutableArray<DiagnosticDescriptor>.Empty,
-            ImmutableArray<DiagnosticAnalyzer>.Empty,
-            ImmutableArray<CodeFixProvider>.Empty,
-            ProjectFixKind.Skipped);
+        public static ProjectFixResult Skipped { get; } = new ProjectFixResult(ProjectFixKind.Skipped);
 
-        public static ProjectFixResult NoAnalyzers { get; } = new ProjectFixResult(
-            ImmutableArray<DiagnosticDescriptor>.Empty,
-            ImmutableArray<DiagnosticDescriptor>.Empty,
-            ImmutableArray<DiagnosticAnalyzer>.Empty,
-            ImmutableArray<CodeFixProvider>.Empty,
-            ProjectFixKind.NoAnalyzers);
+        public static ProjectFixResult NoAnalyzers { get; } = new ProjectFixResult(ProjectFixKind.NoAnalyzers);
 
-        public ProjectFixResult(
-            ImmutableArray<DiagnosticDescriptor> fixedDiagnostics,
-            ImmutableArray<DiagnosticDescriptor> unfixedDiagnostics,
-            ImmutableArray<DiagnosticAnalyzer> analyzers,
-            ImmutableArray<CodeFixProvider> fixers,
+        internal ProjectFixResult(
             ProjectFixKind kind,
+            IEnumerable<DiagnosticDescriptor> fixedDiagnostics = default,
+            IEnumerable<DiagnosticDescriptor> unfixedDiagnostics = default,
+            IEnumerable<DiagnosticDescriptor> unfixableDiagnostics = default,
+            IEnumerable<DiagnosticAnalyzer> analyzers = default,
+            IEnumerable<CodeFixProvider> fixers = default,
             int formattedDocumentCount = 0)
         {
-            FixedDiagnostics = fixedDiagnostics;
-            UnfixedDiagnostics = unfixedDiagnostics;
-            Analyzers = analyzers;
-            Fixers = fixers;
             Kind = kind;
+            FixedDiagnostics = fixedDiagnostics?.ToImmutableArray() ?? ImmutableArray<DiagnosticDescriptor>.Empty;
+            UnfixedDiagnostics = unfixedDiagnostics?.ToImmutableArray() ?? ImmutableArray<DiagnosticDescriptor>.Empty;
+            UnfixableDiagnostics = unfixableDiagnostics?.ToImmutableArray() ?? ImmutableArray<DiagnosticDescriptor>.Empty;
+            Analyzers = analyzers?.ToImmutableArray() ?? ImmutableArray<DiagnosticAnalyzer>.Empty;
+            Fixers = fixers?.ToImmutableArray() ?? ImmutableArray<CodeFixProvider>.Empty;
             FormattedDocumentCount = formattedDocumentCount;
         }
+
+        public ProjectFixKind Kind { get; }
 
         public ImmutableArray<DiagnosticDescriptor> FixedDiagnostics { get; }
 
         public ImmutableArray<DiagnosticDescriptor> UnfixedDiagnostics { get; }
+
+        public ImmutableArray<DiagnosticDescriptor> UnfixableDiagnostics { get; }
 
         public ImmutableArray<DiagnosticAnalyzer> Analyzers { get; }
 
         public ImmutableArray<CodeFixProvider> Fixers { get; }
 
         public int FormattedDocumentCount { get; }
-
-        public ProjectFixKind Kind { get; }
-
-        internal ProjectFixResult WithUnfixedDiagnostics(ImmutableArray<DiagnosticDescriptor> unfixedDiagnostics)
-        {
-            return new ProjectFixResult(FixedDiagnostics, unfixedDiagnostics, Analyzers, Fixers, Kind, FormattedDocumentCount);
-        }
-
-        internal ProjectFixResult WithFormattedDocumentCount(int formattedDocumentCount)
-        {
-            return new ProjectFixResult(FixedDiagnostics, UnfixedDiagnostics, Analyzers, Fixers, Kind, formattedDocumentCount);
-        }
     }
 }

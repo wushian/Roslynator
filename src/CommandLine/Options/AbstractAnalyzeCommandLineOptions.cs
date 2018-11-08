@@ -14,18 +14,22 @@ namespace Roslynator.CommandLine
         [Option(longName: "culture")]
         public string Culture { get; set; }
 
+        //TODO: IgnoreReferences, IgnoreAssemblyReferences, IgnoreAnalyzerAssemblyReferences
         [Option(longName: "ignore-analyzer-references")]
         public bool IgnoreAnalyzerReferences { get; set; }
 
         [Option(longName: "ignored-diagnostics")]
         public IEnumerable<string> IgnoredDiagnostics { get; set; }
 
+        //TODO: MinSeverity
         [Option(longName: "minimal-severity")]
         public string MinimalSeverity { get; set; }
 
+        //TODO: IncludedDiagnostics
         [Option(longName: "supported-diagnostics")]
         public IEnumerable<string> SupportedDiagnostics { get; set; }
 
+        //TODO: UseEmbeddedAnalyzers, UseAnalyzers
         [Option(longName: "use-roslynator-analyzers")]
         public bool UseRoslynatorAnalyzers { get; set; }
 

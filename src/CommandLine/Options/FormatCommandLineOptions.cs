@@ -31,15 +31,18 @@ namespace Roslynator.CommandLine
         [Option(longName: "format-accessor-list")]
         public bool FormatAccessorList { get; set; }
 
+        //TODO: FormatEmptyDeclarationBraces
         [Option(longName: "format-declaration-braces")]
         public bool FormatDeclarationBraces { get; set; }
 
+        //TODO: FormatEmptyBlockBraces
         [Option(longName: "format-empty-block")]
         public bool FormatEmptyBlock { get; set; }
 
         [Option(longName: "format-single-line-block")]
         public bool FormatSingleLineBlock { get; set; }
 
+        //TODO: generated-code
         [Option(longName: "include-generated-code")]
         public bool IncludeGeneratedCode { get; set; }
 

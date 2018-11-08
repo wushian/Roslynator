@@ -131,6 +131,19 @@ namespace Roslynator.CommandLine
                         WriteLine($"    {type.FullName}", Verbosity.Detailed);
                         WriteLine($"      Supported Languages: {string.Join(", ", attribute.Languages.Select(f => Utilities.GetShortLanguageName(f)).OrderBy(f => f))}", ConsoleColor.DarkGray, Verbosity.Detailed);
                         WriteLine($"      Fixable Diagnostics: {string.Join(", ", fixer.FixableDiagnosticIds.OrderBy(f => f))}", ConsoleColor.DarkGray, Verbosity.Detailed);
+
+                        Write("      FixAllProvider:      ", ConsoleColor.DarkGray, Verbosity.Detailed);
+
+                        FixAllProvider fixAllProvider = fixer.GetFixAllProvider();
+
+                        if (fixAllProvider != null)
+                        {
+                            WriteLine($"{fixAllProvider.GetType().FullName} ({string.Join(", ", fixAllProvider.GetSupportedFixAllScopes().Select(f => f.ToString()).OrderBy(f => f))})", ConsoleColor.DarkGray, Verbosity.Detailed);
+                        }
+                        else
+                        {
+                            WriteLine("-", ConsoleColor.DarkGray, Verbosity.Detailed);
+                        }
                     }
                 }
             }
