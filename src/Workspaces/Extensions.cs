@@ -3,9 +3,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Diagnostics.Telemetry;
 
@@ -13,6 +15,11 @@ namespace Roslynator
 {
     internal static class Extensions
     {
+        public static bool HasFixAllProvider(this CodeFixProvider codeFixProvider, FixAllScope fixAllScope)
+        {
+            return codeFixProvider.GetFixAllProvider()?.GetSupportedFixAllScopes().Contains(fixAllScope) == true;
+        }
+
         public static Task<ImmutableArray<Diagnostic>> GetAnalyzerDiagnosticsAsync(
             this Compilation compilation,
             ImmutableArray<DiagnosticAnalyzer> analyzers,

@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
@@ -362,6 +363,21 @@ namespace Roslynator
             WriteDiagnosticDescriptors(unfixableDiagnostics, "Unfixable diagnostics:", indent: indent, addEmptyLine: addEmptyLine, verbosity: verbosity);
             WriteDiagnosticDescriptors(unfixedDiagnostics, "Unfixed diagnostics:", indent: indent, addEmptyLine: addEmptyLine, verbosity: verbosity);
             WriteDiagnosticDescriptors(fixedDiagnostics, "Fixed diagnostics:", titleColor: fixedColor, indent: indent, addEmptyLine: addEmptyLine, verbosity: verbosity);
+        }
+
+        public static void WriteInfiniteFixLoop(ImmutableArray<Diagnostic> diagnostics, ImmutableArray<Diagnostic> previousDiagnostics, Project project, IFormatProvider formatProvider = null)
+        {
+            WriteLine("  Infinite loop detected: Reported diagnostics have been previously fixed", ConsoleColor.Yellow, Verbosity.Normal);
+
+            string baseDirectoryPath = Path.GetDirectoryName(project.FilePath);
+
+            WriteLine(Verbosity.Detailed);
+            WriteLine("  Diagnostics:", Verbosity.Detailed);
+            WriteDiagnostics(diagnostics, baseDirectoryPath: baseDirectoryPath, formatProvider: formatProvider, indentation: "    ", verbosity: Verbosity.Detailed);
+            WriteLine(Verbosity.Detailed);
+            WriteLine("  Previous diagnostics:", Verbosity.Detailed);
+            WriteDiagnostics(previousDiagnostics, baseDirectoryPath: baseDirectoryPath, formatProvider: formatProvider, indentation: "    ", verbosity: Verbosity.Detailed);
+            WriteLine(Verbosity.Detailed);
         }
 
         private static bool WriteDiagnosticDescriptors(

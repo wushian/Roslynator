@@ -5,13 +5,16 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: SupportedDiagnosticsWithoutFixAllProvider (DiagnosticsFixableOneByOne)
     [Verb("fix", HelpText = "Fixes diagnostics in the specified project or solution.")]
     public class FixCommandLineOptions : AbstractAnalyzeCommandLineOptions
     {
         //TODO: Batch
         [Option(longName: "batch-size", Default = -1)]
         public int BatchSize { get; set; }
+
+        //TODO: DiagnosticsFixableOneByOne, FixOneByOneDiagnostics
+        [Option(longName: "fixable-one-by-one-diagnostics")]
+        public IEnumerable<string> FixableOneByOneDiagnostics { get; set; }
 
         [Option(longName: "diagnostic-fixer-map")]
         public IEnumerable<string> DiagnosticFixerMap { get; set; }
