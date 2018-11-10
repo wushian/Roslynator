@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
@@ -171,6 +172,34 @@ namespace Roslynator
             Debug.Fail(languageName);
 
             return languageName;
+        }
+
+        public static IEnumerable<(string prefix, int count)> GetLetterPrefixes(IEnumerable<string> values)
+        {
+            foreach (IGrouping<string, string> grouping in values
+                .Select(id =>
+                {
+                    int length = 0;
+
+                    for (int i = 0; i < id.Length; i++)
+                    {
+                        if (char.IsLetter(id[i]))
+                        {
+                            length++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    return id.Substring(0, length);
+                })
+                .GroupBy(f => f)
+                .OrderBy(f => f.Key))
+            {
+                yield return (grouping.Key, grouping.Count());
+            }
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Roslynator
             Writer = writer;
         }
 
-        public Verbosity Verbosity { get; set; } = Verbosity.Detailed;
+        public Verbosity Verbosity { get; set; } = Verbosity.Diagnostic;
 
         public override Encoding Encoding => Writer.Encoding;
 

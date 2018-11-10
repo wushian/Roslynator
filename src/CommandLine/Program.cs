@@ -53,14 +53,14 @@ namespace Roslynator.CommandLine
 
                 parserResult.WithParsed<BaseCommandLineOptions>(options =>
                 {
-                    Verbosity consoleVerbosity = ConsoleOut.Verbosity;
+                    var defaultVerbosity = Verbosity.Normal;
 
                     if (options.Verbosity == null
-                        || TryParseVerbosity(options.Verbosity, out consoleVerbosity))
+                        || TryParseVerbosity(options.Verbosity, out defaultVerbosity))
                     {
-                        ConsoleOut.Verbosity = consoleVerbosity;
+                        ConsoleOut.Verbosity = defaultVerbosity;
 
-                        Verbosity fileLogVerbosity = consoleVerbosity;
+                        Verbosity fileLogVerbosity = defaultVerbosity;
 
                         if (options.FileLogVerbosity == null
                             || TryParseVerbosity(options.FileLogVerbosity, out fileLogVerbosity))

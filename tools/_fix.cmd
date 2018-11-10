@@ -4,7 +4,7 @@
 
 set _analyzersDir=..\src\Analyzers.CodeFixes\bin\Debug\netstandard1.3\
 
-"..\src\CommandLine\bin\Debug\net461\roslynator" fix "..\src\CommandLine.sln" ^
+"..\src\CommandLine\bin\Debug\net461\roslynator" fix "..\src\Roslynator.sln" ^
  --use-roslynator-analyzers ^
  --format ^
  --verbosity d ^

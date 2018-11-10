@@ -6,8 +6,10 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Roslynator.CodeFixes;
 
 namespace Roslynator
 {
@@ -304,7 +306,7 @@ namespace Roslynator
             string baseDirectoryPath = null,
             IFormatProvider formatProvider = null,
             string indentation = null,
-            Verbosity verbosity = Verbosity.None)
+            Verbosity verbosity = Verbosity.Diagnostic)
         {
             Write(indentation, verbosity);
 
@@ -325,7 +327,7 @@ namespace Roslynator
             if (!diagnostics.Any())
                 return;
 
-            if (!CheckVerbosity(verbosity))
+            if (!ShouldWrite(verbosity))
                 return;
 
             int count = 0;
@@ -360,12 +362,52 @@ namespace Roslynator
             bool addEmptyLine = false,
             Verbosity verbosity = Verbosity.None)
         {
-            WriteDiagnosticDescriptors(unfixableDiagnostics, "Unfixable diagnostics:", indent: indent, addEmptyLine: addEmptyLine, verbosity: verbosity);
-            WriteDiagnosticDescriptors(unfixedDiagnostics, "Unfixed diagnostics:", indent: indent, addEmptyLine: addEmptyLine, verbosity: verbosity);
-            WriteDiagnosticDescriptors(fixedDiagnostics, "Fixed diagnostics:", titleColor: fixedColor, indent: indent, addEmptyLine: addEmptyLine, verbosity: verbosity);
+            WriteDiagnosticDescriptors(unfixableDiagnostics, "Unfixable diagnostics:");
+            WriteDiagnosticDescriptors(unfixedDiagnostics, "Unfixed diagnostics:");
+            WriteDiagnosticDescriptors(fixedDiagnostics, "Fixed diagnostics:", titleColor: fixedColor);
+
+            bool WriteDiagnosticDescriptors(
+                IEnumerable<DiagnosticDescriptor> diagnosticDescriptors,
+                string title,
+                ConsoleColor? titleColor = null)
+            {
+                DiagnosticDescriptor[] uniqueDiagnosticDescriptors = diagnosticDescriptors
+                    .Distinct(DiagnosticDescriptorComparer.Id)
+                    .OrderBy(f => f.Id)
+                    .ToArray();
+
+                if (uniqueDiagnosticDescriptors.Length > 0)
+                {
+                    if (addEmptyLine)
+                        WriteLine(verbosity);
+
+                    Write(indent, verbosity);
+
+                    if (titleColor != null)
+                    {
+                        WriteLine(title, titleColor.Value, verbosity);
+                    }
+                    else
+                    {
+                        WriteLine(title, verbosity);
+                    }
+
+                    int maxIdLength = uniqueDiagnosticDescriptors.Max(f => f.Id.Length);
+
+                    foreach (DiagnosticDescriptor diagnosticDescriptor in uniqueDiagnosticDescriptors)
+                    {
+                        Write(indent, verbosity);
+                        WriteLine($"  {diagnosticDescriptor.Id.PadRight(maxIdLength)} {diagnosticDescriptor.Title}", verbosity);
+                    }
+
+                    return true;
+                }
+
+                return false;
+            }
         }
 
-        public static void WriteInfiniteFixLoop(ImmutableArray<Diagnostic> diagnostics, ImmutableArray<Diagnostic> previousDiagnostics, Project project, IFormatProvider formatProvider = null)
+        public static void WriteInfiniteLoopSummary(ImmutableArray<Diagnostic> diagnostics, ImmutableArray<Diagnostic> previousDiagnostics, Project project, IFormatProvider formatProvider = null)
         {
             WriteLine("  Infinite loop detected: Reported diagnostics have been previously fixed", ConsoleColor.Yellow, Verbosity.Normal);
 
@@ -380,49 +422,6 @@ namespace Roslynator
             WriteLine(Verbosity.Detailed);
         }
 
-        private static bool WriteDiagnosticDescriptors(
-            IEnumerable<DiagnosticDescriptor> diagnosticDescriptors,
-            string title,
-            ConsoleColor? titleColor = null,
-            string indent = null,
-            bool addEmptyLine = false,
-            Verbosity verbosity = Verbosity.None)
-        {
-            DiagnosticDescriptor[] fixedDiagnostics = diagnosticDescriptors
-                .Distinct(DiagnosticDescriptorComparer.Id)
-                .OrderBy(f => f.Id)
-                .ToArray();
-
-            if (fixedDiagnostics.Length > 0)
-            {
-                if (addEmptyLine)
-                    WriteLine(verbosity);
-
-                Write(indent, verbosity);
-
-                if (titleColor != null)
-                {
-                    WriteLine(title, titleColor.Value, verbosity);
-                }
-                else
-                {
-                    WriteLine(title, verbosity);
-                }
-
-                int maxIdLength = fixedDiagnostics.Max(f => f.Id.Length);
-
-                foreach (DiagnosticDescriptor diagnosticDescriptor in fixedDiagnostics)
-                {
-                    Write(indent, verbosity);
-                    WriteLine($"  {diagnosticDescriptor.Id.PadRight(maxIdLength)} {diagnosticDescriptor.Title}", verbosity);
-                }
-
-                return true;
-            }
-
-            return false;
-        }
-
         public static void WriteFormattedDocuments(ImmutableArray<DocumentId> documentIds, Project project, string solutionDirectory)
         {
             foreach (DocumentId documentId in documentIds)
@@ -432,15 +431,15 @@ namespace Roslynator
             }
         }
 
-        public static void WriteAnalyzers(ImmutableArray<DiagnosticAnalyzer> analyzers, ConsoleColor color, Verbosity verbosity)
+        public static void WriteUsedAnalyzers(ImmutableArray<DiagnosticAnalyzer> analyzers, ConsoleColor color, Verbosity verbosity)
         {
-            if (CheckVerbosity(verbosity))
+            if (ShouldWrite(verbosity))
             {
                 WriteLine($"  Use {analyzers.Length} {((analyzers.Length == 1) ? "analyzer" : "analyzers")}", color, verbosity);
 
-                if (CheckVerbosity(verbosity))
+                if (ShouldWrite(verbosity))
                 {
-                    foreach ((string prefix, int count) in GetDiagnosticIdPrefixes(analyzers.SelectMany(f => f.SupportedDiagnostics).Select(f => f.Id).Distinct()))
+                    foreach ((string prefix, int count) in Utilities.GetLetterPrefixes(analyzers.SelectMany(f => f.SupportedDiagnostics).Select(f => f.Id)))
                     {
                         WriteLine($"    {count} supported {((count == 1) ? "diagnostic" : "diagnostics")} with prefix '{prefix}'", color, verbosity);
                     }
@@ -448,15 +447,15 @@ namespace Roslynator
             }
         }
 
-        public static void WriteFixers(ImmutableArray<CodeFixProvider> fixers, ConsoleColor color, Verbosity verbosity)
+        public static void WriteUsedFixers(ImmutableArray<CodeFixProvider> fixers, ConsoleColor color, Verbosity verbosity)
         {
-            if (CheckVerbosity(verbosity))
+            if (ShouldWrite(verbosity))
             {
                 WriteLine($"  Use {fixers.Length} {((fixers.Length == 1) ? "fixer" : "fixers")}", color, verbosity);
 
-                if (CheckVerbosity(verbosity))
+                if (ShouldWrite(verbosity))
                 {
-                    foreach ((string prefix, int count) in GetDiagnosticIdPrefixes(fixers.SelectMany(f => f.FixableDiagnosticIds).Distinct()))
+                    foreach ((string prefix, int count) in Utilities.GetLetterPrefixes(fixers.SelectMany(f => f.FixableDiagnosticIds)))
                     {
                         WriteLine($"    {count} fixable {((count == 1) ? "diagnostic" : "diagnostics")} with prefix '{prefix}'", color, verbosity);
                     }
@@ -464,35 +463,28 @@ namespace Roslynator
             }
         }
 
-        private static IEnumerable<(string, int)> GetDiagnosticIdPrefixes(IEnumerable<string> ids)
+        public static void WriteMultipleFixersSummary(string diagnosticId, CodeFixProvider fixer1, CodeFixProvider fixer2)
         {
-            foreach (IGrouping<string, string> grouping in ids
-                .Select(id =>
-                {
-                    int length = 0;
-
-                    for (int i = 0; i < id.Length; i++)
-                    {
-                        if (char.IsLetter(id[i]))
-                        {
-                            length++;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-
-                    return id.Substring(0, length);
-                })
-                .GroupBy(f => f)
-                .OrderBy(f => f.Key))
-            {
-                yield return (grouping.Key, grouping.Count());
-            }
+            WriteLine($"  Diagnostic '{diagnosticId}' is fixable with multiple fixers", ConsoleColor.Yellow, Verbosity.Diagnostic);
+            WriteLine($"    Fixer 1: '{fixer1.GetType().FullName}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
+            WriteLine($"    Fixer 2: '{fixer2.GetType().FullName}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
         }
 
-        private static bool CheckVerbosity(Verbosity verbosity)
+        public static void WriteMultipleActionsSummary(in MultipleFixesInfo info)
+        {
+            WriteLine($"  '{info.Fixer.GetType().FullName}' registered multiple actions to fix diagnostic '{info.DiagnosticId}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
+            WriteLine($"    EquivalenceKey 1: '{info.EquivalenceKey1}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
+            WriteLine($"    EquivalenceKey 2: '{info.EquivalenceKey2}'", ConsoleColor.Yellow, Verbosity.Diagnostic);
+        }
+
+        public static void WriteMultipleOperationsSummary(CodeAction fix)
+        {
+            WriteLine("  Code action has multiple operations", ConsoleColor.Yellow, Verbosity.Diagnostic);
+            WriteLine($"    Title:           {fix.Title}", ConsoleColor.Yellow, Verbosity.Diagnostic);
+            WriteLine($"    EquivalenceKey: {fix.EquivalenceKey}", ConsoleColor.Yellow, Verbosity.Diagnostic);
+        }
+
+        private static bool ShouldWrite(Verbosity verbosity)
         {
             return verbosity <= ConsoleOut.Verbosity
                 || (Out != null && verbosity <= Out.Verbosity);
