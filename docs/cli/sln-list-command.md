@@ -25,7 +25,7 @@ The solution to open.
 
 ### Optional Options
 
-**`--ignored-projects`**
+**`--ignored-projects`** <PROJECT_NAME>
 
 Defines project names that should not be fixed.
 
@@ -33,13 +33,13 @@ Defines project names that should not be fixed.
 
 Defines project language.
 
-**`--msbuild-path`**
+**`--msbuild-path`** <MSBUILD_PATH>
 
 Defines a path to MSBuild.
 
 *Note: First found instance of MSBuild will be used if the path to MSBuild is not specified.*
 
-**`--projects`**
+**`--projects`** <PROJECT_NAME>
 
 Defines projects that should be analyzed.
 

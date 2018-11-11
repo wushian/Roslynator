@@ -8,13 +8,11 @@ namespace Roslynator.CommandLine
     [Verb("fix", HelpText = "Fixes diagnostics in the specified project or solution.")]
     public class FixCommandLineOptions : AbstractAnalyzeCommandLineOptions
     {
-        //TODO: Batch
         [Option(longName: "batch-size", Default = -1)]
         public int BatchSize { get; set; }
 
-        //TODO: DiagnosticsFixableOneByOne, FixOneByOneDiagnostics
-        [Option(longName: "fixable-one-by-one-diagnostics")]
-        public IEnumerable<string> FixableOneByOneDiagnostics { get; set; }
+        [Option(longName: "diagnostics-fixable-one-by-one")]
+        public IEnumerable<string> DiagnosticsFixableOneByOne { get; set; }
 
         [Option(longName: "diagnostic-fixer-map")]
         public IEnumerable<string> DiagnosticFixerMap { get; set; }
@@ -37,7 +35,6 @@ namespace Roslynator.CommandLine
         [Option(longName: "max-iterations", Default = -1)]
         public int MaxIterations { get; set; }
 
-        //TODO: UseCodeFixes, UseEmbeddedCodeFixes
         [Option(longName: "use-roslynator-code-fixes")]
         public bool UseRoslynatorCodeFixes { get; set; }
     }

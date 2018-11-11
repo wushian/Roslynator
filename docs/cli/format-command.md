@@ -42,7 +42,7 @@ The project or solution to fix.
 
 ### Optional Options
 
-**`--culture`**
+**`--culture`** <CULTURE_ID>
 
 Defines culture that should be used to display diagnostic message.
 
@@ -104,7 +104,7 @@ Indicates whether a single-line block should be formatted.
 
 Indicates whether generated code should be formatted.
 
-**`--ignored-projects`**
+**`--ignored-projects`** <PROJECT_NAME>
 
 Defines project names that should not be formatted.
 
@@ -112,7 +112,7 @@ Defines project names that should not be formatted.
 
 Defines project language.
 
-**`--msbuild-path`**
+**`--msbuild-path`** <MSBUILD_PATH>
 
 Defines a path to MSBuild.
 
@@ -154,7 +154,7 @@ Indicates whether a statement should be preceded with new line.
 
 *Note: This option is available only for C#. For details see [RCS1026](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1026.md).*
 
-**`--projects`**
+**`--projects`** <PROJECT_NAME>
 
 Defines projects that should be formatted.
 

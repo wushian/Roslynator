@@ -37,14 +37,14 @@ The project or solution to analyze.
 
 ### Optional Options
 
-**`a-|--analyzer-assemblies`**
+**`a-|--analyzer-assemblies`** <ASSEMBLY_PATH> <DIRECTORY_PATH>
 
 Defines one or more paths to:
 
 * analyzer assembly
 * directory that should be searched recursively for analyzer assemblies
 
-**`--culture`**
+**`--culture`** <CULTURE_ID>
 
 Defines culture that should be used to display diagnostic message.
 
@@ -60,11 +60,11 @@ Indicates whether Roslynator should ignore analyzers that are referenced in proj
 
 Indicates whether to display compiler diagnostics.
 
-**`--ignored-diagnostics`**
+**`--ignored-diagnostics`** <DIAGNOSTIC_ID>
 
-Defines diagnostic identifiers that should not be reported.
+Defines diagnostics that should not be reported.
 
-**`--ignored-projects`**
+**`--ignored-projects`** <PROJECT_NAME>
 
 Defines projects that should not be analyzed.
 
@@ -76,13 +76,13 @@ Defines project language.
 
 Defines minimal severity for a diagnostic. Default value is `info`.
 
-**`--msbuild-path`**
+**`--msbuild-path`** <MSBUILD_PATH>
 
 Defines a path to MSBuild.
 
 *Note: First found instance of MSBuild will be used if the path to MSBuild is not specified.*
 
-**`--projects`**
+**`--projects`** <PROJECT_NAME>
 
 Defines projects that should be analyzed.
 
@@ -102,9 +102,9 @@ Indicates whether diagnostics whose ID ends with 'FadedToken' or 'FadeOut' shoul
 
 Indicates whether suppressed diagnostics should be reported.
 
-**`--supported-diagnostics`**
+**`--supported-diagnostics`** <DIAGNOSTIC_ID>
 
-Defines diagnostic identifiers that should be reported.
+Defines diagnostics that should be reported.
 
 **`--use-roslynator-analyzers`**
 
@@ -114,7 +114,7 @@ Indicates whether code analysis should use analyzers from nuget package [Roslyna
 
 Defines the amount of information to display in the log.
 
-**`--xml-file-log`**
+**`--xml-file-log`** <FILE_PATH>
 
 Defines path to file that will store reported diagnostics in XML format.
 

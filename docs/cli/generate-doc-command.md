@@ -45,19 +45,19 @@ roslynator generate-doc
 
 ### Required Options
 
-**`-a|--assemblies`** `<ASSEMBLIES-TO-DOCUMENT>`
+**`-a|--assemblies`** `<ASSEMBLIES_TO_DOCUMENT>`
 
 Defines one or more assemblies that should be used as a source for the documentation.
 
-**`-h|--heading`** `<ROOT-FILE-HEADING>`
+**`-h|--heading`** `<ROOT_FILE_HEADING>`
 
 Defines a heading of the root documentation file.
 
-**`-o|--output`** `<OUTPUT-DIRECTORY>`
+**`-o|--output`** `<OUTPUT_DIRECTORY>`
 
 Defines a path for the output directory.
 
-**`-r|--references`** `<ASSEMBLY-REFERENCE> <ASSEMBLY-REFERENCES-FILE>`
+**`-r|--references`** `<ASSEMBLY_REFERENCE> <ASSEMBLY_REFERENCES_FILE>`
 
 Defines one or more values where each value can be:
 
@@ -66,7 +66,7 @@ Defines one or more values where each value can be:
 
 ### Optional Options
 
-**`[--additional-xml-documentation]`** `<XML-DOCUMENTATION-FILES>`
+**`[--additional-xml-documentation]`** `<XML_DOCUMENTATION_FILES>`
 
 Defines one or more xml documentation files that should be included. These files can contain a documentation for namespaces, for instance.
 
@@ -78,7 +78,7 @@ Defines a depth of a documentation. Default value is `member`.
 
 Defines parts of a member documentation that should be excluded.
 
-**`[--ignored-names]`** `<FULLY-QUALIFIED-METADATA-NAMES-TO-IGNORE>`
+**`[--ignored-names]`** `<FULLY_QUALIFIED_METADATA_NAME>`
 
 Defines a list of metadata names that should be excluded from a documentation. Namespace of type names can be specified.
 
@@ -86,7 +86,7 @@ Defines a list of metadata names that should be excluded from a documentation. N
 
 Defines parts of a namespace documentation that should be excluded.
 
-**`[--ignored-root-parts]`** `{content | namespaces | classes | static-classes | structs | interfaces | enums | delegates | other}`
+**`[--ignored-root-parts]`** `{content|namespaces|classes|static-classes|structs|interfaces|enums|delegates|other}`
 
 Defines parts of a root documentation that should be excluded.
 
@@ -94,7 +94,7 @@ Defines parts of a root documentation that should be excluded.
 
 Defines parts of a type documentation that should be excluded.
 
-**`[--inheritance-style]`** `{horizontal | vertical}`
+**`[--inheritance-style]`** `{horizontal|vertical}`
 
 Defines a style of a type inheritance. Default value is `horizontal`.
 
@@ -110,7 +110,7 @@ Indicates whether interface `System.Collections.IEnumerable` should be included 
 
 Indicates whether inherited interface members should be displayed in a list of members.
 
-**`[--max-derived-types]`**
+**`[--max-derived-types]`** <MAX_DERIVED_TYPES>
 
 Defines maximum number derived types that should be displayed. Default value is `5`.
 
@@ -142,7 +142,7 @@ Indicates whether symbols contained in `System` namespace should be ordered as a
 
 Indicates whether attribute arguments should be omitted when displaying an attribute.
 
-**`[--omit-containing-namespace-parts]`** `{root | containing-type | return-type | base-type | attribute | derived-type | implemented-interface | implemented-member | exception | see-also | all}`
+**`[--omit-containing-namespace-parts]`** `{root|containing-type|return-type|base-type|attribute|derived-type|implemented-interface|implemented-member|exception|see-also|all}`
 
 Defines parts that that should by displayed without containing namespace.
 
@@ -168,7 +168,7 @@ Indicates whether an interface member that is being implemented should be omitte
 
 Indicates whether an overridden member should be omitted.
 
-**`[--preferred-culture]`** <CULTURE-NAME>
+**`[--preferred-culture]`** <CULTURE_ID>
 
 Defines culture that should be used when searching for xml documentation files.
 

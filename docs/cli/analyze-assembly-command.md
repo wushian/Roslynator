@@ -24,7 +24,7 @@ The path to file or directory to analyze.
 
 ### Optional Options
 
-**`--additional-paths`**
+**`--additional-paths`** <ASSEMBLY_PATH> <DIRECTORY_PATH>
 
 Defines additional paths to search.
 

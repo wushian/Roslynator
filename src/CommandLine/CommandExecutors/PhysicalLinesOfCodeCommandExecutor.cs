@@ -39,26 +39,7 @@ namespace Roslynator.CommandLine
 
                 if (counter != null)
                 {
-                    WriteLine($"Count lines for '{project.Name}'", ConsoleColor.Cyan, Verbosity.Minimal);
-
-                    Stopwatch stopwatch = Stopwatch.StartNew();
-
-                    CodeMetrics metrics = await counter.CountLinesAsync(project, codeMetricsOptions, cancellationToken);
-
-                    stopwatch.Stop();
-
-                    WriteLine(Verbosity.Minimal);
-
-                    WriteMetrics(
-                        metrics.CodeLineCount,
-                        metrics.BlockBoundaryLineCount,
-                        metrics.WhitespaceLineCount,
-                        metrics.CommentLineCount,
-                        metrics.PreprocessorDirectiveLineCount,
-                        metrics.TotalLineCount);
-
-                    WriteLine(Verbosity.Minimal);
-                    WriteLine($"Done counting lines for '{project.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Normal);
+                    await CountLinesAsync(project, counter, codeMetricsOptions, cancellationToken);
                 }
                 else
                 {
@@ -67,41 +48,68 @@ namespace Roslynator.CommandLine
             }
             else
             {
-                Solution solution = projectOrSolution.AsSolution();
-
-                WriteLine($"Count lines for solution '{solution.FilePath}'", ConsoleColor.Cyan, Verbosity.Minimal);
-
-                IEnumerable<Project> projects = FilterProjects(solution, Options);
-
-                Stopwatch stopwatch = Stopwatch.StartNew();
-
-                ImmutableDictionary<ProjectId, CodeMetrics> projectsMetrics = CodeMetricsCounter.CountPhysicalLinesInParallel(projects, codeMetricsOptions, cancellationToken);
-
-                stopwatch.Stop();
-
-                if (projectsMetrics.Count > 0)
-                {
-                    WriteLine(Verbosity.Normal);
-                    WriteLine("Lines of code by project:", Verbosity.Normal);
-
-                    WriteLinesOfCode(solution, projectsMetrics);
-                }
-
-                WriteLine(Verbosity.Minimal);
-
-                WriteMetrics(
-                    projectsMetrics.Sum(f => f.Value.CodeLineCount),
-                    projectsMetrics.Sum(f => f.Value.BlockBoundaryLineCount),
-                    projectsMetrics.Sum(f => f.Value.WhitespaceLineCount),
-                    projectsMetrics.Sum(f => f.Value.CommentLineCount),
-                    projectsMetrics.Sum(f => f.Value.PreprocessorDirectiveLineCount),
-                    projectsMetrics.Sum(f => f.Value.TotalLineCount));
-
-                WriteLine(Verbosity.Minimal);
-                WriteLine($"Done counting lines for solution '{solution.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Minimal);
+                CountLines(projectOrSolution.AsSolution(), codeMetricsOptions, cancellationToken);
             }
 
             return CommandResult.Success;
+        }
+
+        private async Task CountLinesAsync(Project project, CodeMetricsCounter counter, CodeMetricsOptions options, CancellationToken cancellationToken)
+        {
+            WriteLine($"Count lines for '{project.Name}'", ConsoleColor.Cyan, Verbosity.Minimal);
+
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            CodeMetrics metrics = await counter.CountLinesAsync(project, options, cancellationToken);
+
+            stopwatch.Stop();
+
+            WriteLine(Verbosity.Minimal);
+
+            WriteMetrics(
+                metrics.CodeLineCount,
+                metrics.BlockBoundaryLineCount,
+                metrics.WhitespaceLineCount,
+                metrics.CommentLineCount,
+                metrics.PreprocessorDirectiveLineCount,
+                metrics.TotalLineCount);
+
+            WriteLine(Verbosity.Minimal);
+            WriteLine($"Done counting lines for '{project.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Normal);
+        }
+
+        private void CountLines(Solution solution, CodeMetricsOptions options, CancellationToken cancellationToken)
+        {
+            WriteLine($"Count lines for solution '{solution.FilePath}'", ConsoleColor.Cyan, Verbosity.Minimal);
+
+            IEnumerable<Project> projects = FilterProjects(solution, Options);
+
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            ImmutableDictionary<ProjectId, CodeMetrics> projectsMetrics = CodeMetricsCounter.CountPhysicalLinesInParallel(projects, options, cancellationToken);
+
+            stopwatch.Stop();
+
+            if (projectsMetrics.Count > 0)
+            {
+                WriteLine(Verbosity.Normal);
+                WriteLine("Lines of code by project:", Verbosity.Normal);
+
+                WriteLinesOfCode(solution, projectsMetrics);
+            }
+
+            WriteLine(Verbosity.Minimal);
+
+            WriteMetrics(
+                projectsMetrics.Sum(f => f.Value.CodeLineCount),
+                projectsMetrics.Sum(f => f.Value.BlockBoundaryLineCount),
+                projectsMetrics.Sum(f => f.Value.WhitespaceLineCount),
+                projectsMetrics.Sum(f => f.Value.CommentLineCount),
+                projectsMetrics.Sum(f => f.Value.PreprocessorDirectiveLineCount),
+                projectsMetrics.Sum(f => f.Value.TotalLineCount));
+
+            WriteLine(Verbosity.Minimal);
+            WriteLine($"Done counting lines for solution '{solution.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Minimal);
         }
 
         private void WriteMetrics(int totalCodeLineCount, int totalBlockBoundaryLineCount, int totalWhitespaceLineCount, int totalCommentLineCount, int totalPreprocessorDirectiveLineCount, int totalLineCount)

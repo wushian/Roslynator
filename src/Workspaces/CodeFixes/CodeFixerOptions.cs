@@ -22,7 +22,7 @@ namespace Roslynator.CodeFixes
             IEnumerable<string> ignoredCompilerDiagnosticIds = null,
             IEnumerable<string> projectNames = null,
             IEnumerable<string> ignoredProjectNames = null,
-            IEnumerable<string> fixableOneByOneDiagnosticIds = null,
+            IEnumerable<string> diagnosticIdsFixableOneByOne = null,
             IEnumerable<KeyValuePair<string, string>> diagnosticFixMap = null,
             IEnumerable<KeyValuePair<string, string>> diagnosticFixerMap = null,
             string fileBanner = null,
@@ -33,7 +33,7 @@ namespace Roslynator.CodeFixes
         {
             IgnoreCompilerErrors = ignoreCompilerErrors;
             IgnoredCompilerDiagnosticIds = ignoredCompilerDiagnosticIds?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
-            FixableOneByOneDiagnosticIds = fixableOneByOneDiagnosticIds?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
+            DiagnosticIdsFixableOneByOne = diagnosticIdsFixableOneByOne?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
             DiagnosticFixMap = diagnosticFixMap?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty;
             DiagnosticFixerMap = diagnosticFixerMap?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty;
             FileBanner = fileBanner;
@@ -85,7 +85,7 @@ namespace Roslynator.CodeFixes
 
         public bool Format { get; }
 
-        public ImmutableHashSet<string> FixableOneByOneDiagnosticIds { get; }
+        public ImmutableHashSet<string> DiagnosticIdsFixableOneByOne { get; }
 
         public ImmutableDictionary<string, string> DiagnosticFixMap { get; }
 

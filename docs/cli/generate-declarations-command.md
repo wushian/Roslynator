@@ -34,15 +34,15 @@ roslynator generate-declarations
 
 ### Required Options
 
-**`-a|--assemblies`** `<ASSEMBLIES-TO-DOCUMENT>`
+**`-a|--assemblies`** `<ASSEMBLIES_TO_DOCUMENT>`
 
 Defines one or more assemblies that should be used as a source for the documentation.
 
-**`-o|--output`** `<OUTPUT-DIRECTORY>`
+**`-o|--output`** `<OUTPUT_DIRECTORY>`
 
 Defines a path for the output directory.
 
-**`-r|--references`** `<ASSEMBLY-REFERENCE> <ASSEMBLY-REFERENCES-FILE>`
+**`-r|--references`** `<ASSEMBLY_REFERENCE> <ASSEMBLY_REFERENCES_FILE>`
 
 Defines one or more values where each value can be:
 
@@ -75,11 +75,11 @@ Indicates whether parameters should be formatted on a multiple lines.
 
 Indicates whether type names should be fully qualified.
 
-**`[--ignored-names]`** `<FULLY-QUALIFIED-METADATA-NAMES-TO-IGNORE>`
+**`[--ignored-names]`** `<FULLY_QUALIFIED_METADATA_NAME>`
 
 Defines a list of metadata names that should be excluded from a documentation. Namespace of type names can be specified.
 
-**`[--ignored-parts]`** `{auto-generated-comment | assembly-attributes}`
+**`[--ignored-parts]`** `{auto-generated-comment|assembly-attributes}`
 
 Defines parts of a declaration list that should be excluded.
 
@@ -87,7 +87,7 @@ Defines parts of a declaration list that should be excluded.
 
 Indicates whether interface `System.Collections.IEnumerable` should be included in a documentation if a type also implements interface `System.Collections.Generic.IEnumerable<T>`.
 
-**`[--indent-chars]`** `<INDENT-CHARS>`
+**`[--indent-chars]`** `<INDENT_CHARS>`
 
 Defines characters that should be used for indentation. Default value is four spaces.
 

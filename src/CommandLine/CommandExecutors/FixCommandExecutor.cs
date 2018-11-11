@@ -87,7 +87,7 @@ namespace Roslynator.CommandLine
                 ignoredCompilerDiagnosticIds: Options.IgnoredCompilerDiagnostics,
                 projectNames: Options.Projects,
                 ignoredProjectNames: Options.IgnoredProjects,
-                fixableOneByOneDiagnosticIds: Options.FixableOneByOneDiagnostics,
+                diagnosticIdsFixableOneByOne: Options.DiagnosticsFixableOneByOne,
                 diagnosticFixMap: DiagnosticFixMap,
                 diagnosticFixerMap: DiagnosticFixerMap,
                 fileBanner: Options.FileBanner,

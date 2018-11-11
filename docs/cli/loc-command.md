@@ -38,7 +38,7 @@ In C# block boundary is opening brace or closing brace.
 
 In Visual Basic block boundary is end-block-statement such as `End Class`.
 
-**`--ignored-projects`**
+**`--ignored-projects`** <PROJECT_NAME>
 
 Defines project names that should not be fixed.
 
@@ -62,13 +62,13 @@ Indicates whether white-space line should be counted.
 
 Defines project language.
 
-**`--msbuild-path`**
+**`--msbuild-path`** <MSBUILD_PATH>
 
 Defines a path to MSBuild.
 
 *Note: First found instance of MSBuild will be used if the path to MSBuild is not specified.*
 
-**`--projects`**
+**`--projects`** <PROJECT_NAME>
 
 Defines projects that should be analyzed.
 

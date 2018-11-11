@@ -202,11 +202,11 @@ namespace Roslynator.CodeFixes
                     if (f.HasFixAllProvider(FixAllScope.Project))
                         return true;
 
-                    if (Options.FixableOneByOneDiagnosticIds.Count > 0)
+                    if (Options.DiagnosticIdsFixableOneByOne.Count > 0)
                     {
                         foreach (string diagnosticId in f.FixableDiagnosticIds)
                         {
-                            if (Options.FixableOneByOneDiagnosticIds.Contains(diagnosticId))
+                            if (Options.DiagnosticIdsFixableOneByOne.Contains(diagnosticId))
                                 return true;
                         }
                     }
@@ -306,7 +306,6 @@ namespace Roslynator.CodeFixes
                     .GroupBy(f => f.Descriptor, DiagnosticDescriptorComparer.Id)
                     .ToDictionary(f => f.Key, f => f.Count());
 
-                //TODO: sort diagnostic ids?
                 foreach (DiagnosticDescriptor diagnosticDescriptor in diagnosticCountByDescriptor
                     .Select(f => f.Key)
                     .OrderBy(f => f, new DiagnosticDescriptorFixComparer(diagnosticCountByDescriptor, fixersById)))
@@ -503,7 +502,7 @@ namespace Roslynator.CodeFixes
 
             if (fixAllProvider == null)
             {
-                if (Options.FixableOneByOneDiagnosticIds.Contains(descriptor.Id))
+                if (Options.DiagnosticIdsFixableOneByOne.Contains(descriptor.Id))
                     return await GetFixAsync(diagnostics[0], fixer, project, cancellationToken).ConfigureAwait(false);
 
                 WriteLine($"  '{fixer.GetType().FullName}' does not have FixAllProvider", ConsoleColor.Yellow, Verbosity.Diagnostic);

@@ -10,6 +10,7 @@ roslynator fix <PROJECT|SOLUTION>
 [-a|--analyzer-assemblies]
 [--batch-size]
 [--culture]
+[--diagnostics-fixable-one-by-one]
 [--format]
 [--ignore-analyzer-references]
 [--ignore-compiler-errors]
@@ -38,20 +39,24 @@ The project or solution to fix.
 
 ### Optional Options
 
-**`a-|--analyzer-assemblies`**
+**`a-|--analyzer-assemblies`** <ASSEMBLY_PATH> <DIRECTORY_PATH>
 
 Defines one or more paths to:
 
 * analyzer assembly
 * directory that should be searched recursively for analyzer assemblies
 
-**`--batch-size`**
+**`--batch-size`** <BATCH_SIZE>
 
 Defines maximum number of diagnostics that can be fixed in one batch.
 
-**`--culture`**
+**`--culture`** <CULTURE_ID>
 
 Defines culture that should be used to display diagnostic message.
+
+**`--diagnostics-fixable-one-by-one`** <DIAGNOSTIC_ID>
+
+Defines diagnostics that can be fixed even if there is no (FixAllProvider)[https://github.com/dotnet/roslyn/blob/master/docs/analyzers/FixAllProvider.md] for them.
 
 **`--format`**
 
@@ -65,15 +70,15 @@ Indicates whether Roslynator should ignore analyzers that are referenced in proj
 
 Indicates whether fixing should continue even if compilation has errors.
 
-**`--ignored-compiler-diagnostics`**
+**`--ignored-compiler-diagnostics`** <DIAGNOSTIC_ID>
 
-Defines compiler diagnostic identifiers that should be ignored even if `--ignore-compiler-errors` is not set.
+Defines compiler diagnostics that should be ignored even if `--ignore-compiler-errors` is not set.
 
-**`--ignored-diagnostics`**
+**`--ignored-diagnostics`** <DIAGNOSTIC_ID>
 
-Defines diagnostic identifiers that should not be fixed.
+Defines diagnostics that should not be fixed.
 
-**`--ignored-projects`**
+**`--ignored-projects`** <PROJECT_NAME>
 
 Defines projects that should not be fixed.
 
@@ -81,7 +86,7 @@ Defines projects that should not be fixed.
 
 Defines project language.
 
-**`--max-iterations`**
+**`--max-iterations`** <MAX_ITERATIONS>
 
 Defines maximum numbers of fixing iterations.
 
@@ -89,13 +94,13 @@ Defines maximum numbers of fixing iterations.
 
 Defines minimal severity for a diagnostic. Default value is `info`.
 
-**`--msbuild-path`**
+**`--msbuild-path`** <MSBUILD_PATH>
 
 Defines a path to MSBuild.
 
 *Note: First found instance of MSBuild will be used if the path to MSBuild is not specified.*
 
-**`--projects`**
+**`--projects`** <PROJECT_NAME>
 
 Defines projects that should be analyzed.
 

@@ -7,6 +7,7 @@ namespace Roslynator.CommandLine
     [Verb("loc", HelpText = "Counts physical lines of code in the specified project or solution.")]
     public class PhysicalLinesOfCodeCommandLineOptions : AbstractLinesOfCodeCommandLineOptions
     {
+        //TODO: IgnoreBlockBoundary
         [Option(longName: "ignore-block-boundary")]
         public bool IgnoreBlockBoundary { get; set; }
 

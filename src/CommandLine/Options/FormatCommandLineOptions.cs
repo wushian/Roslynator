@@ -42,7 +42,6 @@ namespace Roslynator.CommandLine
         [Option(longName: "format-single-line-block")]
         public bool FormatSingleLineBlock { get; set; }
 
-        //TODO: generated-code
         [Option(longName: "include-generated-code")]
         public bool IncludeGeneratedCode { get; set; }
 
