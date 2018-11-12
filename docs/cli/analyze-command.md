@@ -19,6 +19,7 @@ roslynator analyze <PROJECT|SOLUTION>
 [--file-log-verbosity]
 [--minimal-severity]
 [--msbuild-path]
+[--output]
 [--projects]
 [-p|--properties]
 [--report-fade-diagnostics]
@@ -26,7 +27,6 @@ roslynator analyze <PROJECT|SOLUTION>
 [--supported-diagnostics]
 [--use-roslynator-analyzers]
 [-v|--verbosity]
-[--xml-file-log]
 ```
 
 ## Arguments
@@ -82,6 +82,10 @@ Defines a path to MSBuild.
 
 *Note: First found instance of MSBuild will be used if the path to MSBuild is not specified.*
 
+**`--output`** <OUTPUT_FILE>
+
+Defines path to file that will store reported diagnostics in XML format.
+
 **`--projects`** <PROJECT_NAME>
 
 Defines projects that should be analyzed.
@@ -113,10 +117,6 @@ Indicates whether code analysis should use analyzers from nuget package [Roslyna
 **`-v|--verbosity`** `{q[uiet]|m[inimal]|n[ormal]|d[etailed]|diag[nostic]}`
 
 Defines the amount of information to display in the log.
-
-**`--xml-file-log`** <FILE_PATH>
-
-Defines path to file that will store reported diagnostics in XML format.
 
 ## See Also
 

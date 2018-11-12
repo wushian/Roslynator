@@ -76,10 +76,10 @@ namespace Roslynator.CommandLine
 
                 ProjectAnalysisResult result = await codeAnalyzer.AnalyzeProjectAsync(project, cancellationToken);
 
-                if (Options.XmlFileLog != null
+                if (Options.Output != null
                     && result.Diagnostics.Any())
                 {
-                    DiagnosticXmlSerializer.Serialize(result, project, Options.XmlFileLog, culture);
+                    DiagnosticXmlSerializer.Serialize(result, project, Options.Output, culture);
                 }
             }
             else
@@ -88,10 +88,10 @@ namespace Roslynator.CommandLine
 
                 ImmutableArray<ProjectAnalysisResult> results = await codeAnalyzer.AnalyzeSolutionAsync(solution, cancellationToken);
 
-                if (Options.XmlFileLog != null
+                if (Options.Output != null
                     && results.Any(f => f.Diagnostics.Any()))
                 {
-                    DiagnosticXmlSerializer.Serialize(results, solution, Options.XmlFileLog, culture);
+                    DiagnosticXmlSerializer.Serialize(results, solution, Options.Output, culture);
                 }
             }
 

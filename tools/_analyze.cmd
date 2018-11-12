@@ -13,6 +13,6 @@ set _analyzersDir=..\src\Analyzers.CodeFixes\bin\Debug\netstandard1.3\
  --verbosity n ^
  --file-log "roslynator.log" ^
  --file-log-verbosity diag ^
- --xml-file-log "diagnostics.xml"
+ --output "diagnostics.xml"
 
 pause

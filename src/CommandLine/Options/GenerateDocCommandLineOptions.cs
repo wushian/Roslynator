@@ -25,9 +25,6 @@ namespace Roslynator.CommandLine
         [Option(longName: "ignored-type-parts")]
         public IEnumerable<string> IgnoredTypeParts { get; set; }
 
-        [Option(longName: "inheritance-style", Default = DefaultValues.InheritanceStyle)]
-        public InheritanceStyle InheritanceStyle { get; set; }
-
         [Option(longName: "include-all-derived-types")]
         public bool IncludeAllDerivedTypes { get; set; }
 
@@ -36,6 +33,9 @@ namespace Roslynator.CommandLine
 
         [Option(longName: "include-inherited-interface-members")]
         public bool IncludeInheritedInterfaceMembers { get; set; }
+
+        [Option(longName: "inheritance-style", Default = DefaultValues.InheritanceStyle)]
+        public InheritanceStyle InheritanceStyle { get; set; }
 
         [Option(longName: "max-derived-types", Default = DefaultValues.MaxDerivedTypes)]
         public int MaxDerivedTypes { get; set; }

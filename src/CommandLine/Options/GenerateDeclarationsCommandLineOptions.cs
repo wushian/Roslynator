@@ -58,11 +58,11 @@ namespace Roslynator.CommandLine
         [Option(longName: "nest-namespaces")]
         public bool NestNamespaces { get; set; }
 
-        [Option(longName: "no-indent")]
-        public bool NoIndent { get; set; }
-
         [Option(longName: "no-default-literal")]
         public bool NoDefaultLiteral { get; set; }
+
+        [Option(longName: "no-indent")]
+        public bool NoIndent { get; set; }
 
         [Option(longName: "no-new-line-before-open-brace")]
         public bool NoNewLineBeforeOpenBrace { get; set; }

@@ -31,14 +31,15 @@ namespace Roslynator.CommandLine
         [Option(longName: "format-accessor-list")]
         public bool FormatAccessorList { get; set; }
 
-        //TODO: NewLineBeforeClosingBraceInEmptyDeclaration
-        [Option(longName: "format-declaration-braces")]
-        public bool FormatDeclarationBraces { get; set; }
-
         //TODO: NewLineBeforeClosingBraceInEmptyBlock
         [Option(longName: "format-empty-block")]
         public bool FormatEmptyBlock { get; set; }
 
+        //TODO: NewLineBeforeClosingBraceInEmptyDeclaration
+        [Option(longName: "format-empty-declaration")]
+        public bool FormatEmptyDeclaration { get; set; }
+
+        //TODO: NewLineBeforeClosingBraceInBlock
         [Option(longName: "format-single-line-block")]
         public bool FormatSingleLineBlock { get; set; }
 
@@ -48,17 +49,17 @@ namespace Roslynator.CommandLine
         [Option(longName: "new-line-after-switch-label")]
         public bool NewLineAfterSwitchLabel { get; set; }
 
-        [Option(longName: "new-line-before-embedded-statement")]
-        public bool NewLineBeforeEmbeddedStatement { get; set; }
-
-        [Option(longName: "new-line-before-enum-member")]
-        public bool NewLineBeforeEnumMember { get; set; }
-
         [Option(longName: "new-line-before-binary-operator")]
         public bool NewLineBeforeBinaryOperator { get; set; }
 
         [Option(longName: "new-line-before-conditional-expression-operator")]
         public bool NewLineBeforeConditionalExpressionOperator { get; set; }
+
+        [Option(longName: "new-line-before-embedded-statement")]
+        public bool NewLineBeforeEmbeddedStatement { get; set; }
+
+        [Option(longName: "new-line-before-enum-member")]
+        public bool NewLineBeforeEnumMember { get; set; }
 
         [Option(longName: "new-line-before-statement")]
         public bool NewLineBeforeStatement { get; set; }
@@ -83,7 +84,7 @@ namespace Roslynator.CommandLine
             if (FormatAccessorList)
                 yield return DiagnosticDescriptors.FormatAccessorList;
 
-            if (FormatDeclarationBraces)
+            if (FormatEmptyDeclaration)
                 yield return DiagnosticDescriptors.FormatDeclarationBraces;
 
             if (FormatEmptyBlock)

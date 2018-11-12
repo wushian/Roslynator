@@ -14,7 +14,7 @@ roslynator format <PROJECT|SOLUTION>
 [--empty-line-between-declarations]
 [--end-of-line]
 [--format-accessor-list]
-[--format-declaration-braces]
+[--format-empty-declaration]
 [--format-empty-block]
 [--format-single-line-block]
 [--include-generated-code]
@@ -82,9 +82,9 @@ Indicates whether access list should be formatted.
 
 *Note: This option is available only for C#. For details see [RCS1024](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1024.md).*
 
-**`--format-declaration-braces`**
+**`--format-empty-declaration`**
 
-Indicates whether declaration braces should be formatted.
+Indicates whether an empty declaration should be formatted.
 
 *Note: This option is available only for C#. For details see [RCS1076](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1076.md).*
 

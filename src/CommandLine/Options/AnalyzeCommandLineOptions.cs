@@ -13,14 +13,13 @@ namespace Roslynator.CommandLine
         [Option(longName: "ignore-compiler-diagnostics")]
         public bool IgnoreCompilerDiagnostics { get; set; }
 
+        [Option(longName: "output")]
+        public string Output { get; set; }
+
         [Option(longName: "report-fade-diagnostics")]
         public bool ReportFadeDiagnostics { get; set; }
 
         [Option(longName: "report-suppressed-diagnostics")]
         public bool ReportSuppressedDiagnostics { get; set; }
-
-        //TODO: rename XmlFileLog?
-        [Option(longName: "xml-file-log")]
-        public string XmlFileLog { get; set; }
     }
 }

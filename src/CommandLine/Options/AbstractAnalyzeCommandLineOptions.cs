@@ -14,7 +14,6 @@ namespace Roslynator.CommandLine
         [Option(longName: "culture")]
         public string Culture { get; set; }
 
-        //TODO: NoAnalyzerReferences
         [Option(longName: "ignore-analyzer-references")]
         public bool IgnoreAnalyzerReferences { get; set; }
 

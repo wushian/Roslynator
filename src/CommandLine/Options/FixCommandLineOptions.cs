@@ -11,14 +11,14 @@ namespace Roslynator.CommandLine
         [Option(longName: "batch-size", Default = -1)]
         public int BatchSize { get; set; }
 
-        [Option(longName: "diagnostics-fixable-one-by-one")]
-        public IEnumerable<string> DiagnosticsFixableOneByOne { get; set; }
-
         [Option(longName: "diagnostic-fixer-map")]
         public IEnumerable<string> DiagnosticFixerMap { get; set; }
 
         [Option(longName: "diagnostic-fix-map")]
         public IEnumerable<string> DiagnosticFixMap { get; set; }
+
+        [Option(longName: "diagnostics-fixable-one-by-one")]
+        public IEnumerable<string> DiagnosticsFixableOneByOne { get; set; }
 
         [Option(longName: "file-banner")]
         public string FileBanner { get; set; }

@@ -10,6 +10,8 @@ roslynator fix <PROJECT|SOLUTION>
 [-a|--analyzer-assemblies]
 [--batch-size]
 [--culture]
+[--diagnostic-fixer-map]
+[--diagnostic-fix-map]
 [--diagnostics-fixable-one-by-one]
 [--format]
 [--ignore-analyzer-references]
@@ -53,6 +55,20 @@ Defines maximum number of diagnostics that can be fixed in one batch.
 **`--culture`** <CULTURE_ID>
 
 Defines culture that should be used to display diagnostic message.
+
+**`--diagnostic-fixer-map`** <DIAGNOSTIC_ID=FIXER_FULL_NAME>
+
+Defines mapping between diagnostic and its fixer ((CodeFixProvider)[https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.codefixes.codefixprovider?view=roslyn-dotnet]).
+
+If there are two (or more) fixers for a diagnostic and both provide a fix it is necessary to determine which one should be used to fix the diagnostic.
+Set verbosity to 'diagnostic' to see which diagnostics cannot be fixed due to multiple fixers.
+
+**`--diagnostic-fix-map`** <DIAGNOSTIC_ID=EQUIVALENCE_KEY>
+
+Defines mapping between diagnostic and its fix ((CodeAction)[https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.codeactions.codeaction?view=roslyn-dotnet]).
+
+If there are two (or more) fixes for a diagnostic it is necessary to determine which one should be used to fix the diagnostic.
+Set verbosity to 'diagnostic' to see which diagnostics cannot be fixed due to multiple fixes.
 
 **`--diagnostics-fixable-one-by-one`** <DIAGNOSTIC_ID>
 
