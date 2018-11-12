@@ -10,7 +10,6 @@ namespace Roslynator.CommandLine
         [Option(longName: "execution-time")]
         public bool ExecutionTime { get; set; }
 
-        //TODO: no-compiler-diagnostics
         [Option(longName: "ignore-compiler-diagnostics")]
         public bool IgnoreCompilerDiagnostics { get; set; }
 
@@ -20,7 +19,7 @@ namespace Roslynator.CommandLine
         [Option(longName: "report-suppressed-diagnostics")]
         public bool ReportSuppressedDiagnostics { get; set; }
 
-        //TODO: rename XmlFileLog
+        //TODO: rename XmlFileLog?
         [Option(longName: "xml-file-log")]
         public string XmlFileLog { get; set; }
     }

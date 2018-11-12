@@ -31,11 +31,11 @@ namespace Roslynator.CommandLine
         [Option(longName: "format-accessor-list")]
         public bool FormatAccessorList { get; set; }
 
-        //TODO: FormatEmptyDeclarationBraces
+        //TODO: NewLineBeforeClosingBraceInEmptyDeclaration
         [Option(longName: "format-declaration-braces")]
         public bool FormatDeclarationBraces { get; set; }
 
-        //TODO: FormatEmptyBlockBraces
+        //TODO: NewLineBeforeClosingBraceInEmptyBlock
         [Option(longName: "format-empty-block")]
         public bool FormatEmptyBlock { get; set; }
 
