@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Collections.Generic;
 using CommandLine;
 using Microsoft.CodeAnalysis;
 using Roslynator.CSharp;
-using System.Collections.Generic;
 
 namespace Roslynator.CommandLine
 {
@@ -31,18 +31,6 @@ namespace Roslynator.CommandLine
         [Option(longName: "format-accessor-list")]
         public bool FormatAccessorList { get; set; }
 
-        //TODO: NewLineBeforeClosingBraceInEmptyBlock
-        [Option(longName: "format-empty-block")]
-        public bool FormatEmptyBlock { get; set; }
-
-        //TODO: NewLineBeforeClosingBraceInEmptyDeclaration
-        [Option(longName: "format-empty-declaration")]
-        public bool FormatEmptyDeclaration { get; set; }
-
-        //TODO: NewLineBeforeClosingBraceInBlock
-        [Option(longName: "format-single-line-block")]
-        public bool FormatSingleLineBlock { get; set; }
-
         [Option(longName: "include-generated-code")]
         public bool IncludeGeneratedCode { get; set; }
 
@@ -51,6 +39,15 @@ namespace Roslynator.CommandLine
 
         [Option(longName: "new-line-before-binary-operator")]
         public bool NewLineBeforeBinaryOperator { get; set; }
+
+        [Option(longName: "new-line-before-closing-brace-in-block")]
+        public bool NewLineBeforeClosingBraceInBlock { get; set; }
+
+        [Option(longName: "new-line-before-closing-brace-in-empty-block")]
+        public bool NewLineBeforeClosingBraceInEmptyBlock { get; set; }
+
+        [Option(longName: "new-line-before-closing-brace-in-empty-declaration")]
+        public bool NewLineBeforeClosingBraceInEmptyDeclaration { get; set; }
 
         [Option(longName: "new-line-before-conditional-expression-operator")]
         public bool NewLineBeforeConditionalExpressionOperator { get; set; }
@@ -84,20 +81,20 @@ namespace Roslynator.CommandLine
             if (FormatAccessorList)
                 yield return DiagnosticDescriptors.FormatAccessorList;
 
-            if (FormatEmptyDeclaration)
-                yield return DiagnosticDescriptors.FormatDeclarationBraces;
-
-            if (FormatEmptyBlock)
-                yield return DiagnosticDescriptors.FormatEmptyBlock;
-
-            if (FormatSingleLineBlock)
-                yield return DiagnosticDescriptors.FormatSingleLineBlock;
-
             if (NewLineAfterSwitchLabel)
                 yield return DiagnosticDescriptors.AddNewLineAfterSwitchLabel;
 
             if (NewLineBeforeBinaryOperator)
                 yield return DiagnosticDescriptors.FormatBinaryOperatorOnNextLine;
+
+            if (NewLineBeforeClosingBraceInBlock)
+                yield return DiagnosticDescriptors.FormatSingleLineBlock;
+
+            if (NewLineBeforeClosingBraceInEmptyBlock)
+                yield return DiagnosticDescriptors.FormatEmptyBlock;
+
+            if (NewLineBeforeClosingBraceInEmptyDeclaration)
+                yield return DiagnosticDescriptors.FormatDeclarationBraces;
 
             if (NewLineBeforeConditionalExpressionOperator)
                 yield return DiagnosticDescriptors.FormatConditionalExpression;

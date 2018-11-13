@@ -14,9 +14,6 @@ roslynator format <PROJECT|SOLUTION>
 [--empty-line-between-declarations]
 [--end-of-line]
 [--format-accessor-list]
-[--format-empty-declaration]
-[--format-empty-block]
-[--format-single-line-block]
 [--include-generated-code]
 [--ignored-projects]
 [--language]
@@ -25,6 +22,9 @@ roslynator format <PROJECT|SOLUTION>
 [--msbuild-path]
 [--new-line-after-switch-label]
 [--new-line-before-binary-operator]
+[--new-line-before-closing-brace-in-block]
+[--new-line-before-closing-brace-in-empty-block]
+[--new-line-before-closing-brace-in-empty-declaration]
 [--new-line-before-conditional-expression-operator]
 [--new-line-before-embedded-statement]
 [--new-line-before-enum-member]
@@ -82,24 +82,6 @@ Indicates whether access list should be formatted.
 
 *Note: This option is available only for C#. For details see [RCS1024](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1024.md).*
 
-**`--format-empty-declaration`**
-
-Indicates whether an empty declaration should be formatted.
-
-*Note: This option is available only for C#. For details see [RCS1076](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1076.md).*
-
-**`--format-empty-block`**
-
-Indicates whether an empty block should be formatted.
-
-*Note: This option is available only for C#. For details see [RCS1023](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1023.md).*
-
-**`--format-single-line-block`**
-
-Indicates whether a single-line block should be formatted.
-
-*Note: This option is available only for C#. For details see [RCS1185](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1185.md).*
-
 **`--include-generated-code`**
 
 Indicates whether generated code should be formatted.
@@ -126,9 +108,27 @@ Indicates whether switch label should be followed with new line.
 
 **`--new-line-before-binary-operator`**
 
-Indicates whether a binary operator be preceded with new line.
+Indicates whether a binary operator should be preceded with new line.
 
 *Note: This option is available only for C#. For details see [RCS1029](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1029.md).*
+
+**`--new-line-before-closing-brace-in-block`**
+
+Indicates whether closing brace in a block should be preceded with new line.
+
+*Note: This option is available only for C#. For details see [RCS1185](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1185.md).*
+
+**`--new-line-before-closing-brace-in-empty-block`**
+
+Indicates whether closing brace in an empty block should be preceded with new line.
+
+*Note: This option is available only for C#. For details see [RCS1023](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1023.md).*
+
+**`--new-line-before-closing-brace-in-empty-declaration`**
+
+Indicates whether closing brace in a type declaration should be preceded with new line.
+
+*Note: This option is available only for C#. For details see [RCS1076](https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1076.md).*
 
 **`--new-line-before-conditional-expression-operator`**
 
