@@ -126,7 +126,7 @@ namespace Roslynator.CommandLine
             WriteLine($"{changedDocuments.Count} {((changedDocuments.Count == 1) ? "document" : "documents")} formatted", ConsoleColor.Green, Verbosity.Normal);
             WriteLine();
 
-            WriteLine($"Done formatting solution '{solution.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Minimal);
+            WriteLine($"Done formatting solution '{solution.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", Verbosity.Minimal);
         }
 
         private static async Task FormatProjectAsync(Project project, CodeFormatterOptions options, CancellationToken cancellationToken)

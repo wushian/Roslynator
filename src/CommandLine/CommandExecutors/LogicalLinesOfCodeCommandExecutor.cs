@@ -69,7 +69,7 @@ namespace Roslynator.CommandLine
                 metrics.TotalLineCount);
 
             WriteLine(Verbosity.Minimal);
-            WriteLine($"Done counting logical lines for '{project.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Normal);
+            WriteLine($"Done counting logical lines for '{project.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", Verbosity.Normal);
         }
 
         private void CountLines(Solution solution, CodeMetricsOptions options, CancellationToken cancellationToken)
@@ -102,7 +102,7 @@ namespace Roslynator.CommandLine
                 projectsMetrics.Sum(f => f.Value.TotalLineCount));
 
             WriteLine(Verbosity.Minimal);
-            WriteLine($"Done counting logical lines for solution '{solution.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Normal);
+            WriteLine($"Done counting logical lines for solution '{solution.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", Verbosity.Normal);
         }
 
         private static void WriteMetrics(

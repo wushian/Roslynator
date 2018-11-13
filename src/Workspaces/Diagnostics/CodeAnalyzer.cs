@@ -133,7 +133,7 @@ namespace Roslynator.Diagnostics
                 }
             }
 
-            WriteLine($"Done analyzing solution '{solution.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", ConsoleColor.Green, Verbosity.Minimal);
+            WriteLine($"Done analyzing solution '{solution.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", Verbosity.Minimal);
 
             return results.ToImmutableArray();
         }
