@@ -5,6 +5,7 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
+    //TODO: --no-summary
     [Verb("fix", HelpText = "Fixes diagnostics in the specified project or solution.")]
     public class FixCommandLineOptions : AbstractAnalyzeCommandLineOptions
     {

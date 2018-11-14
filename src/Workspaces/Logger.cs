@@ -357,7 +357,6 @@ namespace Roslynator
             IEnumerable<Diagnostic> fixedDiagnostics,
             IEnumerable<Diagnostic> unfixedDiagnostics,
             IEnumerable<Diagnostic> unfixableDiagnostics,
-            ConsoleColor? fixedColor = null,
             string indent = null,
             bool addEmptyLine = false,
             IFormatProvider formatProvider = null,
@@ -365,12 +364,11 @@ namespace Roslynator
         {
             WriteDiagnosticDescriptors(unfixableDiagnostics, "Unfixable diagnostics:");
             WriteDiagnosticDescriptors(unfixedDiagnostics, "Unfixed diagnostics:");
-            WriteDiagnosticDescriptors(fixedDiagnostics, "Fixed diagnostics:", titleColor: fixedColor);
+            WriteDiagnosticDescriptors(fixedDiagnostics, "Fixed diagnostics:");
 
             bool WriteDiagnosticDescriptors(
                 IEnumerable<Diagnostic> diagnostics,
-                string title,
-                ConsoleColor? titleColor = null)
+                string title)
             {
                 List<(DiagnosticDescriptor descriptor, int count)> diagnosticsById = diagnostics
                     .GroupBy(f => f.Descriptor, DiagnosticDescriptorComparer.Id)
@@ -384,15 +382,7 @@ namespace Roslynator
                         WriteLine(verbosity);
 
                     Write(indent, verbosity);
-
-                    if (titleColor != null)
-                    {
-                        WriteLine(title, titleColor.Value, verbosity);
-                    }
-                    else
-                    {
-                        WriteLine(title, verbosity);
-                    }
+                    WriteLine(title, verbosity);
 
                     int maxIdLength = diagnosticsById.Max(f => f.descriptor.Id.Length);
                     int maxCountLength = diagnosticsById.Max(f => f.count.ToString(formatProvider).Length);

@@ -115,19 +115,24 @@ namespace Roslynator.CodeFixes
             {
                 int count = results.Sum(f => f.FormattedDocumentCount);
                 WriteLine();
-                WriteLine($"{count} {((count == 1) ? "document" : "documents")} formatted", ConsoleColor.Green, Verbosity.Normal);
+                WriteLine($"{count} {((count == 1) ? "document" : "documents")} formatted", Verbosity.Normal);
             }
 
             WriteFixSummary(
                 results.SelectMany(f => f.FixedDiagnostics),
                 results.SelectMany(f => f.UnfixedDiagnostics),
                 results.SelectMany(f => f.UnfixableDiagnostics),
-                ConsoleColor.Green,
                 addEmptyLine: true,
                 formatProvider: FormatProvider,
                 verbosity: Verbosity.Normal);
 
             WriteLine(Verbosity.Minimal);
+
+            int fixedCount = results.Sum(f => f.FixedDiagnostics.Length);
+
+            WriteLine($"{fixedCount} {((fixedCount == 1) ? "diagnostic" : "diagnostics")} fixed", ConsoleColor.Green, Verbosity.Minimal);
+            WriteLine(Verbosity.Minimal);
+
             WriteLine($"Done fixing solution '{CurrentSolution.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", Verbosity.Minimal);
         }
 
