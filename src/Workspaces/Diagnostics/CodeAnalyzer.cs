@@ -114,7 +114,6 @@ namespace Roslynator.Diagnostics
                 if (totalCount > 0)
                 {
                     WriteLine(Verbosity.Minimal);
-                    WriteLine($"{totalCount} {((totalCount == 1) ? "diagnostic" : "diagnostics")} found", ConsoleColor.Green, Verbosity.Minimal);
 
                     Dictionary<DiagnosticDescriptor, int> diagnosticsByDescriptor = results
                         .SelectMany(f => FilterDiagnostics(f.Diagnostics.Concat(f.CompilerDiagnostics), cancellationToken))
@@ -129,6 +128,7 @@ namespace Roslynator.Diagnostics
                         WriteLine($"{kvp.Value.ToString().PadLeft(maxCountLength)} {kvp.Key.Id.PadRight(maxIdLength)} {kvp.Key.Title}", Verbosity.Normal);
                     }
 
+                    WriteLine($"{totalCount} {((totalCount == 1) ? "diagnostic" : "diagnostics")} found", ConsoleColor.Green, Verbosity.Minimal);
                     WriteLine(Verbosity.Minimal);
                 }
             }
@@ -162,6 +162,8 @@ namespace Roslynator.Diagnostics
                 ? ImmutableArray<Diagnostic>.Empty
                 : compilation.GetDiagnostics(cancellationToken);
 
+            compilerDiagnostics = FilterDiagnostics(compilerDiagnostics, cancellationToken).ToImmutableArray();
+
             CompilationWithAnalyzersOptions compilationWithAnalyzersOptions = (Options.ReportSuppressedDiagnostics)
                 ? _reportSuppressedDiagnosticsCompilationWithAnalyzersOptions
                 : _ignoreSuppressedDiagnosticsCompilationWithAnalyzersOptions;
@@ -180,22 +182,20 @@ namespace Roslynator.Diagnostics
             }
             else
             {
-                diagnostics = await compilationWithAnalyzers.GetAllDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
+                diagnostics = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
             }
 
             string projectDirectoryPath = Path.GetDirectoryName(project.FilePath);
 
             WriteDiagnostics(FilterDiagnostics(diagnostics.Where(f => f.IsAnalyzerExceptionDiagnostic()), cancellationToken).ToImmutableArray(), baseDirectoryPath: projectDirectoryPath, formatProvider: FormatProvider, indentation: "  ", verbosity: Verbosity.Diagnostic);
 
-            IEnumerable<Diagnostic> allDiagnostics = diagnostics
-                .Where(f => !f.IsAnalyzerExceptionDiagnostic())
-                .Concat(compilerDiagnostics);
+            diagnostics = FilterDiagnostics(diagnostics.Where(f => !f.IsAnalyzerExceptionDiagnostic()), cancellationToken).ToImmutableArray();
 
-            ImmutableArray<Diagnostic> filteredDiagnostics = FilterDiagnostics(allDiagnostics, cancellationToken).ToImmutableArray();
+            WriteDiagnostics(compilerDiagnostics, baseDirectoryPath: projectDirectoryPath, formatProvider: FormatProvider, indentation: "  ", verbosity: Verbosity.Normal);
 
-            WriteDiagnostics(filteredDiagnostics, baseDirectoryPath: projectDirectoryPath, formatProvider: FormatProvider, indentation: "  ", verbosity: Verbosity.Normal);
+            WriteDiagnostics(diagnostics, baseDirectoryPath: projectDirectoryPath, formatProvider: FormatProvider, indentation: "  ", verbosity: Verbosity.Normal);
 
-            return new ProjectAnalysisResult(project.Id, analyzers, filteredDiagnostics, compilerDiagnostics, telemetry);
+            return new ProjectAnalysisResult(project.Id, analyzers, compilerDiagnostics, diagnostics, telemetry);
         }
 
         private IEnumerable<Diagnostic> FilterDiagnostics(IEnumerable<Diagnostic> diagnostics, CancellationToken cancellationToken = default)

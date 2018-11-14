@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
@@ -21,11 +22,11 @@ namespace Roslynator.CommandLine
             string filePath,
             IFormatProvider formatProvider = null)
         {
-            var document = new XDocument(
-                new XElement("Projects",
-                    SerializeProjectAnalysisResult(result, project, formatProvider)));
+            XElement summary = CreateSummary(result.GetAllDiagnostics(), formatProvider);
 
-            SerializeDocument(document, filePath);
+            XElement projects = SerializeProjectAnalysisResult(result, project, formatProvider);
+
+            SerializeDocument(filePath, summary, projects);
         }
 
         public static void Serialize(
@@ -34,13 +35,13 @@ namespace Roslynator.CommandLine
             string filePath,
             IFormatProvider formatProvider = null)
         {
-            var document = new XDocument(
-                new XElement("Projects",
-                    results
-                        .Where(f => f.Diagnostics.Any())
-                        .Select(result => SerializeProjectAnalysisResult(result, solution.GetProject(result.ProjectId), formatProvider))));
+            XElement summary = CreateSummary(results.SelectMany(f => f.GetAllDiagnostics()), formatProvider);
 
-            SerializeDocument(document, filePath);
+            IEnumerable<XElement> projects = results
+                .Where(f => f.Diagnostics.Any())
+                .Select(result => SerializeProjectAnalysisResult(result, solution.GetProject(result.ProjectId), formatProvider));
+
+            SerializeDocument(filePath, summary, projects);
         }
 
         private static XElement SerializeProjectAnalysisResult(
@@ -89,8 +90,26 @@ namespace Roslynator.CommandLine
                 locationElement);
         }
 
-        private static void SerializeDocument(XDocument document, string filePath)
+        private static XElement CreateSummary(IEnumerable<Diagnostic> diagnostics, IFormatProvider formatProvider)
         {
+            return new XElement("Summary",
+                diagnostics
+                    .GroupBy(f => f.Descriptor, DiagnosticDescriptorComparer.Id)
+                    .OrderBy(f => f.Key, DiagnosticDescriptorComparer.Id)
+                    .Select(f => new XElement("Diagnostic",
+                        new XAttribute("Id", f.Key.Id),
+                        new XAttribute("Title", f.Key.Title.ToString(formatProvider)),
+                        new XAttribute("Count", f.Count()))));
+        }
+
+        private static void SerializeDocument(string filePath, XElement summary, params object[] projects)
+        {
+            var document = new XDocument(
+                new XElement("Roslynator",
+                new XElement("CodeAnalysis",
+                    summary,
+                    new XElement("Projects", projects))));
+
             WriteLine($"Save diagnostics to '{filePath}'", ConsoleColor.DarkGray, Verbosity.Detailed);
 
             using (var fileStream = new FileStream(filePath, FileMode.Create))

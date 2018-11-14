@@ -16,17 +16,17 @@ namespace Roslynator.CodeFixes
 
         internal ProjectFixResult(
             ProjectFixKind kind,
-            IEnumerable<DiagnosticDescriptor> fixedDiagnostics = default,
-            IEnumerable<DiagnosticDescriptor> unfixedDiagnostics = default,
-            IEnumerable<DiagnosticDescriptor> unfixableDiagnostics = default,
+            IEnumerable<Diagnostic> fixedDiagnostics = default,
+            IEnumerable<Diagnostic> unfixedDiagnostics = default,
+            IEnumerable<Diagnostic> unfixableDiagnostics = default,
             IEnumerable<DiagnosticAnalyzer> analyzers = default,
             IEnumerable<CodeFixProvider> fixers = default,
             int formattedDocumentCount = 0)
         {
             Kind = kind;
-            FixedDiagnostics = fixedDiagnostics?.ToImmutableArray() ?? ImmutableArray<DiagnosticDescriptor>.Empty;
-            UnfixedDiagnostics = unfixedDiagnostics?.ToImmutableArray() ?? ImmutableArray<DiagnosticDescriptor>.Empty;
-            UnfixableDiagnostics = unfixableDiagnostics?.ToImmutableArray() ?? ImmutableArray<DiagnosticDescriptor>.Empty;
+            FixedDiagnostics = fixedDiagnostics?.ToImmutableArray() ?? ImmutableArray<Diagnostic>.Empty;
+            UnfixedDiagnostics = unfixedDiagnostics?.ToImmutableArray() ?? ImmutableArray<Diagnostic>.Empty;
+            UnfixableDiagnostics = unfixableDiagnostics?.ToImmutableArray() ?? ImmutableArray<Diagnostic>.Empty;
             Analyzers = analyzers?.ToImmutableArray() ?? ImmutableArray<DiagnosticAnalyzer>.Empty;
             Fixers = fixers?.ToImmutableArray() ?? ImmutableArray<CodeFixProvider>.Empty;
             FormattedDocumentCount = formattedDocumentCount;
@@ -34,11 +34,11 @@ namespace Roslynator.CodeFixes
 
         public ProjectFixKind Kind { get; }
 
-        public ImmutableArray<DiagnosticDescriptor> FixedDiagnostics { get; }
+        public ImmutableArray<Diagnostic> FixedDiagnostics { get; }
 
-        public ImmutableArray<DiagnosticDescriptor> UnfixedDiagnostics { get; }
+        public ImmutableArray<Diagnostic> UnfixedDiagnostics { get; }
 
-        public ImmutableArray<DiagnosticDescriptor> UnfixableDiagnostics { get; }
+        public ImmutableArray<Diagnostic> UnfixableDiagnostics { get; }
 
         public ImmutableArray<DiagnosticAnalyzer> Analyzers { get; }
 

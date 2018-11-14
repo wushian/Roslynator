@@ -354,12 +354,13 @@ namespace Roslynator
         }
 
         public static void WriteFixSummary(
-            IEnumerable<DiagnosticDescriptor> fixedDiagnostics,
-            IEnumerable<DiagnosticDescriptor> unfixedDiagnostics,
-            IEnumerable<DiagnosticDescriptor> unfixableDiagnostics,
+            IEnumerable<Diagnostic> fixedDiagnostics,
+            IEnumerable<Diagnostic> unfixedDiagnostics,
+            IEnumerable<Diagnostic> unfixableDiagnostics,
             ConsoleColor? fixedColor = null,
             string indent = null,
             bool addEmptyLine = false,
+            IFormatProvider formatProvider = null,
             Verbosity verbosity = Verbosity.None)
         {
             WriteDiagnosticDescriptors(unfixableDiagnostics, "Unfixable diagnostics:");
@@ -367,16 +368,17 @@ namespace Roslynator
             WriteDiagnosticDescriptors(fixedDiagnostics, "Fixed diagnostics:", titleColor: fixedColor);
 
             bool WriteDiagnosticDescriptors(
-                IEnumerable<DiagnosticDescriptor> diagnosticDescriptors,
+                IEnumerable<Diagnostic> diagnostics,
                 string title,
                 ConsoleColor? titleColor = null)
             {
-                DiagnosticDescriptor[] uniqueDiagnosticDescriptors = diagnosticDescriptors
-                    .Distinct(DiagnosticDescriptorComparer.Id)
-                    .OrderBy(f => f.Id)
-                    .ToArray();
+                List<(DiagnosticDescriptor descriptor, int count)> diagnosticsById = diagnostics
+                    .GroupBy(f => f.Descriptor, DiagnosticDescriptorComparer.Id)
+                    .Select(f => (descriptor: f.Key, count: f.Count()))
+                    .OrderByDescending(f => f.count)
+                    .ToList();
 
-                if (uniqueDiagnosticDescriptors.Length > 0)
+                if (diagnosticsById.Count > 0)
                 {
                     if (addEmptyLine)
                         WriteLine(verbosity);
@@ -392,12 +394,13 @@ namespace Roslynator
                         WriteLine(title, verbosity);
                     }
 
-                    int maxIdLength = uniqueDiagnosticDescriptors.Max(f => f.Id.Length);
+                    int maxIdLength = diagnosticsById.Max(f => f.descriptor.Id.Length);
+                    int maxCountLength = diagnosticsById.Max(f => f.count.ToString(formatProvider).Length);
 
-                    foreach (DiagnosticDescriptor diagnosticDescriptor in uniqueDiagnosticDescriptors)
+                    foreach ((DiagnosticDescriptor descriptor, int count) in diagnosticsById)
                     {
                         Write(indent, verbosity);
-                        WriteLine($"  {diagnosticDescriptor.Id.PadRight(maxIdLength)} {diagnosticDescriptor.Title}", verbosity);
+                        WriteLine($"  {count.ToString(formatProvider).PadLeft(maxCountLength)} {descriptor.Id.PadRight(maxIdLength)} {descriptor.Title.ToString(formatProvider)}", verbosity);
                     }
 
                     return true;

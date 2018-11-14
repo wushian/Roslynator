@@ -89,6 +89,7 @@ namespace Roslynator.CodeFixes
                         result.UnfixedDiagnostics,
                         result.UnfixableDiagnostics,
                         indent: "  ",
+                        formatProvider: FormatProvider,
                         verbosity: Verbosity.Detailed);
 
                     if (result.Kind == ProjectFixKind.CompilerError)
@@ -123,6 +124,7 @@ namespace Roslynator.CodeFixes
                 results.SelectMany(f => f.UnfixableDiagnostics),
                 ConsoleColor.Green,
                 addEmptyLine: true,
+                formatProvider: FormatProvider,
                 verbosity: Verbosity.Normal);
 
             WriteLine(Verbosity.Minimal);
@@ -146,14 +148,14 @@ namespace Roslynator.CodeFixes
                 .GroupBy(f => f.id)
                 .ToDictionary(f => f.Key, g => g.Select(f => f.fixer).Distinct().ToImmutableArray());
 
-            ImmutableArray<DiagnosticDescriptor> unfixableDiagnostics = await GetDiagnosticsAsync(
+            ImmutableArray<Diagnostic> unfixableDiagnostics = await GetDiagnosticsAsync(
                 analyzers,
                 fixResult.FixedDiagnostics,
                 compilation,
                 f => !fixersById.TryGetValue(f.id, out ImmutableArray<CodeFixProvider> fixers2),
                 cancellationToken).ConfigureAwait(false);
 
-            ImmutableArray<DiagnosticDescriptor> unfixedDiagnostics = await GetDiagnosticsAsync(
+            ImmutableArray<Diagnostic> unfixedDiagnostics = await GetDiagnosticsAsync(
                 analyzers,
                 fixResult.FixedDiagnostics.Concat(unfixableDiagnostics),
                 compilation,
@@ -232,7 +234,7 @@ namespace Roslynator.CodeFixes
             WriteUsedAnalyzers(analyzers, ConsoleColor.DarkGray, Verbosity.Diagnostic);
             WriteUsedFixers(fixers, ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
-            ImmutableHashSet<DiagnosticDescriptor>.Builder fixedDiagnostics = ImmutableHashSet.CreateBuilder(DiagnosticDescriptorComparer.Id);
+            ImmutableArray<Diagnostic>.Builder fixedDiagnostics = ImmutableArray.CreateBuilder<Diagnostic>();
 
             ImmutableArray<Diagnostic> previousDiagnostics = ImmutableArray<Diagnostic>.Empty;
             ImmutableArray<Diagnostic> previousPreviousDiagnostics = ImmutableArray<Diagnostic>.Empty;
@@ -314,7 +316,7 @@ namespace Roslynator.CodeFixes
 
                     string diagnosticId = diagnosticDescriptor.Id;
 
-                    DiagnosticFixKind diagnosticFixKind = await FixDiagnosticsAsync(
+                    DiagnosticFixResult result = await FixDiagnosticsAsync(
                         diagnosticDescriptor,
                         (diagnosticDescriptor.CustomTags.Contains(WellKnownDiagnosticTags.Compiler))
                             ? default(ImmutableArray<DiagnosticAnalyzer>)
@@ -323,11 +325,11 @@ namespace Roslynator.CodeFixes
                         CurrentSolution.GetProject(project.Id),
                         cancellationToken).ConfigureAwait(false);
 
-                    if (diagnosticFixKind == DiagnosticFixKind.Fixed)
+                    if (result.Kind == DiagnosticFixKind.Fixed)
                     {
-                        fixedDiagnostics.Add(diagnosticDescriptor);
+                        fixedDiagnostics.AddRange(result.FixedDiagnostics);
                     }
-                    else if (diagnosticFixKind == DiagnosticFixKind.CompilerError)
+                    else if (result.Kind == DiagnosticFixKind.CompilerError)
                     {
                         return new ProjectFixResult(ProjectFixKind.CompilerError, fixedDiagnostics, analyzers: analyzers, fixers: fixers);
                     }
@@ -344,15 +346,20 @@ namespace Roslynator.CodeFixes
             return new ProjectFixResult(fixKind, fixedDiagnostics, analyzers: analyzers, fixers: fixers);
         }
 
-        private async Task<DiagnosticFixKind> FixDiagnosticsAsync(
+        private async Task<DiagnosticFixResult> FixDiagnosticsAsync(
             DiagnosticDescriptor descriptor,
             ImmutableArray<DiagnosticAnalyzer> analyzers,
             ImmutableArray<CodeFixProvider> fixers,
             Project project,
             CancellationToken cancellationToken)
         {
-            ImmutableArray<Diagnostic> previousDiagnostics = ImmutableArray<Diagnostic>.Empty;
+            ImmutableArray<Diagnostic>.Builder fixedDiagostics = ImmutableArray.CreateBuilder<Diagnostic>();
 
+            ImmutableArray<Diagnostic> diagnostics = ImmutableArray<Diagnostic>.Empty;
+            ImmutableArray<Diagnostic> previousDiagnostics = ImmutableArray<Diagnostic>.Empty;
+            ImmutableArray<Diagnostic> previousDiagnosticsToFix = ImmutableArray<Diagnostic>.Empty;
+
+            int length = 0;
             var fixKind = DiagnosticFixKind.NotFixed;
 
             while (true)
@@ -362,9 +369,12 @@ namespace Roslynator.CodeFixes
                 ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
 
                 if (!VerifyCompilerDiagnostics(compilerDiagnostics, project))
-                    return DiagnosticFixKind.CompilerError;
+                {
+                    fixKind = DiagnosticFixKind.CompilerError;
 
-                ImmutableArray<Diagnostic> diagnostics = default;
+                    if (!previousDiagnostics.Any())
+                        break;
+                }
 
                 if (analyzers.IsDefault)
                 {
@@ -379,7 +389,25 @@ namespace Roslynator.CodeFixes
                     .Where(f => f.Id == descriptor.Id && f.Severity >= Options.MinimalSeverity)
                     .ToImmutableArray();
 
-                int length = diagnostics.Length;
+                if (fixKind == DiagnosticFixKind.CompilerError)
+                {
+                    break;
+                }
+                else if (fixKind == DiagnosticFixKind.Fixed)
+                {
+                    if (Options.BatchSize <= 0
+                        || length <= Options.BatchSize)
+                    {
+                        break;
+                    }
+                }
+                else if (previousDiagnostics.Any()
+                    && fixKind != DiagnosticFixKind.PartiallyFixed)
+                {
+                    break;
+                }
+
+                length = diagnostics.Length;
 
                 if (length == 0)
                     break;
@@ -389,6 +417,8 @@ namespace Roslynator.CodeFixes
                 {
                     break;
                 }
+
+                fixedDiagostics.AddRange(previousDiagnosticsToFix.Except(diagnostics, DiagnosticDeepEqualityComparer.Instance));
 
                 previousDiagnostics = diagnostics;
 
@@ -400,23 +430,14 @@ namespace Roslynator.CodeFixes
 
                 fixKind = await FixDiagnosticsAsync(diagnostics, descriptor, fixers, project, cancellationToken).ConfigureAwait(false);
 
-                if (fixKind == DiagnosticFixKind.Fixed)
-                {
-                    if (Options.BatchSize <= 0
-                        || length <= Options.BatchSize)
-                    {
-                        break;
-                    }
-                }
-                else if (fixKind != DiagnosticFixKind.PartiallyFixed)
-                {
-                    break;
-                }
+                previousDiagnosticsToFix = diagnostics;
 
                 project = CurrentSolution.GetProject(project.Id);
             }
 
-            return fixKind;
+            fixedDiagostics.AddRange(previousDiagnosticsToFix.Except(diagnostics, DiagnosticDeepEqualityComparer.Instance));
+
+            return new DiagnosticFixResult(fixKind, fixedDiagostics.ToImmutableArray());
         }
 
         private async Task<DiagnosticFixKind> FixDiagnosticsAsync(
@@ -728,9 +749,9 @@ namespace Roslynator.CodeFixes
             return true;
         }
 
-        private async Task<ImmutableArray<DiagnosticDescriptor>> GetDiagnosticsAsync(
+        private async Task<ImmutableArray<Diagnostic>> GetDiagnosticsAsync(
             ImmutableArray<DiagnosticAnalyzer> analyzers,
-            IEnumerable<DiagnosticDescriptor> except,
+            IEnumerable<Diagnostic> except,
             Compilation compilation,
             Func<(string id, DiagnosticAnalyzer analyzer), bool> predicate,
             CancellationToken cancellationToken)
@@ -747,15 +768,14 @@ namespace Roslynator.CodeFixes
                 .ToImmutableArray();
 
             if (!analyzers.Any())
-                return ImmutableArray<DiagnosticDescriptor>.Empty;
+                return ImmutableArray<Diagnostic>.Empty;
 
             ImmutableArray<Diagnostic> diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(analyzers, _defaultCompilationWithAnalyzersOptions, cancellationToken).ConfigureAwait(false);
 
             return diagnostics
                 .Where(f => Options.IsSupportedDiagnostic(f)
                     && analyzersById.ContainsKey(f.Id))
-                .Select(f => f.Descriptor)
-                .Except(except, DiagnosticDescriptorComparer.Id)
+                .Except(except, DiagnosticDeepEqualityComparer.Instance)
                 .ToImmutableArray();
         }
 
