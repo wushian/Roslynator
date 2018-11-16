@@ -374,6 +374,7 @@ namespace Roslynator
                     .GroupBy(f => f.Descriptor, DiagnosticDescriptorComparer.Id)
                     .Select(f => (descriptor: f.Key, count: f.Count()))
                     .OrderByDescending(f => f.count)
+                    .ThenBy(f => f.descriptor.Id)
                     .ToList();
 
                 if (diagnosticsById.Count > 0)
@@ -385,12 +386,12 @@ namespace Roslynator
                     WriteLine(title, verbosity);
 
                     int maxIdLength = diagnosticsById.Max(f => f.descriptor.Id.Length);
-                    int maxCountLength = diagnosticsById.Max(f => f.count.ToString(formatProvider).Length);
+                    int maxCountLength = diagnosticsById.Max(f => f.count.ToString("n0").Length);
 
                     foreach ((DiagnosticDescriptor descriptor, int count) in diagnosticsById)
                     {
                         Write(indent, verbosity);
-                        WriteLine($"  {count.ToString(formatProvider).PadLeft(maxCountLength)} {descriptor.Id.PadRight(maxIdLength)} {descriptor.Title.ToString(formatProvider)}", verbosity);
+                        WriteLine($"  {count.ToString("n0").PadLeft(maxCountLength)} {descriptor.Id.PadRight(maxIdLength)} {descriptor.Title.ToString(formatProvider)}", verbosity);
                     }
 
                     return true;

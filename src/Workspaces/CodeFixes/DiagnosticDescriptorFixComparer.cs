@@ -47,7 +47,7 @@ namespace Roslynator.CodeFixes
                 return 1;
             }
 
-            return DiagnosticCountByDescriptor[x].CompareTo(DiagnosticCountByDescriptor[y]);
+            return DiagnosticCountByDescriptor[y].CompareTo(DiagnosticCountByDescriptor[x]);
         }
     }
 }
