@@ -186,19 +186,16 @@ namespace Roslynator.CommandLine
 
         private protected IEnumerable<Project> FilterProjects(
             Solution solution,
-            MSBuildCommandLineOptions options)
+            MSBuildCommandLineOptions options,
+            Func<Solution, ImmutableArray<ProjectId>> getProjects = null)
         {
-            ImmutableHashSet<string> projectNames = (options.Projects != null)
-                ? options.Projects.ToImmutableHashSet()
-                : ImmutableHashSet<string>.Empty;
+            ImmutableHashSet<string> projectNames = options.GetProjectNames();
 
-            ImmutableHashSet<string> ignoredProjectNames = (options.IgnoredProjects != null)
-                ? options.IgnoredProjects.ToImmutableHashSet()
-                : ImmutableHashSet<string>.Empty;
+            ImmutableHashSet<string> ignoredProjectNames = options.GetIgnoredProjectNames();
 
             Workspace workspace = solution.Workspace;
 
-            foreach (ProjectId projectId in solution.ProjectIds)
+            foreach (ProjectId projectId in (getProjects != null) ? getProjects(solution) : solution.ProjectIds)
             {
                 Project project = workspace.CurrentSolution.GetProject(projectId);
 

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Roslynator.Diagnostics;
 using Roslynator.Documentation;
 using static Roslynator.Logger;
 
@@ -307,6 +308,43 @@ namespace Roslynator.CommandLine
 
             language = null;
             return false;
+        }
+
+        public static bool TryParseVisibility(string value, out Visibility visibility)
+        {
+            if (!Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out visibility))
+            {
+                WriteLine($"Unknown visibility '{value}'.", Verbosity.Quiet);
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool TryParseUnusedSymbolKinds(IEnumerable<string> values, out UnusedSymbolKinds kinds)
+        {
+            if (!values.Any())
+            {
+                kinds = UnusedSymbolKinds.TypeOrMember;
+                return true;
+            }
+
+            kinds = UnusedSymbolKinds.None;
+
+            foreach (string value in values)
+            {
+                if (Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out UnusedSymbolKinds result))
+                {
+                    kinds |= result;
+                }
+                else
+                {
+                    WriteLine($"Unknown unused symbol kind '{value}'.", Verbosity.Quiet);
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

@@ -17,8 +17,8 @@ using Roslynator.CodeFixes;
 using Roslynator.Diagnostics;
 using Roslynator.Documentation;
 using Roslynator.Documentation.Markdown;
-using static Roslynator.CommandLine.ParseHelpers;
 using static Roslynator.CommandLine.DocumentationHelpers;
+using static Roslynator.CommandLine.ParseHelpers;
 using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
@@ -39,6 +39,7 @@ namespace Roslynator.CommandLine
                     AnalyzeCommandLineOptions,
 #if DEBUG
                     AnalyzeAssemblyCommandLineOptions,
+                    AnalyzeUnusedCommandLineOptions,
 #endif
                     FormatCommandLineOptions,
                     SlnListCommandLineOptions,
@@ -85,6 +86,7 @@ namespace Roslynator.CommandLine
                     (AnalyzeCommandLineOptions options) => AnalyzeAsync(options).Result,
 #if DEBUG
                     (AnalyzeAssemblyCommandLineOptions options) => AnalyzeAssembly(options),
+                    (AnalyzeUnusedCommandLineOptions options) => AnalyzeUnusedAsync(options).Result,
 #endif
                     (FormatCommandLineOptions options) => FormatAsync(options).Result,
                     (SlnListCommandLineOptions options) => SlnListAsync(options).Result,
@@ -161,6 +163,24 @@ namespace Roslynator.CommandLine
             var executor = new AnalyzeAssemblyCommandExecutor(language);
 
             CommandResult result = executor.Execute(options);
+
+            return (result.Kind == CommandResultKind.Success) ? 0 : 1;
+        }
+
+        private static async Task<int> AnalyzeUnusedAsync(AnalyzeUnusedCommandLineOptions options)
+        {
+            if (!options.TryGetLanguage(out string language))
+                return 1;
+
+            if (!options.TryGetScope(UnusedSymbolKinds.TypeOrMember, out UnusedSymbolKinds unusedSymbolKinds))
+                return 1;
+
+            if (!options.TryGetVisibility(Visibility.Internal, out  Visibility visibility))
+                return 1;
+
+            var executor = new AnalyzeUnusedCommandExecutor(options, visibility, unusedSymbolKinds, language);
+
+            CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
 
             return (result.Kind == CommandResultKind.Success) ? 0 : 1;
         }
