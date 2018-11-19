@@ -4,6 +4,7 @@ using System;
 
 namespace Roslynator.Diagnostics
 {
+    //TODO: zrušit Flags
     [Flags]
     internal enum UnusedSymbolKinds
     {
@@ -11,14 +12,13 @@ namespace Roslynator.Diagnostics
         Class = 1,
         Delegate = 2,
         Enum = 4,
-        Interface = 8,
-        Struct = 16,
+        Event = 8,
+        Field = 16,
+        Interface = 32,
+        Method = 64,
+        Property = 128,
+        Struct = 256,
         Type = Class | Delegate | Enum | Interface | Struct,
-        Event = 32,
-        Field = 64,
-        Method = 128,
-        Property = 256,
         Member = Event | Field | Method | Property,
-        TypeOrMember = Type | Member,
-    }
+        TypeOrMember = Type | Member    }
 }

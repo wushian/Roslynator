@@ -203,7 +203,7 @@ namespace Roslynator.Diagnostics
             foreach (Diagnostic diagnostic in diagnostics)
             {
                 if (Options.IsSupportedDiagnostic(diagnostic)
-                    && (Options.ReportFadeDiagnostics || !diagnostic.IsFadeDiagnostic()))
+                    && (Options.ReportNotConfigurable || !diagnostic.Descriptor.CustomTags.Contains(WellKnownDiagnosticTags.NotConfigurable)))
                 {
                     if (diagnostic.Descriptor.CustomTags.Contains(WellKnownDiagnosticTags.Compiler))
                     {

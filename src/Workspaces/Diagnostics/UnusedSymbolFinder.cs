@@ -16,7 +16,7 @@ namespace Roslynator.Diagnostics
 {
     internal static class UnusedSymbolFinder
     {
-        public static async Task<ImmutableArray<ISymbol>> FindUnusedSymbolsAsync(
+        public static async Task<ImmutableArray<UnusedSymbolInfo>> FindUnusedSymbolsAsync(
             Project project,
             Func<ISymbol, bool> predicate = null,
             IImmutableSet<ISymbol> ignoredSymbols = null,
@@ -32,14 +32,14 @@ namespace Roslynator.Diagnostics
                 cancellationToken).ConfigureAwait(false);
         }
 
-        internal static async Task<ImmutableArray<ISymbol>> FindUnusedSymbolsAsync(
+        internal static async Task<ImmutableArray<UnusedSymbolInfo>> FindUnusedSymbolsAsync(
             Project project,
             Compilation compilation,
             Func<ISymbol, bool> predicate = null,
             IImmutableSet<ISymbol> ignoredSymbols = null,
             CancellationToken cancellationToken = default)
         {
-            ImmutableArray<ISymbol>.Builder unusedSymbols = null;
+            ImmutableArray<UnusedSymbolInfo>.Builder unusedSymbols = null;
 
             var namespaceOrTypeSymbols = new Stack<INamespaceOrTypeSymbol>();
 
@@ -69,7 +69,9 @@ namespace Roslynator.Diagnostics
                             WriteLine($"  {kindText} {symbol.ToDisplayString()}", Verbosity.Normal);
                             WriteLine($"  {"ID:".PadLeft(kindText.Length)} {symbol.GetDocumentationCommentId()}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
-                            (unusedSymbols ?? (unusedSymbols = ImmutableArray.CreateBuilder<ISymbol>())).Add(symbol);
+                            var unusedSymbolInfo = new UnusedSymbolInfo(symbol, symbol.GetDocumentationCommentId(), project.Id);
+
+                            (unusedSymbols ?? (unusedSymbols = ImmutableArray.CreateBuilder<UnusedSymbolInfo>())).Add(unusedSymbolInfo);
                         }
                     }
 
@@ -81,7 +83,7 @@ namespace Roslynator.Diagnostics
                 }
             }
 
-            return unusedSymbols?.ToImmutableArray() ?? ImmutableArray<ISymbol>.Empty;
+            return unusedSymbols?.ToImmutableArray() ?? ImmutableArray<UnusedSymbolInfo>.Empty;
         }
 
         private static bool IsAnalyzable(ISymbol symbol)

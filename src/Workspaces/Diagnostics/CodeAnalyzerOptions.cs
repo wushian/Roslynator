@@ -12,7 +12,7 @@ namespace Roslynator.Diagnostics
         public CodeAnalyzerOptions(
             bool ignoreAnalyzerReferences = false,
             bool ignoreCompilerDiagnostics = false,
-            bool reportFadeDiagnostics = false,
+            bool reportNotConfigurable = false,
             bool reportSuppressedDiagnostics = false,
             bool executionTime = false,
             DiagnosticSeverity minimalSeverity = DiagnosticSeverity.Info,
@@ -23,14 +23,14 @@ namespace Roslynator.Diagnostics
             string language = null) : base(minimalSeverity, ignoreAnalyzerReferences, supportedDiagnosticIds, ignoredDiagnosticIds, projectNames, ignoredProjectNames, language)
         {
             IgnoreCompilerDiagnostics = ignoreCompilerDiagnostics;
-            ReportFadeDiagnostics = reportFadeDiagnostics;
+            ReportNotConfigurable = reportNotConfigurable;
             ReportSuppressedDiagnostics = reportSuppressedDiagnostics;
             ExecutionTime = executionTime;
         }
 
         public bool IgnoreCompilerDiagnostics { get; }
 
-        public bool ReportFadeDiagnostics { get; }
+        public bool ReportNotConfigurable { get; }
 
         public bool ReportSuppressedDiagnostics { get; }
 

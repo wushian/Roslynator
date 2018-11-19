@@ -22,7 +22,7 @@ roslynator analyze <PROJECT|SOLUTION>
 [--output]
 [--projects]
 [-p|--properties]
-[--report-fade-diagnostics]
+[--report-not-configurable]
 [--report-suppressed-diagnostics]
 [--supported-diagnostics]
 [--use-roslynator-analyzers]
@@ -98,9 +98,9 @@ Defines one or more MSBuild properties.
 
 Indicates whether code analysis should use analyzers from nuget package [Roslynator.Analyzers](https://nuget.org/packages/Roslynator.Analyzers).
 
-**`--report-fade-diagnostics`**
+**`--report-not-configurable`**
 
-Indicates whether diagnostics whose ID ends with 'FadedToken' or 'FadeOut' should be reported.
+Indicates whether diagnostics that have tag '[NotConfigurable](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.wellknowndiagnostictags.notconfigurable?view=roslyn-dotnet)' should be reported.
 
 **`--report-suppressed-diagnostics`**
 

@@ -49,7 +49,7 @@ namespace Roslynator.CommandLine
             var codeAnalyzerOptions = new CodeAnalyzerOptions(
                 ignoreAnalyzerReferences: Options.IgnoreAnalyzerReferences,
                 ignoreCompilerDiagnostics: Options.IgnoreCompilerDiagnostics,
-                reportFadeDiagnostics: Options.ReportFadeDiagnostics,
+                reportNotConfigurable: Options.ReportNotConfigurable,
                 reportSuppressedDiagnostics: Options.ReportSuppressedDiagnostics,
                 executionTime: Options.ExecutionTime,
                 minimalSeverity: MinimalSeverity,

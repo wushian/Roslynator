@@ -46,12 +46,6 @@ namespace Roslynator
             return false;
         }
 
-        public static bool IsFadeDiagnostic(this Diagnostic diagnostic)
-        {
-            return diagnostic.Id.EndsWith("FadedToken", StringComparison.Ordinal)
-                || diagnostic.Id.EndsWith("FadeOut", StringComparison.Ordinal);
-        }
-
         public static void Add(this AnalyzerTelemetryInfo telemetryInfo, AnalyzerTelemetryInfo telemetryInfoToAdd)
         {
             telemetryInfo.CodeBlockActionsCount += telemetryInfoToAdd.CodeBlockActionsCount;

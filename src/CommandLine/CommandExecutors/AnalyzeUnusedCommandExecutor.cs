@@ -34,7 +34,7 @@ namespace Roslynator.CommandLine
         {
             AssemblyResolver.Register();
 
-            ImmutableArray<ISymbol> allUnusedSymbols;
+            ImmutableArray<UnusedSymbolInfo> allUnusedSymbols;
 
             if (projectOrSolution.IsProject)
             {
@@ -46,7 +46,7 @@ namespace Roslynator.CommandLine
             {
                 Solution solution = projectOrSolution.AsSolution();
 
-                ImmutableArray<ISymbol>.Builder unusedSymbols = null;
+                ImmutableArray<UnusedSymbolInfo>.Builder unusedSymbols = null;
 
                 foreach (Project project in FilterProjects(solution, Options, s => s
                     .GetProjectDependencyGraph()
@@ -55,15 +55,27 @@ namespace Roslynator.CommandLine
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    ImmutableArray<ISymbol> unusedSymbols2 = await AnalyzeProject(project, cancellationToken);
+                    ImmutableArray<UnusedSymbolInfo> unusedSymbols2 = await AnalyzeProject(project, cancellationToken);
 
                     if (unusedSymbols2.Any())
                     {
-                        (unusedSymbols ?? (unusedSymbols = ImmutableArray.CreateBuilder<ISymbol>())).AddRange(unusedSymbols2);
+                        (unusedSymbols ?? (unusedSymbols = ImmutableArray.CreateBuilder<UnusedSymbolInfo>())).AddRange(unusedSymbols2);
                     }
                 }
 
-                allUnusedSymbols = unusedSymbols?.ToImmutableArray() ?? ImmutableArray<ISymbol>.Empty;
+                allUnusedSymbols = unusedSymbols?.ToImmutableArray() ?? ImmutableArray<UnusedSymbolInfo>.Empty;
+            }
+
+            if (allUnusedSymbols.Any())
+            {
+                WriteLine(Verbosity.Normal);
+
+                foreach (IGrouping<UnusedSymbolKinds, UnusedSymbolInfo> grouping in allUnusedSymbols
+                    .GroupBy(f => f.Kind)
+                    .OrderBy(f => f.Key))
+                {
+                    WriteLine($"{grouping.Count()} {grouping.Key.ToString().ToLowerInvariant()} symbols", Verbosity.Normal);
+                }
             }
 
             WriteLine(Verbosity.Minimal);
@@ -73,7 +85,7 @@ namespace Roslynator.CommandLine
             return CommandResult.Success;
         }
 
-        private async Task<ImmutableArray<ISymbol>> AnalyzeProject(Project project, CancellationToken cancellationToken)
+        private async Task<ImmutableArray<UnusedSymbolInfo>> AnalyzeProject(Project project, CancellationToken cancellationToken)
         {
             WriteLine($"Analyze '{project.Name}'", ConsoleColor.Cyan, Verbosity.Minimal);
 

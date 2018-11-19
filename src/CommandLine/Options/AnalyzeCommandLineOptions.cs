@@ -4,7 +4,6 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: IgnoreNotConfigurable, IncludeNotConfigurable
     [Verb("analyze", HelpText = "Analyzes specified project or solution and reports diagnostics.")]
     public class AnalyzeCommandLineOptions : AbstractAnalyzeCommandLineOptions
     {
@@ -17,8 +16,8 @@ namespace Roslynator.CommandLine
         [Option(longName: "output")]
         public string Output { get; set; }
 
-        [Option(longName: "report-fade-diagnostics")]
-        public bool ReportFadeDiagnostics { get; set; }
+        [Option(longName: "report-not-configurable")]
+        public bool ReportNotConfigurable { get; set; }
 
         [Option(longName: "report-suppressed-diagnostics")]
         public bool ReportSuppressedDiagnostics { get; set; }
