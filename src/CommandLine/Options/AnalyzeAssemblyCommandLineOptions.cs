@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using CommandLine;
 
 #if DEBUG
-
 namespace Roslynator.CommandLine
 {
     [Verb("analyze-assembly", HelpText = "Searches file or directory for analyzer assemblies.")]
@@ -34,5 +33,4 @@ namespace Roslynator.CommandLine
         }
     }
 }
-
 #endif

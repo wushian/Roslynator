@@ -19,11 +19,27 @@ namespace Roslynator.Diagnostics
         public static async Task<ImmutableArray<ISymbol>> FindUnusedSymbolsAsync(
             Project project,
             Func<ISymbol, bool> predicate = null,
+            IImmutableSet<ISymbol> ignoredSymbols = null,
+            CancellationToken cancellationToken = default)
+        {
+            Compilation compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
+
+            return await FindUnusedSymbolsAsync(
+                project,
+                compilation,
+                predicate,
+                ignoredSymbols,
+                cancellationToken).ConfigureAwait(false);
+        }
+
+        internal static async Task<ImmutableArray<ISymbol>> FindUnusedSymbolsAsync(
+            Project project,
+            Compilation compilation,
+            Func<ISymbol, bool> predicate = null,
+            IImmutableSet<ISymbol> ignoredSymbols = null,
             CancellationToken cancellationToken = default)
         {
             ImmutableArray<ISymbol>.Builder unusedSymbols = null;
-
-            Compilation compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
             var namespaceOrTypeSymbols = new Stack<INamespaceOrTypeSymbol>();
 
@@ -38,17 +54,20 @@ namespace Roslynator.Diagnostics
                     bool isUnused = false;
 
                     if (symbol.Kind != SymbolKind.Namespace
-                        && (predicate == null || predicate(symbol))
+                        && !symbol.IsImplicitlyDeclared
                         && !symbol.IsOverride
-                        && IsAnalyzable(symbol))
+                        && (predicate == null || predicate(symbol))
+                        && IsAnalyzable(symbol)
+                        && ignoredSymbols?.Contains(symbol) != true)
                     {
-                        WriteLine($"  Analyze '{symbol.ToDisplayString()}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
-
                         isUnused = await IsUnusedSymbolAsync(symbol, project.Solution, cancellationToken).ConfigureAwait(false);
 
                         if (isUnused)
                         {
-                            WriteLine($"  {GetUnusedSymbolKind(symbol).ToString()} {symbol.ToDisplayString()}", Verbosity.Normal);
+                            string kindText = GetUnusedSymbolKind(symbol).ToString();
+
+                            WriteLine($"  {kindText} {symbol.ToDisplayString()}", Verbosity.Normal);
+                            WriteLine($"  {"ID:".PadLeft(kindText.Length)} {symbol.GetDocumentationCommentId()}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
                             (unusedSymbols ?? (unusedSymbols = ImmutableArray.CreateBuilder<ISymbol>())).Add(symbol);
                         }
@@ -153,6 +172,8 @@ namespace Roslynator.Diagnostics
             CancellationToken cancellationToken)
         {
             ImmutableArray<SyntaxReference> syntaxReferences = symbol.DeclaringSyntaxReferences;
+
+            Debug.Assert(syntaxReferences.Any(), $"No syntax references for {symbol.ToDisplayString()}");
 
             if (!syntaxReferences.Any())
                 return false;

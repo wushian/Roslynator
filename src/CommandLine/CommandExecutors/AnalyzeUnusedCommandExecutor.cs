@@ -77,7 +77,14 @@ namespace Roslynator.CommandLine
         {
             WriteLine($"Analyze '{project.Name}'", ConsoleColor.Cyan, Verbosity.Minimal);
 
-            return await UnusedSymbolFinder.FindUnusedSymbolsAsync(project, Predicate, cancellationToken).ConfigureAwait(false);
+            Compilation compilation = await project.GetCompilationAsync(cancellationToken);
+
+            ImmutableHashSet<ISymbol> ignoredSymbols = Options.IgnoredSymbols
+                .Select(f => DocumentationCommentId.GetFirstSymbolForDeclarationId(f, compilation))
+                .Where(f => f != null)
+                .ToImmutableHashSet();
+
+            return await UnusedSymbolFinder.FindUnusedSymbolsAsync(project, compilation, Predicate, ignoredSymbols, cancellationToken).ConfigureAwait(false);
 
             bool Predicate(ISymbol symbol)
             {

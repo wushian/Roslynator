@@ -4,6 +4,7 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
+    //TODO: IgnoreNotConfigurable, IncludeNotConfigurable
     [Verb("analyze", HelpText = "Analyzes specified project or solution and reports diagnostics.")]
     public class AnalyzeCommandLineOptions : AbstractAnalyzeCommandLineOptions
     {

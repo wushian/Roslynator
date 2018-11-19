@@ -6,9 +6,10 @@ using CommandLine;
 using Roslynator.Diagnostics;
 
 #if DEBUG
-
 namespace Roslynator.CommandLine
 {
+    //TODO: Remove, Output
+    //TODO: IgnoreGeneratedCode
     [Verb("analyze-unused", HelpText = "Finds unused symbols in the specified project or solution.")]
     public class AnalyzeUnusedCommandLineOptions : MSBuildCommandLineOptions
     {
@@ -18,6 +19,7 @@ namespace Roslynator.CommandLine
         [Option(longName: "scope")]
         public IEnumerable<string> Scope { get; set; }
 
+        //TODO: MaxVisibility
         [Option(longName: "visibility")]
         public string Visibility { get; set; }
 
@@ -40,5 +42,4 @@ namespace Roslynator.CommandLine
         }
     }
 }
-
 #endif
