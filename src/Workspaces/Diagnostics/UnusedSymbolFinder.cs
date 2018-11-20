@@ -64,12 +64,13 @@ namespace Roslynator.Diagnostics
 
                         if (isUnused)
                         {
-                            string kindText = GetUnusedSymbolKind(symbol).ToString();
+                            string id = symbol.GetDocumentationCommentId();
 
-                            WriteLine($"  {kindText} {symbol.ToDisplayString()}", Verbosity.Normal);
-                            WriteLine($"  {"ID:".PadLeft(kindText.Length)} {symbol.GetDocumentationCommentId()}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                            WriteLine($"  {GetUnusedSymbolKind(symbol).ToString()} {symbol.ToDisplayString()}", Verbosity.Normal);
+                            WriteLine($"    {symbol.GetSyntax(cancellationToken).SyntaxTree.FilePath}", ConsoleColor.DarkGray, Verbosity.Detailed);
+                            WriteLine($"    {id}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
-                            var unusedSymbolInfo = new UnusedSymbolInfo(symbol, symbol.GetDocumentationCommentId(), project.Id);
+                            var unusedSymbolInfo = new UnusedSymbolInfo(symbol, id, project.Id);
 
                             (unusedSymbols ?? (unusedSymbols = ImmutableArray.CreateBuilder<UnusedSymbolInfo>())).Add(unusedSymbolInfo);
                         }

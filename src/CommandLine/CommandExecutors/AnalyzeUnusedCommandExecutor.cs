@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Roslynator.Diagnostics;
 using static Roslynator.Logger;
+using System.Collections.Generic;
 
 namespace Roslynator.CommandLine
 {
@@ -70,11 +71,16 @@ namespace Roslynator.CommandLine
             {
                 WriteLine(Verbosity.Normal);
 
-                foreach (IGrouping<UnusedSymbolKinds, UnusedSymbolInfo> grouping in allUnusedSymbols
+                Dictionary<UnusedSymbolKinds, int> countByKind = allUnusedSymbols
                     .GroupBy(f => f.Kind)
-                    .OrderBy(f => f.Key))
+                    .OrderBy(f => f.Key)
+                    .ToDictionary(f => f.Key, f => f.Count());
+
+                int maxCountLength = countByKind.Sum(f => f.Value.ToString().Length);
+
+                foreach (KeyValuePair<UnusedSymbolKinds, int> kvp in countByKind)
                 {
-                    WriteLine($"{grouping.Count()} {grouping.Key.ToString().ToLowerInvariant()} symbols", Verbosity.Normal);
+                    WriteLine($"{kvp.Value.ToString().PadLeft(maxCountLength)} {kvp.Key.ToString().ToLowerInvariant()} symbols", Verbosity.Normal);
                 }
             }
 

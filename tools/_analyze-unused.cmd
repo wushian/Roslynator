@@ -4,10 +4,10 @@
 
 set _analyzersDir=..\src\Analyzers.CodeFixes\bin\Debug\netstandard1.3\
 
-"..\src\CommandLine\bin\Debug\net461\roslynator" analyze-unused "..\src\Roslynator.sln" ^
+"..\src\CommandLine\bin\Debug\net461\roslynator" analyze-unused "..\src\CommandLine.sln" ^
  --visibility internal ^
- --scope type member ^
- --verbosity n ^
+ --scope type ^
+ --verbosity d ^
  --file-log "roslynator.log" ^
  --file-log-verbosity diag
 
