@@ -37,7 +37,7 @@ The project or solution to analyze.
 
 ### Optional Options
 
-**`a-|--analyzer-assemblies`** <ASSEMBLY_PATH> <DIRECTORY_PATH>
+**`a-|--analyzer-assemblies`** <PATH>
 
 Defines one or more paths to:
 
@@ -93,10 +93,6 @@ Defines projects that should be analyzed.
 **`-p|--properties`** `<NAME=VALUE>`
 
 Defines one or more MSBuild properties.
-
-**`--use-roslynator-analyzers`**
-
-Indicates whether code analysis should use analyzers from nuget package [Roslynator.Analyzers](https://nuget.org/packages/Roslynator.Analyzers).
 
 **`--report-not-configurable`**
 

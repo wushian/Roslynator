@@ -27,7 +27,7 @@ roslynator generate-doc-root
 
 ### Required Options
 
-**`-a|--assemblies`** `<ASSEMBLIES_TO_DOCUMENT>`
+**`-a|--assemblies`** `<ASSEMBLIES>`
 
 Defines one or more assemblies that should be used as a source for the documentation.
 
@@ -39,12 +39,9 @@ Defines a heading of the root documentation file.
 
 Defines a path for the output directory.
 
-**`-r|--references`** `<ASSEMBLY_REFERENCE> <ASSEMBLY_REFERENCES_FILE>`
+**`-r|--references`** `<ASSEMBLY_REFERENCE | ASSEMBLY_REFERENCES_FILE>`
 
-Defines one or more values where each value can be:
-
-* Path to assembly file.
-* Path to a file that contains a list of all assemblies. Each assembly must be on separate line.
+Defines one or more paths to assembly or a file that contains a list of all assemblies. Each assembly must be on separate line.
 
 ### Optional Options
 
@@ -56,9 +53,9 @@ Defines a depth of a documentation. Default value is `member`.
 
 Defines a list of metadata names that should be excluded from a documentation. Namespace of type names can be specified.
 
-**`[--ignored-parts]`** `{content|namespaces|classes|static-classes|structs|interfaces|enums|delegates|other}`
+**`[--ignored-parts]`** `{content namespaces classes static-classes structs interfaces enums delegates other}`
 
-Defines parts of a root documentation that should be excluded. No part is excluded by default.
+Defines parts of a root documentation that should be excluded.
 
 **`[--no-class-hierarchy]`**
 

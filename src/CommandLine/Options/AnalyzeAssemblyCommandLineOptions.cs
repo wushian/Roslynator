@@ -3,10 +3,11 @@
 using System.Collections.Generic;
 using CommandLine;
 
-#if DEBUG
 namespace Roslynator.CommandLine
 {
+#if DEBUG
     [Verb("analyze-assembly", HelpText = "Searches file or directory for analyzer assemblies.")]
+#endif
     public class AnalyzeAssemblyCommandLineOptions : BaseCommandLineOptions
     {
         [Value(index: 0, Required = true, HelpText = "The path to file or directory to analyze.", MetaValue = "<PATH>")]
@@ -33,4 +34,3 @@ namespace Roslynator.CommandLine
         }
     }
 }
-#endif

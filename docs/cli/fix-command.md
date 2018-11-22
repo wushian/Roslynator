@@ -13,6 +13,7 @@ roslynator fix <PROJECT|SOLUTION>
 [--diagnostic-fixer-map]
 [--diagnostic-fix-map]
 [--diagnostics-fixable-one-by-one]
+[--file-banner]
 [--format]
 [--ignore-analyzer-references]
 [--ignore-compiler-errors]
@@ -41,7 +42,7 @@ The project or solution to fix.
 
 ### Optional Options
 
-**`a-|--analyzer-assemblies`** <ASSEMBLY_PATH> <DIRECTORY_PATH>
+**`a-|--analyzer-assemblies`** <PATH>
 
 Defines one or more paths to:
 
@@ -73,6 +74,10 @@ Set verbosity to 'diagnostic' to see which diagnostics cannot be fixed due to mu
 **`--diagnostics-fixable-one-by-one`** <DIAGNOSTIC_ID>
 
 Defines diagnostics that can be fixed even if there is no (FixAllProvider)[https://github.com/dotnet/roslyn/blob/master/docs/analyzers/FixAllProvider.md] for them.
+
+**`--file-banner`** <FILE_BANNER>
+
+Defines text that should be at the top of the source file.
 
 **`--format`**
 

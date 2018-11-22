@@ -10,6 +10,7 @@ roslynator generate-declarations
 -a|--assemblies
 -o|--output
 -r|--references
+[--additional-xml-documentation]
 [--depth]
 [--empty-line-between-members]
 [--format-base-list]
@@ -34,7 +35,7 @@ roslynator generate-declarations
 
 ### Required Options
 
-**`-a|--assemblies`** `<ASSEMBLIES_TO_DOCUMENT>`
+**`-a|--assemblies`** `<ASSEMBLIES>`
 
 Defines one or more assemblies that should be used as a source for the documentation.
 
@@ -42,14 +43,15 @@ Defines one or more assemblies that should be used as a source for the documenta
 
 Defines a path for the output directory.
 
-**`-r|--references`** `<ASSEMBLY_REFERENCE> <ASSEMBLY_REFERENCES_FILE>`
+**`-r|--references`** `<ASSEMBLY_REFERENCE | ASSEMBLY_REFERENCES_FILE>`
 
-Defines one or more values where each value can be:
-
-* Path to assembly file.
-* Path to a file that contains a list of all assemblies. Each assembly must be on separate line.
+Defines one or more paths to assembly or a file that contains a list of all assemblies. Each assembly must be on separate line.
 
 ### Optional Options
+
+**`[--additional-xml-documentation]`** `<XML_DOCUMENTATION_FILE>`
+
+Defines one or more xml documentation files that should be included. These files can contain a documentation for namespaces, for instance.
 
 **`[--depth]`** `{member|type|namespace}`
 

@@ -12,19 +12,19 @@ namespace Roslynator.CommandLine
         [Value(index: 0, Required = true, HelpText = "The project or solution file.", MetaValue = "<PROJECT|SOLUTION>")]
         public string Path { get; set; }
 
-        [Option(longName: "ignored-projects")]
+        [Option(longName: "ignored-projects", HelpText = "Defines projects that should not be analyzed.", MetaValue = "<PROJECT_NAME>")]
         public IEnumerable<string> IgnoredProjects { get; set; }
 
-        [Option(longName: "language")]
+        [Option(longName: "language", HelpText = "Defines project language.", MetaValue = "{cs[harp]|v[isual-]b[asic])}")]
         public string Language { get; set; }
 
-        [Option(longName: "msbuild-path")]
+        [Option(longName: "msbuild-path", HelpText = "Defines a path to MSBuild. First found instance of MSBuild will be used if the path to MSBuild is not specified.", MetaValue = "<MSBUILD_PATH>")]
         public string MSBuildPath { get; set; }
 
-        [Option(longName: "projects")]
+        [Option(longName: "projects", HelpText = "Defines projects that should be analyzed.", MetaValue = "<PROJECT_NAME>")]
         public IEnumerable<string> Projects { get; set; }
 
-        [Option(shortName: 'p', longName: "properties")]
+        [Option(shortName: 'p', longName: "properties", HelpText = "Defines one or more MSBuild properties.", MetaValue = "<NAME=VALUE>")]
         public IEnumerable<string> Properties { get; set; }
 
         internal ImmutableHashSet<string> GetProjectNames()

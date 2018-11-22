@@ -434,7 +434,7 @@ namespace Roslynator.CommandLine
             if (documentationModel == null)
                 return 1;
 
-            if (!TryParseIgnoredRootParts(options.Parts, out RootDocumentationParts ignoredParts))
+            if (!TryParseIgnoredRootParts(options.IgnoredParts, out RootDocumentationParts ignoredParts))
                 return 1;
 
             var documentationOptions = new DocumentationOptions(

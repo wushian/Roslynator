@@ -5,11 +5,12 @@ using System.Linq;
 using CommandLine;
 using Roslynator.Diagnostics;
 
-#if DEBUG
 namespace Roslynator.CommandLine
 {
     //TODO: Remove, IgnoreGeneratedCode
+#if DEBUG
     [Verb("analyze-unused", HelpText = "Finds unused symbols in the specified project or solution.")]
+#endif
     public class AnalyzeUnusedCommandLineOptions : MSBuildCommandLineOptions
     {
         [Option(longName: "ignored-symbols")]
@@ -40,4 +41,3 @@ namespace Roslynator.CommandLine
         }
     }
 }
-#endif
