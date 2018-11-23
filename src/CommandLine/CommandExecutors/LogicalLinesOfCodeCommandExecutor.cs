@@ -30,7 +30,7 @@ namespace Roslynator.CommandLine
             {
                 Project project = projectOrSolution.AsProject();
 
-                CodeMetricsCounter counter = CodeMetricsCounter.GetLogicalLinesCounter(project.Language);
+                CodeMetricsCounter counter = CodeMetricsCounterFactory.GetLogicalLinesCounter(project.Language);
 
                 if (counter != null)
                 {
@@ -55,7 +55,7 @@ namespace Roslynator.CommandLine
 
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            CodeMetrics metrics = await counter.CountLinesAsync(project, options, cancellationToken);
+            CodeMetrics metrics = await WorkspaceCodeMetrics.CountLinesAsync(project, counter, options, cancellationToken);
 
             stopwatch.Stop();
 
@@ -80,7 +80,7 @@ namespace Roslynator.CommandLine
 
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            ImmutableDictionary<ProjectId, CodeMetrics> projectsMetrics = CodeMetricsCounter.CountLogicalLinesInParallel(projects, options, cancellationToken);
+            ImmutableDictionary<ProjectId, CodeMetrics> projectsMetrics = WorkspaceCodeMetrics.CountLinesInParallel(projects, CodeMetricsCounterFactory.GetLogicalLinesCounter, options, cancellationToken);
 
             stopwatch.Stop();
 

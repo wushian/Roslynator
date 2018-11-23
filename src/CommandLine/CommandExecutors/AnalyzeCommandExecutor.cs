@@ -66,7 +66,7 @@ namespace Roslynator.CommandLine
 
             CultureInfo culture = (Options.Culture != null) ? CultureInfo.GetCultureInfo(Options.Culture) : null;
 
-            var codeAnalyzer = new CodeAnalyzer(analyzerAssemblies: analyzerAssemblies, formatProvider: culture, options: codeAnalyzerOptions);
+            var codeAnalyzer = new CodeAnalyzer(SyntaxFactsServiceFactory.Instance, analyzerAssemblies: analyzerAssemblies, formatProvider: culture, options: codeAnalyzerOptions);
 
             if (projectOrSolution.IsProject)
             {

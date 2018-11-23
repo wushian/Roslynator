@@ -8,32 +8,6 @@ namespace Roslynator
 {
     internal abstract class SyntaxFactsService
     {
-        public static SyntaxFactsService GetService(string language)
-        {
-            switch (language)
-            {
-                case LanguageNames.CSharp:
-                    return CSharpSyntaxFactsService.Instance;
-                case LanguageNames.VisualBasic:
-                    return VisualBasicSyntaxFactsService.Instance;
-                default:
-                    throw new NotSupportedException($"Language '{language}' is not supported.");
-            }
-        }
-
-        public static SyntaxFactsService GetServiceOrDefault(string language)
-        {
-            switch (language)
-            {
-                case LanguageNames.CSharp:
-                    return CSharpSyntaxFactsService.Instance;
-                case LanguageNames.VisualBasic:
-                    return VisualBasicSyntaxFactsService.Instance;
-                default:
-                    return null;
-            }
-        }
-
         public static bool IsSupportedLanguage(string language)
         {
             switch (language)

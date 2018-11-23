@@ -122,7 +122,7 @@ namespace Roslynator.CommandLine
 
                 Solution solution = project.Solution;
 
-                var codeFixer = new CodeFixer(solution, analyzerAssemblies: analyzerAssemblies, formatProvider: formatProvider, options: codeFixerOptions);
+                var codeFixer = new CodeFixer(solution, SyntaxFactsServiceFactory.Instance, analyzerAssemblies: analyzerAssemblies, formatProvider: formatProvider, options: codeFixerOptions);
 
                 WriteLine($"Fix '{project.Name}'", ConsoleColor.Cyan, Verbosity.Minimal);
 
@@ -132,7 +132,7 @@ namespace Roslynator.CommandLine
             {
                 Solution solution = projectOrSolution.AsSolution();
 
-                var codeFixer = new CodeFixer(solution, analyzerAssemblies: analyzerAssemblies, options: codeFixerOptions);
+                var codeFixer = new CodeFixer(solution, SyntaxFactsServiceFactory.Instance, analyzerAssemblies: analyzerAssemblies, options: codeFixerOptions);
 
                 await codeFixer.FixSolutionAsync(cancellationToken);
             }

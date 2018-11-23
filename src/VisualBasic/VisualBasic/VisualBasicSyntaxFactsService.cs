@@ -3,7 +3,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.VisualBasic;
 
-namespace Roslynator
+namespace Roslynator.VisualBasic
 {
     internal sealed class VisualBasicSyntaxFactsService : SyntaxFactsService
     {

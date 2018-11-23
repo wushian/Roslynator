@@ -2,12 +2,13 @@
 
 using System.Threading;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
-using Microsoft.CodeAnalysis.VisualBasic;
+using Roslynator.Metrics;
 
-namespace Roslynator.Metrics.VisualBasic
+namespace Roslynator.CSharp.Metrics
 {
-    internal abstract class VisualBasicLinesWalker : VisualBasicSyntaxWalker
+    internal abstract class CSharpLinesWalker : CSharpSyntaxWalker
     {
         public int CommentLineCount { get; set; }
 
@@ -19,7 +20,7 @@ namespace Roslynator.Metrics.VisualBasic
 
         public CancellationToken CancellationToken { get; }
 
-        protected VisualBasicLinesWalker(TextLineCollection lines, CodeMetricsOptions options, CancellationToken cancellationToken)
+        protected CSharpLinesWalker(TextLineCollection lines, CodeMetricsOptions options, CancellationToken cancellationToken)
             : base(SyntaxWalkerDepth.Trivia)
         {
             Lines = lines;
@@ -40,7 +41,7 @@ namespace Roslynator.Metrics.VisualBasic
             {
                 switch (trivia.Kind())
                 {
-                    case SyntaxKind.CommentTrivia:
+                    case SyntaxKind.SingleLineCommentTrivia:
                         {
                             TextSpan span = trivia.Span;
 
@@ -53,9 +54,33 @@ namespace Roslynator.Metrics.VisualBasic
 
                             break;
                         }
-                    case SyntaxKind.DocumentationCommentTrivia:
+                    case SyntaxKind.SingleLineDocumentationCommentTrivia:
                         {
                             CommentLineCount += Lines.GetLineCount(trivia.Span) - 1;
+                            break;
+                        }
+                    case SyntaxKind.MultiLineCommentTrivia:
+                        {
+                            TextSpan span = trivia.Span;
+
+                            TextLine line = Lines.GetLineFromPosition(span.Start);
+
+                            if (line.IsEmptyOrWhiteSpace(TextSpan.FromBounds(line.Start, span.Start)))
+                            {
+                                int lineCount = Lines.GetLineCount(trivia.Span);
+
+                                if (lineCount == 1
+                                    || line.IsEmptyOrWhiteSpace(TextSpan.FromBounds(Lines.GetLineFromPosition(span.End).End, span.End)))
+                                {
+                                    CommentLineCount += lineCount;
+                                }
+                            }
+
+                            break;
+                        }
+                    case SyntaxKind.MultiLineDocumentationCommentTrivia:
+                        {
+                            CommentLineCount += Lines.GetLineCount(trivia.Span);
                             break;
                         }
                 }

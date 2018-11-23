@@ -3,18 +3,19 @@
 using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
+using Roslynator.Metrics;
 
-namespace Roslynator.Metrics.CSharp
+namespace Roslynator.VisualBasic.Metrics
 {
-    public class CSharpLogicalLinesCounter : CSharpCodeMetricsCounter
+    public class VisualBasicPhysicalLinesCounter : VisualBasicCodeMetricsCounter
     {
-        public static CSharpLogicalLinesCounter Instance { get; } = new CSharpLogicalLinesCounter();
+        public static VisualBasicPhysicalLinesCounter Instance { get; } = new VisualBasicPhysicalLinesCounter();
 
-        protected override CodeMetrics CountLines(SyntaxNode node, SourceText sourceText, CodeMetricsOptions options, CancellationToken cancellationToken)
+        public override CodeMetrics CountLines(SyntaxNode node, SourceText sourceText, CodeMetricsOptions options, CancellationToken cancellationToken)
         {
             TextLineCollection lines = sourceText.Lines;
 
-            var walker = new CSharpLogicalLinesWalker(lines, options, cancellationToken);
+            var walker = new VisualBasicPhysicalLinesWalker(lines, options, cancellationToken);
 
             walker.Visit(node);
 
@@ -22,11 +23,11 @@ namespace Roslynator.Metrics.CSharp
 
             return new CodeMetrics(
                 totalLineCount: lines.Count,
-                codeLineCount: walker.LogicalLineCount,
+                codeLineCount: lines.Count - whitespaceLineCount - walker.CommentLineCount - walker.PreprocessorDirectiveLineCount - walker.BlockBoundaryLineCount,
                 whitespaceLineCount: whitespaceLineCount,
                 commentLineCount: walker.CommentLineCount,
                 preprocessorDirectiveLineCount: walker.PreprocessorDirectiveLineCount,
-                blockBoundaryLineCount: 0);
+                blockBoundaryLineCount: walker.BlockBoundaryLineCount);
         }
     }
 }

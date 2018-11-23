@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Roslynator.CSharp;
 
-namespace Roslynator
+namespace Roslynator.CSharp
 {
     internal sealed class CSharpSyntaxFactsService : SyntaxFactsService
     {

@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Roslynator.CSharp;
 using static Roslynator.Logger;
 
 namespace Roslynator
@@ -136,6 +135,7 @@ namespace Roslynator
         public static async Task<bool> VerifySyntaxEquivalenceAsync(
             Document oldDocument,
             Document newDocument,
+            SyntaxFactsService syntaxFacts,
             CancellationToken cancellationToken = default)
         {
             if (!string.Equals(
@@ -147,7 +147,7 @@ namespace Roslynator
                 return false;
             }
 
-            if (!SyntaxFactsService.GetService(oldDocument.Project.Language).AreEquivalent(
+            if (!syntaxFacts.AreEquivalent(
                 await newDocument.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false),
                 await oldDocument.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false)))
             {

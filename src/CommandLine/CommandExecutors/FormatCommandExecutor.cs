@@ -89,9 +89,11 @@ namespace Roslynator.CommandLine
             {
                 WriteLine($"  Analyze '{project.Name}'", Verbosity.Minimal);
 
-                Project newProject = CodeFormatter.FormatProjectAsync(project, options, cancellationToken).Result;
+                SyntaxFactsService syntaxFacts = SyntaxFactsServiceFactory.Instance.GetService(project.Language);
 
-                ImmutableArray<DocumentId> formattedDocuments = CodeFormatter.GetFormattedDocumentsAsync(project, newProject).Result;
+                Project newProject = CodeFormatter.FormatProjectAsync(project, syntaxFacts, options, cancellationToken).Result;
+
+                ImmutableArray<DocumentId> formattedDocuments = CodeFormatter.GetFormattedDocumentsAsync(project, newProject, syntaxFacts).Result;
 
                 if (formattedDocuments.Any())
                 {
@@ -137,9 +139,11 @@ namespace Roslynator.CommandLine
 
             WriteLine($"  Analyze '{project.Name}'", Verbosity.Minimal);
 
-            Project newProject = await CodeFormatter.FormatProjectAsync(project, options, cancellationToken);
+            SyntaxFactsService syntaxFacts = SyntaxFactsServiceFactory.Instance.GetService(project.Language);
 
-            ImmutableArray<DocumentId> formattedDocuments = await CodeFormatter.GetFormattedDocumentsAsync(project, newProject);
+            Project newProject = await CodeFormatter.FormatProjectAsync(project, syntaxFacts, options, cancellationToken);
+
+            ImmutableArray<DocumentId> formattedDocuments = await CodeFormatter.GetFormattedDocumentsAsync(project, newProject, syntaxFacts);
 
             WriteFormattedDocuments(formattedDocuments, project, solutionDirectory);
 

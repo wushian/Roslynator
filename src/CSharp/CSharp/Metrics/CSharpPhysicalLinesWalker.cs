@@ -5,8 +5,9 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using Roslynator.Metrics;
 
-namespace Roslynator.Metrics.CSharp
+namespace Roslynator.CSharp.Metrics
 {
     internal class CSharpPhysicalLinesWalker : CSharpLinesWalker
     {

@@ -11,12 +11,11 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Diagnostics.Telemetry;
-using Roslynator.CSharp;
 using static Roslynator.Logger;
 
 namespace Roslynator.Diagnostics
 {
-    public class CodeAnalyzer
+    internal class CodeAnalyzer
     {
         private readonly AnalyzerAssemblyList _analyzerAssemblies = new AnalyzerAssemblyList();
 
@@ -38,8 +37,14 @@ namespace Roslynator.Diagnostics
             logAnalyzerExecutionTime: true,
             reportSuppressedDiagnostics: true);
 
-        public CodeAnalyzer(IEnumerable<string> analyzerAssemblies = null, IFormatProvider formatProvider = null, CodeAnalyzerOptions options = null)
+        public CodeAnalyzer(
+            AbstractSyntaxFactsServiceFactory syntaxFactsFactory,
+            IEnumerable<string> analyzerAssemblies = null,
+            IFormatProvider formatProvider = null,
+            CodeAnalyzerOptions options = null)
         {
+            SyntaxFactsFactory = syntaxFactsFactory;
+
             Options = options ?? CodeAnalyzerOptions.Default;
 
             if (analyzerAssemblies != null)
@@ -47,6 +52,8 @@ namespace Roslynator.Diagnostics
 
             FormatProvider = formatProvider;
         }
+
+        public AbstractSyntaxFactsServiceFactory SyntaxFactsFactory { get; }
 
         public CodeAnalyzerOptions Options { get; }
 
@@ -212,7 +219,7 @@ namespace Roslynator.Diagnostics
                         SyntaxTree tree = diagnostic.Location.SourceTree;
 
                         if (tree == null
-                            || !GeneratedCodeUtility.IsGeneratedCode(tree, f => SyntaxFactsService.GetService(tree.Options.Language).IsComment(f), cancellationToken))
+                            || !GeneratedCodeUtility.IsGeneratedCode(tree, f => SyntaxFactsFactory.GetService(tree.Options.Language).IsComment(f), cancellationToken))
                         {
                             yield return diagnostic;
                         }

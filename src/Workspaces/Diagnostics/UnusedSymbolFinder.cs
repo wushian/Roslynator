@@ -9,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.FindSymbols;
-using Roslynator.CSharp;
 using static Roslynator.Logger;
 
 namespace Roslynator.Diagnostics

@@ -5,8 +5,9 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.VisualBasic;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
+using Roslynator.Metrics;
 
-namespace Roslynator.Metrics.VisualBasic
+namespace Roslynator.VisualBasic.Metrics
 {
     internal class VisualBasicPhysicalLinesWalker : VisualBasicLinesWalker
     {
