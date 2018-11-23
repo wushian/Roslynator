@@ -46,6 +46,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CLI", "CLI", "{E5C47A70-19E
 		..\docs\cli\sln-list-command.md = ..\docs\cli\sln-list-command.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisualBasic", "VisualBasic\VisualBasic.csproj", "{05DF2CB8-95FB-4BD9-A9E7-D346470E979A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,6 +94,10 @@ Global
 		{45E21AD0-275F-4F64-A74E-781FE3BA0B4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45E21AD0-275F-4F64-A74E-781FE3BA0B4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45E21AD0-275F-4F64-A74E-781FE3BA0B4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05DF2CB8-95FB-4BD9-A9E7-D346470E979A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05DF2CB8-95FB-4BD9-A9E7-D346470E979A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05DF2CB8-95FB-4BD9-A9E7-D346470E979A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05DF2CB8-95FB-4BD9-A9E7-D346470E979A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

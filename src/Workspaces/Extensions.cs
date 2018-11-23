@@ -15,6 +15,11 @@ namespace Roslynator
 {
     internal static class Extensions
     {
+        public static bool StartsWith(this string s, string value1, string value2, StringComparison comparisonType)
+        {
+            return s.StartsWith(value1, comparisonType) || s.StartsWith(value2, comparisonType);
+        }
+
         public static bool HasFixAllProvider(this CodeFixProvider codeFixProvider, FixAllScope fixAllScope)
         {
             return codeFixProvider.GetFixAllProvider()?.GetSupportedFixAllScopes().Contains(fixAllScope) == true;

@@ -207,13 +207,12 @@ namespace Roslynator.Diagnostics
                 {
                     if (diagnostic.Descriptor.CustomTags.Contains(WellKnownDiagnosticTags.Compiler))
                     {
-                        Debug.Assert(diagnostic.Id.StartsWith("CS", StringComparison.Ordinal)
-                            || diagnostic.Id.StartsWith("VB", StringComparison.Ordinal), diagnostic.Id);
+                        Debug.Assert(diagnostic.Id.StartsWith("CS", "VB", StringComparison.Ordinal), diagnostic.Id);
 
                         SyntaxTree tree = diagnostic.Location.SourceTree;
 
                         if (tree == null
-                            || !GeneratedCodeUtility.IsGeneratedCode(tree, f => IsComment(f), cancellationToken))
+                            || !GeneratedCodeUtility.IsGeneratedCode(tree, f => SyntaxFactsService.GetService(tree.Options.Language).IsComment(f), cancellationToken))
                         {
                             yield return diagnostic;
                         }
@@ -222,19 +221,6 @@ namespace Roslynator.Diagnostics
                     {
                         yield return diagnostic;
                     }
-                }
-            }
-
-            bool IsComment(in SyntaxTrivia trivia)
-            {
-                switch (trivia.Language)
-                {
-                    case LanguageNames.CSharp:
-                        return trivia.IsKind(Microsoft.CodeAnalysis.CSharp.SyntaxKind.SingleLineCommentTrivia, Microsoft.CodeAnalysis.CSharp.SyntaxKind.MultiLineCommentTrivia);
-                    case LanguageNames.VisualBasic:
-                        return trivia.IsKind(Microsoft.CodeAnalysis.VisualBasic.SyntaxKind.CommentTrivia);
-                    default:
-                        return false;
                 }
             }
         }
