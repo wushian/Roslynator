@@ -7,3 +7,6 @@ rem dotnet restore "..\src\CommandLine.sln"
  /p:Configuration=Debug,TreatWarningsAsErrors=true,WarningsNotAsErrors="1591" ^
  /v:minimal ^
  /m
+
+echo OK
+pause
