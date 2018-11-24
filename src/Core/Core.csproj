@@ -23,10 +23,7 @@
     <PackageVersion>1.0.0-rc4</PackageVersion>
     <Authors>Josef Pihrt</Authors>
     <Company></Company>
-    <Description>This library extends functionality of Microsoft.CodeAnalysis.Common
-
-Commonly Used Types:
-Roslynator.NameGenerator</Description>
+    <Description>This library extends functionality of package Microsoft.CodeAnalysis.Common.</Description>
     <Copyright>Copyright (c) 2017-2018 Josef Pihrt</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>http://github.com/JosefPihrt/Roslynator/blob/master/LICENSE.txt</PackageLicenseUrl>
