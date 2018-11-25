@@ -14,7 +14,7 @@ namespace Roslynator.CommandLine
 {
     internal static class DocumentationHelpers
     {
-        public static DocumentationModel CreateDocumentationModel(IEnumerable<string> assemblyReferences, IEnumerable<string> assemblies, DocumentationVisibility visibility, IEnumerable<string> additionalXmlDocumentationPaths = null)
+        public static DocumentationModel CreateDocumentationModel(IEnumerable<string> assemblyReferences, IEnumerable<string> assemblies, Visibility visibility, IEnumerable<string> additionalXmlDocumentationPaths = null)
         {
             var references = new List<PortableExecutableReference>();
 

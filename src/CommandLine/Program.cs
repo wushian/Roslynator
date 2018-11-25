@@ -284,7 +284,7 @@ namespace Roslynator.CommandLine
             if (!TryParseOmitContainingNamespaceParts(options.OmitContainingNamespaceParts, out OmitContainingNamespaceParts omitContainingNamespaceParts))
                 return 1;
 
-            if (!TryParseVisibility(options.Visibility, out DocumentationVisibility visibility))
+            if (!TryParseVisibility(options.Visibility, out Visibility visibility))
                 return 1;
 
             DocumentationModel documentationModel = CreateDocumentationModel(options.References, options.Assemblies, visibility, options.AdditionalXmlDocumentation);
@@ -369,7 +369,7 @@ namespace Roslynator.CommandLine
             if (!TryParseIgnoredDeclarationListParts(options.IgnoredParts, out DeclarationListParts ignoredParts))
                 return 1;
 
-            if (!TryParseVisibility(options.Visibility, out DocumentationVisibility visibility))
+            if (!TryParseVisibility(options.Visibility, out Visibility visibility))
                 return 1;
 
             DocumentationModel documentationModel = CreateDocumentationModel(options.References, options.Assemblies, visibility, options.AdditionalXmlDocumentation);
@@ -426,7 +426,7 @@ namespace Roslynator.CommandLine
 
         private static int GenerateDocRoot(GenerateDocRootCommandLineOptions options)
         {
-            if (!TryParseVisibility(options.Visibility, out DocumentationVisibility visibility))
+            if (!TryParseVisibility(options.Visibility, out Visibility visibility))
                 return 1;
 
             DocumentationModel documentationModel = CreateDocumentationModel(options.References, options.Assemblies, visibility);

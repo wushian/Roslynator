@@ -173,9 +173,9 @@ Defines culture that should be used when searching for xml documentation files.
 
 Indicates whether a link should lead to the top of the documentation content.
 
-**`[--visibility]`** `{publicly|publicly-or-internally|all}`
+**`[--visibility]`** `{public|internal|private}`
 
-Defines a visibility of a type or a member. Default value is `publicly`.
+Defines a visibility of a type or a member. Default value is `public`.
 
 ## See Also
 

@@ -7,19 +7,25 @@ namespace Roslynator.CommandLine
     [Verb("analyze", HelpText = "Analyzes specified project or solution and reports diagnostics.")]
     public class AnalyzeCommandLineOptions : AbstractAnalyzeCommandLineOptions
     {
-        [Option(longName: "execution-time", HelpText = "Indicates whether to measure execution time of each analyzer.")]
+        [Option(longName: "execution-time",
+            HelpText = "Indicates whether to measure execution time of each analyzer.")]
         public bool ExecutionTime { get; set; }
 
-        [Option(longName: "ignore-compiler-diagnostics", HelpText = "Indicates whether to display compiler diagnostics.")]
+        [Option(longName: "ignore-compiler-diagnostics",
+            HelpText = "Indicates whether to display compiler diagnostics.")]
         public bool IgnoreCompilerDiagnostics { get; set; }
 
-        [Option(longName: "output", HelpText = "Defines path to file that will store reported diagnostics in XML format.", MetaValue = "<OUTPUT_FILE>")]
+        [Option(longName: "output",
+            HelpText = "Defines path to file that will store reported diagnostics in XML format.",
+            MetaValue = "<OUTPUT_FILE>")]
         public string Output { get; set; }
 
-        [Option(longName: "report-not-configurable", HelpText = "Indicates whether diagnostics that have tag 'NotConfigurable' should be reported.")]
+        [Option(longName: "report-not-configurable",
+            HelpText = "Indicates whether diagnostics that have tag 'NotConfigurable' should be reported.")]
         public bool ReportNotConfigurable { get; set; }
 
-        [Option(longName: "report-suppressed-diagnostics", HelpText = "Indicates whether suppressed diagnostics should be reported.")]
+        [Option(longName: "report-suppressed-diagnostics",
+            HelpText = "Indicates whether suppressed diagnostics should be reported.")]
         public bool ReportSuppressedDiagnostics { get; set; }
     }
 }

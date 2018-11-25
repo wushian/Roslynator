@@ -237,7 +237,7 @@ namespace Roslynator.CommandLine
             return true;
         }
 
-        public static bool TryParseVisibility(string value, out DocumentationVisibility visibility)
+        public static bool TryParseVisibility(string value, out Visibility visibility)
         {
             if (!Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out visibility))
             {
@@ -308,17 +308,6 @@ namespace Roslynator.CommandLine
 
             language = null;
             return false;
-        }
-
-        public static bool TryParseVisibility(string value, out Visibility visibility)
-        {
-            if (!Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out visibility))
-            {
-                WriteLine($"Unknown visibility '{value}'.", Verbosity.Quiet);
-                return false;
-            }
-
-            return true;
         }
 
         public static bool TryParseUnusedSymbolKinds(IEnumerable<string> values, out UnusedSymbolKinds kinds)

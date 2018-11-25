@@ -8,26 +8,38 @@ namespace Roslynator.CommandLine
 {
     public abstract class AbstractAnalyzeCommandLineOptions : MSBuildCommandLineOptions
     {
-        [Option(shortName: 'a', longName: "analyzer-assemblies", HelpText = "Define one or more paths to an analyzer assembly or a directory.", MetaValue = "<PATH>")]
+        [Option(shortName: 'a', longName: "analyzer-assemblies",
+            HelpText = "Define one or more paths to an analyzer assembly or a directory.",
+            MetaValue = "<PATH>")]
         public IEnumerable<string> AnalyzerAssemblies { get; set; }
 
-        [Option(longName: "culture", HelpText = "Defines culture that should be used to display diagnostic message.", MetaValue = "<CULTURE_ID>")]
+        [Option(longName: "culture",
+            HelpText = "Defines culture that should be used to display diagnostic message.",
+            MetaValue = "<CULTURE_ID>")]
         public string Culture { get; set; }
 
-        [Option(longName: "ignore-analyzer-references", HelpText = "Indicates whether Roslynator should ignore analyzers that are referenced in projects.")]
+        [Option(longName: "ignore-analyzer-references",
+            HelpText = "Indicates whether Roslynator should ignore analyzers that are referenced in projects.")]
         public bool IgnoreAnalyzerReferences { get; set; }
 
-        [Option(longName: "ignored-diagnostics", HelpText = "Defines diagnostics that should not be reported.", MetaValue = "<DIAGNOSTIC_ID>")]
+        [Option(longName: "ignored-diagnostics",
+            HelpText = "Defines diagnostics that should not be reported.",
+            MetaValue = "<DIAGNOSTIC_ID>")]
         public IEnumerable<string> IgnoredDiagnostics { get; set; }
 
         //TODO: MinSeverity
-        [Option(longName: "minimal-severity", HelpText = "Defines minimal severity for a diagnostic. Default value is 'info'.", MetaValue = "{hidden|info|warning|error}")]
+        [Option(longName: "minimal-severity",
+            HelpText = "Defines minimal severity for a diagnostic. Allowed values are hidden, info, warning or error. Default value is info.",
+            MetaValue = "<LEVEL>")]
         public string MinimalSeverity { get; set; }
 
-        [Option(longName: "supported-diagnostics", HelpText = "Defines diagnostics that should be reported.", MetaValue = "<DIAGNOSTIC_ID>")]
+        [Option(longName: "supported-diagnostics",
+            HelpText = "Defines diagnostics that should be reported.",
+            MetaValue = "<DIAGNOSTIC_ID>")]
         public IEnumerable<string> SupportedDiagnostics { get; set; }
 
-        [Option(longName: "use-roslynator-analyzers", HelpText = "Indicates whether code analysis should use analyzers from nuget package Roslynator.Analyzers.")]
+        [Option(longName: "use-roslynator-analyzers",
+            HelpText = "Indicates whether code analysis should use analyzers from nuget package Roslynator.Analyzers.")]
         public bool UseRoslynatorAnalyzers { get; set; }
 
         internal bool TryGetMinimalSeverity(DiagnosticSeverity defaultValue, out DiagnosticSeverity value)

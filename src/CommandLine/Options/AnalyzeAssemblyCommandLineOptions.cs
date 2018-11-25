@@ -10,7 +10,10 @@ namespace Roslynator.CommandLine
 #endif
     public class AnalyzeAssemblyCommandLineOptions : AbstractCommandLineOptions
     {
-        [Value(index: 0, Required = true, HelpText = "The path to file or directory to analyze.", MetaValue = "<PATH>")]
+        [Value(index: 0,
+            Required = true,
+            HelpText = "The path to file or directory to analyze.",
+            MetaValue = "<PATH>")]
         public string Path { get; set; }
 
         [Option(longName: "additional-paths")]

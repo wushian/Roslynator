@@ -121,9 +121,9 @@ Indicates whether symbols contained in `System` namespace should be ordered as a
 
 Indicates whether attribute arguments should be omitted when displaying an attribute.
 
-**`[--visibility]`** `{publicly|publicly-or-internally|all}`
+**`[--visibility]`** `{public|internal|private}`
 
-Defines a visibility of a type or a member. Default value is `publicly`.
+Defines a visibility of a type or a member. Default value is `public`.
 
 ## See Also
 
