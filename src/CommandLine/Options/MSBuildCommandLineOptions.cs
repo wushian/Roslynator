@@ -22,7 +22,7 @@ namespace Roslynator.CommandLine
 
         [Option(longName: "language",
             HelpText = "Defines project language. Allowed values are cs [csharp] or vb [visual basic]",
-            MetaValue = "<LEVEL>")]
+            MetaValue = "<LANGUAGE>")]
         public string Language { get; set; }
 
         [Option(longName: "msbuild-path",

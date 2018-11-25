@@ -44,7 +44,7 @@ namespace Roslynator.CommandLine
         public bool IgnoreCompilerErrors { get; set; }
 
         [Option(longName: "ignored-compiler-diagnostics",
-            HelpText = "Defines compiler diagnostics that should be ignored even if '--ignore-compiler-errors' is not set.")]
+            HelpText = "Defines compiler diagnostics that should be ignored even if --ignore-compiler-errors is not set.")]
         public IEnumerable<string> IgnoredCompilerDiagnostics { get; set; }
 
         [Option(longName: "max-iterations",
