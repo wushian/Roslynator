@@ -19,15 +19,15 @@ namespace Roslynator.CommandLine
     {
         private static ImmutableArray<string> _roslynatorAnalyzersAssemblies;
 
-        public AnalyzeCommandExecutor(AnalyzeCommandLineOptions options, DiagnosticSeverity minimalSeverity, string language) : base(language)
+        public AnalyzeCommandExecutor(AnalyzeCommandLineOptions options, DiagnosticSeverity severityLevel, string language) : base(language)
         {
             Options = options;
-            MinimalSeverity = minimalSeverity;
+            SeverityLevel = severityLevel;
         }
 
         public AnalyzeCommandLineOptions Options { get; }
 
-        public DiagnosticSeverity MinimalSeverity { get; }
+        public DiagnosticSeverity SeverityLevel { get; }
 
         public static ImmutableArray<string> RoslynatorAnalyzersAssemblies
         {
@@ -52,7 +52,7 @@ namespace Roslynator.CommandLine
                 reportNotConfigurable: Options.ReportNotConfigurable,
                 reportSuppressedDiagnostics: Options.ReportSuppressedDiagnostics,
                 executionTime: Options.ExecutionTime,
-                minimalSeverity: MinimalSeverity,
+                severityLevel: SeverityLevel,
                 supportedDiagnosticIds: Options.SupportedDiagnostics,
                 ignoredDiagnosticIds: Options.IgnoredDiagnostics,
                 projectNames: Options.Projects,

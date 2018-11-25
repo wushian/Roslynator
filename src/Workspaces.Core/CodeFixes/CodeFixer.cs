@@ -399,7 +399,7 @@ namespace Roslynator.CodeFixes
                 }
 
                 diagnostics = diagnostics
-                    .Where(f => f.Id == descriptor.Id && f.Severity >= Options.MinimalSeverity)
+                    .Where(f => f.Id == descriptor.Id && f.Severity >= Options.SeverityLevel)
                     .ToImmutableArray();
 
                 if (fixKind == DiagnosticFixKind.CompilerError)

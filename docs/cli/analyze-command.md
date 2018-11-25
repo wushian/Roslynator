@@ -17,13 +17,13 @@ roslynator analyze <PROJECT|SOLUTION>
 [--language]
 [--file-log]
 [--file-log-verbosity]
-[--minimal-severity]
 [--msbuild-path]
 [--output]
 [--projects]
 [-p|--properties]
 [--report-not-configurable]
 [--report-suppressed-diagnostics]
+[--severity-level]
 [--supported-diagnostics]
 [--use-roslynator-analyzers]
 [-v|--verbosity]
@@ -72,10 +72,6 @@ Defines projects that should not be analyzed.
 
 Defines project language.
 
-**`--minimal-severity`** `{hidden|info|warning|error}`
-
-Defines minimal severity for a diagnostic. Default value is `info`.
-
 **`--msbuild-path`** <MSBUILD_PATH>
 
 Defines a path to MSBuild.
@@ -101,6 +97,10 @@ Indicates whether diagnostics that have tag '[NotConfigurable](https://docs.micr
 **`--report-suppressed-diagnostics`**
 
 Indicates whether suppressed diagnostics should be reported.
+
+**`--severity-level`** `{hidden|info|warning|error}`
+
+Defines minimally required severity for a diagnostic. Default value is `info`.
 
 **`--supported-diagnostics`** <DIAGNOSTIC_ID>
 

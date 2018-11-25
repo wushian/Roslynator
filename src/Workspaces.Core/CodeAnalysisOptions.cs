@@ -11,7 +11,7 @@ namespace Roslynator
     public abstract class CodeAnalysisOptions
     {
         protected CodeAnalysisOptions(
-            DiagnosticSeverity minimalSeverity = DiagnosticSeverity.Info,
+            DiagnosticSeverity severityLevel = DiagnosticSeverity.Info,
             bool ignoreAnalyzerReferences = false,
             IEnumerable<string> supportedDiagnosticIds = null,
             IEnumerable<string> ignoredDiagnosticIds = null,
@@ -31,7 +31,7 @@ namespace Roslynator
                 throw new ArgumentException($"Cannot specify both '{nameof(projectNames)}' and '{nameof(ignoredProjectNames)}'.", nameof(ignoredProjectNames));
             }
 
-            MinimalSeverity = minimalSeverity;
+            SeverityLevel = severityLevel;
             IgnoreAnalyzerReferences = ignoreAnalyzerReferences;
             SupportedDiagnosticIds = supportedDiagnosticIds?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
             IgnoredDiagnosticIds = ignoredDiagnosticIds?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
@@ -40,7 +40,7 @@ namespace Roslynator
             Language = language;
         }
 
-        public DiagnosticSeverity MinimalSeverity { get; }
+        public DiagnosticSeverity SeverityLevel { get; }
 
         public bool IgnoreAnalyzerReferences { get; }
 
@@ -56,7 +56,7 @@ namespace Roslynator
 
         internal bool IsSupportedDiagnostic(Diagnostic diagnostic)
         {
-            if (diagnostic.Severity >= MinimalSeverity)
+            if (diagnostic.Severity >= SeverityLevel)
             {
                 return (SupportedDiagnosticIds.Count > 0)
                     ? SupportedDiagnosticIds.Contains(diagnostic.Id)

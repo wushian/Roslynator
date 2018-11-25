@@ -27,11 +27,10 @@ namespace Roslynator.CommandLine
             MetaValue = "<DIAGNOSTIC_ID>")]
         public IEnumerable<string> IgnoredDiagnostics { get; set; }
 
-        //TODO: MinSeverity
-        [Option(longName: "minimal-severity",
-            HelpText = "Defines minimal severity for a diagnostic. Allowed values are hidden, info, warning or error. Default value is info.",
+        [Option(longName: "severity-level",
+            HelpText = "Defines minimally required severity for a diagnostic. Allowed values are hidden, info, warning or error. Default value is info.",
             MetaValue = "<LEVEL>")]
-        public string MinimalSeverity { get; set; }
+        public string SeverityLevel { get; set; }
 
         [Option(longName: "supported-diagnostics",
             HelpText = "Defines diagnostics that should be reported.",
@@ -42,10 +41,10 @@ namespace Roslynator.CommandLine
             HelpText = "Indicates whether code analysis should use analyzers from nuget package Roslynator.Analyzers.")]
         public bool UseRoslynatorAnalyzers { get; set; }
 
-        internal bool TryGetMinimalSeverity(DiagnosticSeverity defaultValue, out DiagnosticSeverity value)
+        internal bool TryGetDiagnosticSeverity(DiagnosticSeverity defaultValue, out DiagnosticSeverity value)
         {
-            if (MinimalSeverity != null)
-                return ParseHelpers.TryParseDiagnosticSeverity(MinimalSeverity, out value);
+            if (SeverityLevel != null)
+                return ParseHelpers.TryParseDiagnosticSeverity(SeverityLevel, out value);
 
             value = defaultValue;
             return true;

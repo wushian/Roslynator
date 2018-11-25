@@ -111,7 +111,7 @@ namespace Roslynator.CommandLine
 
         private static async Task<int> FixAsync(FixCommandLineOptions options)
         {
-            if (!options.TryGetMinimalSeverity(CodeFixerOptions.Default.MinimalSeverity, out DiagnosticSeverity minimalSeverity))
+            if (!options.TryGetDiagnosticSeverity(CodeFixerOptions.Default.SeverityLevel, out DiagnosticSeverity severityLevel))
                 return 1;
 
             if (!TryParseKeyValuePairs(options.DiagnosticFixMap, out Dictionary<string, string> diagnosticFixMap))
@@ -125,7 +125,7 @@ namespace Roslynator.CommandLine
 
             var executor = new FixCommandExecutor(
                 options: options,
-                minimalSeverity: minimalSeverity,
+                severityLevel: severityLevel,
                 diagnosticFixMap: diagnosticFixMap?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty,
                 diagnosticFixerMap: diagnosticFixerMap?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty,
                 language: language);
@@ -137,13 +137,13 @@ namespace Roslynator.CommandLine
 
         private static async Task<int> AnalyzeAsync(AnalyzeCommandLineOptions options)
         {
-            if (!options.TryGetMinimalSeverity(CodeAnalyzerOptions.Default.MinimalSeverity, out DiagnosticSeverity minimalSeverity))
+            if (!options.TryGetDiagnosticSeverity(CodeAnalyzerOptions.Default.SeverityLevel, out DiagnosticSeverity severityLevel))
                 return 1;
 
             if (!options.TryGetLanguage(out string language))
                 return 1;
 
-            var executor = new AnalyzeCommandExecutor(options, minimalSeverity, language);
+            var executor = new AnalyzeCommandExecutor(options, severityLevel, language);
 
             CommandResult result = await executor.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
 

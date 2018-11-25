@@ -22,13 +22,13 @@ namespace Roslynator.CommandLine
 
         public FixCommandExecutor(
             FixCommandLineOptions options,
-            DiagnosticSeverity minimalSeverity,
+            DiagnosticSeverity severityLevel,
             ImmutableDictionary<string, string> diagnosticFixMap,
             ImmutableDictionary<string, string> diagnosticFixerMap,
             string language) : base(language)
         {
             Options = options;
-            MinimalSeverity = minimalSeverity;
+            SeverityLevel = severityLevel;
             DiagnosticFixMap = diagnosticFixMap;
             DiagnosticFixerMap = diagnosticFixerMap;
         }
@@ -68,7 +68,7 @@ namespace Roslynator.CommandLine
 
         public FixCommandLineOptions Options { get; }
 
-        public DiagnosticSeverity MinimalSeverity { get; }
+        public DiagnosticSeverity SeverityLevel { get; }
 
         public ImmutableDictionary<string, string> DiagnosticFixMap { get; }
 
@@ -79,7 +79,7 @@ namespace Roslynator.CommandLine
             AssemblyResolver.Register();
 
             var codeFixerOptions = new CodeFixerOptions(
-                minimalSeverity: MinimalSeverity,
+                severityLevel: SeverityLevel,
                 ignoreCompilerErrors: Options.IgnoreCompilerErrors,
                 ignoreAnalyzerReferences: Options.IgnoreAnalyzerReferences,
                 supportedDiagnosticIds: Options.SupportedDiagnostics,

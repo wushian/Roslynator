@@ -24,10 +24,10 @@ roslynator fix <PROJECT|SOLUTION>
 [--file-log]
 [--file-log-verbosity]
 [--max-iterations]
-[--minimal-severity]
 [--msbuild-path]
 [--projects]
 [-p|--properties]
+[--severity-level]
 [--supported-diagnostics]
 [--use-roslynator-analyzers]
 [--use-roslynator-code-fixes]
@@ -111,10 +111,6 @@ Defines project language.
 
 Defines maximum numbers of fixing iterations.
 
-**`--minimal-severity`** `{hidden|info|warning|error}`
-
-Defines minimal severity for a diagnostic. Default value is `info`.
-
 **`--msbuild-path`** <MSBUILD_PATH>
 
 Defines a path to MSBuild.
@@ -128,6 +124,10 @@ Defines projects that should be analyzed.
 **`-p|--properties`** `<NAME=VALUE>`
 
 Defines one or more MSBuild properties.
+
+**`--severity-level`** `{hidden|info|warning|error}`
+
+Defines minimally required severity for a diagnostic. Default value is `info`.
 
 **`--use-roslynator-analyzers`**
 

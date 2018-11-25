@@ -108,7 +108,7 @@ namespace Roslynator
                         ReportDiagnostic reportDiagnostic = supportedDiagnostic.GetEffectiveSeverity(project.CompilationOptions);
 
                         if (reportDiagnostic != ReportDiagnostic.Suppress
-                            && reportDiagnostic.ToDiagnosticSeverity() >= options.MinimalSeverity)
+                            && reportDiagnostic.ToDiagnosticSeverity() >= options.SeverityLevel)
                         {
                             return true;
                         }

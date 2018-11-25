@@ -15,12 +15,12 @@ namespace Roslynator.Diagnostics
             bool reportNotConfigurable = false,
             bool reportSuppressedDiagnostics = false,
             bool executionTime = false,
-            DiagnosticSeverity minimalSeverity = DiagnosticSeverity.Info,
+            DiagnosticSeverity severityLevel = DiagnosticSeverity.Info,
             IEnumerable<string> supportedDiagnosticIds = null,
             IEnumerable<string> ignoredDiagnosticIds = null,
             IEnumerable<string> projectNames = null,
             IEnumerable<string> ignoredProjectNames = null,
-            string language = null) : base(minimalSeverity, ignoreAnalyzerReferences, supportedDiagnosticIds, ignoredDiagnosticIds, projectNames, ignoredProjectNames, language)
+            string language = null) : base(severityLevel, ignoreAnalyzerReferences, supportedDiagnosticIds, ignoredDiagnosticIds, projectNames, ignoredProjectNames, language)
         {
             IgnoreCompilerDiagnostics = ignoreCompilerDiagnostics;
             ReportNotConfigurable = reportNotConfigurable;

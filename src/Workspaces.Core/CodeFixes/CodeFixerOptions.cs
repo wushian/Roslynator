@@ -14,7 +14,7 @@ namespace Roslynator.CodeFixes
         public static CodeFixerOptions Default { get; } = new CodeFixerOptions();
 
         public CodeFixerOptions(
-            DiagnosticSeverity minimalSeverity = DiagnosticSeverity.Info,
+            DiagnosticSeverity severityLevel = DiagnosticSeverity.Info,
             bool ignoreCompilerErrors = false,
             bool ignoreAnalyzerReferences = false,
             IEnumerable<string> supportedDiagnosticIds = null,
@@ -29,7 +29,7 @@ namespace Roslynator.CodeFixes
             string language = null,
             int maxIterations = -1,
             int batchSize = -1,
-            bool format = false) : base(minimalSeverity, ignoreAnalyzerReferences, supportedDiagnosticIds, ignoredDiagnosticIds, projectNames, ignoredProjectNames, language)
+            bool format = false) : base(severityLevel, ignoreAnalyzerReferences, supportedDiagnosticIds, ignoredDiagnosticIds, projectNames, ignoredProjectNames, language)
         {
             IgnoreCompilerErrors = ignoreCompilerErrors;
             IgnoredCompilerDiagnosticIds = ignoredCompilerDiagnosticIds?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;

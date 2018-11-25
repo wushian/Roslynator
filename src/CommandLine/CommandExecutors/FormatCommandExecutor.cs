@@ -36,7 +36,7 @@ namespace Roslynator.CommandLine
             if (supportedDiagnosticIds.Any())
             {
                 var codeFixerOptions = new CodeFixerOptions(
-                    minimalSeverity: DiagnosticSeverity.Hidden,
+                    severityLevel: DiagnosticSeverity.Hidden,
                     ignoreCompilerErrors: true,
                     ignoreAnalyzerReferences: true,
                     supportedDiagnosticIds: supportedDiagnosticIds,
