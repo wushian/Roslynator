@@ -3,7 +3,7 @@
 using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 
-namespace Roslynator.Diagnostics
+namespace Roslynator.FindSymbols
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     internal readonly struct UnusedSymbolInfo

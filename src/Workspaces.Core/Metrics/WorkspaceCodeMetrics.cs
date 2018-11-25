@@ -19,7 +19,7 @@ namespace Roslynator.CodeMetrics
             CodeMetricsOptions options = null,
             CancellationToken cancellationToken = default)
         {
-            var metrics = new ConcurrentBag<(ProjectId projectId, CodeMetricsInfo metrics)>();
+            var codeMetrics = new ConcurrentBag<(ProjectId projectId, CodeMetricsInfo codeMetrics)>();
 
             Parallel.ForEach(projects, project =>
             {
@@ -29,10 +29,10 @@ namespace Roslynator.CodeMetrics
                     ? CountLinesAsync(project, counter, options, cancellationToken).Result
                     : CodeMetricsInfo.NotAvailable;
 
-                metrics.Add((project.Id, metrics: projectMetrics));
+                codeMetrics.Add((project.Id, codeMetrics: projectMetrics));
             });
 
-            return metrics.ToImmutableDictionary(f => f.projectId, f => f.metrics);
+            return codeMetrics.ToImmutableDictionary(f => f.projectId, f => f.codeMetrics);
         }
 
         public static async Task<ImmutableDictionary<ProjectId, CodeMetricsInfo>> CountLinesAsync(
@@ -63,7 +63,7 @@ namespace Roslynator.CodeMetrics
             CodeMetricsOptions options = null,
             CancellationToken cancellationToken = default)
         {
-            CodeMetricsInfo metrics = default;
+            CodeMetricsInfo codeMetrics = default;
 
             foreach (Document document in project.Documents)
             {
@@ -72,10 +72,10 @@ namespace Roslynator.CodeMetrics
 
                 CodeMetricsInfo documentMetrics = await CountLinesAsync(document, counter, options, cancellationToken).ConfigureAwait(false);
 
-                metrics = metrics.Add(documentMetrics);
+                codeMetrics = codeMetrics.Add(documentMetrics);
             }
 
-            return metrics;
+            return codeMetrics;
         }
 
         public static async Task<CodeMetricsInfo> CountLinesAsync(

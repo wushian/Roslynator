@@ -6,7 +6,7 @@
  --use-roslynator-analyzers ^
  --ignore-analyzer-references ^
  --ignored-diagnostics CS1591 ^
- --minimal-severity info ^
+ --severity-level info ^
  --culture en ^
  --verbosity n ^
  --file-log "roslynator.log" ^

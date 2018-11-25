@@ -11,7 +11,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.FindSymbols;
 using static Roslynator.Logger;
 
-namespace Roslynator.Diagnostics
+namespace Roslynator.FindSymbols
 {
     internal static class UnusedSymbolFinder
     {
@@ -65,7 +65,7 @@ namespace Roslynator.Diagnostics
                         {
                             string id = symbol.GetDocumentationCommentId();
 
-                            WriteLine($"  {GetUnusedSymbolKind(symbol).ToString()} {symbol.ToDisplayString()}", Verbosity.Normal);
+                            WriteLine($"  {GetUnusedSymbolKind(symbol).ToString()} {symbol.ToDisplayString()}", ConsoleColor.Yellow, Verbosity.Normal);
                             WriteLine($"    {symbol.GetSyntax(cancellationToken).SyntaxTree.FilePath}", ConsoleColor.DarkGray, Verbosity.Detailed);
                             WriteLine($"    {id}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
 

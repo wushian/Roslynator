@@ -6,7 +6,7 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: Remove, IgnoreGeneratedCode
+    //TODO: Remove, ExcludeObsolete
 #if DEBUG
     [Verb("analyze-unused", HelpText = "Finds unused symbols in the specified project or solution.")]
 #endif
@@ -14,6 +14,10 @@ namespace Roslynator.CommandLine
     {
         [Option(longName: "ignored-symbols")]
         public IEnumerable<string> IgnoredSymbols { get; set; }
+
+        [Option(longName: "include-generated-code",
+            HelpText = "Indicates whether generated code should be included.")]
+        public bool IncludeGeneratedCode { get; set; }
 
         [Option(longName: "scope")]
         public IEnumerable<string> Scope { get; set; }

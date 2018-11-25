@@ -10,6 +10,7 @@ using Roslynator.Diagnostics;
 using static Roslynator.Logger;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Roslynator.FindSymbols;
 
 namespace Roslynator.CommandLine
 {
@@ -94,9 +95,11 @@ namespace Roslynator.CommandLine
 
         private async Task<ImmutableArray<UnusedSymbolInfo>> AnalyzeProject(Project project, CancellationToken cancellationToken)
         {
-            WriteLine($"Analyze '{project.Name}'", ConsoleColor.Cyan, Verbosity.Minimal);
+            WriteLine($"Analyze '{project.Name}'", Verbosity.Minimal);
 
             Compilation compilation = await project.GetCompilationAsync(cancellationToken);
+
+            INamedTypeSymbol generatedCodeAttribute = compilation.GetTypeByMetadataName("System.CodeDom.Compiler.GeneratedCodeAttribute");
 
             ImmutableHashSet<ISymbol> ignoredSymbols = Options.IgnoredSymbols
                 .Select(f => DocumentationCommentId.GetFirstSymbolForDeclarationId(f, compilation))
@@ -108,7 +111,9 @@ namespace Roslynator.CommandLine
             bool Predicate(ISymbol symbol)
             {
                 return (UnusedSymbolKinds & GetUnusedSymbolKinds(symbol)) != 0
-                    && IsVisible(symbol);
+                    && IsVisible(symbol)
+                    && (Options.IncludeGeneratedCode
+                        || !GeneratedCodeUtility.IsGeneratedCode(symbol, generatedCodeAttribute, SyntaxFactsServiceFactory.Instance.GetService(project.Language).IsComment, cancellationToken));
             }
         }
 

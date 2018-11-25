@@ -20,7 +20,7 @@ namespace Roslynator.CommandLine
             int count = 0;
             foreach (VisualStudioInstance instance in MSBuildLocator.QueryVisualStudioInstances())
             {
-                WriteLine($"{instance.Name} {instance.Version}", Verbosity.Normal);
+                WriteLine($"{instance.Name} {instance.Version}", ConsoleColor.Cyan, Verbosity.Normal);
                 WriteLine($"  Visual Studio Path: {instance.VisualStudioRootPath}", Verbosity.Detailed);
                 WriteLine($"  MSBuild Path:       {instance.MSBuildPath}", Verbosity.Detailed);
 
