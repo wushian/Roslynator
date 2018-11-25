@@ -2,13 +2,13 @@
 
 using System;
 
-namespace Roslynator.Metrics
+namespace Roslynator.CodeMetrics
 {
-    public readonly struct CodeMetrics : IEquatable<CodeMetrics>
+    internal readonly struct CodeMetricsInfo : IEquatable<CodeMetricsInfo>
     {
-        internal static CodeMetrics NotAvailable { get; } = new CodeMetrics(-1, 0, 0, 0, 0, 0);
+        internal static CodeMetricsInfo NotAvailable { get; } = new CodeMetricsInfo(-1, 0, 0, 0, 0, 0);
 
-        internal CodeMetrics(
+        internal CodeMetricsInfo(
             int totalLineCount,
             int codeLineCount,
             int whitespaceLineCount,
@@ -36,9 +36,9 @@ namespace Roslynator.Metrics
 
         public int BlockBoundaryLineCount { get; }
 
-        internal CodeMetrics Add(in CodeMetrics codeMetrics)
+        internal CodeMetricsInfo Add(in CodeMetricsInfo codeMetrics)
         {
-            return new CodeMetrics(
+            return new CodeMetricsInfo(
                 totalLineCount: TotalLineCount + codeMetrics.TotalLineCount,
                 codeLineCount: CodeLineCount + codeMetrics.CodeLineCount,
                 whitespaceLineCount: WhitespaceLineCount + codeMetrics.WhitespaceLineCount,
@@ -49,10 +49,10 @@ namespace Roslynator.Metrics
 
         public override bool Equals(object obj)
         {
-            return obj is CodeMetrics other && Equals(other);
+            return obj is CodeMetricsInfo other && Equals(other);
         }
 
-        public bool Equals(CodeMetrics other)
+        public bool Equals(CodeMetricsInfo other)
         {
             return TotalLineCount == other.TotalLineCount
                 && CodeLineCount == other.CodeLineCount
@@ -71,12 +71,12 @@ namespace Roslynator.Metrics
                 Hash.Combine(PreprocessorDirectiveLineCount, Hash.Create(BlockBoundaryLineCount))))));
         }
 
-        public static bool operator ==(in CodeMetrics metrics1, in CodeMetrics metrics2)
+        public static bool operator ==(in CodeMetricsInfo metrics1, in CodeMetricsInfo metrics2)
         {
             return metrics1.Equals(metrics2);
         }
 
-        public static bool operator !=(in CodeMetrics metrics1, in CodeMetrics metrics2)
+        public static bool operator !=(in CodeMetricsInfo metrics1, in CodeMetricsInfo metrics2)
         {
             return !(metrics1 == metrics2);
         }

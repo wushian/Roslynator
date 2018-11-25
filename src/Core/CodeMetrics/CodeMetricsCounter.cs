@@ -4,13 +4,13 @@ using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
-namespace Roslynator.Metrics
+namespace Roslynator.CodeMetrics
 {
-    public abstract class CodeMetricsCounter
+    internal abstract class CodeMetricsCounter
     {
         internal abstract SyntaxFactsService SyntaxFacts { get; }
 
-        public abstract CodeMetrics CountLines(SyntaxNode node, SourceText sourceText, CodeMetricsOptions options, CancellationToken cancellationToken);
+        public abstract CodeMetricsInfo CountLines(SyntaxNode node, SourceText sourceText, CodeMetricsOptions options, CancellationToken cancellationToken);
 
         private protected int CountWhitespaceLines(SyntaxNode root, SourceText sourceText)
         {

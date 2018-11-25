@@ -3,25 +3,25 @@
 using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
-using Roslynator.Metrics;
+using Roslynator.CodeMetrics;
 
-namespace Roslynator.VisualBasic.Metrics
+namespace Roslynator.CSharp.CodeMetrics
 {
-    public class VisualBasicLogicalLinesCounter : VisualBasicCodeMetricsCounter
+    internal class CSharpLogicalLinesCounter : CSharpCodeMetricsCounter
     {
-        public static VisualBasicLogicalLinesCounter Instance { get; } = new VisualBasicLogicalLinesCounter();
+        public static CSharpLogicalLinesCounter Instance { get; } = new CSharpLogicalLinesCounter();
 
-        public override CodeMetrics CountLines(SyntaxNode node, SourceText sourceText, CodeMetricsOptions options, CancellationToken cancellationToken)
+        public override CodeMetricsInfo CountLines(SyntaxNode node, SourceText sourceText, CodeMetricsOptions options, CancellationToken cancellationToken)
         {
             TextLineCollection lines = sourceText.Lines;
 
-            var walker = new VisualBasicLogicalLinesWalker(lines, options, cancellationToken);
+            var walker = new CSharpLogicalLinesWalker(lines, options, cancellationToken);
 
             walker.Visit(node);
 
             int whitespaceLineCount = (options.IncludeWhitespace) ? 0 : CountWhitespaceLines(node, sourceText);
 
-            return new CodeMetrics(
+            return new CodeMetricsInfo(
                 totalLineCount: lines.Count,
                 codeLineCount: walker.LogicalLineCount,
                 whitespaceLineCount: whitespaceLineCount,

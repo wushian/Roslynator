@@ -3,15 +3,15 @@
 using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
-using Roslynator.Metrics;
+using Roslynator.CodeMetrics;
 
-namespace Roslynator.VisualBasic.Metrics
+namespace Roslynator.VisualBasic.CodeMetrics
 {
-    public class VisualBasicPhysicalLinesCounter : VisualBasicCodeMetricsCounter
+    internal class VisualBasicPhysicalLinesCounter : VisualBasicCodeMetricsCounter
     {
         public static VisualBasicPhysicalLinesCounter Instance { get; } = new VisualBasicPhysicalLinesCounter();
 
-        public override CodeMetrics CountLines(SyntaxNode node, SourceText sourceText, CodeMetricsOptions options, CancellationToken cancellationToken)
+        public override CodeMetricsInfo CountLines(SyntaxNode node, SourceText sourceText, CodeMetricsOptions options, CancellationToken cancellationToken)
         {
             TextLineCollection lines = sourceText.Lines;
 
@@ -21,7 +21,7 @@ namespace Roslynator.VisualBasic.Metrics
 
             int whitespaceLineCount = (options.IncludeWhitespace) ? 0 : CountWhitespaceLines(node, sourceText);
 
-            return new CodeMetrics(
+            return new CodeMetricsInfo(
                 totalLineCount: lines.Count,
                 codeLineCount: lines.Count - whitespaceLineCount - walker.CommentLineCount - walker.PreprocessorDirectiveLineCount - walker.BlockBoundaryLineCount,
                 whitespaceLineCount: whitespaceLineCount,

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
-using Roslynator.Metrics;
+using Roslynator.CodeMetrics;
 using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine

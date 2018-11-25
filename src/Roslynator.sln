@@ -110,11 +110,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CLI", "CLI", "{A16068FE-9E6
 		..\docs\cli\sln-list-command.md = ..\docs\cli\sln-list-command.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Workspaces", "Workspaces\Workspaces.csproj", "{4FD3D777-11FC-4FF9-985B-2756E39F7AD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Workspaces.Core", "Workspaces.Core\Workspaces.Core.csproj", "{4FD3D777-11FC-4FF9-985B-2756E39F7AD7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{59C3841C-DF61-493B-88AF-477357698477}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Tests", "Tests\Core.Tests\Core.Tests.csproj", "{73ABB10A-2252-46F4-B65D-D27FA8560EB6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisualBasic", "VisualBasic\VisualBasic.csproj", "{A0C4C70C-8249-49D7-BF72-D942B7B79D47}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -233,6 +235,8 @@ Global
 		{73ABB10A-2252-46F4-B65D-D27FA8560EB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73ABB10A-2252-46F4-B65D-D27FA8560EB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73ABB10A-2252-46F4-B65D-D27FA8560EB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0C4C70C-8249-49D7-BF72-D942B7B79D47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0C4C70C-8249-49D7-BF72-D942B7B79D47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

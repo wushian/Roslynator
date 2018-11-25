@@ -3,7 +3,7 @@
 using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 
-namespace Roslynator.Metrics
+namespace Roslynator.CodeMetrics
 {
     internal static class CodeMetricsCounterFactory
     {
@@ -12,9 +12,9 @@ namespace Roslynator.Metrics
             switch (language)
             {
                 case LanguageNames.CSharp:
-                    return CSharp.Metrics.CSharpPhysicalLinesCounter.Instance;
+                    return CSharp.CodeMetrics.CSharpPhysicalLinesCounter.Instance;
                 case LanguageNames.VisualBasic:
-                    return VisualBasic.Metrics.VisualBasicPhysicalLinesCounter.Instance;
+                    return VisualBasic.CodeMetrics.VisualBasicPhysicalLinesCounter.Instance;
             }
 
             Debug.Assert(language == LanguageNames.FSharp, language);
@@ -27,9 +27,9 @@ namespace Roslynator.Metrics
             switch (language)
             {
                 case LanguageNames.CSharp:
-                    return CSharp.Metrics.CSharpLogicalLinesCounter.Instance;
+                    return CSharp.CodeMetrics.CSharpLogicalLinesCounter.Instance;
                 case LanguageNames.VisualBasic:
-                    return VisualBasic.Metrics.VisualBasicLogicalLinesCounter.Instance;
+                    return VisualBasic.CodeMetrics.VisualBasicLogicalLinesCounter.Instance;
             }
 
             Debug.Assert(language == LanguageNames.FSharp, language);

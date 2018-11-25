@@ -3,9 +3,9 @@
 using System.Threading;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
-using Roslynator.Metrics;
+using Roslynator.CodeMetrics;
 
-namespace Roslynator.VisualBasic.Metrics
+namespace Roslynator.VisualBasic.CodeMetrics
 {
     internal class VisualBasicLogicalLinesWalker : VisualBasicLinesWalker
     {

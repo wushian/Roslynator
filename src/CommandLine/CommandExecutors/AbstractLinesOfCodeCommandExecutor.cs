@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
-using Roslynator.Metrics;
+using Roslynator.CodeMetrics;
 using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine

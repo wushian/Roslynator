@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Roslynator.Metrics;
+using Roslynator.CodeMetrics;
 
-namespace Roslynator.VisualBasic.Metrics
+namespace Roslynator.VisualBasic.CodeMetrics
 {
-    public abstract class VisualBasicCodeMetricsCounter : CodeMetricsCounter
+    internal abstract class VisualBasicCodeMetricsCounter : CodeMetricsCounter
     {
         internal override SyntaxFactsService SyntaxFacts => VisualBasicSyntaxFactsService.Instance;
     }

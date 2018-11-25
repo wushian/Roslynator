@@ -25,9 +25,11 @@
     <TrimFilesRootFiles Include="System.Diagnostics.Tracing.dll" />
     <TrimFilesRootFiles Include="System.Composition.Convention.dll" />
     <TrimFilesRootFiles Include="Roslynator.Core.dll" />
+    <TrimFilesRootFiles Include="Roslynator.Workspaces.Core.dll" />
+    <TrimFilesRootFiles Include="Roslynator.CSharp.dll" />
+    <TrimFilesRootFiles Include="Roslynator.VisualBasic.dll" />
     <TrimFilesRootFiles Include="Roslynator.Common.dll" />
     <TrimFilesRootFiles Include="Roslynator.Common.Workspaces.dll" />
-    <TrimFilesRootFiles Include="Roslynator.CSharp.dll" />
     <TrimFilesRootFiles Include="Roslynator.CSharp.Workspaces.dll" />
     <TrimFilesRootFiles Include="Roslynator.CSharp.Analyzers.dll" />
     <TrimFilesRootFiles Include="Roslynator.CSharp.Analyzers.CodeFixes.dll" />
@@ -57,7 +59,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CSharp\CSharp.csproj" />
     <ProjectReference Include="..\VisualBasic\VisualBasic.csproj" />
-    <ProjectReference Include="..\Workspaces\Workspaces.csproj" />
+    <ProjectReference Include="..\Workspaces.Core\Workspaces.Core.csproj" />
     <ProjectReference Include="..\Analyzers.CodeFixes\Analyzers.CodeFixes.csproj" />
     <ProjectReference Include="..\CodeFixes\CodeFixes.csproj" />
     <ProjectReference Include="..\Documentation\Documentation.csproj" />

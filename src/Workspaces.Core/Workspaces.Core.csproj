@@ -6,10 +6,10 @@
 
   <PropertyGroup>
     <Version>0.1.0.0</Version>
-    <AssemblyName>Roslynator.Workspaces</AssemblyName>
+    <AssemblyName>Roslynator.Workspaces.Core</AssemblyName>
     <RootNamespace>Roslynator</RootNamespace>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Workspaces.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Workspaces.Core.snk</AssemblyOriginatorKeyFile>
     <CodeAnalysisRuleSet>..\global.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
     <IsPackable>false</IsPackable>
