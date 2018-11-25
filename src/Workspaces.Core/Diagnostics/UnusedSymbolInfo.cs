@@ -21,9 +21,9 @@ namespace Roslynator.Diagnostics
 
         public ProjectId ProjectId { get; }
 
-        public UnusedSymbolKinds Kind
+        public UnusedSymbolKind Kind
         {
-            get { return (Symbol != null) ? UnusedSymbolFinder.GetUnusedSymbolKind(Symbol) : UnusedSymbolKinds.None; }
+            get { return (Symbol != null) ? UnusedSymbolFinder.GetUnusedSymbolKind(Symbol) : UnusedSymbolKind.None; }
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

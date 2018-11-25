@@ -211,7 +211,7 @@ namespace Roslynator.Diagnostics
             return true;
         }
 
-        internal static UnusedSymbolKinds GetUnusedSymbolKind(ISymbol symbol)
+        internal static UnusedSymbolKind GetUnusedSymbolKind(ISymbol symbol)
         {
             switch (symbol.Kind)
             {
@@ -222,40 +222,40 @@ namespace Roslynator.Diagnostics
                         switch (namedType.TypeKind)
                         {
                             case TypeKind.Class:
-                                return UnusedSymbolKinds.Class;
+                                return UnusedSymbolKind.Class;
                             case TypeKind.Delegate:
-                                return UnusedSymbolKinds.Delegate;
+                                return UnusedSymbolKind.Delegate;
                             case TypeKind.Enum:
-                                return UnusedSymbolKinds.Enum;
+                                return UnusedSymbolKind.Enum;
                             case TypeKind.Interface:
-                                return UnusedSymbolKinds.Interface;
+                                return UnusedSymbolKind.Interface;
                             case TypeKind.Struct:
-                                return UnusedSymbolKinds.Struct;
+                                return UnusedSymbolKind.Struct;
                         }
 
                         Debug.Fail(namedType.TypeKind.ToString());
-                        return UnusedSymbolKinds.None;
+                        return UnusedSymbolKind.None;
                     }
                 case SymbolKind.Event:
                     {
-                        return UnusedSymbolKinds.Event;
+                        return UnusedSymbolKind.Event;
                     }
                 case SymbolKind.Field:
                     {
-                        return UnusedSymbolKinds.Field;
+                        return UnusedSymbolKind.Field;
                     }
                 case SymbolKind.Method:
                     {
-                        return UnusedSymbolKinds.Method;
+                        return UnusedSymbolKind.Method;
                     }
                 case SymbolKind.Property:
                     {
-                        return UnusedSymbolKinds.Property;
+                        return UnusedSymbolKind.Property;
                     }
             }
 
             Debug.Fail(symbol.Kind.ToString());
-            return UnusedSymbolKinds.None;
+            return UnusedSymbolKind.None;
         }
 
         // https://docs.microsoft.com/cs-cz/dotnet/csharp/programming-guide/main-and-command-args/

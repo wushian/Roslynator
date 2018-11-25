@@ -52,7 +52,7 @@ namespace Roslynator.CommandLine
 
                 bool verbosityParsed = false;
 
-                parserResult.WithParsed<BaseCommandLineOptions>(options =>
+                parserResult.WithParsed<AbstractCommandLineOptions>(options =>
                 {
                     var defaultVerbosity = Verbosity.Normal;
 
@@ -175,7 +175,7 @@ namespace Roslynator.CommandLine
             if (!options.TryGetScope(UnusedSymbolKinds.TypeOrMember, out UnusedSymbolKinds unusedSymbolKinds))
                 return 1;
 
-            if (!options.TryGetVisibility(Visibility.Internal, out  Visibility visibility))
+            if (!options.TryGetVisibility(Visibility.Internal, out Visibility visibility))
                 return 1;
 
             var executor = new AnalyzeUnusedCommandExecutor(options, visibility, unusedSymbolKinds, language);

@@ -55,18 +55,18 @@ namespace Roslynator.CommandLine
 
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            CodeMetrics metrics = await WorkspaceCodeMetrics.CountLinesAsync(project, counter, options, cancellationToken);
+            CodeMetricsInfo codeMetrics = await WorkspaceCodeMetrics.CountLinesAsync(project, counter, options, cancellationToken);
 
             stopwatch.Stop();
 
             WriteLine(Verbosity.Minimal);
 
             WriteMetrics(
-                metrics.CodeLineCount,
-                metrics.WhitespaceLineCount,
-                metrics.CommentLineCount,
-                metrics.PreprocessorDirectiveLineCount,
-                metrics.TotalLineCount);
+                codeMetrics.CodeLineCount,
+                codeMetrics.WhitespaceLineCount,
+                codeMetrics.CommentLineCount,
+                codeMetrics.PreprocessorDirectiveLineCount,
+                codeMetrics.TotalLineCount);
 
             WriteLine(Verbosity.Minimal);
             WriteLine($"Done counting logical lines for '{project.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", Verbosity.Normal);
@@ -80,26 +80,26 @@ namespace Roslynator.CommandLine
 
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            ImmutableDictionary<ProjectId, CodeMetrics> projectsMetrics = WorkspaceCodeMetrics.CountLinesInParallel(projects, CodeMetricsCounterFactory.GetLogicalLinesCounter, options, cancellationToken);
+            ImmutableDictionary<ProjectId, CodeMetricsInfo> codeMetrics = WorkspaceCodeMetrics.CountLinesInParallel(projects, CodeMetricsCounterFactory.GetLogicalLinesCounter, options, cancellationToken);
 
             stopwatch.Stop();
 
-            if (projectsMetrics.Count > 0)
+            if (codeMetrics.Count > 0)
             {
                 WriteLine(Verbosity.Normal);
                 WriteLine("Logical lines of code by project:", Verbosity.Normal);
 
-                WriteLinesOfCode(solution, projectsMetrics);
+                WriteLinesOfCode(solution, codeMetrics);
             }
 
             WriteLine(Verbosity.Minimal);
 
             WriteMetrics(
-                projectsMetrics.Sum(f => f.Value.CodeLineCount),
-                projectsMetrics.Sum(f => f.Value.WhitespaceLineCount),
-                projectsMetrics.Sum(f => f.Value.CommentLineCount),
-                projectsMetrics.Sum(f => f.Value.PreprocessorDirectiveLineCount),
-                projectsMetrics.Sum(f => f.Value.TotalLineCount));
+                codeMetrics.Sum(f => f.Value.CodeLineCount),
+                codeMetrics.Sum(f => f.Value.WhitespaceLineCount),
+                codeMetrics.Sum(f => f.Value.CommentLineCount),
+                codeMetrics.Sum(f => f.Value.PreprocessorDirectiveLineCount),
+                codeMetrics.Sum(f => f.Value.TotalLineCount));
 
             WriteLine(Verbosity.Minimal);
             WriteLine($"Done counting logical lines for solution '{solution.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", Verbosity.Normal);

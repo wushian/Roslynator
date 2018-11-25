@@ -4,7 +4,7 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    public abstract class BaseCommandLineOptions
+    public abstract class AbstractCommandLineOptions
     {
         [Option(longName: "file-log")]
         public string FileLog { get; set; }

@@ -4,8 +4,10 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
+#if DEBUG
     [Verb("list-vs", HelpText = "Lists Visual Studio installations.")]
-    public class ListVisualStudioCommandLineOptions : BaseCommandLineOptions
+#endif
+    public class ListVisualStudioCommandLineOptions : AbstractCommandLineOptions
     {
     }
 }

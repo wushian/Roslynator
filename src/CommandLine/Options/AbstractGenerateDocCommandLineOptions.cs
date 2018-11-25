@@ -6,7 +6,7 @@ using Roslynator.Documentation;
 
 namespace Roslynator.CommandLine
 {
-    public abstract class AbstractGenerateDocCommandLineOptions : BaseCommandLineOptions
+    public abstract class AbstractGenerateDocCommandLineOptions : AbstractCommandLineOptions
     {
         [Option(longName: "assemblies", shortName: 'a', Required = true, HelpText = "Defines one or more assemblies that should be used as a source for the documentation.", MetaValue = "<ASSEMBLIES>")]
         public IEnumerable<string> Assemblies { get; set; }

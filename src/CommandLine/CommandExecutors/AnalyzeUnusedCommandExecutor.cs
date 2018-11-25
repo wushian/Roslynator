@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis;
 using Roslynator.Diagnostics;
 using static Roslynator.Logger;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Roslynator.CommandLine
 {
@@ -71,14 +72,14 @@ namespace Roslynator.CommandLine
             {
                 WriteLine(Verbosity.Normal);
 
-                Dictionary<UnusedSymbolKinds, int> countByKind = allUnusedSymbols
+                Dictionary<UnusedSymbolKind, int> countByKind = allUnusedSymbols
                     .GroupBy(f => f.Kind)
                     .OrderBy(f => f.Key)
                     .ToDictionary(f => f.Key, f => f.Count());
 
                 int maxCountLength = countByKind.Sum(f => f.Value.ToString().Length);
 
-                foreach (KeyValuePair<UnusedSymbolKinds, int> kvp in countByKind)
+                foreach (KeyValuePair<UnusedSymbolKind, int> kvp in countByKind)
                 {
                     WriteLine($"{kvp.Value.ToString().PadLeft(maxCountLength)} {kvp.Key.ToString().ToLowerInvariant()} symbols", Verbosity.Normal);
                 }
@@ -106,7 +107,7 @@ namespace Roslynator.CommandLine
 
             bool Predicate(ISymbol symbol)
             {
-                return (UnusedSymbolKinds & UnusedSymbolFinder.GetUnusedSymbolKind(symbol)) != 0
+                return (UnusedSymbolKinds & GetUnusedSymbolKinds(symbol)) != 0
                     && IsVisible(symbol);
             }
         }
@@ -129,6 +130,53 @@ namespace Roslynator.CommandLine
         protected override void OperationCanceled(OperationCanceledException ex)
         {
             WriteLine("Analysis was canceled.", Verbosity.Quiet);
+        }
+
+        private static UnusedSymbolKinds GetUnusedSymbolKinds(ISymbol symbol)
+        {
+            switch (symbol.Kind)
+            {
+                case SymbolKind.NamedType:
+                    {
+                        var namedType = (INamedTypeSymbol)symbol;
+
+                        switch (namedType.TypeKind)
+                        {
+                            case TypeKind.Class:
+                                return UnusedSymbolKinds.Class;
+                            case TypeKind.Delegate:
+                                return UnusedSymbolKinds.Delegate;
+                            case TypeKind.Enum:
+                                return UnusedSymbolKinds.Enum;
+                            case TypeKind.Interface:
+                                return UnusedSymbolKinds.Interface;
+                            case TypeKind.Struct:
+                                return UnusedSymbolKinds.Struct;
+                        }
+
+                        Debug.Fail(namedType.TypeKind.ToString());
+                        return UnusedSymbolKinds.None;
+                    }
+                case SymbolKind.Event:
+                    {
+                        return UnusedSymbolKinds.Event;
+                    }
+                case SymbolKind.Field:
+                    {
+                        return UnusedSymbolKinds.Field;
+                    }
+                case SymbolKind.Method:
+                    {
+                        return UnusedSymbolKinds.Method;
+                    }
+                case SymbolKind.Property:
+                    {
+                        return UnusedSymbolKinds.Property;
+                    }
+            }
+
+            Debug.Fail(symbol.Kind.ToString());
+            return UnusedSymbolKinds.None;
         }
     }
 }

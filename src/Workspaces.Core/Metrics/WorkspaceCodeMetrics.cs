@@ -9,25 +9,25 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
-namespace Roslynator.Metrics
+namespace Roslynator.CodeMetrics
 {
-    public static class WorkspaceCodeMetrics
+    internal static class WorkspaceCodeMetrics
     {
-        public static ImmutableDictionary<ProjectId, CodeMetrics> CountLinesInParallel(
+        public static ImmutableDictionary<ProjectId, CodeMetricsInfo> CountLinesInParallel(
             IEnumerable<Project> projects,
             Func<string, CodeMetricsCounter> counterFactory,
             CodeMetricsOptions options = null,
             CancellationToken cancellationToken = default)
         {
-            var metrics = new ConcurrentBag<(ProjectId projectId, CodeMetrics metrics)>();
+            var metrics = new ConcurrentBag<(ProjectId projectId, CodeMetricsInfo metrics)>();
 
             Parallel.ForEach(projects, project =>
             {
                 CodeMetricsCounter counter = counterFactory(project.Language);
 
-                CodeMetrics projectMetrics = (counter != null)
+                CodeMetricsInfo projectMetrics = (counter != null)
                     ? CountLinesAsync(project, counter, options, cancellationToken).Result
-                    : CodeMetrics.NotAvailable;
+                    : CodeMetricsInfo.NotAvailable;
 
                 metrics.Add((project.Id, metrics: projectMetrics));
             });
@@ -35,21 +35,21 @@ namespace Roslynator.Metrics
             return metrics.ToImmutableDictionary(f => f.projectId, f => f.metrics);
         }
 
-        public static async Task<ImmutableDictionary<ProjectId, CodeMetrics>> CountLinesAsync(
+        public static async Task<ImmutableDictionary<ProjectId, CodeMetricsInfo>> CountLinesAsync(
             IEnumerable<Project> projects,
             Func<string, CodeMetricsCounter> counterFactory,
             CodeMetricsOptions options = null,
             CancellationToken cancellationToken = default)
         {
-            ImmutableDictionary<ProjectId, CodeMetrics>.Builder builder = ImmutableDictionary.CreateBuilder<ProjectId, CodeMetrics>();
+            ImmutableDictionary<ProjectId, CodeMetricsInfo>.Builder builder = ImmutableDictionary.CreateBuilder<ProjectId, CodeMetricsInfo>();
 
             foreach (Project project in projects)
             {
                 CodeMetricsCounter counter = counterFactory(project.Language);
 
-                CodeMetrics projectMetrics = (counter != null)
+                CodeMetricsInfo projectMetrics = (counter != null)
                     ? await CountLinesAsync(project, counter, options, cancellationToken).ConfigureAwait(false)
-                    : CodeMetrics.NotAvailable;
+                    : CodeMetricsInfo.NotAvailable;
 
                 builder.Add(project.Id, projectMetrics);
             }
@@ -57,20 +57,20 @@ namespace Roslynator.Metrics
             return builder.ToImmutableDictionary();
         }
 
-        public static async Task<CodeMetrics> CountLinesAsync(
+        public static async Task<CodeMetricsInfo> CountLinesAsync(
             Project project,
             CodeMetricsCounter counter,
             CodeMetricsOptions options = null,
             CancellationToken cancellationToken = default)
         {
-            CodeMetrics metrics = default;
+            CodeMetricsInfo metrics = default;
 
             foreach (Document document in project.Documents)
             {
                 if (!document.SupportsSyntaxTree)
                     continue;
 
-                CodeMetrics documentMetrics = await CountLinesAsync(document, counter, options, cancellationToken).ConfigureAwait(false);
+                CodeMetricsInfo documentMetrics = await CountLinesAsync(document, counter, options, cancellationToken).ConfigureAwait(false);
 
                 metrics = metrics.Add(documentMetrics);
             }
@@ -78,7 +78,7 @@ namespace Roslynator.Metrics
             return metrics;
         }
 
-        public static async Task<CodeMetrics> CountLinesAsync(
+        public static async Task<CodeMetricsInfo> CountLinesAsync(
             Document document,
             CodeMetricsCounter counter,
             CodeMetricsOptions options = null,

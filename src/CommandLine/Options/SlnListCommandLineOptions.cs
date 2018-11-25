@@ -4,7 +4,9 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
+#if DEBUG
     [Verb("sln-list", HelpText = "Gets an information about specified solution and its projects.")]
+#endif
     public class SlnListCommandLineOptions : MSBuildCommandLineOptions
     {
     }

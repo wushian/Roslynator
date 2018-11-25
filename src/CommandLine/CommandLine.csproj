@@ -21,6 +21,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="docs\**" />
+    <EmbeddedResource Remove="docs\**" />
+    <None Remove="docs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <TrimFilesRootFiles Include="System.Runtime.InteropServices.RuntimeInformation.dll" />
     <TrimFilesRootFiles Include="System.Diagnostics.Tracing.dll" />
     <TrimFilesRootFiles Include="System.Composition.Convention.dll" />

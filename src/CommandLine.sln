@@ -27,23 +27,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandLine", "CommandLine\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documentation", "Documentation\Documentation.csproj", "{43B9DEFC-E6A9-4CA2-B19E-0C486A418831}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Workspaces", "Workspaces\Workspaces.csproj", "{F8922FB4-67DB-4EA6-932F-AAF9C7503EE7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Workspaces.Core", "Workspaces.Core\Workspaces.Core.csproj", "{F8922FB4-67DB-4EA6-932F-AAF9C7503EE7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeFixes", "CodeFixes\CodeFixes.csproj", "{45E21AD0-275F-4F64-A74E-781FE3BA0B4B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CLI", "CLI", "{E5C47A70-19EB-4B95-9B05-DD5CEE67C060}"
 	ProjectSection(SolutionItems) = preProject
-		..\docs\cli\analyze-assembly-command.md = ..\docs\cli\analyze-assembly-command.md
+		CommandLine\docs\analyze-assembly-command.md = CommandLine\docs\analyze-assembly-command.md
 		..\docs\cli\analyze-command.md = ..\docs\cli\analyze-command.md
 		..\docs\cli\fix-command.md = ..\docs\cli\fix-command.md
 		..\docs\cli\format-command.md = ..\docs\cli\format-command.md
 		..\docs\cli\generate-declarations-command.md = ..\docs\cli\generate-declarations-command.md
 		..\docs\cli\generate-doc-command.md = ..\docs\cli\generate-doc-command.md
 		..\docs\cli\generate-doc-root-command.md = ..\docs\cli\generate-doc-root-command.md
-		..\docs\cli\list-vs-command.md = ..\docs\cli\list-vs-command.md
+		CommandLine\docs\list-vs-command.md = CommandLine\docs\list-vs-command.md
 		..\docs\cli\lloc-command.md = ..\docs\cli\lloc-command.md
 		..\docs\cli\loc-command.md = ..\docs\cli\loc-command.md
-		..\docs\cli\sln-list-command.md = ..\docs\cli\sln-list-command.md
+		CommandLine\docs\sln-list-command.md = CommandLine\docs\sln-list-command.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisualBasic", "VisualBasic\VisualBasic.csproj", "{05DF2CB8-95FB-4BD9-A9E7-D346470E979A}"
