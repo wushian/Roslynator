@@ -13,12 +13,12 @@ using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.Text;
 using Roslynator.Tests.Text;
 using Xunit;
-using static Roslynator.Tests.CompilerDiagnosticVerifier;
+using static Roslynator.Tests.CodeVerifierHelpers;
 
 namespace Roslynator.Tests
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public abstract class CodeRefactoringVerifier : CodeVerifier
+    public abstract class RefactoringVerifier : CodeVerifier
     {
         public abstract string RefactoringId { get; }
 
@@ -27,25 +27,30 @@ namespace Roslynator.Tests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string DebuggerDisplay
         {
-            get { return $"{RefactoringId} {RefactoringProvider.GetType().Name}"; }
+            get
+            {
+                return (!string.IsNullOrEmpty(RefactoringId))
+                    ? $"{RefactoringId} {RefactoringProvider.GetType().Name}"
+                    : $"{RefactoringProvider.GetType().Name}";
+            }
         }
 
         public async Task VerifyRefactoringAsync(
             string source,
             string expected,
-            string equivalenceKey = null,
             string[] additionalSources = null,
+            string equivalenceKey = null,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
-            TextSpanParserResult result = SpanParser.GetSpans(source, reverse: true);
+            TextParserResult result = TextParser.GetSpans(source, reverse: true);
 
             await VerifyRefactoringAsync(
                 source: result.Text,
                 expected: expected,
                 spans: result.Spans.Select(f => f.Span),
-                equivalenceKey: equivalenceKey,
                 additionalSources: additionalSources,
+                equivalenceKey: equivalenceKey,
                 options: options,
                 cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -56,11 +61,11 @@ namespace Roslynator.Tests
             string toData,
             string equivalenceKey = null,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
-            (TextSpan span, string source, string expected) = SpanParser.ReplaceEmptySpan(theory, fromData, toData);
+            (TextSpan span, string source, string expected) = TextParser.ReplaceEmptySpan(theory, fromData, toData);
 
-            TextSpanParserResult result = SpanParser.GetSpans(source, reverse: true);
+            TextParserResult result = TextParser.GetSpans(source, reverse: true);
 
             if (result.Spans.Any())
             {
@@ -88,10 +93,10 @@ namespace Roslynator.Tests
             string source,
             string expected,
             IEnumerable<TextSpan> spans,
-            string equivalenceKey = null,
             string[] additionalSources = null,
+            string equivalenceKey = null,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             using (IEnumerator<TextSpan> en = spans.GetEnumerator())
             {
@@ -105,9 +110,9 @@ namespace Roslynator.Tests
                     await VerifyRefactoringAsync(
                         source: source,
                         expected: expected,
-                        en.Current,
-                        equivalenceKey: equivalenceKey,
+                        span: en.Current,
                         additionalSources: additionalSources,
+                        equivalenceKey: equivalenceKey,
                         options: options,
                         cancellationToken: cancellationToken).ConfigureAwait(false);
 
@@ -119,14 +124,14 @@ namespace Roslynator.Tests
             string source,
             string expected,
             TextSpan span,
-            string equivalenceKey = null,
             string[] additionalSources = null,
+            string equivalenceKey = null,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            Document document = CreateDocument(source, additionalSources ?? Array.Empty<string>());
+            Document document = ProjectFactory.CreateDocument(source, additionalSources ?? Array.Empty<string>());
 
             SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
@@ -176,9 +181,9 @@ namespace Roslynator.Tests
             string source,
             string equivalenceKey = null,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
-            TextSpanParserResult result = SpanParser.GetSpans(source, reverse: true);
+            TextParserResult result = TextParser.GetSpans(source, reverse: true);
 
             await VerifyNoRefactoringAsync(
                 source: result.Text,
@@ -193,7 +198,7 @@ namespace Roslynator.Tests
             TextSpan span,
             string equivalenceKey = null,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             await VerifyNoRefactoringAsync(
                 source,
@@ -208,11 +213,11 @@ namespace Roslynator.Tests
             IEnumerable<TextSpan> spans,
             string equivalenceKey = null,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            Document document = CreateDocument(source);
+            Document document = ProjectFactory.CreateDocument(source);
 
             SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 

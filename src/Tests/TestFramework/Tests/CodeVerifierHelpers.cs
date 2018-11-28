@@ -3,12 +3,14 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Text;
 using Xunit;
 
 namespace Roslynator.Tests
 {
-    internal static class CompilerDiagnosticVerifier
+    internal static class CodeVerifierHelpers
     {
         public static void VerifyCompilerDiagnostics(
             ImmutableArray<Diagnostic> diagnostics,
@@ -105,6 +107,39 @@ namespace Roslynator.Tests
                 }
 
                 return false;
+            }
+        }
+
+        public static ImmutableArray<ExpectedDocument> AddAdditionalDocuments(IEnumerable<(string source, string expected)> additionalData, ref Document document)
+        {
+            ImmutableArray<ExpectedDocument>.Builder expectedDocuments = ImmutableArray.CreateBuilder<ExpectedDocument>();
+
+            Project project = document.Project;
+
+            int i = 2;
+            foreach ((string source, string expected) in additionalData)
+            {
+                Document newDocument = project.AddDocument(PathHelpers.AddNumberToFileName(document.Name, i), SourceText.From(source));
+                expectedDocuments.Add(new ExpectedDocument(newDocument.Id, expected));
+                project = newDocument.Project;
+
+                i++;
+            }
+
+            document = project.GetDocument(document.Id);
+
+            return expectedDocuments.ToImmutableArray();
+        }
+
+        public static async Task VerifyAdditionalDocumentsAsync(Project project, ImmutableArray<ExpectedDocument> expectedDocuments)
+        {
+            foreach (ExpectedDocument expectedDocument in expectedDocuments)
+            {
+                Document document = project.GetDocument(expectedDocument.Id);
+
+                string actual = await document.ToFullStringAsync(simplify: true, format: true).ConfigureAwait(false);
+
+                Assert.Equal(expectedDocument.Text, actual);
             }
         }
     }

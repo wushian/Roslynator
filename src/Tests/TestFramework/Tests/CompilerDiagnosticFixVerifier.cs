@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -11,7 +13,7 @@ using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Text;
 using Xunit;
-using static Roslynator.Tests.CompilerDiagnosticVerifier;
+using static Roslynator.Tests.CodeVerifierHelpers;
 
 namespace Roslynator.Tests
 {
@@ -34,9 +36,9 @@ namespace Roslynator.Tests
             string toData,
             string equivalenceKey = null,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
-            (TextSpan span, string source, string expected) = SpanParser.ReplaceEmptySpan(theory, fromData, toData);
+            (TextSpan span, string source, string expected) = TextParser.ReplaceEmptySpan(theory, fromData, toData);
 
             await VerifyFixAsync(
                 source: source,
@@ -49,16 +51,21 @@ namespace Roslynator.Tests
         public async Task VerifyFixAsync(
             string source,
             string expected,
+            IEnumerable<(string source, string expected)> additionalData = null,
             string equivalenceKey = null,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             if (!FixProvider.FixableDiagnosticIds.Contains(DiagnosticId))
                 Assert.True(false, $"Code fix provider '{FixProvider.GetType().Name}' cannot fix diagnostic '{DiagnosticId}'.");
 
-            Document document = CreateDocument(source);
+            Document document = ProjectFactory.CreateDocument(source);
+
+            ImmutableArray<ExpectedDocument> expectedDocuments = (additionalData != null)
+                ? AddAdditionalDocuments(additionalData, ref document)
+                : ImmutableArray<ExpectedDocument>.Empty;
 
             Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
@@ -128,6 +135,9 @@ namespace Roslynator.Tests
 
             Assert.Equal(expected, actual);
 
+            if (expectedDocuments.Any())
+                await VerifyAdditionalDocumentsAsync(document.Project, expectedDocuments).ConfigureAwait(false);
+
             Diagnostic FindDiagnostic()
             {
                 foreach (Diagnostic diagnostic in diagnostics)
@@ -145,11 +155,11 @@ namespace Roslynator.Tests
             string source,
             string equivalenceKey = null,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            Document document = CreateDocument(source);
+            Document document = ProjectFactory.CreateDocument(source);
 
             Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 

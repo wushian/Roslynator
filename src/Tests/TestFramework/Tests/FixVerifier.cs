@@ -13,12 +13,12 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Text;
 using Roslynator.Tests.Text;
 using Xunit;
-using static Roslynator.Tests.CompilerDiagnosticVerifier;
+using static Roslynator.Tests.CodeVerifierHelpers;
 
 namespace Roslynator.Tests
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public abstract class CodeFixVerifier : DiagnosticVerifier
+    public abstract class FixVerifier : DiagnosticVerifier
     {
         public abstract CodeFixProvider FixProvider { get; }
 
@@ -34,9 +34,9 @@ namespace Roslynator.Tests
             IEnumerable<(string source, string expected)> additionalData = null,
             string equivalenceKey = null,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
-            TextSpanParserResult result = SpanParser.GetSpans(source);
+            TextParserResult result = TextParser.GetSpans(source);
 
             IEnumerable<Diagnostic> diagnostics = result.Spans.Select(f => CreateDiagnostic(f.Span, f.LineSpan));
 
@@ -64,11 +64,11 @@ namespace Roslynator.Tests
             string toData,
             string equivalenceKey = null,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
-            (TextSpan span, string source, string expected) = SpanParser.ReplaceEmptySpan(theory, fromData, toData);
+            (TextSpan span, string source, string expected) = TextParser.ReplaceEmptySpan(theory, fromData, toData);
 
-            TextSpanParserResult result = SpanParser.GetSpans(source);
+            TextParserResult result = TextParser.GetSpans(source);
 
             if (result.Spans.Any())
             {
@@ -92,9 +92,9 @@ namespace Roslynator.Tests
             string toData,
             string equivalenceKey = null,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
-            (TextSpan span, string source, string expected) = SpanParser.ReplaceEmptySpan(theory, fromData, toData);
+            (TextSpan span, string source, string expected) = TextParser.ReplaceEmptySpan(theory, fromData, toData);
 
             await VerifyFixAsync(
                 source: source,
@@ -110,35 +110,18 @@ namespace Roslynator.Tests
             IEnumerable<(string source, string expected)> additionalData = null,
             string equivalenceKey = null,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             if (!FixProvider.CanFixAny(Analyzer.SupportedDiagnostics))
                 Assert.True(false, $"Code fix provider '{FixProvider.GetType().Name}' cannot fix any diagnostic supported by analyzer '{Analyzer}'.");
 
-            Document document = CreateDocument(source);
+            Document document = ProjectFactory.CreateDocument(source);
 
-            List<(DocumentId documentId, string expected)> additionalDocumentData = null;
-
-            if (additionalData != null)
-            {
-                Project project = document.Project;
-
-                additionalDocumentData = new List<(DocumentId documentId, string expected)>();
-
-                int i = 1;
-                foreach ((string source2, string expected2) in additionalData)
-                {
-                    Document newDocument = project.AddDocument(CreateFileName(i), SourceText.From(source2));
-                    additionalDocumentData.Add((newDocument.Id, expected2));
-                    project = newDocument.Project;
-
-                    i++;
-                }
-
-                document = project.GetDocument(document.Id);
-            }
+            ImmutableArray<ExpectedDocument> expectedDocuments = (additionalData != null)
+                ? AddAdditionalDocuments(additionalData, ref document)
+                : ImmutableArray<ExpectedDocument>.Empty;
 
             Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
@@ -213,19 +196,8 @@ namespace Roslynator.Tests
 
             Assert.Equal(expected, actual);
 
-            if (additionalDocumentData != null)
-            {
-                Project project = document.Project;
-
-                foreach ((DocumentId documentId, string expected2) in additionalDocumentData)
-                {
-                    Document document2 = project.GetDocument(documentId);
-
-                    string actual2 = await document2.ToFullStringAsync(simplify: true, format: true).ConfigureAwait(false);
-
-                    Assert.Equal(expected2, actual2);
-                }
-            }
+            if (expectedDocuments.Any())
+                await VerifyAdditionalDocumentsAsync(document.Project, expectedDocuments).ConfigureAwait(false);
 
             Diagnostic FindFirstFixableDiagnostic()
             {
@@ -244,21 +216,21 @@ namespace Roslynator.Tests
             IEnumerable<string> additionalSources = null,
             string equivalenceKey = null,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            Document document = CreateDocument(source);
+            Document document = ProjectFactory.CreateDocument(source);
 
             if (additionalSources != null)
             {
                 Project project = document.Project;
 
-                int i = 1;
+                int i = 2;
                 foreach (string additionalSource in additionalSources)
                 {
                     project = project
-                        .AddDocument(CreateFileName(i), SourceText.From(additionalSource))
+                        .AddDocument(PathHelpers.AddNumberToFileName(document.Name, i), SourceText.From(additionalSource))
                         .Project;
 
                     i++;

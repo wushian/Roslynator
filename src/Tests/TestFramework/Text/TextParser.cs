@@ -9,24 +9,24 @@ using Roslynator.Text;
 
 namespace Roslynator.Tests.Text
 {
-    public abstract class TextSpanParser
+    public abstract class TextParser
     {
-        public static TextSpanParser Default { get; } = new DefaultSpanParser();
+        public static TextParser Default { get; } = new DefaultTextParser();
 
-        public abstract TextSpanParserResult GetSpans(string s, bool reverse = false);
+        public abstract TextParserResult GetSpans(string s, bool reverse = false);
 
         public abstract (TextSpan span, string text) ReplaceEmptySpan(string s, string replacement);
 
         public abstract (TextSpan span, string text1, string text2) ReplaceEmptySpan(string s, string replacement1, string replacement2);
 
-        private class DefaultSpanParser : TextSpanParser
+        private class DefaultTextParser : TextParser
         {
             private const string OpenToken = "[|";
             private const string CloseToken = "|]";
             private const string OpenCloseTokens = OpenToken + CloseToken;
             private const int TokensLength = 4;
 
-            public override TextSpanParserResult GetSpans(string s, bool reverse = false)
+            public override TextParserResult GetSpans(string s, bool reverse = false)
             {
                 StringBuilder sb = StringBuilderCache.GetInstance(s.Length - TokensLength);
 
@@ -142,7 +142,7 @@ namespace Roslynator.Tests.Text
                     spans.Reverse();
                 }
 
-                return new TextSpanParserResult(
+                return new TextParserResult(
                     StringBuilderCache.GetStringAndFree(sb),
                     spans?.ToImmutableArray() ?? ImmutableArray<LinePositionSpanInfo>.Empty);
 
@@ -186,7 +186,7 @@ namespace Roslynator.Tests.Text
                 int index = s.IndexOf(OpenCloseTokens, StringComparison.Ordinal);
 
                 if (index == -1)
-                    throw new ArgumentException("Empty span not found in.", nameof(s));
+                    throw new ArgumentException("Empty span not found.", nameof(s));
 
                 var span = new TextSpan(index, replacement.Length);
 
@@ -200,7 +200,7 @@ namespace Roslynator.Tests.Text
                 int index = s.IndexOf(OpenCloseTokens, StringComparison.Ordinal);
 
                 if (index == -1)
-                    throw new ArgumentException("Empty span not found in.", nameof(s));
+                    throw new ArgumentException("Empty span not found.", nameof(s));
 
                 var span = new TextSpan(index, replacement1.Length);
 

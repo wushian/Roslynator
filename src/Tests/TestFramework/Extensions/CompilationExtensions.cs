@@ -47,7 +47,7 @@ namespace Roslynator
             this Compilation compilation,
             DiagnosticAnalyzer analyzer,
             IComparer<Diagnostic> comparer = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             CompilationWithAnalyzers compilationWithAnalyzers = compilation.WithAnalyzers(ImmutableArray.Create(analyzer), default(AnalyzerOptions), cancellationToken);
 

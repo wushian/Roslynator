@@ -5,9 +5,9 @@ using System.Collections.Immutable;
 
 namespace Roslynator.Tests.Text
 {
-    public readonly struct TextSpanParserResult : IEquatable<TextSpanParserResult>
+    public readonly struct TextParserResult : IEquatable<TextParserResult>
     {
-        public TextSpanParserResult(string text, ImmutableArray<LinePositionSpanInfo> spans)
+        public TextParserResult(string text, ImmutableArray<LinePositionSpanInfo> spans)
         {
             Text = text;
             Spans = spans;
@@ -19,11 +19,11 @@ namespace Roslynator.Tests.Text
 
         public override bool Equals(object obj)
         {
-            return obj is TextSpanParserResult other
+            return obj is TextParserResult other
                 && Equals(other);
         }
 
-        public bool Equals(TextSpanParserResult other)
+        public bool Equals(TextParserResult other)
         {
             return Text == other.Text
                    && Spans.Equals(other.Spans);
@@ -34,12 +34,12 @@ namespace Roslynator.Tests.Text
             return Hash.Combine(Spans.GetHashCode(), Hash.Create(Text));
         }
 
-        public static bool operator ==(in TextSpanParserResult analysis1, in TextSpanParserResult analysis2)
+        public static bool operator ==(in TextParserResult analysis1, in TextParserResult analysis2)
         {
             return analysis1.Equals(analysis2);
         }
 
-        public static bool operator !=(in TextSpanParserResult analysis1, in TextSpanParserResult analysis2)
+        public static bool operator !=(in TextParserResult analysis1, in TextParserResult analysis2)
         {
             return !(analysis1 == analysis2);
         }

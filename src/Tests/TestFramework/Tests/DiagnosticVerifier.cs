@@ -12,7 +12,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 using Roslynator.Tests.Text;
 using Xunit;
-using static Roslynator.Tests.CompilerDiagnosticVerifier;
+using static Roslynator.Tests.CodeVerifierHelpers;
 
 namespace Roslynator.Tests
 {
@@ -32,9 +32,9 @@ namespace Roslynator.Tests
         public async Task VerifyDiagnosticAsync(
             string source,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
-            TextSpanParserResult result = SpanParser.GetSpans(source);
+            TextParserResult result = TextParser.GetSpans(source);
 
             await VerifyDiagnosticAsync(
                 result.Text,
@@ -48,11 +48,11 @@ namespace Roslynator.Tests
             string theory,
             string fromData,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
-            (TextSpan span, string text) = SpanParser.ReplaceEmptySpan(theory, fromData);
+            (TextSpan span, string text) = TextParser.ReplaceEmptySpan(theory, fromData);
 
-            TextSpanParserResult result = SpanParser.GetSpans(text);
+            TextParserResult result = TextParser.GetSpans(text);
 
             if (result.Spans.Any())
             {
@@ -68,7 +68,7 @@ namespace Roslynator.Tests
             string source,
             TextSpan span,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             await VerifyDiagnosticAsync(
                 source,
@@ -81,7 +81,7 @@ namespace Roslynator.Tests
             string source,
             IEnumerable<TextSpan> spans,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             await VerifyDiagnosticAsync(
                 source,
@@ -95,7 +95,7 @@ namespace Roslynator.Tests
             string source,
             Diagnostic expectedDiagnostic,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             await VerifyDiagnosticAsync(
                 source,
@@ -110,11 +110,11 @@ namespace Roslynator.Tests
             IEnumerable<Diagnostic> expectedDiagnostics,
             string[] additionalSources = null,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            Document document = CreateDocument(source, additionalSources ?? Array.Empty<string>());
+            Document document = ProjectFactory.CreateDocument(source, additionalSources ?? Array.Empty<string>());
 
             Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
@@ -164,9 +164,9 @@ namespace Roslynator.Tests
             string theory,
             string fromData,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
-            (TextSpan span, string text) = SpanParser.ReplaceEmptySpan(theory, fromData);
+            (TextSpan span, string text) = TextParser.ReplaceEmptySpan(theory, fromData);
 
             await VerifyNoDiagnosticAsync(
                 source: text,
@@ -179,14 +179,14 @@ namespace Roslynator.Tests
             string source,
             string[] additionalSources = null,
             CodeVerificationOptions options = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             if (!Analyzer.Supports(Descriptor))
                 Assert.True(false, $"Diagnostic \"{Descriptor.Id}\" is not supported by analyzer \"{Analyzer.GetType().Name}\".");
 
-            Document document = CreateDocument(source, additionalSources ?? Array.Empty<string>());
+            Document document = ProjectFactory.CreateDocument(source, additionalSources ?? Array.Empty<string>());
 
             Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
@@ -212,7 +212,7 @@ namespace Roslynator.Tests
         private void VerifyDiagnostics(
             IEnumerable<Diagnostic> actualDiagnostics,
             IEnumerable<Diagnostic> expectedDiagnostics,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             VerifyDiagnostics(actualDiagnostics, expectedDiagnostics, checkAdditionalLocations: false, cancellationToken: cancellationToken);
         }
@@ -221,7 +221,7 @@ namespace Roslynator.Tests
             IEnumerable<Diagnostic> actualDiagnostics,
             IEnumerable<Diagnostic> expectedDiagnostics,
             bool checkAdditionalLocations,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             int expectedCount = 0;
             int actualCount = 0;
@@ -350,7 +350,7 @@ namespace Roslynator.Tests
 
         private protected Diagnostic CreateDiagnostic(TextSpan span, LinePositionSpan lineSpan)
         {
-            Location location = Location.Create(CreateFileName(), span, lineSpan);
+            Location location = Location.Create(ProjectFactory.DefaultDocumentName, span, lineSpan);
 
             return Diagnostic.Create(Descriptor, location);
         }
