@@ -114,33 +114,38 @@ namespace Roslynator.Tests
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            Document document = ProjectFactory.CreateDocument(source, additionalSources ?? Array.Empty<string>());
-
-            Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
-
-            ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
-
-            if (options == null)
-                options = Options;
-
-            VerifyCompilerDiagnostics(compilerDiagnostics, options);
-
-            if (options.EnableDiagnosticsDisabledByDefault)
-                compilation = compilation.EnableDiagnosticsDisabledByDefault(Analyzer);
-
-            ImmutableArray<Diagnostic> diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(Analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);
-
-            if (diagnostics.Length > 0
-                && Analyzer.SupportedDiagnostics.Length > 1)
+            using (Workspace workspace = new AdhocWorkspace())
             {
-                VerifyDiagnostics(FilterDiagnostics(), expectedDiagnostics, cancellationToken);
-            }
-            else
-            {
-                VerifyDiagnostics(diagnostics, expectedDiagnostics, cancellationToken);
+                Project project = WorkspaceFactory.AddProject(workspace.CurrentSolution);
+
+                Document document = WorkspaceFactory.AddDocument(project, source, additionalSources ?? Array.Empty<string>());
+
+                Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
+
+                ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
+
+                if (options == null)
+                    options = Options;
+
+                VerifyCompilerDiagnostics(compilerDiagnostics, options);
+
+                if (options.EnableDiagnosticsDisabledByDefault)
+                    compilation = compilation.EnableDiagnosticsDisabledByDefault(Analyzer);
+
+                ImmutableArray<Diagnostic> diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(Analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);
+
+                if (diagnostics.Length > 0
+                    && Analyzer.SupportedDiagnostics.Length > 1)
+                {
+                    VerifyDiagnostics(FilterDiagnostics(diagnostics), expectedDiagnostics, cancellationToken);
+                }
+                else
+                {
+                    VerifyDiagnostics(diagnostics, expectedDiagnostics, cancellationToken);
+                }
             }
 
-            IEnumerable<Diagnostic> FilterDiagnostics()
+            IEnumerable<Diagnostic> FilterDiagnostics(ImmutableArray<Diagnostic> diagnostics)
             {
                 foreach (Diagnostic diagnostic in diagnostics)
                 {
@@ -186,26 +191,31 @@ namespace Roslynator.Tests
             if (!Analyzer.Supports(Descriptor))
                 Assert.True(false, $"Diagnostic \"{Descriptor.Id}\" is not supported by analyzer \"{Analyzer.GetType().Name}\".");
 
-            Document document = ProjectFactory.CreateDocument(source, additionalSources ?? Array.Empty<string>());
-
-            Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
-
-            ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
-
-            if (options == null)
-                options = Options;
-
-            VerifyCompilerDiagnostics(compilerDiagnostics, options);
-
-            if (options.EnableDiagnosticsDisabledByDefault)
-                compilation = compilation.EnableDiagnosticsDisabledByDefault(Analyzer);
-
-            ImmutableArray<Diagnostic> analyzerDiagnostics = await compilation.GetAnalyzerDiagnosticsAsync(Analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);
-
-            foreach (Diagnostic diagnostic in analyzerDiagnostics)
+            using (Workspace workspace = new AdhocWorkspace())
             {
-                if (string.Equals(diagnostic.Id, Descriptor.Id, StringComparison.Ordinal))
-                    Assert.True(false, $"No diagnostic expected{analyzerDiagnostics.Where(f => string.Equals(f.Id, Descriptor.Id, StringComparison.Ordinal)).ToDebugString()}");
+                Project project = WorkspaceFactory.AddProject(workspace.CurrentSolution);
+
+                Document document = WorkspaceFactory.AddDocument(project, source, additionalSources ?? Array.Empty<string>());
+
+                Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
+
+                ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
+
+                if (options == null)
+                    options = Options;
+
+                VerifyCompilerDiagnostics(compilerDiagnostics, options);
+
+                if (options.EnableDiagnosticsDisabledByDefault)
+                    compilation = compilation.EnableDiagnosticsDisabledByDefault(Analyzer);
+
+                ImmutableArray<Diagnostic> analyzerDiagnostics = await compilation.GetAnalyzerDiagnosticsAsync(Analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);
+
+                foreach (Diagnostic diagnostic in analyzerDiagnostics)
+                {
+                    if (string.Equals(diagnostic.Id, Descriptor.Id, StringComparison.Ordinal))
+                        Assert.True(false, $"No diagnostic expected{analyzerDiagnostics.Where(f => string.Equals(f.Id, Descriptor.Id, StringComparison.Ordinal)).ToDebugString()}");
+                }
             }
         }
 
@@ -350,7 +360,7 @@ namespace Roslynator.Tests
 
         private protected Diagnostic CreateDiagnostic(TextSpan span, LinePositionSpan lineSpan)
         {
-            Location location = Location.Create(ProjectFactory.DefaultDocumentName, span, lineSpan);
+            Location location = Location.Create(WorkspaceFactory.DefaultDocumentName, span, lineSpan);
 
             return Diagnostic.Create(Descriptor, location);
         }

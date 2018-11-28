@@ -131,50 +131,55 @@ namespace Roslynator.Tests
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            Document document = ProjectFactory.CreateDocument(source, additionalSources ?? Array.Empty<string>());
+            using (Workspace workspace = new AdhocWorkspace())
+            {
+                Project project = WorkspaceFactory.AddProject(workspace.CurrentSolution);
 
-            SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+                Document document = WorkspaceFactory.AddDocument(project, source, additionalSources ?? Array.Empty<string>());
 
-            ImmutableArray<Diagnostic> compilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
+                SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
-            if (options == null)
-                options = Options;
+                ImmutableArray<Diagnostic> compilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
 
-            VerifyCompilerDiagnostics(compilerDiagnostics, options);
-            CodeAction action = null;
+                if (options == null)
+                    options = Options;
 
-            var context = new CodeRefactoringContext(
-                document,
-                span,
-                a =>
-                {
-                    if (equivalenceKey == null
-                        || string.Equals(a.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
+                VerifyCompilerDiagnostics(compilerDiagnostics, options);
+                CodeAction action = null;
+
+                var context = new CodeRefactoringContext(
+                    document,
+                    span,
+                    a =>
                     {
-                        if (action == null)
-                            action = a;
-                    }
-                },
-                CancellationToken.None);
+                        if (equivalenceKey == null
+                            || string.Equals(a.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
+                        {
+                            if (action == null)
+                                action = a;
+                        }
+                    },
+                    CancellationToken.None);
 
-            await RefactoringProvider.ComputeRefactoringsAsync(context).ConfigureAwait(false);
+                await RefactoringProvider.ComputeRefactoringsAsync(context).ConfigureAwait(false);
 
-            Assert.True(action != null, "No code refactoring has been registered.");
+                Assert.True(action != null, "No code refactoring has been registered.");
 
-            document = await document.ApplyCodeActionAsync(action).ConfigureAwait(false);
+                document = await document.ApplyCodeActionAsync(action).ConfigureAwait(false);
 
-            semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+                semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
-            ImmutableArray<Diagnostic> newCompilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
+                ImmutableArray<Diagnostic> newCompilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
 
-            VerifyCompilerDiagnostics(newCompilerDiagnostics, options);
+                VerifyCompilerDiagnostics(newCompilerDiagnostics, options);
 
-            if (!options.AllowNewCompilerDiagnostics)
-                VerifyNoNewCompilerDiagnostics(compilerDiagnostics, newCompilerDiagnostics, options);
+                if (!options.AllowNewCompilerDiagnostics)
+                    VerifyNoNewCompilerDiagnostics(compilerDiagnostics, newCompilerDiagnostics, options);
 
-            string actual = await document.ToFullStringAsync(simplify: true, format: true).ConfigureAwait(false);
+                string actual = await document.ToFullStringAsync(simplify: true, format: true).ConfigureAwait(false);
 
-            Assert.Equal(expected, actual);
+                Assert.Equal(expected, actual);
+            }
         }
 
         public async Task VerifyNoRefactoringAsync(
@@ -217,42 +222,47 @@ namespace Roslynator.Tests
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            Document document = ProjectFactory.CreateDocument(source);
-
-            SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
-
-            ImmutableArray<Diagnostic> compilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
-
-            if (options == null)
-                options = Options;
-
-            VerifyCompilerDiagnostics(compilerDiagnostics, options);
-
-            using (IEnumerator<TextSpan> en = spans.GetEnumerator())
+            using (Workspace workspace = new AdhocWorkspace())
             {
-                if (!en.MoveNext())
-                    throw new InvalidOperationException($"'{nameof(spans)}' contains no elements.");
+                Project project = WorkspaceFactory.AddProject(workspace.CurrentSolution);
 
-                do
+                Document document = WorkspaceFactory.AddDocument(project, source);
+
+                SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+
+                ImmutableArray<Diagnostic> compilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
+
+                if (options == null)
+                    options = Options;
+
+                VerifyCompilerDiagnostics(compilerDiagnostics, options);
+
+                using (IEnumerator<TextSpan> en = spans.GetEnumerator())
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
+                    if (!en.MoveNext())
+                        throw new InvalidOperationException($"'{nameof(spans)}' contains no elements.");
 
-                    var context = new CodeRefactoringContext(
-                        document,
-                        en.Current,
-                        a =>
-                        {
-                            if (equivalenceKey == null
-                                || string.Equals(a.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
+                    do
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        var context = new CodeRefactoringContext(
+                            document,
+                            en.Current,
+                            a =>
                             {
-                                Assert.True(false, "No code refactoring expected.");
-                            }
-                        },
-                        CancellationToken.None);
+                                if (equivalenceKey == null
+                                    || string.Equals(a.EquivalenceKey, equivalenceKey, StringComparison.Ordinal))
+                                {
+                                    Assert.True(false, "No code refactoring expected.");
+                                }
+                            },
+                            CancellationToken.None);
 
-                    await RefactoringProvider.ComputeRefactoringsAsync(context).ConfigureAwait(false);
+                        await RefactoringProvider.ComputeRefactoringsAsync(context).ConfigureAwait(false);
 
-                } while (en.MoveNext());
+                    } while (en.MoveNext());
+                }
             }
         }
     }

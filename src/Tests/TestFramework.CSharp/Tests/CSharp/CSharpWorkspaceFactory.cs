@@ -5,17 +5,17 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace Roslynator.Tests.CSharp
 {
-    public class CSharpProjectFactory : ProjectFactory
+    public class CSharpWorkspaceFactory : WorkspaceFactory
     {
-        internal static CSharpProjectFactory Instance { get; } = new CSharpProjectFactory();
+        internal static CSharpWorkspaceFactory Instance { get; } = new CSharpWorkspaceFactory();
 
         public override string Language => LanguageNames.CSharp;
 
         public override string DefaultDocumentName => "Test.cs";
 
-        public override Project CreateProject()
+        public override Project AddProject(Solution solution)
         {
-            Project project = base.CreateProject();
+            Project project = base.AddProject(solution);
 
             var compilationOptions = (CSharpCompilationOptions)project.CompilationOptions;
 
@@ -31,11 +31,6 @@ namespace Roslynator.Tests.CSharp
             return project
                 .WithCompilationOptions(newCompilationOptions)
                 .WithParseOptions(newParseOptions);
-        }
-
-        public override Document CreateDocument(string source, params string[] additionalSources)
-        {
-            return CreateDocumentCore(DefaultDocumentName, source, additionalSources);
         }
     }
 }

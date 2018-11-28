@@ -6,6 +6,6 @@ namespace Roslynator.Tests.CSharp
     {
         public override CodeVerificationOptions Options => CSharpCodeVerificationOptions.Default;
 
-        protected override ProjectFactory ProjectFactory => CSharpProjectFactory.Instance;
+        protected override WorkspaceFactory WorkspaceFactory => CSharpWorkspaceFactory.Instance;
     }
 }

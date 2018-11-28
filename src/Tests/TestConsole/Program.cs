@@ -13,6 +13,7 @@ using Microsoft.CodeAnalysis.Text;
 using Roslynator;
 using Roslynator.CSharp;
 using Roslynator.CSharp.Syntax;
+using Roslynator.Tests.CSharp;
 #endregion usings
 
 namespace Roslynator.Tests
@@ -33,36 +34,20 @@ class C
     }   
 }
 ";
+            using (Workspace workspace = new AdhocWorkspace())
+            {
+                Project project = CSharpWorkspaceFactory.Instance.AddProject(workspace.CurrentSolution);
 
-            Project project = new AdhocWorkspace()
-                .CurrentSolution
-                .AddProject("TestProject", "TestProject", LanguageNames.CSharp)
-                .WithMetadataReferences(
-                    new MetadataReference[]
-                    {
-                        MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                        RuntimeMetadataReference.CreateFromAssemblyName("System.Core.dll"),
-                        RuntimeMetadataReference.CreateFromAssemblyName("System.Linq.dll"),
-                        RuntimeMetadataReference.CreateFromAssemblyName("System.Linq.Expressions.dll"),
-                        RuntimeMetadataReference.CreateFromAssemblyName("System.Runtime.dll"),
-                        RuntimeMetadataReference.CreateFromAssemblyName("System.Collections.Immutable.dll"),
-                        RuntimeMetadataReference.CreateFromAssemblyName("Microsoft.CodeAnalysis.dll"),
-                        RuntimeMetadataReference.CreateFromAssemblyName("Microsoft.CodeAnalysis.CSharp.dll"),
-                    });
+                Document document = CSharpWorkspaceFactory.Instance.AddDocument(project, source);
 
-            var parseOptions = (CSharpParseOptions)project.ParseOptions;
+                SemanticModel semanticModel = await document.GetSemanticModelAsync().ConfigureAwait(false);
+                SyntaxTree tree = await document.GetSyntaxTreeAsync().ConfigureAwait(false);
+                SyntaxNode root = await tree.GetRootAsync().ConfigureAwait(false);
 
-            Document document = project
-                .WithParseOptions(parseOptions.WithLanguageVersion(LanguageVersion.Latest))
-                .AddDocument("Test.cs", SourceText.From(source));
-
-            SemanticModel semanticModel = await document.GetSemanticModelAsync().ConfigureAwait(false);
-            SyntaxTree tree = await document.GetSyntaxTreeAsync().ConfigureAwait(false);
-            SyntaxNode root = await tree.GetRootAsync().ConfigureAwait(false);
-
-            string s = document.GetSyntaxRootAsync().Result.ToFullString();
-            Console.WriteLine(s);
-            Console.ReadKey();
+                string s = document.GetSyntaxRootAsync().Result.ToFullString();
+                Console.WriteLine(s);
+                Console.ReadKey();
+            }
         }
     }
 }

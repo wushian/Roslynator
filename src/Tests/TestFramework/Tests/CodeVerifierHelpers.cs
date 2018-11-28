@@ -5,7 +5,6 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Text;
 using Xunit;
 
 namespace Roslynator.Tests
@@ -108,27 +107,6 @@ namespace Roslynator.Tests
 
                 return false;
             }
-        }
-
-        public static ImmutableArray<ExpectedDocument> AddAdditionalDocuments(IEnumerable<(string source, string expected)> additionalData, ref Document document)
-        {
-            ImmutableArray<ExpectedDocument>.Builder expectedDocuments = ImmutableArray.CreateBuilder<ExpectedDocument>();
-
-            Project project = document.Project;
-
-            int i = 2;
-            foreach ((string source, string expected) in additionalData)
-            {
-                Document newDocument = project.AddDocument(PathHelpers.AddNumberToFileName(document.Name, i), SourceText.From(source));
-                expectedDocuments.Add(new ExpectedDocument(newDocument.Id, expected));
-                project = newDocument.Project;
-
-                i++;
-            }
-
-            document = project.GetDocument(document.Id);
-
-            return expectedDocuments.ToImmutableArray();
         }
 
         public static async Task VerifyAdditionalDocumentsAsync(Project project, ImmutableArray<ExpectedDocument> expectedDocuments)

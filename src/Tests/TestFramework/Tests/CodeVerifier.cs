@@ -8,7 +8,7 @@ namespace Roslynator.Tests
     {
         public abstract CodeVerificationOptions Options { get; }
 
-        protected abstract ProjectFactory ProjectFactory { get; }
+        protected abstract WorkspaceFactory WorkspaceFactory { get; }
 
         protected virtual TextParser TextParser { get; } = TextParser.Default;
     }
