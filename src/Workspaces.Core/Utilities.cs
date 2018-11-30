@@ -56,12 +56,17 @@ namespace Roslynator
         {
             string language = project.Language;
 
-            ImmutableArray<Assembly> assemblies = (options.IgnoreAnalyzerReferences) ? ImmutableArray<Assembly>.Empty : project.AnalyzerReferences
-                .Distinct()
-                .OfType<AnalyzerFileReference>()
-                .Select(f => f.GetAssembly())
-                .Where(f => !analyzerAssemblies.ContainsAssembly(f.FullName))
-                .ToImmutableArray();
+            ImmutableArray<Assembly> assemblies = ImmutableArray<Assembly>.Empty;
+
+            if (!options.IgnoreAnalyzerReferences)
+            {
+                assemblies = project.AnalyzerReferences
+                    .Distinct()
+                    .OfType<AnalyzerFileReference>()
+                    .Select(f => f.GetAssembly())
+                    .Where(f => !analyzerAssemblies.ContainsAssembly(f.FullName))
+                    .ToImmutableArray();
+            }
 
             ImmutableArray<DiagnosticAnalyzer> analyzers = analyzerAssemblies
                 .GetAnalyzers(language)

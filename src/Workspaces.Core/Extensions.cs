@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
@@ -119,16 +118,6 @@ namespace Roslynator
                 default:
                     throw new ArgumentException("", nameof(reportDiagnostic));
             }
-        }
-
-        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> collection)
-        {
-            return new HashSet<T>(collection);
-        }
-
-        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> collection, IEqualityComparer<T> comparer)
-        {
-            return new HashSet<T>(collection, comparer);
         }
     }
 }
