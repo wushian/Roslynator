@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator
 {
-    internal abstract class SyntaxFactsService
+    public abstract class SyntaxFactsService
     {
         public static bool IsSupportedLanguage(string language)
         {

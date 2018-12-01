@@ -74,7 +74,7 @@ namespace Roslynator.CommandLine
                 WriteLine(Verbosity.Normal);
 
                 Dictionary<UnusedSymbolKind, int> countByKind = allUnusedSymbols
-                    .GroupBy(f => f.Kind)
+                    .GroupBy(f => UnusedSymbolFinder.GetUnusedSymbolKind(f.Symbol))
                     .OrderBy(f => f.Key)
                     .ToDictionary(f => f.Key, f => f.Count());
 
@@ -106,7 +106,7 @@ namespace Roslynator.CommandLine
                 .Where(f => f != null)
                 .ToImmutableHashSet();
 
-            return await UnusedSymbolFinder.FindUnusedSymbolsAsync(project, compilation, Predicate, ignoredSymbols, cancellationToken).ConfigureAwait(false);
+            return await UnusedSymbolFinder.FindUnusedSymbolsAsync(project, compilation, Predicate, ignoredSymbols, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             bool Predicate(ISymbol symbol)
             {

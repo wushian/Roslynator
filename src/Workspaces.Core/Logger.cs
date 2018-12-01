@@ -444,7 +444,7 @@ namespace Roslynator
 
                 if (ShouldWrite(verbosity))
                 {
-                    foreach ((string prefix, int count) in Utilities.GetLetterPrefixes(analyzers.SelectMany(f => f.SupportedDiagnostics).Select(f => f.Id)))
+                    foreach ((string prefix, int count) in DiagnosticIdPrefix.CountPrefixes(analyzers.SelectMany(f => f.SupportedDiagnostics).Select(f => f.Id)))
                     {
                         WriteLine($"    {count} supported {((count == 1) ? "diagnostic" : "diagnostics")} with prefix '{prefix}'", color, verbosity);
                     }
@@ -460,7 +460,7 @@ namespace Roslynator
 
                 if (ShouldWrite(verbosity))
                 {
-                    foreach ((string prefix, int count) in Utilities.GetLetterPrefixes(fixers.SelectMany(f => f.FixableDiagnosticIds)))
+                    foreach ((string prefix, int count) in DiagnosticIdPrefix.CountPrefixes(fixers.SelectMany(f => f.FixableDiagnosticIds)))
                     {
                         WriteLine($"    {count} fixable {((count == 1) ? "diagnostic" : "diagnostics")} with prefix '{prefix}'", color, verbosity);
                     }
@@ -489,14 +489,14 @@ namespace Roslynator
         {
             if (options.FileBannerLines.Any())
             {
-                int count = results.Sum(f => f.FileBannerAddedCount);
+                int count = results.Sum(f => f.NumberOfAddedFileBanners);
                 WriteLine();
                 WriteLine($"{count} file {((count == 1) ? "banner" : "banners")} added", Verbosity.Normal);
             }
 
             if (options.Format)
             {
-                int count = results.Sum(f => f.DocumentFormattedCount);
+                int count = results.Sum(f => f.NumberOfFormattedDocuments);
                 WriteLine();
                 WriteLine($"{count} {((count == 1) ? "document" : "documents")} formatted", Verbosity.Normal);
             }

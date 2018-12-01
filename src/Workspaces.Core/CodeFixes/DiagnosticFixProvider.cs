@@ -15,6 +15,7 @@ using static Roslynator.Logger;
 
 namespace Roslynator.CodeFixes
 {
+    //TODO: non-static
     internal static class DiagnosticFixProvider
     {
         public static async Task<DiagnosticFix> GetFixAsync(

@@ -13,12 +13,13 @@ using static Roslynator.Logger;
 
 namespace Roslynator.FindSymbols
 {
-    internal static class UnusedSymbolFinder
+    public static class UnusedSymbolFinder
     {
         public static async Task<ImmutableArray<UnusedSymbolInfo>> FindUnusedSymbolsAsync(
             Project project,
             Func<ISymbol, bool> predicate = null,
             IImmutableSet<ISymbol> ignoredSymbols = null,
+            IImmutableSet<Document> documents = null,
             CancellationToken cancellationToken = default)
         {
             Compilation compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
@@ -28,6 +29,7 @@ namespace Roslynator.FindSymbols
                 compilation,
                 predicate,
                 ignoredSymbols,
+                documents,
                 cancellationToken).ConfigureAwait(false);
         }
 
@@ -36,6 +38,7 @@ namespace Roslynator.FindSymbols
             Compilation compilation,
             Func<ISymbol, bool> predicate = null,
             IImmutableSet<ISymbol> ignoredSymbols = null,
+            IImmutableSet<Document> documents = null,
             CancellationToken cancellationToken = default)
         {
             ImmutableArray<UnusedSymbolInfo>.Builder unusedSymbols = null;
@@ -59,7 +62,7 @@ namespace Roslynator.FindSymbols
                         && IsAnalyzable(symbol)
                         && ignoredSymbols?.Contains(symbol) != true)
                     {
-                        isUnused = await IsUnusedSymbolAsync(symbol, project.Solution, cancellationToken).ConfigureAwait(false);
+                        isUnused = await IsUnusedSymbolAsync(symbol, project.Solution, documents, cancellationToken).ConfigureAwait(false);
 
                         if (isUnused)
                         {
@@ -171,6 +174,7 @@ namespace Roslynator.FindSymbols
         private static async Task<bool> IsUnusedSymbolAsync(
             ISymbol symbol,
             Solution solution,
+            IImmutableSet<Document> documents,
             CancellationToken cancellationToken)
         {
             ImmutableArray<SyntaxReference> syntaxReferences = symbol.DeclaringSyntaxReferences;
@@ -180,7 +184,7 @@ namespace Roslynator.FindSymbols
             if (!syntaxReferences.Any())
                 return false;
 
-            IEnumerable<ReferencedSymbol> referencedSymbols = await SymbolFinder.FindReferencesAsync(symbol, solution, cancellationToken).ConfigureAwait(false);
+            IEnumerable<ReferencedSymbol> referencedSymbols = await SymbolFinder.FindReferencesAsync(symbol, solution, documents, cancellationToken).ConfigureAwait(false);
 
             foreach (ReferencedSymbol referencedSymbol in referencedSymbols)
             {

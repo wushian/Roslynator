@@ -9,6 +9,8 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Diagnostics.Telemetry;
+using Microsoft.CodeAnalysis.Text;
+using Roslynator.CodeMetrics;
 
 namespace Roslynator
 {
@@ -118,6 +120,51 @@ namespace Roslynator
                 default:
                     throw new ArgumentException("", nameof(reportDiagnostic));
             }
+        }
+
+        public static async Task<CodeMetricsInfo> CountLinesAsync(
+            this CodeMetricsCounter counter,
+            Project project,
+            CodeMetricsOptions options = null,
+            CancellationToken cancellationToken = default)
+        {
+            CodeMetricsInfo codeMetrics = default;
+
+            foreach (Document document in project.Documents)
+            {
+                if (!document.SupportsSyntaxTree)
+                    continue;
+
+                CodeMetricsInfo documentMetrics = await counter.CountLinesAsync(document, options, cancellationToken).ConfigureAwait(false);
+
+                codeMetrics = codeMetrics.Add(documentMetrics);
+            }
+
+            return codeMetrics;
+        }
+
+        public static async Task<CodeMetricsInfo> CountLinesAsync(
+            this CodeMetricsCounter counter,
+            Document document,
+            CodeMetricsOptions options = null,
+            CancellationToken cancellationToken = default)
+        {
+            SyntaxTree tree = await document.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
+
+            if (tree == null)
+                return default;
+
+            if (!options.IncludeGeneratedCode
+                && GeneratedCodeUtility.IsGeneratedCode(tree, counter.SyntaxFacts.IsComment, cancellationToken))
+            {
+                return default;
+            }
+
+            SyntaxNode root = await tree.GetRootAsync(cancellationToken).ConfigureAwait(false);
+
+            SourceText sourceText = await document.GetTextAsync(cancellationToken).ConfigureAwait(false);
+
+            return counter.CountLines(root, sourceText, options, cancellationToken);
         }
     }
 }

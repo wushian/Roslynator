@@ -10,6 +10,7 @@ namespace Roslynator
 {
     public abstract class CodeAnalysisOptions
     {
+        //TODO: internal
         protected CodeAnalysisOptions(
             DiagnosticSeverity severityLevel = DiagnosticSeverity.Info,
             bool ignoreAnalyzerReferences = false,

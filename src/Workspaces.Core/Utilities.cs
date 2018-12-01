@@ -1,22 +1,18 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using static Roslynator.Logger;
 
 namespace Roslynator
 {
     internal static class Utilities
     {
+        //TODO: 
         public static ImmutableArray<DiagnosticAnalyzer> GetAnalyzers(
             Project project,
             AnalyzerAssemblyList analyzerAssemblies,
@@ -137,32 +133,6 @@ namespace Roslynator
             return (analyzers, fixers);
         }
 
-        public static async Task<bool> VerifySyntaxEquivalenceAsync(
-            Document oldDocument,
-            Document newDocument,
-            SyntaxFactsService syntaxFacts,
-            CancellationToken cancellationToken = default)
-        {
-            if (!string.Equals(
-                (await newDocument.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false)).NormalizeWhitespace("", false).ToFullString(),
-                (await oldDocument.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false)).NormalizeWhitespace("", false).ToFullString(),
-                StringComparison.Ordinal))
-            {
-                WriteLine($"Syntax roots with normalized white-space are not equivalent '{oldDocument.FilePath}'", ConsoleColor.Magenta);
-                return false;
-            }
-
-            if (!syntaxFacts.AreEquivalent(
-                await newDocument.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false),
-                await oldDocument.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false)))
-            {
-                WriteLine($"Syntax trees are not equivalent '{oldDocument.FilePath}'", ConsoleColor.Magenta);
-                return false;
-            }
-
-            return true;
-        }
-
         public static string GetShortLanguageName(string languageName)
         {
             switch (languageName)
@@ -177,34 +147,6 @@ namespace Roslynator
             Debug.Fail(languageName);
 
             return languageName;
-        }
-
-        public static IEnumerable<(string prefix, int count)> GetLetterPrefixes(IEnumerable<string> values)
-        {
-            foreach (IGrouping<string, string> grouping in values
-                .Select(id =>
-                {
-                    int length = 0;
-
-                    for (int i = 0; i < id.Length; i++)
-                    {
-                        if (char.IsLetter(id[i]))
-                        {
-                            length++;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-
-                    return id.Substring(0, length);
-                })
-                .GroupBy(f => f)
-                .OrderBy(f => f.Key))
-            {
-                yield return (grouping.Key, grouping.Count());
-            }
         }
     }
 }

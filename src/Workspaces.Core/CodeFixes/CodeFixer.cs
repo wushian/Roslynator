@@ -149,10 +149,10 @@ namespace Roslynator.CodeFixes
                 f => fixersById.TryGetValue(f.id, out ImmutableArray<CodeFixProvider> fixers2),
                 cancellationToken).ConfigureAwait(false);
 
-            int fileBannerAddedCount = 0;
+            int numberOfAddedFileBanners = 0;
 
             if (Options.FileBannerLines.Any())
-                fileBannerAddedCount = await AddFileBannerAsync(CurrentSolution.GetProject(project.Id), Options.FileBannerLines, cancellationToken).ConfigureAwait(false);
+                numberOfAddedFileBanners = await AddFileBannerAsync(CurrentSolution.GetProject(project.Id), Options.FileBannerLines, cancellationToken).ConfigureAwait(false);
 
             ImmutableArray<DocumentId> formattedDocuments = ImmutableArray<DocumentId>.Empty;
 
@@ -166,8 +166,8 @@ namespace Roslynator.CodeFixes
                 unfixableDiagnostics: unfixableDiagnostics,
                 analyzers: fixResult.Analyzers,
                 fixers: fixResult.Fixers,
-                documentFormattedCount: formattedDocuments.Length,
-                fileBannerAddedCount: fileBannerAddedCount);
+                numberOfFormattedDocuments: formattedDocuments.Length,
+                numberOfAddedFileBanners: numberOfAddedFileBanners);
         }
 
         private async Task<ProjectFixResult> FixProjectAsync(
@@ -194,6 +194,7 @@ namespace Roslynator.CodeFixes
                 .Where(analyzer => analyzer.SupportedDiagnostics.Any(descriptor => fixersById.ContainsKey(descriptor.Id)))
                 .ToImmutableArray();
 
+            //TODO: no analyzers with fixers
             if (!analyzers.Any())
                 return new ProjectFixResult(ProjectFixKind.Success, analyzers: analyzers, fixers: fixers);
 
@@ -271,7 +272,7 @@ namespace Roslynator.CodeFixes
                         CurrentSolution.GetProject(project.Id),
                         cancellationToken).ConfigureAwait(false);
 
-                    if (result.Kind == DiagnosticFixKind.Fixed)
+                    if (result.Kind == DiagnosticFixKind.Success)
                     {
                         fixedDiagnostics.AddRange(result.FixedDiagnostics);
                     }
@@ -368,7 +369,7 @@ namespace Roslynator.CodeFixes
                 {
                     break;
                 }
-                else if (fixKind == DiagnosticFixKind.Fixed)
+                else if (fixKind == DiagnosticFixKind.Success)
                 {
                     if (Options.BatchSize <= 0
                         || length <= Options.BatchSize)
@@ -450,7 +451,7 @@ namespace Roslynator.CodeFixes
 
                     return (diagnostics.Length != 1 && diagnosticFix.FixProvider.GetFixAllProvider() == null)
                         ? DiagnosticFixKind.PartiallyFixed
-                        : DiagnosticFixKind.Fixed;
+                        : DiagnosticFixKind.Success;
                 }
                 else if (operations.Length > 1)
                 {
