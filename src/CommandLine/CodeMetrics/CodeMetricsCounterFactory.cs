@@ -12,9 +12,9 @@ namespace Roslynator.CodeMetrics
             switch (language)
             {
                 case LanguageNames.CSharp:
-                    return CSharp.CodeMetrics.CSharpPhysicalLinesCounter.Instance;
+                    return CSharp.CSharpPhysicalLinesCounter.Instance;
                 case LanguageNames.VisualBasic:
-                    return VisualBasic.CodeMetrics.VisualBasicPhysicalLinesCounter.Instance;
+                    return VisualBasic.VisualBasicPhysicalLinesCounter.Instance;
             }
 
             Debug.Assert(language == LanguageNames.FSharp, language);
@@ -27,9 +27,9 @@ namespace Roslynator.CodeMetrics
             switch (language)
             {
                 case LanguageNames.CSharp:
-                    return CSharp.CodeMetrics.CSharpLogicalLinesCounter.Instance;
+                    return CSharp.CSharpLogicalLinesCounter.Instance;
                 case LanguageNames.VisualBasic:
-                    return VisualBasic.CodeMetrics.VisualBasicLogicalLinesCounter.Instance;
+                    return VisualBasic.VisualBasicLogicalLinesCounter.Instance;
             }
 
             Debug.Assert(language == LanguageNames.FSharp, language);
