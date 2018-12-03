@@ -194,9 +194,11 @@ namespace Roslynator.CodeFixes
                 .Where(analyzer => analyzer.SupportedDiagnostics.Any(descriptor => fixersById.ContainsKey(descriptor.Id)))
                 .ToImmutableArray();
 
-            //TODO: no analyzers with fixers
             if (!analyzers.Any())
-                return new ProjectFixResult(ProjectFixKind.Success, analyzers: analyzers, fixers: fixers);
+            {
+                WriteLine($"  No fixable analyzers found to analyze '{project.Name}'", ConsoleColor.DarkGray, Verbosity.Normal);
+                return new ProjectFixResult(ProjectFixKind.NoFixableAnalyzers, analyzers: analyzers, fixers: fixers);
+            }
 
             Dictionary<string, ImmutableArray<DiagnosticAnalyzer>> analyzersById = GetAnalyzersById(analyzers);
 

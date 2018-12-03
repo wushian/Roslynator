@@ -12,7 +12,6 @@ namespace Roslynator
 {
     internal static class Utilities
     {
-        //TODO: 
         public static ImmutableArray<DiagnosticAnalyzer> GetAnalyzers(
             Project project,
             AnalyzerAssemblyList analyzerAssemblies,

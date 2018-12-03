@@ -75,7 +75,8 @@ namespace Roslynator.CommandLine
 
                 Dictionary<UnusedSymbolKind, int> countByKind = allUnusedSymbols
                     .GroupBy(f => UnusedSymbolFinder.GetUnusedSymbolKind(f.Symbol))
-                    .OrderBy(f => f.Key)
+                    .OrderByDescending(f => f.Count())
+                    .ThenBy(f => f.Key)
                     .ToDictionary(f => f.Key, f => f.Count());
 
                 int maxCountLength = countByKind.Sum(f => f.Value.ToString().Length);
