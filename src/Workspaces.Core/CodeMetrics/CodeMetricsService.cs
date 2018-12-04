@@ -6,11 +6,13 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace Roslynator.CodeMetrics
 {
-    internal abstract class CodeMetricsCounter
+    internal abstract class CodeMetricsService : ICodeMetricsService
     {
-        internal abstract ISyntaxFactsService SyntaxFacts { get; }
+        public abstract ISyntaxFactsService SyntaxFacts { get; }
 
-        public abstract CodeMetricsInfo CountLines(SyntaxNode node, SourceText sourceText, CodeMetricsOptions options, CancellationToken cancellationToken);
+        public abstract CodeMetricsInfo CountPhysicalLines(SyntaxNode node, SourceText sourceText, CodeMetricsOptions options, CancellationToken cancellationToken);
+
+        public abstract CodeMetricsInfo CountLogicalLines(SyntaxNode node, SourceText sourceText, CodeMetricsOptions options, CancellationToken cancellationToken);
 
         private protected int CountWhitespaceLines(SyntaxNode root, SourceText sourceText)
         {

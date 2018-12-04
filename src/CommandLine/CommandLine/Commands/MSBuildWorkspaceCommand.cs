@@ -9,13 +9,14 @@ using System.Threading.Tasks;
 using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
+using Roslynator.Mef;
 using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
-    internal abstract class MSBuildWorkspaceCommandExecutor
+    internal abstract class MSBuildWorkspaceCommand
     {
-        protected MSBuildWorkspaceCommandExecutor(string language)
+        protected MSBuildWorkspaceCommand(string language)
         {
             Language = language;
         }
@@ -198,7 +199,7 @@ namespace Roslynator.CommandLine
             {
                 Project project = workspace.CurrentSolution.GetProject(projectId);
 
-                if (SyntaxFactsServiceProvider.IsSupportedLanguage(project.Language)
+                if (LanguageServices.IsWellKnownLanguage(project.Language)
                     && (Language == null || Language == project.Language)
                     && ((projectNames.Count > 0) ? projectNames.Contains(project.Name) : !ignoredProjectNames.Contains(project.Name)))
                 {

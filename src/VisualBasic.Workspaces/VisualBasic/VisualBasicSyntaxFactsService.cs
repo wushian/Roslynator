@@ -1,17 +1,18 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Composition;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Host;
 using Microsoft.CodeAnalysis.VisualBasic;
 
 namespace Roslynator.VisualBasic
 {
+    [Export(typeof(ILanguageService))]
+    [ExportMetadata("Language", LanguageNames.VisualBasic)]
+    [ExportMetadata("ServiceType", "Roslynator.ISyntaxFactsService")]
     internal sealed class VisualBasicSyntaxFactsService : ISyntaxFactsService
     {
         public static VisualBasicSyntaxFactsService Instance { get; } = new VisualBasicSyntaxFactsService();
-
-        private VisualBasicSyntaxFactsService()
-        {
-        }
 
         public string SingleLineCommentStart => "'";
 

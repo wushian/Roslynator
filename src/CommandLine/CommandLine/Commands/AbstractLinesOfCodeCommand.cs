@@ -1,6 +1,5 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -9,19 +8,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Roslynator.CodeMetrics;
+using Roslynator.Mef;
 using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
-    internal abstract class AbstractLinesOfCodeCommandExecutor : MSBuildWorkspaceCommandExecutor
+    internal abstract class AbstractLinesOfCodeCommand : MSBuildWorkspaceCommand
     {
-        protected AbstractLinesOfCodeCommandExecutor(string language) : base(language)
+        protected AbstractLinesOfCodeCommand(string language) : base(language)
         {
         }
 
         public static ImmutableDictionary<ProjectId, CodeMetricsInfo> CountLinesInParallel(
             IEnumerable<Project> projects,
-            Func<string, CodeMetricsCounter> counterFactory,
+            LinesOfCodeKind kind,
             CodeMetricsOptions options = null,
             CancellationToken cancellationToken = default)
         {
@@ -29,10 +29,10 @@ namespace Roslynator.CommandLine
 
             Parallel.ForEach(projects, project =>
             {
-                CodeMetricsCounter counter = counterFactory(project.Language);
+                ICodeMetricsService service = LanguageServices.Default.GetService<ICodeMetricsService>(project.Language);
 
-                CodeMetricsInfo projectMetrics = (counter != null)
-                    ? counter.CountLinesAsync(project, options, cancellationToken).Result
+                CodeMetricsInfo projectMetrics = (service != null)
+                    ? service.CountLinesAsync(project, kind, options, cancellationToken).Result
                     : CodeMetricsInfo.NotAvailable;
 
                 codeMetrics.Add((project.Id, codeMetrics: projectMetrics));
@@ -43,7 +43,7 @@ namespace Roslynator.CommandLine
 
         public static async Task<ImmutableDictionary<ProjectId, CodeMetricsInfo>> CountLinesAsync(
             IEnumerable<Project> projects,
-            Func<string, CodeMetricsCounter> counterFactory,
+            LinesOfCodeKind kind,
             CodeMetricsOptions options = null,
             CancellationToken cancellationToken = default)
         {
@@ -51,10 +51,10 @@ namespace Roslynator.CommandLine
 
             foreach (Project project in projects)
             {
-                CodeMetricsCounter counter = counterFactory(project.Language);
+                ICodeMetricsService service = LanguageServices.Default.GetService<ICodeMetricsService>(project.Language);
 
-                CodeMetricsInfo projectMetrics = (counter != null)
-                    ? await counter.CountLinesAsync(project, options, cancellationToken).ConfigureAwait(false)
+                CodeMetricsInfo projectMetrics = (service != null)
+                    ? await service.CountLinesAsync(project, kind, options, cancellationToken).ConfigureAwait(false)
                     : CodeMetricsInfo.NotAvailable;
 
                 builder.Add(project.Id, projectMetrics);

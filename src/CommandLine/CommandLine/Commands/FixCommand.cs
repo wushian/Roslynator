@@ -15,12 +15,12 @@ using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
-    internal class FixCommandExecutor : MSBuildWorkspaceCommandExecutor
+    internal class FixCommand : MSBuildWorkspaceCommand
     {
         private static ImmutableArray<string> _roslynatorAnalyzersAssemblies;
         private static ImmutableArray<string> _roslynatorCodeFixesAssemblies;
 
-        public FixCommandExecutor(
+        public FixCommand(
             FixCommandLineOptions options,
             DiagnosticSeverity severityLevel,
             ImmutableDictionary<string, string> diagnosticFixMap,
@@ -122,7 +122,7 @@ namespace Roslynator.CommandLine
 
                 Solution solution = project.Solution;
 
-                var codeFixer = new CodeFixer(solution, analyzerAssemblies: analyzerAssemblies, formatProvider: formatProvider, options: codeFixerOptions);
+                CodeFixer codeFixer = GetCodeFixer(solution);
 
                 WriteLine($"Fix '{project.Name}'", ConsoleColor.Cyan, Verbosity.Minimal);
 
@@ -132,12 +132,21 @@ namespace Roslynator.CommandLine
             {
                 Solution solution = projectOrSolution.AsSolution();
 
-                var codeFixer = new CodeFixer(solution, analyzerAssemblies: analyzerAssemblies, options: codeFixerOptions);
+                CodeFixer codeFixer = GetCodeFixer(solution);
 
                 await codeFixer.FixSolutionAsync(cancellationToken);
             }
 
             return CommandResult.Success;
+
+            CodeFixer GetCodeFixer(Solution solution)
+            {
+                return new CodeFixer(
+                    solution,
+                    analyzerAssemblies: AnalyzerAssemblyLoader.LoadFiles(analyzerAssemblies),
+                    formatProvider: formatProvider,
+                    options: codeFixerOptions);
+            }
         }
 
         protected override void OperationCanceled(OperationCanceledException ex)

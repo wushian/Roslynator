@@ -13,9 +13,9 @@ using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
-    internal class AnalyzeAssemblyCommandExecutor
+    internal class AnalyzeAssemblyCommand
     {
-        public AnalyzeAssemblyCommandExecutor(string language = null)
+        public AnalyzeAssemblyCommand(string language = null)
         {
             Language = language;
         }
@@ -27,7 +27,7 @@ namespace Roslynator.CommandLine
             var assemblies = new HashSet<Assembly>();
 
             foreach ((string filePath, AnalyzerAssembly analyzerAssembly) in options.GetPaths()
-                .SelectMany(path => AnalyzerAssembly.LoadFrom(
+                .SelectMany(path => AnalyzerAssemblyLoader.LoadFrom(
                     path: path,
                     loadAnalyzers: !options.NoAnalyzers,
                     loadFixers: !options.NoFixers,

@@ -9,13 +9,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Roslynator.CodeMetrics;
+using Roslynator.Mef;
 using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
-    internal class PhysicalLinesOfCodeCommandExecutor : AbstractLinesOfCodeCommandExecutor
+    internal class PhysicalLinesOfCodeCommand : AbstractLinesOfCodeCommand
     {
-        public PhysicalLinesOfCodeCommandExecutor(PhysicalLinesOfCodeCommandLineOptions options, string language) : base(language)
+        public PhysicalLinesOfCodeCommand(PhysicalLinesOfCodeCommandLineOptions options, string language) : base(language)
         {
             Options = options;
         }
@@ -35,11 +36,11 @@ namespace Roslynator.CommandLine
             {
                 Project project = projectOrSolution.AsProject();
 
-                CodeMetricsCounter counter = CodeMetricsCounterFactory.GetPhysicalLinesCounter(project.Language);
+                ICodeMetricsService service = LanguageServices.Default.GetService<ICodeMetricsService>(project.Language);
 
-                if (counter != null)
+                if (service != null)
                 {
-                    await CountLinesAsync(project, counter, codeMetricsOptions, cancellationToken);
+                    await CountLinesAsync(project, service, codeMetricsOptions, cancellationToken);
                 }
                 else
                 {
@@ -54,13 +55,13 @@ namespace Roslynator.CommandLine
             return CommandResult.Success;
         }
 
-        private async Task CountLinesAsync(Project project, CodeMetricsCounter counter, CodeMetricsOptions options, CancellationToken cancellationToken)
+        private async Task CountLinesAsync(Project project, ICodeMetricsService service, CodeMetricsOptions options, CancellationToken cancellationToken)
         {
             WriteLine($"Count lines for '{project.Name}'", ConsoleColor.Cyan, Verbosity.Minimal);
 
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            CodeMetricsInfo codeMetrics = await counter.CountLinesAsync(project, options, cancellationToken);
+            CodeMetricsInfo codeMetrics = await service.CountLinesAsync(project, LinesOfCodeKind.Physical, options, cancellationToken);
 
             stopwatch.Stop();
 
@@ -86,7 +87,7 @@ namespace Roslynator.CommandLine
 
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            ImmutableDictionary<ProjectId, CodeMetricsInfo> codeMetrics = CountLinesInParallel(projects, CodeMetricsCounterFactory.GetPhysicalLinesCounter, options, cancellationToken);
+            ImmutableDictionary<ProjectId, CodeMetricsInfo> codeMetrics = CountLinesInParallel(projects, LinesOfCodeKind.Physical, options, cancellationToken);
 
             stopwatch.Stop();
 

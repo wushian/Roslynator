@@ -15,11 +15,11 @@ using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
-    internal class AnalyzeCommandExecutor : MSBuildWorkspaceCommandExecutor
+    internal class AnalyzeCommand : MSBuildWorkspaceCommand
     {
         private static ImmutableArray<string> _roslynatorAnalyzersAssemblies;
 
-        public AnalyzeCommandExecutor(AnalyzeCommandLineOptions options, DiagnosticSeverity severityLevel, string language) : base(language)
+        public AnalyzeCommand(AnalyzeCommandLineOptions options, DiagnosticSeverity severityLevel, string language) : base(language)
         {
             Options = options;
             SeverityLevel = severityLevel;
@@ -66,7 +66,10 @@ namespace Roslynator.CommandLine
 
             CultureInfo culture = (Options.Culture != null) ? CultureInfo.GetCultureInfo(Options.Culture) : null;
 
-            var codeAnalyzer = new CodeAnalyzer(analyzerAssemblies: analyzerAssemblies, formatProvider: culture, options: codeAnalyzerOptions);
+            var codeAnalyzer = new CodeAnalyzer(
+                analyzerAssemblies: AnalyzerAssemblyLoader.LoadFiles(analyzerAssemblies, loadFixers: false),
+                formatProvider: culture,
+                options: codeAnalyzerOptions);
 
             if (projectOrSolution.IsProject)
             {

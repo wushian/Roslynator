@@ -3,8 +3,9 @@
 using System.Threading;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using Roslynator.CodeMetrics;
 
-namespace Roslynator.CodeMetrics.CSharp
+namespace Roslynator.CSharp.CodeMetrics
 {
     internal class CSharpLogicalLinesWalker : CSharpLinesWalker
     {

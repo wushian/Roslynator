@@ -72,8 +72,7 @@ namespace Roslynator
 
         internal bool IsSupportedProject(Project project)
         {
-            if (SyntaxFactsServiceProvider.IsSupportedLanguage(project.Language)
-                && (Language == null || Language == project.Language))
+            if (Language == null || Language == project.Language)
             {
                 return (ProjectNames.Count > 0)
                     ? ProjectNames.Contains(project.Name)

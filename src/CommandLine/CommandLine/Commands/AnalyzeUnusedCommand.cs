@@ -9,13 +9,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Roslynator.FindSymbols;
+using Roslynator.Mef;
 using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
-    internal class AnalyzeUnusedCommandExecutor : MSBuildWorkspaceCommandExecutor
+    internal class AnalyzeUnusedCommand : MSBuildWorkspaceCommand
     {
-        public AnalyzeUnusedCommandExecutor(
+        public AnalyzeUnusedCommand(
             AnalyzeUnusedCommandLineOptions options,
             Visibility visibility,
             UnusedSymbolKinds unusedSymbolKinds,
@@ -113,7 +114,7 @@ namespace Roslynator.CommandLine
                 return (UnusedSymbolKinds & GetUnusedSymbolKinds(symbol)) != 0
                     && IsVisible(symbol)
                     && (Options.IncludeGeneratedCode
-                        || !GeneratedCodeUtility.IsGeneratedCode(symbol, generatedCodeAttribute, SyntaxFactsServiceProvider.GetService(project.Language).IsComment, cancellationToken));
+                        || !GeneratedCodeUtility.IsGeneratedCode(symbol, generatedCodeAttribute, LanguageServices.Default.GetService<ISyntaxFactsService>(project.Language).IsComment, cancellationToken));
             }
         }
 

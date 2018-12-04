@@ -123,8 +123,9 @@ namespace Roslynator
         }
 
         public static async Task<CodeMetricsInfo> CountLinesAsync(
-            this CodeMetricsCounter counter,
+            this ICodeMetricsService service,
             Project project,
+            LinesOfCodeKind kind,
             CodeMetricsOptions options = null,
             CancellationToken cancellationToken = default)
         {
@@ -135,7 +136,7 @@ namespace Roslynator
                 if (!document.SupportsSyntaxTree)
                     continue;
 
-                CodeMetricsInfo documentMetrics = await counter.CountLinesAsync(document, options, cancellationToken).ConfigureAwait(false);
+                CodeMetricsInfo documentMetrics = await service.CountLinesAsync(document, kind, options, cancellationToken).ConfigureAwait(false);
 
                 codeMetrics = codeMetrics.Add(documentMetrics);
             }
@@ -144,8 +145,9 @@ namespace Roslynator
         }
 
         public static async Task<CodeMetricsInfo> CountLinesAsync(
-            this CodeMetricsCounter counter,
+            this ICodeMetricsService service,
             Document document,
+            LinesOfCodeKind kind,
             CodeMetricsOptions options = null,
             CancellationToken cancellationToken = default)
         {
@@ -155,7 +157,7 @@ namespace Roslynator
                 return default;
 
             if (!options.IncludeGeneratedCode
-                && GeneratedCodeUtility.IsGeneratedCode(tree, counter.SyntaxFacts.IsComment, cancellationToken))
+                && GeneratedCodeUtility.IsGeneratedCode(tree, service.SyntaxFacts.IsComment, cancellationToken))
             {
                 return default;
             }
@@ -164,7 +166,15 @@ namespace Roslynator
 
             SourceText sourceText = await document.GetTextAsync(cancellationToken).ConfigureAwait(false);
 
-            return counter.CountLines(root, sourceText, options, cancellationToken);
+            switch (kind)
+            {
+                case LinesOfCodeKind.Physical:
+                    return service.CountPhysicalLines(root, sourceText, options, cancellationToken);
+                case LinesOfCodeKind.Logical:
+                    return service.CountLogicalLines(root, sourceText, options, cancellationToken);
+                default:
+                    throw new InvalidOperationException();
+            }
         }
 
         public static OperationCanceledException GetOperationCanceledException(this AggregateException aggregateException)

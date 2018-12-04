@@ -13,9 +13,9 @@ using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
-    internal class SlnListCommandExecutor : MSBuildWorkspaceCommandExecutor
+    internal class SlnListCommand : MSBuildWorkspaceCommand
     {
-        public SlnListCommandExecutor(SlnListCommandLineOptions options, string language) : base(language)
+        public SlnListCommand(SlnListCommandLineOptions options, string language) : base(language)
         {
             Options = options;
         }

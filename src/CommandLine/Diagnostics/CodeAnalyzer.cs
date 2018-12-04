@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Diagnostics.Telemetry;
+using Roslynator.Mef;
 using static Roslynator.Logger;
 
 namespace Roslynator.Diagnostics
@@ -24,15 +25,14 @@ namespace Roslynator.Diagnostics
         internal static readonly TimeSpan MinimalExecutionTime = TimeSpan.FromMilliseconds(1);
 
         public CodeAnalyzer(
-            IEnumerable<string> analyzerAssemblies = null,
+            IEnumerable<AnalyzerAssembly> analyzerAssemblies = null,
             IFormatProvider formatProvider = null,
             CodeAnalyzerOptions options = null)
         {
-            Options = options ?? CodeAnalyzerOptions.Default;
-
             if (analyzerAssemblies != null)
-                _analyzerAssemblies.LoadFrom(analyzerAssemblies, loadFixers: false);
+                _analyzerAssemblies.AddRange(analyzerAssemblies);
 
+            Options = options ?? CodeAnalyzerOptions.Default;
             FormatProvider = formatProvider;
         }
 
@@ -64,7 +64,8 @@ namespace Roslynator.Diagnostics
 
                 Project project = solution.GetProject(projectIds[i]);
 
-                if (Options.IsSupportedProject(project))
+                if (LanguageServices.IsWellKnownLanguage(project.Language)
+                    && Options.IsSupportedProject(project))
                 {
                     WriteLine($"Analyze '{project.Name}' {$"{i + 1}/{projectIds.Length}"}", Verbosity.Minimal);
 
@@ -168,7 +169,7 @@ namespace Roslynator.Diagnostics
                         SyntaxTree tree = diagnostic.Location.SourceTree;
 
                         if (tree == null
-                            || !GeneratedCodeUtility.IsGeneratedCode(tree, f => SyntaxFactsServiceProvider.GetService(tree.Options.Language).IsComment(f), cancellationToken))
+                            || !GeneratedCodeUtility.IsGeneratedCode(tree, f => LanguageServices.Default.GetService<ISyntaxFactsService>(tree.Options.Language).IsComment(f), cancellationToken))
                         {
                             yield return diagnostic;
                         }

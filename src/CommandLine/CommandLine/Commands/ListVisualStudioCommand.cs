@@ -6,9 +6,9 @@ using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
-    internal class ListVisualStudioCommandExecutor
+    internal class ListVisualStudioCommand
     {
-        public ListVisualStudioCommandExecutor(ListVisualStudioCommandLineOptions options)
+        public ListVisualStudioCommand(ListVisualStudioCommandLineOptions options)
         {
             Options = options;
         }

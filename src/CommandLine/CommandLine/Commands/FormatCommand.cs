@@ -13,13 +13,14 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Roslynator.CodeFixes;
 using Roslynator.Formatting;
+using Roslynator.Mef;
 using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
-    internal class FormatCommandExecutor : MSBuildWorkspaceCommandExecutor
+    internal class FormatCommand : MSBuildWorkspaceCommand
     {
-        public FormatCommandExecutor(FormatCommandLineOptions options, string language) : base(language)
+        public FormatCommand(FormatCommandLineOptions options, string language) : base(language)
         {
             Options = options;
         }
@@ -48,9 +49,9 @@ namespace Roslynator.CommandLine
 
                 CultureInfo culture = (Options.Culture != null) ? CultureInfo.GetCultureInfo(Options.Culture) : null;
 
-                return await FixCommandExecutor.FixAsync(
+                return await FixCommand.FixAsync(
                     projectOrSolution,
-                    FixCommandExecutor.RoslynatorAnalyzersAssemblies,
+                    FixCommand.RoslynatorAnalyzersAssemblies,
                     codeFixerOptions,
                     culture,
                     cancellationToken);
@@ -89,7 +90,7 @@ namespace Roslynator.CommandLine
             {
                 WriteLine($"  Analyze '{project.Name}'", Verbosity.Minimal);
 
-                ISyntaxFactsService syntaxFacts = SyntaxFactsServiceProvider.GetService(project.Language);
+                ISyntaxFactsService syntaxFacts = LanguageServices.Default.GetService<ISyntaxFactsService>(project.Language);
 
                 Project newProject = CodeFormatter.FormatProjectAsync(project, syntaxFacts, options, cancellationToken).Result;
 
@@ -139,7 +140,7 @@ namespace Roslynator.CommandLine
 
             WriteLine($"  Analyze '{project.Name}'", Verbosity.Minimal);
 
-            ISyntaxFactsService syntaxFacts = SyntaxFactsServiceProvider.GetService(project.Language);
+            ISyntaxFactsService syntaxFacts = LanguageServices.Default.GetService<ISyntaxFactsService>(project.Language);
 
             Project newProject = await CodeFormatter.FormatProjectAsync(project, syntaxFacts, options, cancellationToken);
 

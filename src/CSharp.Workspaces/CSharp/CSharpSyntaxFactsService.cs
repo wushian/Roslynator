@@ -1,18 +1,19 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Composition;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Host;
 using Roslynator.CSharp;
 
 namespace Roslynator.CSharp
 {
+    [Export(typeof(ILanguageService))]
+    [ExportMetadata("Language", LanguageNames.CSharp)]
+    [ExportMetadata("ServiceType", "Roslynator.ISyntaxFactsService")]
     internal sealed class CSharpSyntaxFactsService : ISyntaxFactsService
     {
         public static CSharpSyntaxFactsService Instance { get; } = new CSharpSyntaxFactsService();
-
-        private CSharpSyntaxFactsService()
-        {
-        }
 
         public string SingleLineCommentStart => "//";
 
