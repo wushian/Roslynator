@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Security;
+using static Roslynator.Logger;
 
 namespace Roslynator
 {
@@ -33,6 +34,7 @@ namespace Roslynator
             return AnalyzerAssembly.Load(assembly, loadAnalyzers: loadAnalyzers, loadFixers: loadFixers, language: language);
         }
 
+        //TODO: struct LoadedAnalyzerAssembly
         public static IEnumerable<(string filePath, AnalyzerAssembly analyzerAssembly)> LoadFrom(
             string path,
             bool loadAnalyzers = true,
@@ -87,7 +89,7 @@ namespace Roslynator
             }
             else
             {
-                //WriteLine($"File or directory not found: '{path}'", ConsoleColor.DarkGray, Verbosity.Normal);
+                WriteLine($"File or directory not found: '{path}'", ConsoleColor.DarkGray, Verbosity.Normal);
             }
 
             AnalyzerAssembly Load(string filePath)
@@ -102,7 +104,7 @@ namespace Roslynator
                         || ex is BadImageFormatException
                         || ex is SecurityException)
                     {
-                        //WriteLine($"Cannot load assembly '{filePath}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                        WriteLine($"Cannot load assembly '{filePath}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
                         return null;
                     }
