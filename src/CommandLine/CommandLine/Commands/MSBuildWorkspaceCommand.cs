@@ -199,8 +199,7 @@ namespace Roslynator.CommandLine
             {
                 Project project = workspace.CurrentSolution.GetProject(projectId);
 
-                if (LanguageServices.IsWellKnownLanguage(project.Language)
-                    && (Language == null || Language == project.Language)
+                if ((Language == null || Language == project.Language)
                     && ((projectNames.Count > 0) ? projectNames.Contains(project.Name) : !ignoredProjectNames.Contains(project.Name)))
                 {
                     yield return project;

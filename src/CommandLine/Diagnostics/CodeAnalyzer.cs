@@ -64,8 +64,7 @@ namespace Roslynator.Diagnostics
 
                 Project project = solution.GetProject(projectIds[i]);
 
-                if (LanguageServices.IsWellKnownLanguage(project.Language)
-                    && Options.IsSupportedProject(project))
+                if (Options.IsSupportedProject(project))
                 {
                     WriteLine($"Analyze '{project.Name}' {$"{i + 1}/{projectIds.Length}"}", Verbosity.Minimal);
 

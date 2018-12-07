@@ -73,8 +73,7 @@ namespace Roslynator.CodeFixes
 
                 Project project = CurrentSolution.GetProject(projects[i]);
 
-                if (LanguageServices.IsWellKnownLanguage(project.Language)
-                    && Options.IsSupportedProject(project))
+                if (Options.IsSupportedProject(project))
                 {
                     WriteLine($"Fix '{project.Name}' {$"{i + 1}/{projects.Length}"}", ConsoleColor.Cyan, Verbosity.Minimal);
 
