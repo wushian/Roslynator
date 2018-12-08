@@ -34,8 +34,7 @@ namespace Roslynator
             return AnalyzerAssembly.Load(assembly, loadAnalyzers: loadAnalyzers, loadFixers: loadFixers, language: language);
         }
 
-        //TODO: struct LoadedAnalyzerAssembly
-        public static IEnumerable<(string filePath, AnalyzerAssembly analyzerAssembly)> LoadFrom(
+        public static IEnumerable<AnalyzerAssemblyInfo> LoadFrom(
             string path,
             bool loadAnalyzers = true,
             bool loadFixers = true,
@@ -46,7 +45,7 @@ namespace Roslynator
                 AnalyzerAssembly analyzerAssembly = Load(path);
 
                 if (analyzerAssembly?.IsEmpty == false)
-                    yield return (path, analyzerAssembly);
+                    yield return new AnalyzerAssemblyInfo(analyzerAssembly, path);
             }
             else if (Directory.Exists(path))
             {
@@ -83,7 +82,7 @@ namespace Roslynator
                         }
 
                         if (analyzerAssembly?.IsEmpty == false)
-                            yield return (filePath, analyzerAssembly);
+                            yield return new AnalyzerAssemblyInfo(analyzerAssembly, filePath);
                     }
                 }
             }

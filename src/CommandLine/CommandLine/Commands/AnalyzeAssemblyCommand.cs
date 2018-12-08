@@ -26,15 +26,18 @@ namespace Roslynator.CommandLine
         {
             var assemblies = new HashSet<Assembly>();
 
-            foreach ((string filePath, AnalyzerAssembly analyzerAssembly) in options.GetPaths()
+            foreach (AnalyzerAssemblyInfo analyzerAssemblyInfo in options.GetPaths()
                 .SelectMany(path => AnalyzerAssemblyLoader.LoadFrom(
                     path: path,
                     loadAnalyzers: !options.NoAnalyzers,
                     loadFixers: !options.NoFixers,
                     language: Language))
-                .OrderBy(f => f.analyzerAssembly.GetName().Name)
-                .ThenBy(f => f.filePath))
+                .OrderBy(f => f.AnalyzerAssembly.GetName().Name)
+                .ThenBy(f => f.FilePath))
             {
+                AnalyzerAssembly analyzerAssembly = analyzerAssemblyInfo.AnalyzerAssembly;
+                string filePath = analyzerAssemblyInfo.FilePath;
+
                 if (assemblies.Add(analyzerAssembly.Assembly))
                 {
                     Write($"{analyzerAssembly.FullName}", ConsoleColor.Cyan, Verbosity.Minimal);
