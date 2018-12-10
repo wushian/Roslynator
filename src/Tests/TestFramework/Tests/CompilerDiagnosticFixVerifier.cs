@@ -75,17 +75,34 @@ namespace Roslynator.Tests
 
                 document = project.GetDocument(document.Id);
 
-                Compilation compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
-
-                ImmutableArray<Diagnostic> diagnostics = compilation.GetDiagnostics(cancellationToken: cancellationToken);
-
-                diagnostics = diagnostics.Sort((x, y) => -DiagnosticComparer.SpanStart.Compare(x, y));
+                ImmutableArray<Diagnostic> previousDiagnostics = ImmutableArray<Diagnostic>.Empty;
 
                 bool fixRegistered = false;
 
-                while (diagnostics.Length > 0)
+                while (true)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
+
+                    Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
+
+                    ImmutableArray<Diagnostic> diagnostics = compilation.GetDiagnostics(cancellationToken: cancellationToken);
+
+                    int length = diagnostics.Length;
+
+                    if (length == 0)
+                        break;
+
+                    if (previousDiagnostics.Any()
+                        && !options.AllowNewCompilerDiagnostics)
+                    {
+                        VerifyNoNewCompilerDiagnostics(previousDiagnostics, diagnostics, options ?? Options);
+                    }
+
+                    if (length == previousDiagnostics.Length
+                        && !diagnostics.Except(previousDiagnostics, DiagnosticDeepEqualityComparer.Instance).Any())
+                    {
+                        Assert.True(false, "Same diagnostics returned before and after the fix was applied.");
+                    }
 
                     Diagnostic diagnostic = FindDiagnostic(diagnostics);
 
@@ -124,17 +141,7 @@ namespace Roslynator.Tests
 
                     document = await document.ApplyCodeActionAsync(action).ConfigureAwait(false);
 
-                    compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
-
-                    ImmutableArray<Diagnostic> newDiagnostics = compilation.GetDiagnostics(cancellationToken: cancellationToken);
-
-                    if (options == null)
-                        options = Options;
-
-                    if (!options.AllowNewCompilerDiagnostics)
-                        VerifyNoNewCompilerDiagnostics(diagnostics, newDiagnostics, options);
-
-                    diagnostics = newDiagnostics;
+                    previousDiagnostics = diagnostics;
                 }
 
                 Assert.True(fixRegistered, "No code fix has been registered.");
@@ -149,13 +156,21 @@ namespace Roslynator.Tests
 
             Diagnostic FindDiagnostic(ImmutableArray<Diagnostic> diagnostics)
             {
+                Diagnostic match = null;
+
                 foreach (Diagnostic diagnostic in diagnostics)
                 {
                     if (string.Equals(diagnostic.Id, DiagnosticId, StringComparison.Ordinal))
-                        return diagnostic;
+                    {
+                        if (match == null
+                            || diagnostic.Location.SourceSpan.Start > match.Location.SourceSpan.Start)
+                        {
+                            match = diagnostic;
+                        }
+                    }
                 }
 
-                return null;
+                return match;
             }
         }
 

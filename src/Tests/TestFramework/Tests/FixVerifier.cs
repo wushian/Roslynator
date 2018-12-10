@@ -143,15 +143,28 @@ namespace Roslynator.Tests
                 if (options.EnableDiagnosticsDisabledByDefault)
                     compilation = compilation.EnableDiagnosticsDisabledByDefault(Analyzer);
 
-                ImmutableArray<Diagnostic> diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(Analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);
+                ImmutableArray<Diagnostic> previousDiagnostics = ImmutableArray<Diagnostic>.Empty;
 
                 ImmutableArray<string> fixableDiagnosticIds = FixProvider.FixableDiagnosticIds;
 
                 bool fixRegistered = false;
 
-                while (diagnostics.Length > 0)
+                while (true)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
+
+                    ImmutableArray<Diagnostic> diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(Analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);
+
+                    int length = diagnostics.Length;
+
+                    if (length == 0)
+                        break;
+
+                    if (length == previousDiagnostics.Length
+                        && !diagnostics.Except(previousDiagnostics, DiagnosticDeepEqualityComparer.Instance).Any())
+                    {
+                        Assert.True(false, "Same diagnostics returned before and after the fix was applied.");
+                    }
 
                     Diagnostic diagnostic = FindFirstFixableDiagnostic(diagnostics, fixableDiagnosticIds);
 
@@ -195,7 +208,7 @@ namespace Roslynator.Tests
                     if (options.EnableDiagnosticsDisabledByDefault)
                         compilation = compilation.EnableDiagnosticsDisabledByDefault(Analyzer);
 
-                    diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(Analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);
+                    previousDiagnostics = diagnostics;
                 }
 
                 Assert.True(fixRegistered, "No code fix has been registered.");
