@@ -92,10 +92,13 @@ namespace Roslynator.Tests
                     if (length == 0)
                         break;
 
-                    if (previousDiagnostics.Any()
-                        && !options.AllowNewCompilerDiagnostics)
+                    if (previousDiagnostics.Any())
                     {
-                        VerifyNoNewCompilerDiagnostics(previousDiagnostics, diagnostics, options ?? Options);
+                        if (options == null)
+                            options = Options;
+
+                        if (!options.AllowNewCompilerDiagnostics)
+                            VerifyNoNewCompilerDiagnostics(previousDiagnostics, diagnostics, options);
                     }
 
                     if (length == previousDiagnostics.Length
