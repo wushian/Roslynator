@@ -47,7 +47,7 @@ namespace Roslynator.Tests
                 for (int i = 0; i < length; i++)
                 {
                     project = project
-                        .AddDocument(PathHelpers.AddNumberToFileName(document.Name, i + 2), SourceText.From(additionalSources[i]))
+                        .AddDocument(PathHelpers.AppendNumberToFileName(document.Name, i + 2), SourceText.From(additionalSources[i]))
                         .Project;
                 }
 
@@ -66,7 +66,7 @@ namespace Roslynator.Tests
             int i = 2;
             foreach ((string source, string expected) in additionalData)
             {
-                Document document = project.AddDocument(PathHelpers.AddNumberToFileName(DefaultDocumentName, i), SourceText.From(source));
+                Document document = project.AddDocument(PathHelpers.AppendNumberToFileName(DefaultDocumentName, i), SourceText.From(source));
                 expectedDocuments.Add(new ExpectedDocument(document.Id, expected));
                 project = document.Project;
 

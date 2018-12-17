@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyName>Roslynator.TestFramework</AssemblyName>
+    <AssemblyName>Roslynator.TestFramework.Core</AssemblyName>
     <RootNamespace>Roslynator</RootNamespace>
     <CodeAnalysisRuleSet>..\..\global.ruleset</CodeAnalysisRuleSet>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>TestFramework.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>TestFramework.Core.snk</AssemblyOriginatorKeyFile>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="TestFramework.snk" />
+    <None Remove="TestFramework.Core.snk" />
   </ItemGroup>
 
 </Project>

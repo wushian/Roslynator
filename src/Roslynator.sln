@@ -73,7 +73,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Refactorings.Tests", "Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeFixes.Tests", "Tests\CodeFixes.Tests\CodeFixes.Tests.csproj", "{BD31315B-B89B-43F7-994D-EBE6FFC2D89B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestFramework", "Tests\TestFramework\TestFramework.csproj", "{306D8762-6A4E-4957-ABE6-5C30E13BD95F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestFramework.Core", "Tests\TestFramework.Core\TestFramework.Core.csproj", "{306D8762-6A4E-4957-ABE6-5C30E13BD95F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharp.Tests", "Tests\CSharp.Tests\CSharp.Tests.csproj", "{9960FC47-14B1-492F-918C-114FDB75790E}"
 EndProject

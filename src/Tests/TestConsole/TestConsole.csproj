@@ -21,10 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\CSharp.Workspaces\CSharp.Workspaces.csproj" />
     <ProjectReference Include="..\TestFramework.CSharp\TestFramework.CSharp.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\TestFramework\TestFramework.csproj" />
+    <ProjectReference Include="..\TestFramework.Core\TestFramework.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

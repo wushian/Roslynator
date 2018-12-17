@@ -43,7 +43,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestFramework.CSharp", "Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "..\Core\Core.csproj", "{EFA1C63D-F3E9-4A10-B135-DAD202D26595}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestFramework", "TestFramework\TestFramework.csproj", "{0DFBCFDC-E1DA-4447-B317-C3CD3ECD63C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestFramework.Core", "TestFramework.Core\TestFramework.Core.csproj", "{0DFBCFDC-E1DA-4447-B317-C3CD3ECD63C2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projects", "Projects", "{91AC55D5-4DA5-45A4-8F5D-A89A84550F7E}"
 EndProject

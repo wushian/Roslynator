@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TestFramework\TestFramework.csproj" />
+    <ProjectReference Include="..\TestFramework.Core\TestFramework.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -13,7 +13,7 @@ using Microsoft.CodeAnalysis.Text;
 using Roslynator;
 using Roslynator.CSharp;
 using Roslynator.CSharp.Syntax;
-using Roslynator.Tests.CSharp;
+using Roslynator.CSharp.Tests;
 #endregion usings
 
 namespace Roslynator.Tests

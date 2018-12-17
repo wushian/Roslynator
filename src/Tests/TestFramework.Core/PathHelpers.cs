@@ -6,7 +6,7 @@ namespace Roslynator
 {
     internal static class PathHelpers
     {
-        public static string AddNumberToFileName(string fileName, int number)
+        public static string AppendNumberToFileName(string fileName, int number)
         {
             int index = fileName.LastIndexOf(".");
 

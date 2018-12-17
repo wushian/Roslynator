@@ -3,12 +3,13 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
+using Roslynator.Tests;
 
-namespace Roslynator.Tests.VisualBasic
+namespace Roslynator.CSharp.Tests
 {
-    public class VisualBasicCodeVerificationOptions : CodeVerificationOptions
+    public class CSharpCodeVerificationOptions : CodeVerificationOptions
     {
-        public VisualBasicCodeVerificationOptions(
+        public CSharpCodeVerificationOptions(
             bool allowNewCompilerDiagnostics = false,
             bool enableDiagnosticsDisabledByDefault = true,
             DiagnosticSeverity maxAllowedCompilerDiagnosticSeverity = DiagnosticSeverity.Info,
@@ -17,7 +18,7 @@ namespace Roslynator.Tests.VisualBasic
         {
         }
 
-        public static VisualBasicCodeVerificationOptions Default { get; } = new VisualBasicCodeVerificationOptions(allowedCompilerDiagnosticIds: ImmutableArray.Create(
+        public static CSharpCodeVerificationOptions Default { get; } = new CSharpCodeVerificationOptions(allowedCompilerDiagnosticIds: ImmutableArray.Create(
             "CS0067", // Event is never used
             "CS0168", // Variable is declared but never used
             "CS0169", // Field is never used
@@ -40,9 +41,9 @@ namespace Roslynator.Tests.VisualBasic
             return WithAllowedCompilerDiagnosticIds(AllowedCompilerDiagnosticIds.AddRange(diagnosticIds));
         }
 
-        public VisualBasicCodeVerificationOptions WithAllowedCompilerDiagnosticIds(ImmutableArray<string> allowedCompilerDiagnosticIds)
+        public CSharpCodeVerificationOptions WithAllowedCompilerDiagnosticIds(IEnumerable<string> allowedCompilerDiagnosticIds)
         {
-            return new VisualBasicCodeVerificationOptions(
+            return new CSharpCodeVerificationOptions(
                 allowNewCompilerDiagnostics: AllowNewCompilerDiagnostics,
                 enableDiagnosticsDisabledByDefault: EnableDiagnosticsDisabledByDefault,
                 maxAllowedCompilerDiagnosticSeverity: MaxAllowedCompilerDiagnosticSeverity,

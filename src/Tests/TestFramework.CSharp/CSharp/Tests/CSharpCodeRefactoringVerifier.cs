@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-namespace Roslynator.Tests.CSharp
+using Roslynator.Tests;
+
+namespace Roslynator.CSharp.Tests
 {
-    public abstract class CSharpDiagnosticVerifier : DiagnosticVerifier
+    public abstract class CSharpCodeRefactoringVerifier : RefactoringVerifier
     {
         public override CodeVerificationOptions Options => CSharpCodeVerificationOptions.Default;
 

@@ -2,8 +2,9 @@
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.VisualBasic;
+using Roslynator.Tests;
 
-namespace Roslynator.Tests.VisualBasic
+namespace Roslynator.VisualBasic.Tests
 {
     public class VisualBasicWorkspaceFactory : WorkspaceFactory
     {

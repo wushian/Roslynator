@@ -2,8 +2,9 @@
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Roslynator.Tests;
 
-namespace Roslynator.Tests.CSharp
+namespace Roslynator.CSharp.Tests
 {
     public class CSharpWorkspaceFactory : WorkspaceFactory
     {
