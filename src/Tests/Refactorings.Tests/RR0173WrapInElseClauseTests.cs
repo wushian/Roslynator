@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Roslynator.CSharp.Refactorings.Tests
 {
-    public class RR0173WrapInElseClauseTests : AbstractCSharpCodeRefactoringVerifier
+    public class RR0173WrapInElseClauseTests : AbstractCSharpRefactoringVerifier
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.WrapInElseClause;
 
