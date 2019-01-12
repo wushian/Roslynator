@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Analyzers>
+  <Analyzer Identifier="UseDefaultLiteral" IsDevelopment="true">
+    <Id>RCS1239</Id>
+    <Title>Use default literal.</Title>
+    <MessageFormat>Use default literal.</MessageFormat>
+    <Category>Simplification</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>true</IsEnabledByDefault>
+    <SupportsFadeOut>true</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Summary></Summary>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[Foo M(Foo foo = default(Foo)) [|Id|]
+{
+    return default(Foo); [|Id|]
+}]]></Before>
+        <After><![CDATA[Foo M(Foo foo = default)
+{
+    return default;
+}]]></After>
+      </Sample>
+    </Samples>
+    <Remarks></Remarks>
+    <Links>
+      <Link>
+        <Url></Url>
+        <Text></Text>
+      </Link>
+    </Links>
+  </Analyzer>
+</Analyzers>

@@ -2569,5 +2569,17 @@ namespace Roslynator.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.DuplicateEnumValue}", 
             customTags:         Array.Empty<string>());
 
+        /// <summary>RCS1239</summary>
+        public static readonly DiagnosticDescriptor UseDefaultLiteral = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.UseDefaultLiteral, 
+            title:              "Use default literal.", 
+            messageFormat:      "Use default literal.", 
+            category:           DiagnosticCategories.Simplification, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseDefaultLiteral}", 
+            customTags:         WellKnownDiagnosticTags.Unnecessary);
+
     }
 }
