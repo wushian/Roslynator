@@ -54,6 +54,54 @@ class C
         }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseDefaultLiteral)]
+        public async Task Test_ReturnStatement()
+        {
+            await VerifyDiagnosticAndFixAsync(@"
+class C
+{
+    string M()
+    {
+        return default[|(string)|];
+    }
+}
+", @"
+class C
+{
+    string M()
+    {
+        return default;
+    }
+}
+");
+        }
+
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseDefaultLiteral)]
+        public async Task Test_YieldReturnStatement()
+        {
+            await VerifyDiagnosticAndFixAsync(@"
+using System.Collections.Generic;
+
+class C
+{
+    IEnumerable<string> M()
+    {
+        yield return default[|(string)|];
+    }
+}
+", @"
+using System.Collections.Generic;
+
+class C
+{
+    IEnumerable<string> M()
+    {
+        yield return default;
+    }
+}
+");
+        }
+
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseDefaultLiteral)]
         public async Task TestNoDiagnostic_NonObjectValueAssignedToObject()
         {
             await VerifyNoDiagnosticAsync(@"

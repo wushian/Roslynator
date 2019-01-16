@@ -90,6 +90,7 @@ namespace Roslynator.CSharp.Analysis
                 case SyntaxKind.ArrowExpressionClause:
                 case SyntaxKind.CoalesceExpression:
                 case SyntaxKind.ReturnStatement:
+                case SyntaxKind.YieldReturnStatement:
                 case SyntaxKind.SimpleAssignmentExpression:
                     {
                         TypeInfo typeInfo = context.SemanticModel.GetTypeInfo(expression, context.CancellationToken);
