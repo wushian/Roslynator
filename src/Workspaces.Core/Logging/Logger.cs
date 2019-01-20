@@ -438,33 +438,27 @@ namespace Roslynator
 
         public static void WriteUsedAnalyzers(ImmutableArray<DiagnosticAnalyzer> analyzers, ConsoleColor color, Verbosity verbosity)
         {
-            if (ShouldWrite(verbosity))
-            {
-                WriteLine($"  Use {analyzers.Length} {((analyzers.Length == 1) ? "analyzer" : "analyzers")}", color, verbosity);
+            if (!ShouldWrite(verbosity))
+                return;
 
-                if (ShouldWrite(verbosity))
-                {
-                    foreach ((string prefix, int count) in DiagnosticIdPrefix.CountPrefixes(analyzers.SelectMany(f => f.SupportedDiagnostics).Select(f => f.Id)))
-                    {
-                        WriteLine($"    {count} supported {((count == 1) ? "diagnostic" : "diagnostics")} with prefix '{prefix}'", color, verbosity);
-                    }
-                }
+            WriteLine($"  Use {analyzers.Length} {((analyzers.Length == 1) ? "analyzer" : "analyzers")}", color, verbosity);
+
+            foreach ((string prefix, int count) in DiagnosticIdPrefix.CountPrefixes(analyzers.SelectMany(f => f.SupportedDiagnostics).Select(f => f.Id)))
+            {
+                WriteLine($"    {count} supported {((count == 1) ? "diagnostic" : "diagnostics")} with prefix '{prefix}'", color, verbosity);
             }
         }
 
         public static void WriteUsedFixers(ImmutableArray<CodeFixProvider> fixers, ConsoleColor color, Verbosity verbosity)
         {
-            if (ShouldWrite(verbosity))
-            {
-                WriteLine($"  Use {fixers.Length} {((fixers.Length == 1) ? "fixer" : "fixers")}", color, verbosity);
+            if (!ShouldWrite(verbosity))
+                return;
 
-                if (ShouldWrite(verbosity))
-                {
-                    foreach ((string prefix, int count) in DiagnosticIdPrefix.CountPrefixes(fixers.SelectMany(f => f.FixableDiagnosticIds)))
-                    {
-                        WriteLine($"    {count} fixable {((count == 1) ? "diagnostic" : "diagnostics")} with prefix '{prefix}'", color, verbosity);
-                    }
-                }
+            WriteLine($"  Use {fixers.Length} {((fixers.Length == 1) ? "fixer" : "fixers")}", color, verbosity);
+
+            foreach ((string prefix, int count) in DiagnosticIdPrefix.CountPrefixes(fixers.SelectMany(f => f.FixableDiagnosticIds)))
+            {
+                WriteLine($"    {count} fixable {((count == 1) ? "diagnostic" : "diagnostics")} with prefix '{prefix}'", color, verbosity);
             }
         }
 
@@ -517,7 +511,7 @@ namespace Roslynator
             WriteLine(Verbosity.Minimal);
         }
 
-        private static bool ShouldWrite(Verbosity verbosity)
+        public static bool ShouldWrite(Verbosity verbosity)
         {
             return verbosity <= ConsoleOut.Verbosity
                 || (Out != null && verbosity <= Out.Verbosity);
