@@ -26,6 +26,9 @@ namespace Roslynator.CommandLine
         {
             var assemblies = new HashSet<Assembly>();
 
+            List<DiagnosticAnalyzer> allAnalyzers = (options.NoAnalyzers) ? null : new List<DiagnosticAnalyzer>();
+            List<CodeFixProvider> allFixers = (options.NoFixers) ? null : new List<CodeFixProvider>();
+
             AnalyzerAssemblyInfo[] analyzerAssemblies = options.GetPaths()
                 .SelectMany(path => AnalyzerAssemblyLoader.LoadFrom(
                     path: path,
@@ -46,7 +49,10 @@ namespace Roslynator.CommandLine
 
                     if (ShouldWrite(Verbosity.Normal))
                     {
-                        WriteAnalyzerAssembly(analyzerAssemblies[i], writeAnalyzers: !options.NoAnalyzers, writeFixers: !options.NoFixers);
+                        (DiagnosticAnalyzer[] analyzers, CodeFixProvider[] fixers) = WriteAnalyzerAssembly(analyzerAssemblies[i], writeAnalyzers: !options.NoAnalyzers, writeFixers: !options.NoFixers);
+
+                        allAnalyzers?.AddRange(analyzers);
+                        allFixers?.AddRange(fixers);
 
                         if (i < analyzerAssemblies.Length - 1)
                             WriteLine(Verbosity.Normal);
@@ -59,6 +65,12 @@ namespace Roslynator.CommandLine
                 }
             }
 
+            if (ShouldWrite(Verbosity.Detailed))
+            {
+                WriteLine(Verbosity.Detailed);
+                WriteDiagnostics(allAnalyzers, allFixers);
+            }
+
             WriteLine(Verbosity.Minimal);
             WriteLine($"{assemblies.Count} analyzer {((assemblies.Count == 1) ? "assembly" : "assemblies")} found", ConsoleColor.Green, Verbosity.Minimal);
             WriteLine(Verbosity.Minimal);
@@ -66,7 +78,7 @@ namespace Roslynator.CommandLine
             return CommandResult.Success;
         }
 
-        private static void WriteAnalyzerAssembly(AnalyzerAssemblyInfo analyzerAssemblyInfo, bool writeAnalyzers, bool writeFixers)
+        private static (DiagnosticAnalyzer[] analyzers, CodeFixProvider[] fixers) WriteAnalyzerAssembly(AnalyzerAssemblyInfo analyzerAssemblyInfo, bool writeAnalyzers, bool writeFixers)
         {
             AnalyzerAssembly analyzerAssembly = analyzerAssemblyInfo.AnalyzerAssembly;
 
@@ -161,9 +173,6 @@ namespace Roslynator.CommandLine
                 {
                     WriteLine(Verbosity.Detailed);
                     WriteDiagnosticAnalyzers(analyzers);
-
-                    WriteLine(Verbosity.Detailed);
-                    WriteSupportedDiagnostics(supportedDiagnostics);
                 }
 
                 if (fixers.Length > 0)
@@ -172,6 +181,8 @@ namespace Roslynator.CommandLine
                     WriteCodeFixProviders(fixers);
                 }
             }
+
+            return (analyzers, fixers);
         }
 
         private static void WriteDiagnosticAnalyzers(DiagnosticAnalyzer[] analyzers)
@@ -194,39 +205,120 @@ namespace Roslynator.CommandLine
             }
         }
 
-        private static void WriteSupportedDiagnostics(DiagnosticDescriptor[] diagnosticDescriptors)
+        private static void WriteDiagnostics(IList<DiagnosticAnalyzer> analyzers, IList<CodeFixProvider> fixers)
         {
-            WriteLine("  SupportedDiagnostics:", Verbosity.Detailed);
+            if (analyzers == null)
+                analyzers = Array.Empty<DiagnosticAnalyzer>();
 
-            foreach (DiagnosticDescriptor descriptor in diagnosticDescriptors.OrderBy(f => f.Id))
+            if (fixers == null)
+                fixers = Array.Empty<CodeFixProvider>();
+
+            Dictionary<string, DiagnosticDescriptor> diagnosticIds = analyzers
+                .SelectMany(f => f.SupportedDiagnostics)
+                .Distinct(DiagnosticDescriptorComparer.Id)
+                .OrderBy(f => f, DiagnosticDescriptorComparer.Id)
+                .ToDictionary(f => f.Id, f => f);
+
+            foreach (CodeFixProvider fixer in fixers)
             {
-                string title = descriptor.Title?.ToString();
-                string messageFormat = descriptor.MessageFormat?.ToString();
+                foreach (string diagnosticId in fixer.FixableDiagnosticIds)
+                {
+                    if (!diagnosticIds.ContainsKey(diagnosticId))
+                        diagnosticIds[diagnosticId] = null;
+                }
+            }
 
-                if (string.IsNullOrEmpty(title))
-                    title = messageFormat;
+            Dictionary<string, IEnumerable<DiagnosticAnalyzer>> analyzersById = analyzers
+                .SelectMany(analyzer => analyzer.SupportedDiagnostics.Select(descriptor => (analyzer, descriptor)))
+                .GroupBy(f => f.descriptor.Id)
+                .ToDictionary(g => g.Key, g => g.Select(f => f.analyzer));
 
-                WriteLine($"    {descriptor.Id} {title}", Verbosity.Detailed);
+            Dictionary<string, IEnumerable<CodeFixProvider>> fixersById = fixers
+                .SelectMany(fixer => fixer.FixableDiagnosticIds.Select(diagnosticId => (fixer, diagnosticId)))
+                .GroupBy(f => f.diagnosticId)
+                .ToDictionary(g => g.Key, g => g.Select(f => f.fixer));
+
+            WriteLine("  Diagnostics:", Verbosity.Detailed);
+
+            foreach (KeyValuePair<string, DiagnosticDescriptor> kvp in diagnosticIds.OrderBy(f => f.Key))
+            {
+                string diagnosticId = kvp.Key;
+                DiagnosticDescriptor descriptor = kvp.Value;
+
+                if (descriptor == null)
+                {
+                    WriteLine($"    {diagnosticId}", Verbosity.Detailed);
+                }
+                else
+                {
+                    string title = descriptor.Title?.ToString();
+                    string messageFormat = descriptor.MessageFormat?.ToString();
+
+                    if (string.IsNullOrEmpty(title))
+                        title = messageFormat;
+
+                    WriteLine($"    {diagnosticId} {title}", Verbosity.Detailed);
+
+                    if (ShouldWrite(Verbosity.Diagnostic))
+                    {
+                        if (title != messageFormat)
+                            WriteLine($"      MessageFormat:       {messageFormat}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+
+                        WriteLine($"      Category:            {descriptor.Category}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                        WriteLine($"      DefaultSeverity:     {descriptor.DefaultSeverity}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                        WriteLine($"      IsEnabledByDefault:  {descriptor.IsEnabledByDefault}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+
+                        string description = descriptor.Description?.ToString();
+
+                        if (!string.IsNullOrEmpty(description))
+                            WriteLine($"      Description:         {description}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+
+                        if (!string.IsNullOrEmpty(descriptor.HelpLinkUri))
+                            WriteLine($"      HelpLinkUri:         {descriptor.HelpLinkUri}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+
+                        if (descriptor.CustomTags?.Any() == true)
+                            WriteLine($"      CustomTags:          {string.Join(", ", descriptor.CustomTags)}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                    }
+                }
 
                 if (ShouldWrite(Verbosity.Diagnostic))
                 {
-                    if (title != messageFormat)
-                        WriteLine($"      MessageFormat:      {messageFormat}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                    if (analyzersById.TryGetValue(diagnosticId, out IEnumerable<DiagnosticAnalyzer> analyzers2))
+                    {
+                        Write("      DiagnosticAnalyzers: ", ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
-                    WriteLine($"      Category:           {descriptor.Category}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
-                    WriteLine($"      DefaultSeverity:    {descriptor.DefaultSeverity}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
-                    WriteLine($"      IsEnabledByDefault: {descriptor.IsEnabledByDefault}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                        WriteTypes(analyzers2.Select(f => f.GetType()));
+                    }
 
-                    string description = descriptor.Description?.ToString();
+                    if (fixersById.TryGetValue(diagnosticId, out IEnumerable<CodeFixProvider> fixers2))
+                    {
+                        Write("      CodeFixProviders:    ", ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
-                    if (!string.IsNullOrEmpty(description))
-                        WriteLine($"      Description:        {description}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                        WriteTypes(fixers2.Select(f => f.GetType()));
+                    }
+                }
+            }
 
-                    if (!string.IsNullOrEmpty(descriptor.HelpLinkUri))
-                        WriteLine($"      HelpLinkUri:        {descriptor.HelpLinkUri}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+            void WriteTypes(IEnumerable<Type> types)
+            {
+                using (IEnumerator<Type> en = types.OrderBy(f => f, TypeComparer.NamespaceThenName).GetEnumerator())
+                {
+                    if (en.MoveNext())
+                    {
+                        while (true)
+                        {
+                            WriteLine(en.Current.FullName, ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
-                    if (descriptor.CustomTags?.Any() == true)
-                        WriteLine($"      CustomTags:         {string.Join(", ", descriptor.CustomTags)}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                            if (en.MoveNext())
+                            {
+                                Write("                           ", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         }
