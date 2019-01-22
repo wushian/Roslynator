@@ -81,7 +81,7 @@ namespace Roslynator.CodeFixes
 
                     results.Add(result);
 
-                    WriteFixSummary(
+                    LogHelpers.WriteFixSummary(
                         result.FixedDiagnostics,
                         result.UnfixedDiagnostics,
                         result.UnfixableDiagnostics,
@@ -108,7 +108,7 @@ namespace Roslynator.CodeFixes
 
             stopwatch.Stop();
 
-            WriteProjectFixResults(results, Options, FormatProvider);
+            LogHelpers.WriteProjectFixResults(results, Options, FormatProvider);
 
             WriteLine($"Done fixing solution '{CurrentSolution.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", Verbosity.Minimal);
         }
@@ -197,8 +197,8 @@ namespace Roslynator.CodeFixes
 
             Dictionary<string, ImmutableArray<DiagnosticAnalyzer>> analyzersById = GetAnalyzersById(analyzers);
 
-            WriteUsedAnalyzers(analyzers, ConsoleColor.DarkGray, Verbosity.Diagnostic);
-            WriteUsedFixers(fixers, ConsoleColor.DarkGray, Verbosity.Diagnostic);
+            LogHelpers.WriteUsedAnalyzers(analyzers, ConsoleColor.DarkGray, Verbosity.Diagnostic);
+            LogHelpers.WriteUsedFixers(fixers, ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
             ImmutableArray<Diagnostic>.Builder fixedDiagnostics = ImmutableArray.CreateBuilder<Diagnostic>();
 
@@ -228,7 +228,7 @@ namespace Roslynator.CodeFixes
 
                 ImmutableArray<Diagnostic> diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(analyzers, Options.CompilationWithAnalyzersOptions, cancellationToken).ConfigureAwait(false);
 
-                WriteAnalyzerExceptionDiagnostics(diagnostics);
+                LogHelpers.WriteAnalyzerExceptionDiagnostics(diagnostics);
 
                 diagnostics = GetFixableDiagnostics(diagnostics, compilerDiagnostics);
 
@@ -246,7 +246,7 @@ namespace Roslynator.CodeFixes
                 if (length == previousPreviousDiagnostics.Length
                     && !diagnostics.Except(previousPreviousDiagnostics, DiagnosticDeepEqualityComparer.Instance).Any())
                 {
-                    WriteInfiniteLoopSummary(diagnostics, previousDiagnostics, project, FormatProvider);
+                    LogHelpers.WriteInfiniteLoopSummary(diagnostics, previousDiagnostics, project, FormatProvider);
 
                     fixKind = ProjectFixKind.InfiniteLoop;
                     break;
@@ -422,7 +422,7 @@ namespace Roslynator.CodeFixes
         {
             WriteLine($"  Fix {diagnostics.Length} {descriptor.Id} '{descriptor.Title}'", diagnostics[0].Severity.GetColor(), Verbosity.Normal);
 
-            WriteDiagnostics(diagnostics, baseDirectoryPath: Path.GetDirectoryName(project.FilePath), formatProvider: FormatProvider, indentation: "    ", verbosity: Verbosity.Detailed);
+            LogHelpers.WriteDiagnostics(diagnostics, baseDirectoryPath: Path.GetDirectoryName(project.FilePath), formatProvider: FormatProvider, indentation: "    ", verbosity: Verbosity.Detailed);
 
             DiagnosticFix diagnosticFix = await DiagnosticFixProvider.GetFixAsync(
                 diagnostics,
@@ -452,7 +452,7 @@ namespace Roslynator.CodeFixes
                 }
                 else if (operations.Length > 1)
                 {
-                    WriteMultipleOperationsSummary(fix);
+                    LogHelpers.WriteMultipleOperationsSummary(fix);
                 }
             }
 
@@ -485,7 +485,7 @@ namespace Roslynator.CodeFixes
 
                         if (count <= maxCount)
                         {
-                            WriteDiagnostic(
+                            LogHelpers.WriteDiagnostic(
                                 en.Current,
                                 baseDirectoryPath: baseDirectoryPath,
                                 formatProvider: FormatProvider,
@@ -633,7 +633,7 @@ namespace Roslynator.CodeFixes
 
             ImmutableArray<DocumentId> formattedDocuments = await CodeFormatter.GetFormattedDocumentsAsync(project, newProject, syntaxFacts).ConfigureAwait(false);
 
-            WriteFormattedDocuments(formattedDocuments, project, solutionDirectory);
+            LogHelpers.WriteFormattedDocuments(formattedDocuments, project, solutionDirectory);
 
             if (formattedDocuments.Length > 0
                 && !Workspace.TryApplyChanges(newProject.Solution))
