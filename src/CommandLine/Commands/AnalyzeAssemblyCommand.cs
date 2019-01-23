@@ -157,7 +157,14 @@ namespace Roslynator.CommandLine
                     WriteLine($"    {GetShortLanguageName(kvp.Key).PadRight(maxLength - 2)}{kvp.Value.Length.ToString().PadLeft(maxDigitLength)}", Verbosity.Normal);
                 }
 
-                WriteLine($"  SupportedDiagnostics: {supportedDiagnostics.Length.ToString().PadLeft(maxDigitLength)}", Verbosity.Normal);
+                Write($"  SupportedDiagnostics: {supportedDiagnostics.Length.ToString().PadLeft(maxDigitLength)}", Verbosity.Normal);
+
+                Write($" ({supportedDiagnostics[0].Id}");
+
+                if (supportedDiagnostics.Length > 1)
+                    Write($" - {supportedDiagnostics[supportedDiagnostics.Length - 1].Id})");
+
+                WriteLine();
 
                 foreach ((string prefix, int count) in supportedDiagnosticIdPrefixes)
                 {
@@ -174,7 +181,14 @@ namespace Roslynator.CommandLine
                     WriteLine($"    {GetShortLanguageName(kvp.Key).PadRight(maxLength - 2)}{kvp.Value.Length.ToString().PadLeft(maxDigitLength)}", Verbosity.Normal);
                 }
 
-                WriteLine($"  FixableDiagnosticIds: {fixableDiagnosticIds.Length}", Verbosity.Normal);
+                Write($"  FixableDiagnosticIds: {fixableDiagnosticIds.Length}", Verbosity.Normal);
+
+                Write($" ({fixableDiagnosticIds[0]}");
+
+                if (fixableDiagnosticIds.Length > 1)
+                    Write($" - {fixableDiagnosticIds[fixableDiagnosticIds.Length - 1]})");
+
+                WriteLine();
 
                 foreach ((string prefix, int count) in fixableDiagnosticIdPrefixes)
                 {
