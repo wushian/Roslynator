@@ -23,12 +23,10 @@ namespace Roslynator
             string indentation = null,
             Verbosity verbosity = Verbosity.Diagnostic)
         {
-            Write(indentation, verbosity);
-
             string text = DiagnosticFormatter.FormatDiagnostic(diagnostic, baseDirectoryPath, formatProvider);
 
-            ConsoleOut.WriteLine(text, diagnostic.Severity.GetColor(), verbosity);
-            Out?.WriteLine(text, verbosity);
+            Write(indentation, verbosity);
+            WriteLine(text, diagnostic.Severity.GetColor(), verbosity);
         }
 
         public static void WriteDiagnostics(
@@ -47,11 +45,9 @@ namespace Roslynator
 
             int count = 0;
 
-            foreach ((Diagnostic diagnostic, string message) in DiagnosticFormatter.FormatDiagnostics(diagnostics, baseDirectoryPath, formatProvider))
+            foreach (Diagnostic diagnostic in diagnostics.OrderBy(f => f, DiagnosticComparer.IdThenFilePathThenSpanStart))
             {
-                Write(indentation, verbosity);
-                ConsoleOut.WriteLine(message, diagnostic.Severity.GetColor(), verbosity);
-                Out?.WriteLine(message, verbosity);
+                WriteDiagnostic(diagnostic, baseDirectoryPath, formatProvider, indentation, verbosity);
 
                 count++;
 
@@ -83,7 +79,8 @@ namespace Roslynator
             IEnumerable<Diagnostic> fixedDiagnostics,
             IEnumerable<Diagnostic> unfixedDiagnostics,
             IEnumerable<Diagnostic> unfixableDiagnostics,
-            string indent = null,
+            string baseDirectoryPath = null,
+            string indentation = null,
             bool addEmptyLine = false,
             IFormatProvider formatProvider = null,
             Verbosity verbosity = Verbosity.None)
@@ -92,14 +89,14 @@ namespace Roslynator
             WriteDiagnosticDescriptors(unfixedDiagnostics, "Unfixed diagnostics:");
             WriteDiagnosticDescriptors(fixedDiagnostics, "Fixed diagnostics:");
 
-            bool WriteDiagnosticDescriptors(
+            void WriteDiagnosticDescriptors(
                 IEnumerable<Diagnostic> diagnostics,
                 string title)
             {
-                List<(DiagnosticDescriptor descriptor, int count)> diagnosticsById = diagnostics
+                List<(DiagnosticDescriptor descriptor, ImmutableArray<Diagnostic> diagnostics)> diagnosticsById = diagnostics
                     .GroupBy(f => f.Descriptor, DiagnosticDescriptorComparer.Id)
-                    .Select(f => (descriptor: f.Key, count: f.Count()))
-                    .OrderByDescending(f => f.count)
+                    .Select(f => (descriptor: f.Key, diagnostics: f.ToImmutableArray()))
+                    .OrderByDescending(f => f.diagnostics.Length)
                     .ThenBy(f => f.descriptor.Id)
                     .ToList();
 
@@ -108,22 +105,23 @@ namespace Roslynator
                     if (addEmptyLine)
                         WriteLine(verbosity);
 
-                    Write(indent, verbosity);
+                    Write(indentation, verbosity);
                     WriteLine(title, verbosity);
 
                     int maxIdLength = diagnosticsById.Max(f => f.descriptor.Id.Length);
-                    int maxCountLength = diagnosticsById.Max(f => f.count.ToString("n0").Length);
+                    int maxCountLength = diagnosticsById.Max(f => f.diagnostics.Length.ToString("n0").Length);
 
-                    foreach ((DiagnosticDescriptor descriptor, int count) in diagnosticsById)
+                    foreach ((DiagnosticDescriptor descriptor, ImmutableArray<Diagnostic> diagnostics2) in diagnosticsById)
                     {
-                        Write(indent, verbosity);
-                        WriteLine($"  {count.ToString("n0").PadLeft(maxCountLength)} {descriptor.Id.PadRight(maxIdLength)} {descriptor.Title.ToString(formatProvider)}", verbosity);
+                        Write(indentation, verbosity);
+                        WriteLine($"  {diagnostics2.Length.ToString("n0").PadLeft(maxCountLength)} {descriptor.Id.PadRight(maxIdLength)} {descriptor.Title.ToString(formatProvider)}", verbosity);
+
+                        if (baseDirectoryPath != null)
+                        {
+                            WriteDiagnostics(diagnostics2, baseDirectoryPath: baseDirectoryPath, formatProvider: formatProvider, indentation: indentation + "    ", verbosity: verbosity);
+                        }
                     }
-
-                    return true;
                 }
-
-                return false;
             }
         }
 

@@ -85,7 +85,8 @@ namespace Roslynator.CodeFixes
                         result.FixedDiagnostics,
                         result.UnfixedDiagnostics,
                         result.UnfixableDiagnostics,
-                        indent: "  ",
+                        baseDirectoryPath: Path.GetDirectoryName(project.FilePath),
+                        indentation: "  ",
                         formatProvider: FormatProvider,
                         verbosity: Verbosity.Detailed);
 

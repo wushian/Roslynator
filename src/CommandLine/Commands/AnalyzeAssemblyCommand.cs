@@ -26,16 +26,13 @@ namespace Roslynator.CommandLine
         {
             var assemblies = new HashSet<Assembly>();
 
-            List<DiagnosticAnalyzer> allAnalyzers = (options.NoAnalyzers) ? null : new List<DiagnosticAnalyzer>();
-            List<CodeFixProvider> allFixers = (options.NoFixers) ? null : new List<CodeFixProvider>();
-
             AnalyzerAssemblyInfo[] analyzerAssemblies = options.GetPaths()
                 .SelectMany(path => AnalyzerAssemblyLoader.LoadFrom(
                     path: path,
                     loadAnalyzers: !options.NoAnalyzers,
                     loadFixers: !options.NoFixers,
                     language: Language))
-                .OrderBy(f => f.AnalyzerAssembly.GetName().Name)
+                .OrderBy(f => f.AnalyzerAssembly.Assembly.GetName().Name)
                 .ThenBy(f => f.FilePath)
                 .ToArray();
 
@@ -49,10 +46,7 @@ namespace Roslynator.CommandLine
 
                     if (ShouldWrite(Verbosity.Normal))
                     {
-                        (DiagnosticAnalyzer[] analyzers, CodeFixProvider[] fixers) = WriteAnalyzerAssembly(analyzerAssemblies[i], writeAnalyzers: !options.NoAnalyzers, writeFixers: !options.NoFixers);
-
-                        allAnalyzers?.AddRange(analyzers);
-                        allFixers?.AddRange(fixers);
+                        WriteAnalyzerAssembly(analyzerAssemblies[i]);
 
                         if (i < analyzerAssemblies.Length - 1)
                             WriteLine(Verbosity.Normal);
@@ -65,10 +59,19 @@ namespace Roslynator.CommandLine
                 }
             }
 
-            if (ShouldWrite(Verbosity.Detailed))
+            if (ShouldWrite(Verbosity.Detailed)
+                && analyzerAssemblies.Length > 1)
             {
+                ImmutableArray<DiagnosticAnalyzer> analyzers = (!options.NoAnalyzers)
+                    ? analyzerAssemblies.SelectMany(f => f.AnalyzerAssembly.Analyzers).ToImmutableArray()
+                    : ImmutableArray<DiagnosticAnalyzer>.Empty;
+
+                ImmutableArray<CodeFixProvider> fixers = (!options.NoFixers)
+                    ? analyzerAssemblies.SelectMany(f => f.AnalyzerAssembly.Fixers).ToImmutableArray()
+                    : ImmutableArray<CodeFixProvider>.Empty;
+
                 WriteLine(Verbosity.Detailed);
-                WriteDiagnostics(allAnalyzers, allFixers);
+                WriteDiagnostics(analyzers, fixers, assemblyQualifiedName: true);
             }
 
             WriteLine(Verbosity.Minimal);
@@ -78,143 +81,97 @@ namespace Roslynator.CommandLine
             return CommandResult.Success;
         }
 
-        private static (DiagnosticAnalyzer[] analyzers, CodeFixProvider[] fixers) WriteAnalyzerAssembly(AnalyzerAssemblyInfo analyzerAssemblyInfo, bool writeAnalyzers, bool writeFixers)
+        private static void WriteAnalyzerAssembly(AnalyzerAssemblyInfo analyzerAssemblyInfo)
         {
             AnalyzerAssembly analyzerAssembly = analyzerAssemblyInfo.AnalyzerAssembly;
 
             WriteLine(Verbosity.Normal);
             WriteLine($"  Location:             {analyzerAssemblyInfo.FilePath}", Verbosity.Normal);
 
-            int maxLength = 22;
-            int maxDigitLength = 0;
+            (int maxLength, int maxDigitLength) = CalculateMaxLength(analyzerAssembly);
 
-            DiagnosticAnalyzer[] analyzers = Array.Empty<DiagnosticAnalyzer>();
-            DiagnosticDescriptor[] supportedDiagnostics = Array.Empty<DiagnosticDescriptor>();
-            (string prefix, int count)[] supportedDiagnosticIdPrefixes = Array.Empty<(string prefix, int count)>();
-
-            if (writeAnalyzers)
+            if (analyzerAssembly.HasAnalyzers)
             {
-                analyzers = analyzerAssembly
-                    .Analyzers
-                    .SelectMany(f => f.Value)
-                    .Distinct()
-                    .ToArray();
+                WriteLine($"  DiagnosticAnalyzers:  {analyzerAssembly.Analyzers.Length.ToString().PadLeft(maxDigitLength)}", Verbosity.Normal);
 
-                if (analyzers.Length > 0)
-                {
-                    supportedDiagnostics = analyzers
-                        .SelectMany(f => f.SupportedDiagnostics)
-                        .Distinct(DiagnosticDescriptorComparer.Id)
-                        .OrderBy(f => f, DiagnosticDescriptorComparer.Id)
-                        .ToArray();
-
-                    supportedDiagnosticIdPrefixes = DiagnosticIdPrefix.CountPrefixes(supportedDiagnostics.Select(f => f.Id)).ToArray();
-
-                    maxLength = Math.Max(maxLength, analyzerAssembly.Analyzers.Max(f => GetShortLanguageName(f.Key).Length + 3));
-                    maxLength = Math.Max(maxLength, supportedDiagnosticIdPrefixes.Max(f => f.prefix.Length + 3));
-
-                    maxDigitLength = Math.Max(maxDigitLength, analyzers.Length.ToString().Length);
-                    maxDigitLength = Math.Max(maxDigitLength, supportedDiagnostics.Length.ToString().Length);
-                }
-            }
-
-            CodeFixProvider[] fixers = Array.Empty<CodeFixProvider>();
-            string[] fixableDiagnosticIds = Array.Empty<string>();
-            (string prefix, int count)[] fixableDiagnosticIdPrefixes = Array.Empty<(string prefix, int count)>();
-
-            if (writeFixers)
-            {
-                fixers = analyzerAssembly
-                   .Fixers
-                   .SelectMany(f => f.Value)
-                   .Distinct()
-                   .ToArray();
-
-                if (fixers.Length > 0)
-                {
-                    fixableDiagnosticIds = fixers
-                        .SelectMany(f => f.FixableDiagnosticIds)
-                        .Distinct()
-                        .OrderBy(f => f)
-                        .ToArray();
-
-                    fixableDiagnosticIdPrefixes = DiagnosticIdPrefix.CountPrefixes(fixableDiagnosticIds).ToArray();
-
-                    maxLength = Math.Max(maxLength, analyzerAssembly.Fixers.Max(f => GetShortLanguageName(f.Key).Length + 3));
-                    maxLength = Math.Max(maxLength, fixableDiagnosticIdPrefixes.Max(f => f.prefix.Length + 3));
-
-                    maxDigitLength = Math.Max(maxDigitLength, fixers.Length.ToString().Length);
-                    maxDigitLength = Math.Max(maxDigitLength, fixableDiagnosticIds.Length.ToString().Length);
-                }
-            }
-
-            if (analyzers.Length > 0)
-            {
-                WriteLine($"  DiagnosticAnalyzers:  {analyzers.Length.ToString().PadLeft(maxDigitLength)}", Verbosity.Normal);
-
-                foreach (KeyValuePair<string, ImmutableArray<DiagnosticAnalyzer>> kvp in analyzerAssembly.Analyzers.OrderBy(f => f.Key))
+                foreach (KeyValuePair<string, ImmutableArray<DiagnosticAnalyzer>> kvp in analyzerAssembly.AnalyzersByLanguage.OrderBy(f => f.Key))
                 {
                     WriteLine($"    {GetShortLanguageName(kvp.Key).PadRight(maxLength - 2)}{kvp.Value.Length.ToString().PadLeft(maxDigitLength)}", Verbosity.Normal);
                 }
 
-                Write($"  SupportedDiagnostics: {supportedDiagnostics.Length.ToString().PadLeft(maxDigitLength)}", Verbosity.Normal);
+                WriteLine($"  SupportedDiagnostics: {analyzerAssembly.SupportedDiagnostics.Length.ToString().PadLeft(maxDigitLength)}", Verbosity.Normal);
 
-                Write($" ({supportedDiagnostics[0].Id}");
-
-                if (supportedDiagnostics.Length > 1)
-                    Write($" - {supportedDiagnostics[supportedDiagnostics.Length - 1].Id})");
-
-                WriteLine();
-
-                foreach ((string prefix, int count) in supportedDiagnosticIdPrefixes)
+                foreach (KeyValuePair<string, ImmutableArray<DiagnosticDescriptor>> kvp in analyzerAssembly.SupportedDiagnosticsByPrefix
+                    .OrderBy(f => f.Key))
                 {
-                    WriteLine($"    {prefix.PadRight(maxLength - 2)}{count.ToString().PadLeft(maxDigitLength)}", Verbosity.Normal);
+                    WriteLine($"    {kvp.Key.PadRight(maxLength - 2)}{kvp.Value.Length.ToString().PadLeft(maxDigitLength)}", Verbosity.Normal);
                 }
             }
 
-            if (fixers.Length > 0)
+            if (analyzerAssembly.HasFixers)
             {
-                WriteLine($"  CodeFixProviders:     {fixers.Length.ToString().PadLeft(maxDigitLength)}", Verbosity.Normal);
+                WriteLine($"  CodeFixProviders:     {analyzerAssembly.Fixers.Length.ToString().PadLeft(maxDigitLength)}", Verbosity.Normal);
 
-                foreach (KeyValuePair<string, ImmutableArray<CodeFixProvider>> kvp in analyzerAssembly.Fixers.OrderBy(f => f.Key))
+                foreach (KeyValuePair<string, ImmutableArray<CodeFixProvider>> kvp in analyzerAssembly.FixersByLanguage.OrderBy(f => f.Key))
                 {
                     WriteLine($"    {GetShortLanguageName(kvp.Key).PadRight(maxLength - 2)}{kvp.Value.Length.ToString().PadLeft(maxDigitLength)}", Verbosity.Normal);
                 }
 
-                Write($"  FixableDiagnosticIds: {fixableDiagnosticIds.Length}", Verbosity.Normal);
+                WriteLine($"  FixableDiagnosticIds: {analyzerAssembly.FixableDiagnosticIds.Length}", Verbosity.Normal);
 
-                Write($" ({fixableDiagnosticIds[0]}");
-
-                if (fixableDiagnosticIds.Length > 1)
-                    Write($" - {fixableDiagnosticIds[fixableDiagnosticIds.Length - 1]})");
-
-                WriteLine();
-
-                foreach ((string prefix, int count) in fixableDiagnosticIdPrefixes)
+                foreach (KeyValuePair<string, ImmutableArray<string>> kvp in analyzerAssembly.FixableDiagnosticIdsByPrefix
+                    .OrderBy(f => f.Key))
                 {
-                    WriteLine($"    {prefix.PadRight(maxLength - 2)}{count.ToString().PadLeft(maxDigitLength)}", Verbosity.Normal);
+                    WriteLine($"    {kvp.Key.PadRight(maxLength - 2)}{kvp.Value.Length.ToString().PadLeft(maxDigitLength)}", Verbosity.Normal);
                 }
             }
 
             if (ShouldWrite(Verbosity.Detailed))
             {
-                if (analyzers.Length > 0)
+                if (analyzerAssembly.HasAnalyzers)
                 {
                     WriteLine(Verbosity.Detailed);
-                    WriteDiagnosticAnalyzers(analyzers);
+                    WriteDiagnosticAnalyzers(analyzerAssembly.Analyzers);
                 }
 
-                if (fixers.Length > 0)
+                if (analyzerAssembly.HasFixers)
                 {
                     WriteLine(Verbosity.Detailed);
-                    WriteCodeFixProviders(fixers);
+                    WriteCodeFixProviders(analyzerAssembly.Fixers);
                 }
+
+                WriteLine(Verbosity.Detailed);
+                WriteDiagnostics(analyzerAssembly.Analyzers, analyzerAssembly.Fixers);
             }
-
-            return (analyzers, fixers);
         }
 
-        private static void WriteDiagnosticAnalyzers(DiagnosticAnalyzer[] analyzers)
+        private static (int maxLength, int maxDigitLength) CalculateMaxLength(AnalyzerAssembly analyzerAssembly)
+        {
+            int maxLength = 22;
+            int maxDigitLength = 0;
+
+            if (analyzerAssembly.HasAnalyzers)
+            {
+                maxLength = Math.Max(maxLength, analyzerAssembly.AnalyzersByLanguage.Max(f => GetShortLanguageName(f.Key).Length + 3));
+                maxLength = Math.Max(maxLength, analyzerAssembly.SupportedDiagnosticsByPrefix.Max(f => f.Key.Length + 3));
+
+                maxDigitLength = Math.Max(maxDigitLength, analyzerAssembly.Analyzers.Length.ToString().Length);
+                maxDigitLength = Math.Max(maxDigitLength, analyzerAssembly.SupportedDiagnostics.Length.ToString().Length);
+            }
+
+            if (analyzerAssembly.HasFixers)
+            {
+                maxLength = Math.Max(maxLength, analyzerAssembly.FixersByLanguage.Max(f => GetShortLanguageName(f.Key).Length + 3));
+                maxLength = Math.Max(maxLength, analyzerAssembly.FixableDiagnosticIdsByPrefix.Max(f => f.Key.Length + 3));
+
+                maxDigitLength = Math.Max(maxDigitLength, analyzerAssembly.Fixers.Length.ToString().Length);
+                maxDigitLength = Math.Max(maxDigitLength, analyzerAssembly.FixableDiagnosticIds.Length.ToString().Length);
+            }
+
+            return (maxLength, maxDigitLength);
+        }
+
+        private static void WriteDiagnosticAnalyzers(IEnumerable<DiagnosticAnalyzer> analyzers)
         {
             WriteLine("  DiagnosticAnalyzers:", Verbosity.Detailed);
 
@@ -229,19 +186,49 @@ namespace Roslynator.CommandLine
                 if (ShouldWrite(Verbosity.Diagnostic))
                 {
                     WriteLine($"      Languages:            {string.Join(", ", attribute.Languages.Select(f => GetShortLanguageName(f)).OrderBy(f => f))}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
-                    WriteLine($"      SupportedDiagnostics: {string.Join(", ", analyzer.SupportedDiagnostics.Select(f => f.Id).OrderBy(f => f))}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                    WriteLine($"      SupportedDiagnostics: {string.Join(", ", analyzer.SupportedDiagnostics.Select(f => f.Id).Distinct().OrderBy(f => f))}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
                 }
             }
         }
 
-        private static void WriteDiagnostics(IList<DiagnosticAnalyzer> analyzers, IList<CodeFixProvider> fixers)
+        private static void WriteCodeFixProviders(IEnumerable<CodeFixProvider> fixers)
         {
-            if (analyzers == null)
-                analyzers = Array.Empty<DiagnosticAnalyzer>();
+            WriteLine("  CodeFixProviders:", Verbosity.Detailed);
 
-            if (fixers == null)
-                fixers = Array.Empty<CodeFixProvider>();
+            foreach (CodeFixProvider fixer in fixers.OrderBy(f => f.GetType(), TypeComparer.NamespaceThenName))
+            {
+                Type type = fixer.GetType();
 
+                ExportCodeFixProviderAttribute attribute = type.GetCustomAttribute<ExportCodeFixProviderAttribute>();
+
+                WriteLine($"    {type.FullName}", Verbosity.Detailed);
+
+                if (ShouldWrite(Verbosity.Diagnostic))
+                {
+                    WriteLine($"      Languages:            {string.Join(", ", attribute.Languages.Select(f => GetShortLanguageName(f)).OrderBy(f => f))}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                    WriteLine($"      FixableDiagnosticIds: {string.Join(", ", fixer.FixableDiagnosticIds.Distinct().OrderBy(f => f))}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+
+                    Write("      FixAllProvider:       ", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+
+                    FixAllProvider fixAllProvider = fixer.GetFixAllProvider();
+
+                    if (fixAllProvider != null)
+                    {
+                        WriteLine($"{fixAllProvider.GetType().FullName} ({string.Join(", ", fixAllProvider.GetSupportedFixAllScopes().Select(f => f.ToString()).OrderBy(f => f))})", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                    }
+                    else
+                    {
+                        WriteLine("-", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                    }
+                }
+            }
+        }
+
+        private static void WriteDiagnostics(
+            ImmutableArray<DiagnosticAnalyzer> analyzers,
+            ImmutableArray<CodeFixProvider> fixers,
+            bool assemblyQualifiedName = false)
+        {
             Dictionary<string, DiagnosticDescriptor> diagnosticIds = analyzers
                 .SelectMany(f => f.SupportedDiagnostics)
                 .Distinct(DiagnosticDescriptorComparer.Id)
@@ -260,12 +247,12 @@ namespace Roslynator.CommandLine
             Dictionary<string, IEnumerable<DiagnosticAnalyzer>> analyzersById = analyzers
                 .SelectMany(analyzer => analyzer.SupportedDiagnostics.Select(descriptor => (analyzer, descriptor)))
                 .GroupBy(f => f.descriptor.Id)
-                .ToDictionary(g => g.Key, g => g.Select(f => f.analyzer));
+                .ToDictionary(g => g.Key, g => g.Select(f => f.analyzer).Distinct());
 
             Dictionary<string, IEnumerable<CodeFixProvider>> fixersById = fixers
                 .SelectMany(fixer => fixer.FixableDiagnosticIds.Select(diagnosticId => (fixer, diagnosticId)))
                 .GroupBy(f => f.diagnosticId)
-                .ToDictionary(g => g.Key, g => g.Select(f => f.fixer));
+                .ToDictionary(g => g.Key, g => g.Select(f => f.fixer).Distinct());
 
             WriteLine("  Diagnostics:", Verbosity.Detailed);
 
@@ -336,7 +323,9 @@ namespace Roslynator.CommandLine
                     {
                         while (true)
                         {
-                            WriteLine(en.Current.AssemblyQualifiedName, ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                            string name = (assemblyQualifiedName) ? en.Current.AssemblyQualifiedName : en.Current.FullName;
+
+                            WriteLine(name, ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
                             if (en.MoveNext())
                             {
@@ -347,39 +336,6 @@ namespace Roslynator.CommandLine
                                 break;
                             }
                         }
-                    }
-                }
-            }
-        }
-
-        private static void WriteCodeFixProviders(CodeFixProvider[] fixers)
-        {
-            WriteLine("  CodeFixProviders:", Verbosity.Detailed);
-
-            foreach (CodeFixProvider fixer in fixers.OrderBy(f => f.GetType(), TypeComparer.NamespaceThenName))
-            {
-                Type type = fixer.GetType();
-
-                ExportCodeFixProviderAttribute attribute = type.GetCustomAttribute<ExportCodeFixProviderAttribute>();
-
-                WriteLine($"    {type.FullName}", Verbosity.Detailed);
-
-                if (ShouldWrite(Verbosity.Diagnostic))
-                {
-                    WriteLine($"      Languages:            {string.Join(", ", attribute.Languages.Select(f => GetShortLanguageName(f)).OrderBy(f => f))}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
-                    WriteLine($"      FixableDiagnosticIds: {string.Join(", ", fixer.FixableDiagnosticIds.OrderBy(f => f))}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
-
-                    Write("      FixAllProvider:       ", ConsoleColor.DarkGray, Verbosity.Diagnostic);
-
-                    FixAllProvider fixAllProvider = fixer.GetFixAllProvider();
-
-                    if (fixAllProvider != null)
-                    {
-                        WriteLine($"{fixAllProvider.GetType().FullName} ({string.Join(", ", fixAllProvider.GetSupportedFixAllScopes().Select(f => f.ToString()).OrderBy(f => f))})", ConsoleColor.DarkGray, Verbosity.Diagnostic);
-                    }
-                    else
-                    {
-                        WriteLine("-", ConsoleColor.DarkGray, Verbosity.Diagnostic);
                     }
                 }
             }
