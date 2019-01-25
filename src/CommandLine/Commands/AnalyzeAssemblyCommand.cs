@@ -9,6 +9,7 @@ using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Roslynator.CommandLine.Xml;
 using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
@@ -62,21 +63,21 @@ namespace Roslynator.CommandLine
             if (ShouldWrite(Verbosity.Detailed)
                 && analyzerAssemblies.Length > 1)
             {
-                ImmutableArray<DiagnosticAnalyzer> analyzers = (!options.NoAnalyzers)
-                    ? analyzerAssemblies.SelectMany(f => f.AnalyzerAssembly.Analyzers).ToImmutableArray()
-                    : ImmutableArray<DiagnosticAnalyzer>.Empty;
-
-                ImmutableArray<CodeFixProvider> fixers = (!options.NoFixers)
-                    ? analyzerAssemblies.SelectMany(f => f.AnalyzerAssembly.Fixers).ToImmutableArray()
-                    : ImmutableArray<CodeFixProvider>.Empty;
+                var map = new DiagnosticMap(analyzerAssemblies.Select(f => f.AnalyzerAssembly));
 
                 WriteLine(Verbosity.Detailed);
-                WriteDiagnostics(analyzers, fixers, assemblyQualifiedName: true);
+                WriteDiagnostics(map, allProperties: true, useAssemblyQualifiedName: true);
             }
 
             WriteLine(Verbosity.Minimal);
             WriteLine($"{assemblies.Count} analyzer {((assemblies.Count == 1) ? "assembly" : "assemblies")} found", ConsoleColor.Green, Verbosity.Minimal);
             WriteLine(Verbosity.Minimal);
+
+            if (options.Output != null
+                && analyzerAssemblies.Length > 0)
+            {
+                AnalyzerAssemblyXmlSerializer.Serialize(analyzerAssemblies, options.Output);
+            }
 
             return CommandResult.Success;
         }
@@ -140,8 +141,10 @@ namespace Roslynator.CommandLine
                     WriteCodeFixProviders(analyzerAssembly.Fixers);
                 }
 
+                var map = new DiagnosticMap(analyzerAssembly);
+
                 WriteLine(Verbosity.Detailed);
-                WriteDiagnostics(analyzerAssembly.Analyzers, analyzerAssembly.Fixers);
+                WriteDiagnostics(map, allProperties: false, useAssemblyQualifiedName: false);
             }
         }
 
@@ -225,42 +228,19 @@ namespace Roslynator.CommandLine
         }
 
         private static void WriteDiagnostics(
-            ImmutableArray<DiagnosticAnalyzer> analyzers,
-            ImmutableArray<CodeFixProvider> fixers,
-            bool assemblyQualifiedName = false)
+            DiagnosticMap map,
+            bool allProperties = true,
+            bool useAssemblyQualifiedName = false)
         {
-            Dictionary<string, DiagnosticDescriptor> diagnosticIds = analyzers
-                .SelectMany(f => f.SupportedDiagnostics)
-                .Distinct(DiagnosticDescriptorComparer.Id)
-                .OrderBy(f => f, DiagnosticDescriptorComparer.Id)
-                .ToDictionary(f => f.Id, f => f);
-
-            foreach (CodeFixProvider fixer in fixers)
-            {
-                foreach (string diagnosticId in fixer.FixableDiagnosticIds)
-                {
-                    if (!diagnosticIds.ContainsKey(diagnosticId))
-                        diagnosticIds[diagnosticId] = null;
-                }
-            }
-
-            Dictionary<string, IEnumerable<DiagnosticAnalyzer>> analyzersById = analyzers
-                .SelectMany(analyzer => analyzer.SupportedDiagnostics.Select(descriptor => (analyzer, descriptor)))
-                .GroupBy(f => f.descriptor.Id)
-                .ToDictionary(g => g.Key, g => g.Select(f => f.analyzer).Distinct());
-
-            Dictionary<string, IEnumerable<CodeFixProvider>> fixersById = fixers
-                .SelectMany(fixer => fixer.FixableDiagnosticIds.Select(diagnosticId => (fixer, diagnosticId)))
-                .GroupBy(f => f.diagnosticId)
-                .ToDictionary(g => g.Key, g => g.Select(f => f.fixer).Distinct());
-
             WriteLine("  Diagnostics:", Verbosity.Detailed);
 
-            foreach (KeyValuePair<string, DiagnosticDescriptor> kvp in diagnosticIds.OrderBy(f => f.Key))
+            foreach (KeyValuePair<string, DiagnosticDescriptor> kvp in map.DiagnosticsById.OrderBy(f => f.Key))
             {
-                string diagnosticId = kvp.Key;
-                DiagnosticDescriptor descriptor = kvp.Value;
+                WriteDiagnostic(kvp.Key, kvp.Value);
+            }
 
+            void WriteDiagnostic(string diagnosticId, DiagnosticDescriptor descriptor)
+            {
                 if (descriptor == null)
                 {
                     WriteLine($"    {diagnosticId}", Verbosity.Detailed);
@@ -275,7 +255,8 @@ namespace Roslynator.CommandLine
 
                     WriteLine($"    {diagnosticId} {title}", Verbosity.Detailed);
 
-                    if (ShouldWrite(Verbosity.Diagnostic))
+                    if (allProperties
+                        && ShouldWrite(Verbosity.Diagnostic))
                     {
                         if (title != messageFormat)
                             WriteLine($"      MessageFormat:       {messageFormat}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
@@ -292,21 +273,23 @@ namespace Roslynator.CommandLine
                         if (!string.IsNullOrEmpty(descriptor.HelpLinkUri))
                             WriteLine($"      HelpLinkUri:         {descriptor.HelpLinkUri}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
-                        if (descriptor.CustomTags?.Any() == true)
-                            WriteLine($"      CustomTags:          {string.Join(", ", descriptor.CustomTags)}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                        string customTags = string.Join(", ", descriptor.CustomTags.OrderBy(f => f));
+
+                        if (!string.IsNullOrEmpty(customTags))
+                            WriteLine($"      CustomTags:          {customTags}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
                     }
                 }
 
                 if (ShouldWrite(Verbosity.Diagnostic))
                 {
-                    if (analyzersById.TryGetValue(diagnosticId, out IEnumerable<DiagnosticAnalyzer> analyzers2))
+                    if (map.AnalyzersById.TryGetValue(diagnosticId, out IEnumerable<DiagnosticAnalyzer> analyzers2))
                     {
                         Write("      DiagnosticAnalyzers: ", ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
                         WriteTypes(analyzers2.Select(f => f.GetType()));
                     }
 
-                    if (fixersById.TryGetValue(diagnosticId, out IEnumerable<CodeFixProvider> fixers2))
+                    if (map.FixersById.TryGetValue(diagnosticId, out IEnumerable<CodeFixProvider> fixers2))
                     {
                         Write("      CodeFixProviders:    ", ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
@@ -323,7 +306,7 @@ namespace Roslynator.CommandLine
                     {
                         while (true)
                         {
-                            string name = (assemblyQualifiedName) ? en.Current.AssemblyQualifiedName : en.Current.FullName;
+                            string name = (useAssemblyQualifiedName) ? en.Current.AssemblyQualifiedName : en.Current.FullName;
 
                             WriteLine(name, ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
