@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace Roslynator.CSharp.Analysis
 {
-    internal static class UseLoopStatementInsteadOfForEachMethodAnalysis
+    internal static class UseForEachInsteadOfForEachMethodAnalysis
     {
         public static void AnalyzeList(SyntaxNodeAnalysisContext context, in SimpleMemberInvocationExpressionInfo invocationInfo)
         {
@@ -58,7 +58,7 @@ namespace Roslynator.CSharp.Analysis
             if (!parameter.Type.HasMetadataName(MetadataNames.System_Action_1))
                 return;
 
-            DiagnosticHelpers.ReportDiagnostic(context, DiagnosticDescriptors.UseLoopStatementInsteadOfForEachMethod, invocationExpression);
+            DiagnosticHelpers.ReportDiagnostic(context, DiagnosticDescriptors.UseForEachInsteadOfForEachMethod, invocationExpression);
         }
 
         public static void AnalyzeArray(SyntaxNodeAnalysisContext context, in SimpleMemberInvocationExpressionInfo invocationInfo)
@@ -109,7 +109,7 @@ namespace Roslynator.CSharp.Analysis
             if (!parameters[1].Type.HasMetadataName(MetadataNames.System_Action_1))
                 return;
 
-            DiagnosticHelpers.ReportDiagnostic(context, DiagnosticDescriptors.UseLoopStatementInsteadOfForEachMethod, invocationExpression);
+            DiagnosticHelpers.ReportDiagnostic(context, DiagnosticDescriptors.UseForEachInsteadOfForEachMethod, invocationExpression);
         }
     }
 }

@@ -2570,15 +2570,15 @@ namespace Roslynator.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS1241</summary>
-        public static readonly DiagnosticDescriptor UseLoopStatementInsteadOfForEachMethod = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.UseLoopStatementInsteadOfForEachMethod, 
-            title:              "Use loop statement instead of 'ForEach' method.", 
-            messageFormat:      "Use loop statement instead of 'ForEach' method.", 
+        public static readonly DiagnosticDescriptor UseForEachInsteadOfForEachMethod = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.UseForEachInsteadOfForEachMethod, 
+            title:              "Use 'foreach' instead of 'ForEach' method.", 
+            messageFormat:      "Use 'foreach' instead of 'ForEach' method.", 
             category:           DiagnosticCategories.Readability, 
             defaultSeverity:    DiagnosticSeverity.Hidden, 
             isEnabledByDefault: true, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseLoopStatementInsteadOfForEachMethod}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseForEachInsteadOfForEachMethod}", 
             customTags:         Array.Empty<string>());
 
     }

@@ -40,7 +40,7 @@ namespace Roslynator.CSharp.Analysis
                     DiagnosticDescriptors.SimplifyLogicalNegation,
                     DiagnosticDescriptors.CallStringConcatInsteadOfStringJoin,
                     DiagnosticDescriptors.UseCoalesceExpression,
-                    DiagnosticDescriptors.UseLoopStatementInsteadOfForEachMethod);
+                    DiagnosticDescriptors.UseForEachInsteadOfForEachMethod);
             }
         }
 
@@ -233,8 +233,8 @@ namespace Roslynator.CSharp.Analysis
                                 }
                             case "ForEach":
                                 {
-                                    if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.UseLoopStatementInsteadOfForEachMethod))
-                                        UseLoopStatementInsteadOfForEachMethodAnalysis.AnalyzeList(context, invocationInfo);
+                                    if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.UseForEachInsteadOfForEachMethod))
+                                        UseForEachInsteadOfForEachMethodAnalysis.AnalyzeList(context, invocationInfo);
 
                                     break;
                                 }
@@ -323,8 +323,8 @@ namespace Roslynator.CSharp.Analysis
                                 }
                             case "ForEach":
                                 {
-                                    if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.UseLoopStatementInsteadOfForEachMethod))
-                                        UseLoopStatementInsteadOfForEachMethodAnalysis.AnalyzeArray(context, invocationInfo);
+                                    if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.UseForEachInsteadOfForEachMethod))
+                                        UseForEachInsteadOfForEachMethodAnalysis.AnalyzeArray(context, invocationInfo);
 
                                     break;
                                 }

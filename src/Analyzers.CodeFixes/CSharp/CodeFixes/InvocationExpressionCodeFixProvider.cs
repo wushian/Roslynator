@@ -37,7 +37,7 @@ namespace Roslynator.CSharp.CodeFixes
                     DiagnosticIdentifiers.CallDebugFailInsteadOfDebugAssert,
                     DiagnosticIdentifiers.CallExtensionMethodAsInstanceMethod,
                     DiagnosticIdentifiers.CallThenByInsteadOfOrderBy,
-                    DiagnosticIdentifiers.UseLoopStatementInsteadOfForEachMethod);
+                    DiagnosticIdentifiers.UseForEachInsteadOfForEachMethod);
             }
         }
 
@@ -152,7 +152,7 @@ namespace Roslynator.CSharp.CodeFixes
                             context.RegisterCodeFix(codeAction, diagnostic);
                             break;
                         }
-                    case DiagnosticIdentifiers.UseLoopStatementInsteadOfForEachMethod:
+                    case DiagnosticIdentifiers.UseForEachInsteadOfForEachMethod:
                         {
                             CodeAction codeAction = CodeAction.Create(
                                 "Convert to 'foreach'",

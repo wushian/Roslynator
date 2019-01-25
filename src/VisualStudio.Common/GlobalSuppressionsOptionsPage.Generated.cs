@@ -14,7 +14,7 @@ namespace Roslynator.VisualStudio
             get;
         }
 
-        = DiagnosticIdentifiers.UseLoopStatementInsteadOfForEachMethod;
+        = DiagnosticIdentifiers.UseForEachInsteadOfForEachMethod;
         protected override void Fill(ICollection<BaseModel> analyzers)
         {
             analyzers.Clear();
@@ -227,7 +227,7 @@ namespace Roslynator.VisualStudio
             analyzers.Add(new BaseModel(DiagnosticIdentifiers.OrderElementsInDocumentationComment, "Order elements in documentation comment.", !IsEnabled(DiagnosticIdentifiers.OrderElementsInDocumentationComment)));
             analyzers.Add(new BaseModel(DiagnosticIdentifiers.UseShortCircuitingOperator, "Use short-circuiting operator.", !IsEnabled(DiagnosticIdentifiers.UseShortCircuitingOperator)));
             analyzers.Add(new BaseModel(DiagnosticIdentifiers.DuplicateEnumValue, "Duplicate enum value.", !IsEnabled(DiagnosticIdentifiers.DuplicateEnumValue)));
-            analyzers.Add(new BaseModel(DiagnosticIdentifiers.UseLoopStatementInsteadOfForEachMethod, "Use loop statement instead of 'ForEach' method.", !IsEnabled(DiagnosticIdentifiers.UseLoopStatementInsteadOfForEachMethod)));
+            analyzers.Add(new BaseModel(DiagnosticIdentifiers.UseForEachInsteadOfForEachMethod, "Use 'foreach' instead of 'ForEach' method.", !IsEnabled(DiagnosticIdentifiers.UseForEachInsteadOfForEachMethod)));
         }
     }
 }

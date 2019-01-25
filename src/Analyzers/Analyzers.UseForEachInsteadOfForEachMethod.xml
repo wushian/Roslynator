@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Analyzers>
-  <Analyzer Identifier="UseLoopStatementInsteadOfForEachMethod" IsDevelopment="true">
+  <Analyzer Identifier="UseForEachInsteadOfForEachMethod" IsDevelopment="true">
     <Id>RCS1241</Id>
-    <Title>Use loop statement instead of 'ForEach' method.</Title>
-    <MessageFormat>Use loop statement instead of 'ForEach' method.</MessageFormat>
+    <Title>Use 'foreach' instead of 'ForEach' method.</Title>
+    <MessageFormat>Use 'foreach' instead of 'ForEach' method.</MessageFormat>
     <Category>Readability</Category>
     <DefaultSeverity>Hidden</DefaultSeverity>
     <IsEnabledByDefault>true</IsEnabledByDefault>
