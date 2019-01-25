@@ -3,14 +3,19 @@
 using System;
 using System.Collections.Immutable;
 using System.Composition;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Roslynator.CodeFixes;
 using Roslynator.CSharp.Refactorings;
 using Roslynator.CSharp.Syntax;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static Roslynator.CSharp.CSharpFactory;
 
 namespace Roslynator.CSharp.CodeFixes
 {
@@ -31,7 +36,8 @@ namespace Roslynator.CSharp.CodeFixes
                     DiagnosticIdentifiers.CallStringConcatInsteadOfStringJoin,
                     DiagnosticIdentifiers.CallDebugFailInsteadOfDebugAssert,
                     DiagnosticIdentifiers.CallExtensionMethodAsInstanceMethod,
-                    DiagnosticIdentifiers.CallThenByInsteadOfOrderBy);
+                    DiagnosticIdentifiers.CallThenByInsteadOfOrderBy,
+                    DiagnosticIdentifiers.UseLoopStatementInsteadOfForEachMethod);
             }
         }
 
@@ -146,8 +152,102 @@ namespace Roslynator.CSharp.CodeFixes
                             context.RegisterCodeFix(codeAction, diagnostic);
                             break;
                         }
+                    case DiagnosticIdentifiers.UseLoopStatementInsteadOfForEachMethod:
+                        {
+                            CodeAction codeAction = CodeAction.Create(
+                                "Convert to 'foreach'",
+                                ct => ConvertForEachMethodToForEachAsync(context.Document, invocation, ct),
+                                GetEquivalenceKey(diagnostic));
+
+                            context.RegisterCodeFix(codeAction, diagnostic);
+                            break;
+                        }
                 }
             }
+        }
+
+        private static async Task<Document> ConvertForEachMethodToForEachAsync(
+            Document document,
+            InvocationExpressionSyntax invocationExpression,
+            CancellationToken cancellationToken)
+        {
+            SimpleMemberInvocationExpressionInfo invocationInfo = SyntaxInfo.SimpleMemberInvocationExpressionInfo(invocationExpression);
+
+            SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+
+            ISymbol symbol = semanticModel.GetSymbol(invocationExpression, cancellationToken);
+
+            ExpressionSyntax collectionExpression = null;
+            ExpressionSyntax anonymousMethodExpression = null;
+
+            if (symbol.ContainingType.SpecialType == SpecialType.System_Array)
+            {
+                collectionExpression = invocationInfo.Arguments[0]
+                    .Expression
+                    .WalkDownParentheses();
+
+                anonymousMethodExpression = invocationInfo.Arguments[1]
+                    .Expression
+                    .WalkDownParentheses();
+            }
+            else if (symbol.ContainingType.OriginalDefinition.HasMetadataName(MetadataNames.System_Collections_Generic_List_T))
+            {
+                collectionExpression = invocationInfo.Expression;
+
+                anonymousMethodExpression = invocationInfo.Arguments[0]
+                    .Expression
+                    .WalkDownParentheses();
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
+
+            SyntaxToken identifier = default;
+            BlockSyntax block = null;
+
+            switch (anonymousMethodExpression.Kind())
+            {
+                case SyntaxKind.SimpleLambdaExpression:
+                    {
+                        var lambda = (SimpleLambdaExpressionSyntax)anonymousMethodExpression;
+
+                        identifier = lambda.Parameter.Identifier;
+
+                        block = lambda.Body as BlockSyntax ?? Block(ExpressionStatement((ExpressionSyntax)lambda.Body));
+                        break;
+                    }
+                case SyntaxKind.ParenthesizedLambdaExpression:
+                    {
+                        var lambda = (ParenthesizedLambdaExpressionSyntax)anonymousMethodExpression;
+
+                        identifier = lambda.ParameterList.Parameters.Single().Identifier;
+
+                        block = lambda.Body as BlockSyntax ?? Block(ExpressionStatement((ExpressionSyntax)lambda.Body));
+                        break;
+                    }
+                case SyntaxKind.AnonymousMethodExpression:
+                    {
+                        var anonymousMethod = (AnonymousMethodExpressionSyntax)anonymousMethodExpression;
+
+                        identifier = anonymousMethod.ParameterList.Parameters.Single().Identifier;
+
+                        block = anonymousMethod.Block;
+                        break;
+                    }
+                default:
+                    {
+                        throw new InvalidOperationException();
+                    }
+            }
+
+            var expressionStatement = (ExpressionStatementSyntax)invocationExpression.Parent;
+
+            ForEachStatementSyntax forEachStatement = ForEachStatement(VarType(), identifier, collectionExpression, block)
+                .WithTriviaFrom(expressionStatement)
+                .WithFormatterAnnotation();
+
+            return await document.ReplaceNodeAsync(expressionStatement, forEachStatement, cancellationToken).ConfigureAwait(false);
         }
     }
 }

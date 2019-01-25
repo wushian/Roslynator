@@ -2569,5 +2569,17 @@ namespace Roslynator.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.DuplicateEnumValue}", 
             customTags:         Array.Empty<string>());
 
+        /// <summary>RCS1241</summary>
+        public static readonly DiagnosticDescriptor UseLoopStatementInsteadOfForEachMethod = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.UseLoopStatementInsteadOfForEachMethod, 
+            title:              "Use loop statement instead of 'ForEach' method.", 
+            messageFormat:      "Use loop statement instead of 'ForEach' method.", 
+            category:           DiagnosticCategories.Readability, 
+            defaultSeverity:    DiagnosticSeverity.Hidden, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseLoopStatementInsteadOfForEachMethod}", 
+            customTags:         Array.Empty<string>());
+
     }
 }

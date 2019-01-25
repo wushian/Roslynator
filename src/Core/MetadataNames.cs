@@ -4,6 +4,7 @@ namespace Roslynator
 {
     internal static class MetadataNames
     {
+        public static readonly MetadataName System_Action_1 = MetadataName.Parse("System.Action`1");
         public static readonly MetadataName System_ArgumentException = MetadataName.Parse("System.ArgumentException");
         public static readonly MetadataName System_ArgumentNullException = MetadataName.Parse("System.ArgumentNullException");
         public static readonly MetadataName System_AttributeUsageAttribute = MetadataName.Parse("System.AttributeUsageAttribute");

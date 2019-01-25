@@ -39,7 +39,8 @@ namespace Roslynator.CSharp.Analysis
                     DiagnosticDescriptors.RemoveRedundantCast,
                     DiagnosticDescriptors.SimplifyLogicalNegation,
                     DiagnosticDescriptors.CallStringConcatInsteadOfStringJoin,
-                    DiagnosticDescriptors.UseCoalesceExpression);
+                    DiagnosticDescriptors.UseCoalesceExpression,
+                    DiagnosticDescriptors.UseLoopStatementInsteadOfForEachMethod);
             }
         }
 
@@ -230,6 +231,13 @@ namespace Roslynator.CSharp.Analysis
 
                                     break;
                                 }
+                            case "ForEach":
+                                {
+                                    if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.UseLoopStatementInsteadOfForEachMethod))
+                                        UseLoopStatementInsteadOfForEachMethodAnalysis.AnalyzeList(context, invocationInfo);
+
+                                    break;
+                                }
                             case "GetValueOrDefault":
                                 {
                                     if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.UseCoalesceExpression)
@@ -310,6 +318,13 @@ namespace Roslynator.CSharp.Analysis
                                 {
                                     if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.CallThenByInsteadOfOrderBy))
                                         CallThenByInsteadOfOrderByAnalysis.Analyze(context, invocationInfo);
+
+                                    break;
+                                }
+                            case "ForEach":
+                                {
+                                    if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.UseLoopStatementInsteadOfForEachMethod))
+                                        UseLoopStatementInsteadOfForEachMethodAnalysis.AnalyzeArray(context, invocationInfo);
 
                                     break;
                                 }

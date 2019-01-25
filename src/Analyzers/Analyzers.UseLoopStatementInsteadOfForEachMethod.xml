@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Analyzers>
+  <Analyzer Identifier="UseLoopStatementInsteadOfForEachMethod" IsDevelopment="true">
+    <Id>RCS1241</Id>
+    <Title>Use loop statement instead of 'ForEach' method.</Title>
+    <MessageFormat>Use loop statement instead of 'ForEach' method.</MessageFormat>
+    <Category>Readability</Category>
+    <DefaultSeverity>Hidden</DefaultSeverity>
+    <IsEnabledByDefault>true</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Summary></Summary>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[list.ForEach(item => M(item));]]></Before>
+        <After><![CDATA[foreach var item in list
+{
+    M(item);
+}]]></After>
+      </Sample>
+      <Sample>
+        <Before><![CDATA[Array.ForEach(items, item => M(item));]]></Before>
+        <After><![CDATA[for (int i = 0; i < items.Length; i++)
+{
+    M(items[i]);
+}]]></After>
+      </Sample>
+    </Samples>
+    <Remarks></Remarks>
+    <Links>
+      <Link>
+        <Url></Url>
+        <Text></Text>
+      </Link>
+    </Links>
+  </Analyzer>
+</Analyzers>
