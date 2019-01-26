@@ -151,6 +151,9 @@ namespace Roslynator
 
         public static void WriteUsedAnalyzers(ImmutableArray<DiagnosticAnalyzer> analyzers, ConsoleColor color, Verbosity verbosity)
         {
+            if (!analyzers.Any())
+                return;
+
             if (!ShouldWrite(verbosity))
                 return;
 

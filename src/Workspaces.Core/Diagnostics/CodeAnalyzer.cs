@@ -102,7 +102,9 @@ namespace Roslynator.Diagnostics
             if (!analyzers.Any())
             {
                 WriteLine($"  No analyzers found to analyze '{project.Name}'", ConsoleColor.DarkGray, Verbosity.Normal);
-                return default;
+
+                if (Options.IgnoreCompilerDiagnostics)
+                    return default;
             }
 
             LogHelpers.WriteUsedAnalyzers(analyzers, ConsoleColor.DarkGray, Verbosity.Diagnostic);
@@ -117,28 +119,32 @@ namespace Roslynator.Diagnostics
 
             compilerDiagnostics = FilterDiagnostics(compilerDiagnostics, cancellationToken).ToImmutableArray();
 
-            var compilationWithAnalyzersOptions = new CompilationWithAnalyzersOptions(
-                options: default(AnalyzerOptions),
-                onAnalyzerException: default(Action<Exception, DiagnosticAnalyzer, Diagnostic>),
-                concurrentAnalysis: Options.ConcurrentAnalysis,
-                logAnalyzerExecutionTime: Options.LogAnalyzerExecutionTime,
-                reportSuppressedDiagnostics: Options.ReportSuppressedDiagnostics);
+            ImmutableArray<Diagnostic> diagnostics = ImmutableArray<Diagnostic>.Empty;
 
-            var compilationWithAnalyzers = new CompilationWithAnalyzers(compilation, analyzers, compilationWithAnalyzersOptions);
-
-            ImmutableArray<Diagnostic> diagnostics = default;
             ImmutableDictionary<DiagnosticAnalyzer, AnalyzerTelemetryInfo> telemetry = ImmutableDictionary<DiagnosticAnalyzer, AnalyzerTelemetryInfo>.Empty;
 
-            if (Options.LogAnalyzerExecutionTime)
+            if (analyzers.Any())
             {
-                AnalysisResult analysisResult = await compilationWithAnalyzers.GetAnalysisResultAsync(cancellationToken).ConfigureAwait(false);
+                var compilationWithAnalyzersOptions = new CompilationWithAnalyzersOptions(
+                    options: default(AnalyzerOptions),
+                    onAnalyzerException: default(Action<Exception, DiagnosticAnalyzer, Diagnostic>),
+                    concurrentAnalysis: Options.ConcurrentAnalysis,
+                    logAnalyzerExecutionTime: Options.LogAnalyzerExecutionTime,
+                    reportSuppressedDiagnostics: Options.ReportSuppressedDiagnostics);
 
-                diagnostics = analysisResult.GetAllDiagnostics();
-                telemetry = analysisResult.AnalyzerTelemetryInfo;
-            }
-            else
-            {
-                diagnostics = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
+                var compilationWithAnalyzers = new CompilationWithAnalyzers(compilation, analyzers, compilationWithAnalyzersOptions);
+
+                if (Options.LogAnalyzerExecutionTime)
+                {
+                    AnalysisResult analysisResult = await compilationWithAnalyzers.GetAnalysisResultAsync(cancellationToken).ConfigureAwait(false);
+
+                    diagnostics = analysisResult.GetAllDiagnostics();
+                    telemetry = analysisResult.AnalyzerTelemetryInfo;
+                }
+                else
+                {
+                    diagnostics = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(cancellationToken).ConfigureAwait(false);
+                }
             }
 
             string projectDirectoryPath = Path.GetDirectoryName(project.FilePath);
