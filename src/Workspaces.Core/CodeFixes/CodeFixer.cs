@@ -116,7 +116,7 @@ namespace Roslynator.CodeFixes
 
         public async Task<ProjectFixResult> FixProjectAsync(Project project, CancellationToken cancellationToken = default)
         {
-            (ImmutableArray<DiagnosticAnalyzer> analyzers, ImmutableArray<CodeFixProvider> fixers) = CodeAnalysisUtilities.GetAnalyzersAndFixers(
+            (ImmutableArray<DiagnosticAnalyzer> analyzers, ImmutableArray<CodeFixProvider> fixers) = CodeAnalysisHelpers.GetAnalyzersAndFixers(
                 project: project,
                 analyzerAssemblies: _analyzerAssemblies,
                 analyzerReferences: _analyzerReferences,
