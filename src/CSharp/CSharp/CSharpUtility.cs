@@ -12,10 +12,6 @@ namespace Roslynator.CSharp
 {
     internal static class CSharpUtility
     {
-        private static readonly SymbolDisplayFormat _symbolDisplayFormat = new SymbolDisplayFormat(
-            genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
-            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces);
-
         public static string GetCountOrLengthPropertyName(
             ExpressionSyntax expression,
             SemanticModel semanticModel,
@@ -218,34 +214,6 @@ namespace Roslynator.CSharp
             }
 
             return false;
-        }
-
-        public static NameSyntax EnsureFullyQualifiedName(
-            NameSyntax name,
-            SemanticModel semanticModel,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ISymbol symbol = semanticModel.GetSymbol(name, cancellationToken);
-
-            if (symbol != null)
-            {
-                if (semanticModel.GetAliasInfo(name, cancellationToken) != null
-                    || !symbol.ContainingNamespace.IsGlobalNamespace)
-                {
-                    SymbolKind kind = symbol.Kind;
-
-                    if (kind == SymbolKind.Namespace)
-                    {
-                        return SyntaxFactory.ParseName(symbol.ToString()).WithTriviaFrom(name);
-                    }
-                    else if (kind == SymbolKind.NamedType)
-                    {
-                        return (NameSyntax)((INamedTypeSymbol)symbol).ToTypeSyntax(_symbolDisplayFormat).WithTriviaFrom(name);
-                    }
-                }
-            }
-
-            return name;
         }
 
         public static bool IsNameOfExpression(
@@ -715,6 +683,60 @@ namespace Roslynator.CSharp
             }
 
             return false;
+        }
+
+        public static SeparatedSyntaxList<ParameterSyntax> GetParameters(SyntaxNode declaration)
+        {
+            return GetParameterList(declaration)?.Parameters ?? default;
+        }
+
+        public static BaseParameterListSyntax GetParameterList(SyntaxNode declaration)
+        {
+            switch (declaration.Kind())
+            {
+                case SyntaxKind.MethodDeclaration:
+                    return ((MethodDeclarationSyntax)declaration).ParameterList;
+                case SyntaxKind.ConstructorDeclaration:
+                    return ((ConstructorDeclarationSyntax)declaration).ParameterList;
+                case SyntaxKind.OperatorDeclaration:
+                    return ((OperatorDeclarationSyntax)declaration).ParameterList;
+                case SyntaxKind.ConversionOperatorDeclaration:
+                    return ((ConversionOperatorDeclarationSyntax)declaration).ParameterList;
+                case SyntaxKind.DelegateDeclaration:
+                    return ((DelegateDeclarationSyntax)declaration).ParameterList;
+                case SyntaxKind.IndexerDeclaration:
+                    return ((IndexerDeclarationSyntax)declaration).ParameterList;
+                case SyntaxKind.LocalFunctionStatement:
+                    return ((LocalFunctionStatementSyntax)declaration).ParameterList;
+                default:
+                    return null;
+            }
+        }
+
+        public static SeparatedSyntaxList<TypeParameterSyntax> GetTypeParameters(SyntaxNode declaration)
+        {
+            return GetTypeParameterList(declaration)?.Parameters ?? default;
+        }
+
+        public static TypeParameterListSyntax GetTypeParameterList(SyntaxNode declaration)
+        {
+            switch (declaration.Kind())
+            {
+                case SyntaxKind.ClassDeclaration:
+                    return ((ClassDeclarationSyntax)declaration).TypeParameterList;
+                case SyntaxKind.InterfaceDeclaration:
+                    return ((InterfaceDeclarationSyntax)declaration).TypeParameterList;
+                case SyntaxKind.StructDeclaration:
+                    return ((StructDeclarationSyntax)declaration).TypeParameterList;
+                case SyntaxKind.MethodDeclaration:
+                    return ((MethodDeclarationSyntax)declaration).TypeParameterList;
+                case SyntaxKind.DelegateDeclaration:
+                    return ((DelegateDeclarationSyntax)declaration).TypeParameterList;
+                case SyntaxKind.LocalFunctionStatement:
+                    return ((LocalFunctionStatementSyntax)declaration).TypeParameterList;
+                default:
+                    return null;
+            }
         }
     }
 }
