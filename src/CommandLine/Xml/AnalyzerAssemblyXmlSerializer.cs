@@ -23,7 +23,7 @@ namespace Roslynator.CommandLine.Xml
         {
             var analyzerAssemblyElements = new XElement("AnalyzerAssemblies", analyzerAssemblies.Select(f => SerializeAnalyzerAssembly(f)));
 
-            var map = new DiagnosticMap(analyzerAssemblies.Select(f => f.AnalyzerAssembly));
+            DiagnosticMap map = DiagnosticMap.Create(analyzerAssemblies.Select(f => f.AnalyzerAssembly));
 
             XElement diagnosticsElement = SerializeDiagnostics(
                 map,
@@ -39,8 +39,7 @@ namespace Roslynator.CommandLine.Xml
         {
             AnalyzerAssembly analyzerAssembly = analyzerAssemblyInfo.AnalyzerAssembly;
 
-            ImmutableArray<DiagnosticAnalyzer> analyzers = analyzerAssembly.Analyzers;
-            ImmutableArray<CodeFixProvider> fixers = analyzerAssembly.Fixers;
+            DiagnosticMap map = DiagnosticMap.Create(analyzerAssembly);
 
             return new XElement(
                 "AnalyzerAssembly",
@@ -49,22 +48,22 @@ namespace Roslynator.CommandLine.Xml
                 new XElement("Summary", SerializeSummary()),
                 new XElement("Analyzers", SerializeDiagnosticAnalyzers()),
                 new XElement("Fixers", SerializeCodeFixProviders()),
-                SerializeDiagnostics(new DiagnosticMap(analyzerAssembly), allProperties: false, useAssemblyQualifiedName: false));
+                SerializeDiagnostics(map, allProperties: false, useAssemblyQualifiedName: false));
 
             IEnumerable<XElement> SerializeSummary()
             {
                 if (analyzerAssembly.HasAnalyzers)
                 {
                     yield return new XElement("Analyzers",
-                        new XAttribute("Count", analyzers.Length),
+                        new XAttribute("Count", map.Analyzers.Length),
                         new XElement("Languages",
                             analyzerAssembly.AnalyzersByLanguage
                                 .OrderBy(f => f.Key)
                                 .Select(f => new XElement("Language", new XAttribute("Name", f.Key), new XAttribute("Count", f.Value.Length)))),
                         new XElement("SupportedDiagnostics",
-                        new XAttribute("Count", analyzerAssembly.SupportedDiagnostics.Length),
+                        new XAttribute("Count", map.SupportedDiagnostics.Length),
                         new XElement("Prefixes",
-                            analyzerAssembly.SupportedDiagnosticsByPrefix
+                            map.SupportedDiagnosticsByPrefix
                                 .OrderBy(f => f.Key)
                                 .Select(f => new XElement("Prefix", new XAttribute("Value", f.Key), new XAttribute("Count", f.Value.Length))))));
                 }
@@ -72,15 +71,15 @@ namespace Roslynator.CommandLine.Xml
                 if (analyzerAssembly.HasFixers)
                 {
                     yield return new XElement("Fixers",
-                        new XAttribute("Count", fixers.Length),
+                        new XAttribute("Count", map.Fixers.Length),
                         new XElement("Languages",
                             analyzerAssembly.FixersByLanguage
                                 .OrderBy(f => f.Key)
                                 .Select(f => new XElement("Language", new XAttribute("Name", f.Key), new XAttribute("Count", f.Value.Length)))),
                         new XElement("FixableDiagnostics",
-                        new XAttribute("Count", analyzerAssembly.FixableDiagnosticIds.Length),
+                        new XAttribute("Count", map.FixableDiagnosticIds.Length),
                         new XElement("Prefixes",
-                            analyzerAssembly.FixableDiagnosticIdsByPrefix
+                            map.FixableDiagnosticIdsByPrefix
                                 .OrderBy(f => f.Key)
                                 .Select(f => new XElement("Prefix", new XAttribute("Value", f.Key), new XAttribute("Count", f.Value.Length))))));
                 }
@@ -88,7 +87,7 @@ namespace Roslynator.CommandLine.Xml
 
             IEnumerable<XElement> SerializeDiagnosticAnalyzers()
             {
-                foreach (DiagnosticAnalyzer analyzer in analyzers.OrderBy(f => f.GetType(), TypeComparer.NamespaceThenName))
+                foreach (DiagnosticAnalyzer analyzer in map.Analyzers.OrderBy(f => f.GetType(), TypeComparer.NamespaceThenName))
                 {
                     Type type = analyzer.GetType();
 
@@ -108,7 +107,7 @@ namespace Roslynator.CommandLine.Xml
 
             IEnumerable<XElement> SerializeCodeFixProviders()
             {
-                foreach (CodeFixProvider fixer in fixers.OrderBy(f => f.GetType(), TypeComparer.NamespaceThenName))
+                foreach (CodeFixProvider fixer in map.Fixers.OrderBy(f => f.GetType(), TypeComparer.NamespaceThenName))
                 {
                     Type type = fixer.GetType();
 
