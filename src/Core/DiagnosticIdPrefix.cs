@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using static Roslynator.WellKnownDiagnosticIdPrefixes;
 
 namespace Roslynator
 {
@@ -21,74 +22,105 @@ namespace Roslynator
             {
                 case 'A':
                     {
-                        if (HasPrefix("Async"))
+                        if (HasPrefix(AD))
                         {
-                            return "Async";
+                            return AD;
+                        }
+                        else if (HasPrefix(Async))
+                        {
+                            return Async;
+                        }
+
+                        break;
+                    }
+                case 'B':
+                    {
+                        if (HasPrefix(BC))
+                        {
+                            return BC;
                         }
 
                         break;
                     }
                 case 'C':
                     {
-                        if (HasPrefix("CA"))
+                        if (HasPrefix(CA))
                         {
-                            return "CA";
+                            return CA;
                         }
-                        else if (HasPrefix("CC"))
+                        else if (HasPrefix(CC))
                         {
-                            return "CC";
+                            return CC;
                         }
-                        else if (HasPrefix("CS"))
+                        else if (HasPrefix(CS))
                         {
-                            return "CS";
+                            return CS;
+                        }
+
+                        break;
+                    }
+                case 'E':
+                    {
+                        if (HasPrefix(ENC))
+                        {
+                            return ENC;
+                        }
+
+                        break;
+                    }
+                case 'I':
+                    {
+                        if (HasPrefix(IDE))
+                        {
+                            return IDE;
                         }
 
                         break;
                     }
                 case 'R':
                     {
-                        if (HasPrefix("RS"))
+                        if (HasPrefix(RCS))
                         {
-                            return "RS";
+                            return RCS;
                         }
-                        else if (HasPrefix("RCS"))
+                        else if (HasPrefix(RECS))
                         {
-                            return "RCS";
+                            return RECS;
                         }
-                        else if (HasPrefix("RECS"))
+                        else if (HasPrefix(REVB))
                         {
-                            return "RECS";
+                            return REVB;
                         }
-                        else if (HasPrefix("REVB"))
+                        else if (HasPrefix(RS))
                         {
-                            return "REVB";
+                            return RS;
                         }
 
                         break;
                     }
                 case 'U':
                     {
-                        if (HasPrefix("U2U"))
+                        if (HasPrefix(U2U))
                         {
-                            return "U2U";
+                            return U2U;
                         }
 
                         break;
                     }
                 case 'V':
                     {
-                        if (HasPrefix("VB"))
+                        if (HasPrefix(VB))
                         {
-                            return "VB";
+                            return VB;
                         }
 
                         break;
                     }
                 case 'x':
                     {
-                        if (HasPrefix("xUnit"))
+                        if (HasPrefix(xUnit))
                         {
-                            return "xUnit";
+                            return xUnit;
                         }
 
                         break;
@@ -99,7 +131,14 @@ namespace Roslynator
 
             string prefix = id.Substring(0, prefixLength);
 
-            Debug.Fail((prefix.Length > 0) ? prefix : id);
+            if (prefix.Length > 0)
+            {
+                Debug.Fail($"Unknown diagnostic id prefix: {prefix}");
+            }
+            else
+            {
+                Debug.Assert(prefix != "RemoveUnnecessaryImportsFixable", $"Unknown diagnostic id: {id}");
+            }
 
             return prefix;
 
