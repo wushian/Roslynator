@@ -5,10 +5,13 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.FindSymbols;
+using Microsoft.CodeAnalysis.Text;
+using Roslynator.Text;
 using static Roslynator.Logger;
 
 namespace Roslynator.FindSymbols
@@ -18,7 +21,6 @@ namespace Roslynator.FindSymbols
         public static async Task<ImmutableArray<UnusedSymbolInfo>> FindUnusedSymbolsAsync(
             Project project,
             Func<ISymbol, bool> predicate = null,
-            IImmutableSet<ISymbol> ignoredSymbols = null,
             IImmutableSet<Document> documents = null,
             CancellationToken cancellationToken = default)
         {
@@ -28,7 +30,6 @@ namespace Roslynator.FindSymbols
                 project,
                 compilation,
                 predicate,
-                ignoredSymbols,
                 documents,
                 cancellationToken).ConfigureAwait(false);
         }
@@ -37,7 +38,6 @@ namespace Roslynator.FindSymbols
             Project project,
             Compilation compilation,
             Func<ISymbol, bool> predicate = null,
-            IImmutableSet<ISymbol> ignoredSymbols = null,
             IImmutableSet<Document> documents = null,
             CancellationToken cancellationToken = default)
         {
@@ -58,10 +58,11 @@ namespace Roslynator.FindSymbols
                     if (symbol.Kind != SymbolKind.Namespace
                         && !symbol.IsImplicitlyDeclared
                         && !symbol.IsOverride
-                        && (predicate == null || predicate(symbol))
                         && IsAnalyzable(symbol)
-                        && ignoredSymbols?.Contains(symbol) != true)
+                        && (predicate == null || predicate(symbol)))
                     {
+                        WriteLine($"Analyze '{symbol}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+
                         isUnused = await IsUnusedSymbolAsync(symbol, project.Solution, documents, cancellationToken).ConfigureAwait(false);
 
                         if (isUnused)
@@ -69,8 +70,8 @@ namespace Roslynator.FindSymbols
                             string id = symbol.GetDocumentationCommentId();
 
                             WriteLine($"  {GetUnusedSymbolKind(symbol).ToString()} {symbol.ToDisplayString()}", ConsoleColor.Yellow, Verbosity.Normal);
-                            WriteLine($"    {symbol.GetSyntax(cancellationToken).SyntaxTree.FilePath}", ConsoleColor.DarkGray, Verbosity.Detailed);
-                            WriteLine($"    {id}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                            WriteLine($"    Location: {FormatLocation(symbol.Locations[0])}", ConsoleColor.DarkGray, Verbosity.Detailed);
+                            WriteLine($"    Id:       {id}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
                             var unusedSymbolInfo = new UnusedSymbolInfo(symbol, id, project.Id);
 
@@ -382,6 +383,38 @@ namespace Roslynator.FindSymbols
 
                 return false;
             }
+        }
+
+        private static string FormatLocation(Location location)
+        {
+            StringBuilder sb = StringBuilderCache.GetInstance();
+
+            switch (location.Kind)
+            {
+                case LocationKind.SourceFile:
+                case LocationKind.XmlFile:
+                case LocationKind.ExternalFile:
+                    {
+                        FileLinePositionSpan span = location.GetMappedLineSpan();
+
+                        if (span.IsValid)
+                        {
+                            sb.Append(span.Path);
+
+                            LinePosition linePosition = span.Span.Start;
+
+                            sb.Append('(');
+                            sb.Append(linePosition.Line + 1);
+                            sb.Append(',');
+                            sb.Append(linePosition.Character + 1);
+                            sb.Append("): ");
+                        }
+
+                        break;
+                    }
+            }
+
+            return StringBuilderCache.GetStringAndFree(sb);
         }
     }
 }

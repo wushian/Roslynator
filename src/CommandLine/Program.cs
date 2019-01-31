@@ -185,7 +185,15 @@ namespace Roslynator.CommandLine
             if (!options.TryGetVisibility(Visibility.Internal, out Visibility visibility))
                 return 1;
 
-            var command = new AnalyzeUnusedCommand(options, visibility, unusedSymbolKinds, language);
+            if (!TryParseMetadataNames(options.IgnoreAttributes, out ImmutableArray<MetadataName> ignoredAttributes))
+                return 1;
+
+            var command = new AnalyzeUnusedCommand(
+                options: options,
+                visibility: visibility,
+                unusedSymbolKinds: unusedSymbolKinds,
+                ignoredAttributes: ignoredAttributes,
+                language: language);
 
             CommandResult result = await command.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
 

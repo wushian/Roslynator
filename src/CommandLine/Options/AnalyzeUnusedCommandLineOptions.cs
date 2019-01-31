@@ -6,14 +6,14 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: Remove, IgnoreAttributes
+    //TODO: Remove
 #if DEBUG
     [Verb("analyze-unused", HelpText = "Finds unused symbols in the specified project or solution.")]
 #endif
     public class AnalyzeUnusedCommandLineOptions : MSBuildCommandLineOptions
     {
-        [Option(longName: "ignore-obsolete")]
-        public bool IgnoreObsolete { get; set; }
+        [Option(longName: "ignore-attributes")]
+        public IEnumerable<string> IgnoreAttributes { get; set; }
 
         [Option(longName: "ignored-symbols")]
         public IEnumerable<string> IgnoredSymbols { get; set; }

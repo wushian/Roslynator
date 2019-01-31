@@ -20,11 +20,13 @@ namespace Roslynator.CommandLine
             AnalyzeUnusedCommandLineOptions options,
             Visibility visibility,
             UnusedSymbolKinds unusedSymbolKinds,
+            ImmutableArray<MetadataName> ignoredAttributes,
             string language) : base(language)
         {
             Options = options;
             Visibility = visibility;
             UnusedSymbolKinds = unusedSymbolKinds;
+            IgnoredAttributes = ignoredAttributes;
         }
 
         public AnalyzeUnusedCommandLineOptions Options { get; }
@@ -32,6 +34,8 @@ namespace Roslynator.CommandLine
         public Visibility Visibility { get; }
 
         public UnusedSymbolKinds UnusedSymbolKinds { get; }
+
+        public ImmutableArray<MetadataName> IgnoredAttributes { get; }
 
         public override async Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default)
         {
@@ -107,31 +111,61 @@ namespace Roslynator.CommandLine
                 .Where(f => f != null)
                 .ToImmutableHashSet();
 
-            return await UnusedSymbolFinder.FindUnusedSymbolsAsync(project, compilation, Predicate, ignoredSymbols, cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await UnusedSymbolFinder.FindUnusedSymbolsAsync(project, compilation, Predicate, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             bool Predicate(ISymbol symbol)
             {
-                return (UnusedSymbolKinds & GetUnusedSymbolKinds(symbol)) != 0
-                    && IsVisible(symbol)
-                    && (!Options.IgnoreObsolete
-                        || !symbol.HasAttribute(MetadataNames.System_ObsoleteAttribute))
-                    && (Options.IncludeGeneratedCode
-                        || !GeneratedCodeUtility.IsGeneratedCode(symbol, generatedCodeAttribute, MefWorkspaceServices.Default.GetService<ISyntaxFactsService>(project.Language).IsComment, cancellationToken));
-            }
-        }
+                if (ignoredSymbols.Contains(symbol))
+                {
+                    if (ShouldWrite(Verbosity.Diagnostic))
+                        WriteLine($"Skip symbol '{symbol}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
 
-        private bool IsVisible(ISymbol symbol)
-        {
-            switch (Visibility)
-            {
-                case Visibility.Public:
-                    return true;
-                case Visibility.Internal:
-                    return !symbol.IsPubliclyVisible();
-                case Visibility.Private:
-                    return !symbol.IsPubliclyOrInternallyVisible();
-                default:
-                    throw new InvalidOperationException();
+                    return false;
+                }
+
+                UnusedSymbolKinds unusedSymbolKind = GetUnusedSymbolKinds(symbol);
+
+                if ((UnusedSymbolKinds & unusedSymbolKind) == 0)
+                {
+                    if (ShouldWrite(Verbosity.Diagnostic))
+                        WriteLine($"Skip {unusedSymbolKind.ToString().ToLowerInvariant()} symbol '{symbol}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+
+                    return false;
+                }
+
+                Visibility visibility = symbol.GetVisibility();
+
+                Debug.Assert(visibility != Visibility.NotApplicable, $"{visibility} {symbol}");
+
+                if (visibility > Visibility)
+                {
+                    if (ShouldWrite(Verbosity.Diagnostic))
+                        WriteLine($"Skip {GetVisibilityText(visibility)} visible symbol '{symbol}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+
+                    return false;
+                }
+
+                foreach (MetadataName ignoredAttribute in IgnoredAttributes)
+                {
+                    if (symbol.HasAttribute(ignoredAttribute))
+                    {
+                        if (ShouldWrite(Verbosity.Diagnostic))
+                            WriteLine($"Skip symbol '{symbol}' with attribute '{ignoredAttribute}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+
+                        return false;
+                    }
+                }
+
+                if (!Options.IncludeGeneratedCode
+                       && GeneratedCodeUtility.IsGeneratedCode(symbol, generatedCodeAttribute, MefWorkspaceServices.Default.GetService<ISyntaxFactsService>(project.Language).IsComment, cancellationToken))
+                {
+                    if (ShouldWrite(Verbosity.Diagnostic))
+                        WriteLine($"Skip generated symbol '{symbol}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+
+                    return false;
+                }
+
+                return true;
             }
         }
 
@@ -185,6 +219,23 @@ namespace Roslynator.CommandLine
 
             Debug.Fail(symbol.Kind.ToString());
             return UnusedSymbolKinds.None;
+        }
+
+        private static string GetVisibilityText(Visibility visibility)
+        {
+            switch (visibility)
+            {
+                case Visibility.Private:
+                    return "privately";
+                case Visibility.Internal:
+                    return "internally";
+                case Visibility.Public:
+                    return "public";
+            }
+
+            Debug.Fail(visibility.ToString());
+
+            return visibility.ToString();
         }
     }
 }

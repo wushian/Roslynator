@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Roslynator.Documentation;
@@ -331,6 +332,26 @@ namespace Roslynator.CommandLine
                     return false;
                 }
             }
+
+            return true;
+        }
+
+        public static bool TryParseMetadataNames(IEnumerable<string> values, out ImmutableArray<MetadataName> metadataNames)
+        {
+            ImmutableArray<MetadataName>.Builder builder = null;
+
+            foreach (string value in values)
+            {
+                if (!MetadataName.TryParse(value, out MetadataName metadataName))
+                {
+                    WriteLine($"Unable to parse metadata name '{value}'.", ConsoleColor.Red, Verbosity.Quiet);
+                    return false;
+                }
+
+                (builder ?? (builder = ImmutableArray.CreateBuilder<MetadataName>())).Add(metadataName);
+            }
+
+            metadataNames = builder?.ToImmutableArray() ?? ImmutableArray<MetadataName>.Empty;
 
             return true;
         }
