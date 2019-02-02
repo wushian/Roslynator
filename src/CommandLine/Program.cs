@@ -17,6 +17,7 @@ using Roslynator.CodeFixes;
 using Roslynator.Diagnostics;
 using Roslynator.Documentation;
 using Roslynator.Documentation.Markdown;
+using Roslynator.FindSymbols;
 using static Roslynator.CommandLine.DocumentationHelpers;
 using static Roslynator.CommandLine.ParseHelpers;
 using static Roslynator.Logger;
@@ -40,7 +41,7 @@ namespace Roslynator.CommandLine
                     AnalyzeCommandLineOptions,
 #if DEBUG
                     AnalyzeAssemblyCommandLineOptions,
-                    AnalyzeUnusedCommandLineOptions,
+                    FindSymbolsCommandLineOptions,
 #endif
                     FormatCommandLineOptions,
                     SlnListCommandLineOptions,
@@ -87,7 +88,7 @@ namespace Roslynator.CommandLine
                     (AnalyzeCommandLineOptions options) => AnalyzeAsync(options).Result,
 #if DEBUG
                     (AnalyzeAssemblyCommandLineOptions options) => AnalyzeAssembly(options),
-                    (AnalyzeUnusedCommandLineOptions options) => AnalyzeUnusedAsync(options).Result,
+                    (FindSymbolsCommandLineOptions options) => FindSymbolsAsync(options).Result,
 #endif
                     (FormatCommandLineOptions options) => FormatAsync(options).Result,
                     (SlnListCommandLineOptions options) => SlnListAsync(options).Result,
@@ -174,24 +175,24 @@ namespace Roslynator.CommandLine
             return (result.Kind == CommandResultKind.Success) ? 0 : 1;
         }
 
-        private static async Task<int> AnalyzeUnusedAsync(AnalyzeUnusedCommandLineOptions options)
+        private static async Task<int> FindSymbolsAsync(FindSymbolsCommandLineOptions options)
         {
             if (!options.TryGetLanguage(out string language))
                 return 1;
 
-            if (!options.TryGetScope(UnusedSymbolKinds.TypeOrMember, out UnusedSymbolKinds unusedSymbolKinds))
+            if (!options.TryGetSymbolKinds(SymbolSpecialKinds.TypeOrMember, out SymbolSpecialKinds symbolKinds))
                 return 1;
 
-            if (!options.TryGetVisibility(Visibility.Internal, out Visibility visibility))
+            if (!options.TryGetVisibility(SymbolFinderOptions.Default.Visibilities, out ImmutableArray< Visibility> visibilities))
                 return 1;
 
-            if (!TryParseMetadataNames(options.IgnoreAttributes, out ImmutableArray<MetadataName> ignoredAttributes))
+            if (!TryParseMetadataNames(options.IgnoredAttributes, out ImmutableArray<MetadataName> ignoredAttributes))
                 return 1;
 
-            var command = new AnalyzeUnusedCommand(
+            var command = new FindSymbolsCommand(
                 options: options,
-                visibility: visibility,
-                unusedSymbolKinds: unusedSymbolKinds,
+                visibilities: visibilities,
+                symbolKinds: symbolKinds,
                 ignoredAttributes: ignoredAttributes,
                 language: language);
 

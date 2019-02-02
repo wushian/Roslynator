@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,6 +18,53 @@ namespace Roslynator
 {
     internal static class Extensions
     {
+        public static SymbolSpecialKind GetSpecialKind(this ISymbol symbol)
+        {
+            switch (symbol.Kind)
+            {
+                case SymbolKind.NamedType:
+                    {
+                        var namedType = (INamedTypeSymbol)symbol;
+
+                        switch (namedType.TypeKind)
+                        {
+                            case TypeKind.Class:
+                                return SymbolSpecialKind.Class;
+                            case TypeKind.Delegate:
+                                return SymbolSpecialKind.Delegate;
+                            case TypeKind.Enum:
+                                return SymbolSpecialKind.Enum;
+                            case TypeKind.Interface:
+                                return SymbolSpecialKind.Interface;
+                            case TypeKind.Struct:
+                                return SymbolSpecialKind.Struct;
+                        }
+
+                        Debug.Fail(namedType.TypeKind.ToString());
+                        return SymbolSpecialKind.None;
+                    }
+                case SymbolKind.Event:
+                    {
+                        return SymbolSpecialKind.Event;
+                    }
+                case SymbolKind.Field:
+                    {
+                        return SymbolSpecialKind.Field;
+                    }
+                case SymbolKind.Method:
+                    {
+                        return SymbolSpecialKind.Method;
+                    }
+                case SymbolKind.Property:
+                    {
+                        return SymbolSpecialKind.Property;
+                    }
+            }
+
+            Debug.Fail(symbol.Kind.ToString());
+            return SymbolSpecialKind.None;
+        }
+
         public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
         {
             if (dictionary.TryGetValue(key, out TValue value))

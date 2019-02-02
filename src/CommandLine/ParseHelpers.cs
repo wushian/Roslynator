@@ -310,25 +310,19 @@ namespace Roslynator.CommandLine
             return false;
         }
 
-        public static bool TryParseUnusedSymbolKinds(IEnumerable<string> values, out UnusedSymbolKinds kinds)
+        public static bool TryParseSymbolKinds(IEnumerable<string> values, out SymbolSpecialKinds kinds)
         {
-            if (!values.Any())
-            {
-                kinds = UnusedSymbolKinds.TypeOrMember;
-                return true;
-            }
-
-            kinds = UnusedSymbolKinds.None;
+            kinds = SymbolSpecialKinds.None;
 
             foreach (string value in values)
             {
-                if (Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out UnusedSymbolKinds result))
+                if (Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out SymbolSpecialKinds result))
                 {
                     kinds |= result;
                 }
                 else
                 {
-                    WriteLine($"Unknown unused symbol kind '{value}'.", Verbosity.Quiet);
+                    WriteLine($"Unknown symbol kind '{value}'.", Verbosity.Quiet);
                     return false;
                 }
             }

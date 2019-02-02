@@ -5,92 +5,16 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.FindSymbols;
-using Microsoft.CodeAnalysis.Text;
-using Roslynator.Text;
-using static Roslynator.Logger;
 
-namespace Roslynator.FindSymbols
+namespace Roslynator
 {
-    internal static class UnusedSymbolFinder
+    internal static class UnusedSymbolUtility
     {
-        public static async Task<ImmutableArray<UnusedSymbolInfo>> FindUnusedSymbolsAsync(
-            Project project,
-            Func<ISymbol, bool> predicate = null,
-            IImmutableSet<Document> documents = null,
-            CancellationToken cancellationToken = default)
-        {
-            Compilation compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
-
-            return await FindUnusedSymbolsAsync(
-                project,
-                compilation,
-                predicate,
-                documents,
-                cancellationToken).ConfigureAwait(false);
-        }
-
-        internal static async Task<ImmutableArray<UnusedSymbolInfo>> FindUnusedSymbolsAsync(
-            Project project,
-            Compilation compilation,
-            Func<ISymbol, bool> predicate = null,
-            IImmutableSet<Document> documents = null,
-            CancellationToken cancellationToken = default)
-        {
-            ImmutableArray<UnusedSymbolInfo>.Builder unusedSymbols = null;
-
-            var namespaceOrTypeSymbols = new Stack<INamespaceOrTypeSymbol>();
-
-            namespaceOrTypeSymbols.Push(compilation.Assembly.GlobalNamespace);
-
-            while (namespaceOrTypeSymbols.Count > 0)
-            {
-                INamespaceOrTypeSymbol namespaceOrTypeSymbol = namespaceOrTypeSymbols.Pop();
-
-                foreach (ISymbol symbol in namespaceOrTypeSymbol.GetMembers())
-                {
-                    bool isUnused = false;
-
-                    if (symbol.Kind != SymbolKind.Namespace
-                        && !symbol.IsImplicitlyDeclared
-                        && !symbol.IsOverride
-                        && IsAnalyzable(symbol)
-                        && (predicate == null || predicate(symbol)))
-                    {
-                        WriteLine($"Analyze '{symbol}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
-
-                        isUnused = await IsUnusedSymbolAsync(symbol, project.Solution, documents, cancellationToken).ConfigureAwait(false);
-
-                        if (isUnused)
-                        {
-                            string id = symbol.GetDocumentationCommentId();
-
-                            WriteLine($"  {GetUnusedSymbolKind(symbol).ToString()} {symbol.ToDisplayString()}", ConsoleColor.Yellow, Verbosity.Normal);
-                            WriteLine($"    Location: {FormatLocation(symbol.Locations[0])}", ConsoleColor.DarkGray, Verbosity.Detailed);
-                            WriteLine($"    Id:       {id}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
-
-                            var unusedSymbolInfo = new UnusedSymbolInfo(symbol, id, project.Id);
-
-                            (unusedSymbols ?? (unusedSymbols = ImmutableArray.CreateBuilder<UnusedSymbolInfo>())).Add(unusedSymbolInfo);
-                        }
-                    }
-
-                    if (!isUnused
-                        && symbol is INamespaceOrTypeSymbol namespaceOrTypeSymbol2)
-                    {
-                        namespaceOrTypeSymbols.Push(namespaceOrTypeSymbol2);
-                    }
-                }
-            }
-
-            return unusedSymbols?.ToImmutableArray() ?? ImmutableArray<UnusedSymbolInfo>.Empty;
-        }
-
-        private static bool IsAnalyzable(ISymbol symbol)
+        public static bool CanBeUnusedSymbol(ISymbol symbol)
         {
             switch (symbol.Kind)
             {
@@ -107,6 +31,9 @@ namespace Roslynator.FindSymbols
                     }
                 case SymbolKind.Event:
                     {
+                        if (symbol.IsOverride)
+                            return false;
+
                         var eventSymbol = (IEventSymbol)symbol;
 
                         return eventSymbol.ExplicitInterfaceImplementations.IsDefaultOrEmpty
@@ -120,6 +47,9 @@ namespace Roslynator.FindSymbols
                     }
                 case SymbolKind.Property:
                     {
+                        if (symbol.IsOverride)
+                            return false;
+
                         var propertySymbol = (IPropertySymbol)symbol;
 
                         return propertySymbol.ExplicitInterfaceImplementations.IsDefaultOrEmpty
@@ -127,6 +57,9 @@ namespace Roslynator.FindSymbols
                     }
                 case SymbolKind.Method:
                     {
+                        if (symbol.IsOverride)
+                            return false;
+
                         var methodSymbol = (IMethodSymbol)symbol;
 
                         switch (methodSymbol.MethodKind)
@@ -153,11 +86,10 @@ namespace Roslynator.FindSymbols
             }
         }
 
-        private static async Task<bool> IsUnusedSymbolAsync(
+        public static async Task<bool> IsUnusedSymbolAsync(
             ISymbol symbol,
             Solution solution,
-            IImmutableSet<Document> documents,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             ImmutableArray<SyntaxReference> syntaxReferences = symbol.DeclaringSyntaxReferences;
 
@@ -169,7 +101,7 @@ namespace Roslynator.FindSymbols
             if (IsReferencedInDebuggerDisplayAttribute(symbol))
                 return false;
 
-            IEnumerable<ReferencedSymbol> referencedSymbols = await SymbolFinder.FindReferencesAsync(symbol, solution, documents, cancellationToken).ConfigureAwait(false);
+            IEnumerable<ReferencedSymbol> referencedSymbols = await SymbolFinder.FindReferencesAsync(symbol, solution, cancellationToken).ConfigureAwait(false);
 
             foreach (ReferencedSymbol referencedSymbol in referencedSymbols)
             {
@@ -198,53 +130,6 @@ namespace Roslynator.FindSymbols
             }
 
             return true;
-        }
-
-        internal static UnusedSymbolKind GetUnusedSymbolKind(ISymbol symbol)
-        {
-            switch (symbol.Kind)
-            {
-                case SymbolKind.NamedType:
-                    {
-                        var namedType = (INamedTypeSymbol)symbol;
-
-                        switch (namedType.TypeKind)
-                        {
-                            case TypeKind.Class:
-                                return UnusedSymbolKind.Class;
-                            case TypeKind.Delegate:
-                                return UnusedSymbolKind.Delegate;
-                            case TypeKind.Enum:
-                                return UnusedSymbolKind.Enum;
-                            case TypeKind.Interface:
-                                return UnusedSymbolKind.Interface;
-                            case TypeKind.Struct:
-                                return UnusedSymbolKind.Struct;
-                        }
-
-                        Debug.Fail(namedType.TypeKind.ToString());
-                        return UnusedSymbolKind.None;
-                    }
-                case SymbolKind.Event:
-                    {
-                        return UnusedSymbolKind.Event;
-                    }
-                case SymbolKind.Field:
-                    {
-                        return UnusedSymbolKind.Field;
-                    }
-                case SymbolKind.Method:
-                    {
-                        return UnusedSymbolKind.Method;
-                    }
-                case SymbolKind.Property:
-                    {
-                        return UnusedSymbolKind.Property;
-                    }
-            }
-
-            Debug.Fail(symbol.Kind.ToString());
-            return UnusedSymbolKind.None;
         }
 
         // https://docs.microsoft.com/cs-cz/dotnet/csharp/programming-guide/main-and-command-args/
@@ -383,38 +268,6 @@ namespace Roslynator.FindSymbols
 
                 return false;
             }
-        }
-
-        private static string FormatLocation(Location location)
-        {
-            StringBuilder sb = StringBuilderCache.GetInstance();
-
-            switch (location.Kind)
-            {
-                case LocationKind.SourceFile:
-                case LocationKind.XmlFile:
-                case LocationKind.ExternalFile:
-                    {
-                        FileLinePositionSpan span = location.GetMappedLineSpan();
-
-                        if (span.IsValid)
-                        {
-                            sb.Append(span.Path);
-
-                            LinePosition linePosition = span.Span.Start;
-
-                            sb.Append('(');
-                            sb.Append(linePosition.Line + 1);
-                            sb.Append(',');
-                            sb.Append(linePosition.Character + 1);
-                            sb.Append("): ");
-                        }
-
-                        break;
-                    }
-            }
-
-            return StringBuilderCache.GetStringAndFree(sb);
         }
     }
 }

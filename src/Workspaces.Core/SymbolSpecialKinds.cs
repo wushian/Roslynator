@@ -2,10 +2,11 @@
 
 using System;
 
-namespace Roslynator.CommandLine
+namespace Roslynator
 {
+    //TODO: Indexer, Constant
     [Flags]
-    internal enum UnusedSymbolKinds
+    internal enum SymbolSpecialKinds
     {
         None = 0,
         Class = 1,
@@ -19,6 +20,6 @@ namespace Roslynator.CommandLine
         Method = 128,
         Property = 256,
         Member = Event | Field | Method | Property,
-        TypeOrMember = Type | Member
+        TypeOrMember = Type | Member,
     }
 }
