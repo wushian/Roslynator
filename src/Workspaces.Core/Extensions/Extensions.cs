@@ -18,6 +18,59 @@ namespace Roslynator
 {
     internal static class Extensions
     {
+        public static MemberDeclarationKind GetMemberDeclarationKind(this ISymbol symbol)
+        {
+            switch (symbol.Kind)
+            {
+                case SymbolKind.Event:
+                    {
+                        return MemberDeclarationKind.Event;
+                    }
+                case SymbolKind.Field:
+                    {
+                        var fieldSymbol = (IFieldSymbol)symbol;
+
+                        return (fieldSymbol.IsConst)
+                            ? MemberDeclarationKind.Const
+                            : MemberDeclarationKind.Field;
+                    }
+                case SymbolKind.Method:
+                    {
+                        var methodSymbol = (IMethodSymbol)symbol;
+
+                        switch (methodSymbol.MethodKind)
+                        {
+                            case MethodKind.Ordinary:
+                                return MemberDeclarationKind.OrdinaryMethod;
+                            case MethodKind.Constructor:
+                                return MemberDeclarationKind.Constructor;
+                            case MethodKind.Destructor:
+                                return MemberDeclarationKind.Destructor;
+                            case MethodKind.StaticConstructor:
+                                return MemberDeclarationKind.StaticConstructor;
+                            case MethodKind.Conversion:
+                                return MemberDeclarationKind.ConversionOperator;
+                            case MethodKind.UserDefinedOperator:
+                                return MemberDeclarationKind.Operator;
+                        }
+
+                        break;
+                    }
+                case SymbolKind.Property:
+                    {
+                        var propertySymbol = (IPropertySymbol)symbol;
+
+                        return (propertySymbol.IsIndexer)
+                            ? MemberDeclarationKind.Indexer
+                            : MemberDeclarationKind.Property;
+                    }
+            }
+
+            Debug.Fail(symbol.ToDisplayString(SymbolDisplayFormats.Test));
+
+            return MemberDeclarationKind.None;
+        }
+
         public static SymbolSpecialKind GetSpecialKind(this ISymbol symbol)
         {
             switch (symbol.Kind)
@@ -49,7 +102,9 @@ namespace Roslynator
                     }
                 case SymbolKind.Field:
                     {
-                        return SymbolSpecialKind.Field;
+                        return (((IFieldSymbol)symbol).IsConst)
+                            ? SymbolSpecialKind.Const
+                            : SymbolSpecialKind.Field;
                     }
                 case SymbolKind.Method:
                     {
@@ -57,7 +112,9 @@ namespace Roslynator
                     }
                 case SymbolKind.Property:
                     {
-                        return SymbolSpecialKind.Property;
+                        return (((IPropertySymbol)symbol).IsIndexer)
+                            ? SymbolSpecialKind.Indexer
+                            : SymbolSpecialKind.Property;
                     }
             }
 

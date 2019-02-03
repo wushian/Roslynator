@@ -7,12 +7,14 @@ namespace Roslynator
         None = 0,
         Const = 1,
         Field = 2,
-        Constructor = 3,
-        Event = 4,
-        Indexer = 5,
-        Property = 6,
-        Method = 7, //TODO: OrdinaryMethod
-        ConversionOperator = 8,
-        Operator = 9
+        StaticConstructor = 3,
+        Constructor = 4,
+        Destructor = 5,
+        Event = 6,
+        Property = 7,
+        Indexer = 8,
+        OrdinaryMethod = 9,
+        ConversionOperator = 10,
+        Operator = 11
     }
 }

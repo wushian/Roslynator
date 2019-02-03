@@ -3,20 +3,28 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Text;
 using Roslynator.FindSymbols;
-using Roslynator.Text;
 using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
     internal class FindSymbolsCommand : MSBuildWorkspaceCommand
     {
+        private static readonly SymbolDisplayFormat _nameAndContainingTypesSymbolDisplayFormat = SymbolDisplayFormat.CSharpErrorMessageFormat.Update(
+            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypes,
+            miscellaneousOptions: SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers
+                | SymbolDisplayMiscellaneousOptions.UseSpecialTypes
+                | SymbolDisplayMiscellaneousOptions.UseErrorTypeSymbolName,
+            parameterOptions: SymbolDisplayParameterOptions.IncludeParamsRefOut
+                | SymbolDisplayParameterOptions.IncludeType
+                | SymbolDisplayParameterOptions.IncludeName
+                | SymbolDisplayParameterOptions.IncludeDefaultValue);
+
         public FindSymbolsCommand(
             FindSymbolsCommandLineOptions options,
             ImmutableArray<Visibility> visibilities,
@@ -54,6 +62,10 @@ namespace Roslynator.CommandLine
             {
                 Solution solution = projectOrSolution.AsSolution();
 
+                WriteLine($"Analyze solution '{solution.FilePath}'", Verbosity.Minimal);
+
+                Stopwatch stopwatch = Stopwatch.StartNew();
+
                 ImmutableArray<ISymbol>.Builder symbols = null;
 
                 foreach (Project project in FilterProjects(solution, Options, s => s
@@ -66,34 +78,42 @@ namespace Roslynator.CommandLine
                     ImmutableArray<ISymbol> symbols2 = await AnalyzeProject(project, cancellationToken);
 
                     if (symbols2.Any())
-                    {
                         (symbols ?? (symbols = ImmutableArray.CreateBuilder<ISymbol>())).AddRange(symbols2);
-                    }
-
-                    WriteLine($"  {symbols.Count} {((symbols.Count == 1) ? "symbol" : "symbols")} found", Verbosity.Normal);
                 }
 
+                stopwatch.Stop();
+
                 allSymbols = symbols?.ToImmutableArray() ?? ImmutableArray<ISymbol>.Empty;
+
+                WriteLine($"Done analyzing solution '{solution.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", Verbosity.Minimal);
             }
 
             if (allSymbols.Any())
             {
-                WriteLine(Verbosity.Normal);
-
-                foreach (ISymbol symbol in allSymbols.OrderBy(f => f, SymbolDefinitionComparer.Instance))
-                {
-                    WriteLine(symbol.ToDisplayString(), Verbosity.Normal);
-                }
-
-                WriteLine(Verbosity.Normal);
-
                 Dictionary<SymbolSpecialKind, int> countByKind = allSymbols
                     .GroupBy(f => f.GetSpecialKind())
                     .OrderByDescending(f => f.Count())
                     .ThenBy(f => f.Key)
                     .ToDictionary(f => f.Key, f => f.Count());
 
+                int maxKindLength = countByKind.Max(f => f.Key.ToString().Length);
+
                 int maxCountLength = countByKind.Max(f => f.Value.ToString().Length);
+
+                WriteLine(Verbosity.Normal);
+
+                //TODO: group by namespace
+                foreach (ISymbol symbol in allSymbols.OrderBy(f => f, SymbolDefinitionComparer.Instance))
+                {
+                    WriteSymbol(symbol, Verbosity.Normal, colorNamespace: true, kindPadding: maxKindLength);
+
+                    //Write("  Location: ", ConsoleColor.DarkGray, Verbosity.Detailed);
+                    //LogHelpers.WriteLocation(symbol.Locations[0], ConsoleColor.DarkGray, Verbosity.Detailed);
+                    //WriteLine(Verbosity.Detailed);
+                    //WriteLine($"  Id:       {symbol.GetDocumentationCommentId()}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                }
+
+                WriteLine(Verbosity.Normal);
 
                 foreach (KeyValuePair<SymbolSpecialKind, int> kvp in countByKind)
                 {
@@ -110,7 +130,7 @@ namespace Roslynator.CommandLine
 
         private async Task<ImmutableArray<ISymbol>> AnalyzeProject(Project project, CancellationToken cancellationToken)
         {
-            WriteLine($"Analyze '{project.Name}'", Verbosity.Minimal);
+            WriteLine($"  Analyze '{project.Name}'", Verbosity.Minimal);
 
             Compilation compilation = await project.GetCompilationAsync(cancellationToken);
 
@@ -127,7 +147,7 @@ namespace Roslynator.CommandLine
                 includeGeneratedCode: Options.IncludeGeneratedCode,
                 unusedOnly: Options.UnusedOnly);
 
-            var progress = new FindSymbolsProgress() { UnusedOnly = options.UnusedOnly };
+            var progress = new FindSymbolsProgress();
 
             return await SymbolFinder.FindSymbolsAsync(project, options, progress, cancellationToken).ConfigureAwait(false);
         }
@@ -137,56 +157,66 @@ namespace Roslynator.CommandLine
             WriteLine("Analysis was canceled.", Verbosity.Quiet);
         }
 
-        private class FindSymbolsProgress : IFindSymbolsProgress
+        private static void WriteSymbol(
+            ISymbol symbol,
+            Verbosity verbosity,
+            bool colorNamespace = false,
+            int kindPadding = 0)
         {
-            public bool UnusedOnly { get; set; }
+            if (!ShouldWrite(verbosity))
+                return;
 
-            public void OnSymbolFound(ISymbol symbol)
+            bool isObsolete = symbol.HasAttribute(MetadataNames.System_ObsoleteAttribute);
+
+            string kindText = symbol.GetSpecialKind().ToString().ToLowerInvariant().PadRight(kindPadding);
+
+            if (isObsolete)
             {
-                //TODO: 
-                //if (UnusedOnly)
-                //{
-                //    WriteLine($"  Unused {symbol.GetSpecialKind().ToString()} {symbol.ToDisplayString()}", Verbosity.Normal);
-                //}
-                //else
-                //{
-                //    WriteLine($"  {symbol.ToDisplayString()}", Verbosity.Normal);
-                //}
-
-                //WriteLine($"    Location: {FormatLocation(symbol.Locations[0])}", ConsoleColor.DarkGray, Verbosity.Detailed);
-                //WriteLine($"    Id:       {symbol.GetDocumentationCommentId()}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                Write(kindText, ConsoleColor.DarkGray, Verbosity.Normal);
+            }
+            else
+            {
+                Write(kindText, Verbosity.Normal);
             }
 
-            private static string FormatLocation(Location location)
+            Write(" ", Verbosity.Normal);
+
+            string namespaceText = symbol.ContainingNamespace.ToDisplayString();
+
+            if (namespaceText.Length > 0)
             {
-                StringBuilder sb = StringBuilderCache.GetInstance();
-
-                switch (location.Kind)
+                if (colorNamespace || isObsolete)
                 {
-                    case LocationKind.SourceFile:
-                    case LocationKind.XmlFile:
-                    case LocationKind.ExternalFile:
-                        {
-                            FileLinePositionSpan span = location.GetMappedLineSpan();
-
-                            if (span.IsValid)
-                            {
-                                sb.Append(span.Path);
-
-                                LinePosition linePosition = span.Span.Start;
-
-                                sb.Append('(');
-                                sb.Append(linePosition.Line + 1);
-                                sb.Append(',');
-                                sb.Append(linePosition.Character + 1);
-                                sb.Append("): ");
-                            }
-
-                            break;
-                        }
+                    Write(namespaceText, ConsoleColor.DarkGray, verbosity);
+                    Write(".", ConsoleColor.DarkGray, verbosity);
                 }
+                else
+                {
+                    Write(namespaceText, verbosity);
+                    Write(".", verbosity);
+                }
+            }
 
-                return StringBuilderCache.GetStringAndFree(sb);
+            string nameText = symbol.ToDisplayString(_nameAndContainingTypesSymbolDisplayFormat);
+
+            if (isObsolete)
+            {
+                Write(nameText, ConsoleColor.DarkGray, verbosity);
+            }
+            else
+            {
+                Write(nameText, verbosity);
+            }
+
+            WriteLine(verbosity);
+        }
+
+        private class FindSymbolsProgress : IFindSymbolsProgress
+        {
+            public void OnSymbolFound(ISymbol symbol)
+            {
+                Write("    ", Verbosity.Normal);
+                WriteSymbol(symbol, Verbosity.Normal);
             }
         }
     }

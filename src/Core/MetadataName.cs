@@ -299,6 +299,50 @@ namespace Roslynator
             }
         }
 
+        internal static int GetHashCode(ISymbol symbol)
+        {
+            if (symbol == null)
+                throw new ArgumentNullException(nameof(symbol));
+
+            int hashCode = Hash.Create(GetHashCode(symbol.MetadataName));
+
+            INamedTypeSymbol containingType = symbol.ContainingType;
+
+            if (containingType != null)
+            {
+                while (true)
+                {
+                    hashCode = Hash.Combine(GetHashCode(containingType.MetadataName), hashCode);
+
+                    containingType = containingType.ContainingType;
+
+                    if (containingType == null)
+                        break;
+
+                    hashCode = Hash.Combine(PlusHashCode, hashCode);
+                }
+            }
+
+            INamespaceSymbol containingNamespace = symbol.ContainingNamespace;
+
+            if (containingNamespace?.IsGlobalNamespace == false)
+            {
+                while (true)
+                {
+                    hashCode = Hash.Combine(GetHashCode(containingNamespace.Name), hashCode);
+
+                    containingNamespace = containingNamespace.ContainingNamespace;
+
+                    if (containingNamespace?.IsGlobalNamespace != false)
+                        break;
+
+                    hashCode = Hash.Combine(DotHashCode, hashCode);
+                }
+            }
+
+            return hashCode;
+        }
+
         internal static int GetHashCode(string name)
         {
             return StringComparer.Ordinal.GetHashCode(name);

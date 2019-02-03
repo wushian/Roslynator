@@ -1,14 +1,13 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Roslynator.Host.Mef;
-using static Roslynator.Logger;
 
 namespace Roslynator.FindSymbols
 {
@@ -81,45 +80,24 @@ namespace Roslynator.FindSymbols
 
             bool IsMatch(ISymbol symbol)
             {
-                SymbolSpecialKinds symbolKind = GetSymbolKinds(symbol);
+                SymbolSpecialKinds symbolKinds = GetSymbolKinds(symbol);
 
-                if ((options.SymbolKinds & symbolKind) == 0)
-                {
-                    if (ShouldWrite(Verbosity.Diagnostic))
-                        WriteLine($"Skip {symbolKind.ToString().ToLowerInvariant()} symbol '{symbol}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
-
+                if ((options.SymbolKinds & symbolKinds) == 0)
                     return false;
-                }
 
                 Visibility visibility = symbol.GetVisibility();
 
                 Debug.Assert(visibility != Visibility.NotApplicable, $"{visibility} {symbol}");
 
                 if (!options.IsVisible(symbol))
-                {
-                    if (ShouldWrite(Verbosity.Diagnostic))
-                        WriteLine($"Skip {GetVisibilityText(visibility)} visible symbol '{symbol}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
-
                     return false;
-                }
 
-                foreach (MetadataName ignoredAttribute in options.IgnoredAttributes)
-                {
-                    if (symbol.HasAttribute(ignoredAttribute))
-                    {
-                        if (ShouldWrite(Verbosity.Diagnostic))
-                            WriteLine($"Skip symbol '{symbol}' with attribute '{ignoredAttribute}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
-
-                        return false;
-                    }
-                }
+                if (options.HasIgnoredAttribute(symbol))
+                    return false;
 
                 if (!options.IncludeGeneratedCode
-                       && GeneratedCodeUtility.IsGeneratedCode(symbol, generatedCodeAttribute, MefWorkspaceServices.Default.GetService<ISyntaxFactsService>(compilation.Language).IsComment, cancellationToken))
+                    && GeneratedCodeUtility.IsGeneratedCode(symbol, generatedCodeAttribute, MefWorkspaceServices.Default.GetService<ISyntaxFactsService>(compilation.Language).IsComment, cancellationToken))
                 {
-                    if (ShouldWrite(Verbosity.Diagnostic))
-                        WriteLine($"Skip generated symbol '{symbol}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
-
                     return false;
                 }
 
@@ -158,7 +136,9 @@ namespace Roslynator.FindSymbols
                     }
                 case SymbolKind.Field:
                     {
-                        return SymbolSpecialKinds.Field;
+                        return (((IFieldSymbol)symbol).IsConst)
+                            ? SymbolSpecialKinds.Const
+                            : SymbolSpecialKinds.Field;
                     }
                 case SymbolKind.Method:
                     {
@@ -167,6 +147,15 @@ namespace Roslynator.FindSymbols
                         switch (methodSymbol.MethodKind)
                         {
                             case MethodKind.Constructor:
+                                {
+                                    if (methodSymbol.ContainingType.TypeKind == TypeKind.Struct
+                                        && !methodSymbol.Parameters.Any())
+                                    {
+                                        return SymbolSpecialKinds.None;
+                                    }
+
+                                    return SymbolSpecialKinds.Method;
+                                }
                             case MethodKind.Conversion:
                             case MethodKind.UserDefinedOperator:
                             case MethodKind.Ordinary:
@@ -194,29 +183,14 @@ namespace Roslynator.FindSymbols
                     }
                 case SymbolKind.Property:
                     {
-                        return SymbolSpecialKinds.Property;
+                        return (((IPropertySymbol)symbol).IsIndexer)
+                            ? SymbolSpecialKinds.Indexer
+                            : SymbolSpecialKinds.Property;
                     }
             }
 
             Debug.Fail(symbol.Kind.ToString());
             return SymbolSpecialKinds.None;
-        }
-
-        private static string GetVisibilityText(Visibility visibility)
-        {
-            switch (visibility)
-            {
-                case Visibility.Private:
-                    return "privately";
-                case Visibility.Internal:
-                    return "internally";
-                case Visibility.Public:
-                    return "public";
-            }
-
-            Debug.Fail(visibility.ToString());
-
-            return visibility.ToString();
         }
     }
 }

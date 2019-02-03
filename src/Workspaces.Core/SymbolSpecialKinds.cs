@@ -4,7 +4,6 @@ using System;
 
 namespace Roslynator
 {
-    //TODO: Indexer, Constant
     [Flags]
     internal enum SymbolSpecialKinds
     {
@@ -17,9 +16,11 @@ namespace Roslynator
         Type = Class | Delegate | Enum | Interface | Struct,
         Event = 32,
         Field = 64,
-        Method = 128,
-        Property = 256,
-        Member = Event | Field | Method | Property,
-        TypeOrMember = Type | Member,
+        Const = 128,
+        Method = 256,
+        Property = 512,
+        Indexer = 1024,
+        Member = Event | Field | Const | Method | Property | Indexer,
+        TypeOrMember = Type | Member
     }
 }

@@ -3,11 +3,12 @@
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 
 namespace Roslynator.FindSymbols
 {
-    //TODO: SymbolNamePattern
+    //TODO: SymbolNamePattern, IgnoredModifiers, IgnoredSymbolNames
     internal class SymbolFinderOptions
     {
         private static readonly ImmutableArray<Visibility> _allVisibilities = ImmutableArray.Create(Visibility.Public, Visibility.Internal, Visibility.Private);
@@ -81,6 +82,23 @@ namespace Roslynator.FindSymbols
             }
 
             Debug.Fail(symbol.ToDisplayString(SymbolDisplayFormats.Test));
+
+            return false;
+        }
+
+        public bool HasIgnoredAttribute(ISymbol symbol)
+        {
+            if (IgnoredAttributes.Any())
+            {
+                foreach (AttributeData attribute in symbol.GetAttributes())
+                {
+                    foreach (MetadataName attributeName in IgnoredAttributes)
+                    {
+                        if (attribute.AttributeClass.HasMetadataName(attributeName))
+                            return true;
+                    }
+                }
+            }
 
             return false;
         }

@@ -387,7 +387,7 @@ namespace Roslynator.Documentation
             {
                 if (en.MoveNext())
                 {
-                    MemberDeclarationKind kind = MemberDeclarationComparer.GetKind(en.Current);
+                    MemberDeclarationKind kind = en.Current.GetMemberDeclarationKind();
 
                     while (true)
                     {
@@ -444,7 +444,7 @@ namespace Roslynator.Documentation
 
                         if (en.MoveNext())
                         {
-                            MemberDeclarationKind kind2 = MemberDeclarationComparer.GetKind(en.Current);
+                            MemberDeclarationKind kind2 = en.Current.GetMemberDeclarationKind();
 
                             if (kind != kind2
                                 || Options.EmptyLineBetweenMembers)

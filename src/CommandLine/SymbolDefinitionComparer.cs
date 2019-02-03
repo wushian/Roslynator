@@ -10,14 +10,7 @@ namespace Roslynator.CommandLine
 {
     internal class SymbolDefinitionComparer : IComparer<ISymbol>
     {
-        public SymbolDefinitionComparer(bool systemNamespaceFirst = false)
-        {
-            SystemNamespaceFirst = systemNamespaceFirst;
-        }
-
-        public static SymbolDefinitionComparer Instance { get; } = new SymbolDefinitionComparer(systemNamespaceFirst: true);
-
-        public bool SystemNamespaceFirst { get; }
+        public static SymbolDefinitionComparer Instance { get; } = new SymbolDefinitionComparer();
 
         public int Compare(ISymbol x, ISymbol y)
         {
@@ -39,7 +32,7 @@ namespace Roslynator.CommandLine
                         switch (y.Kind)
                         {
                             case SymbolKind.Namespace:
-                                return CompareNamespace(namespaceSymbol, (INamespaceSymbol)y);
+                                return CompareNamespaceSymbol(namespaceSymbol, (INamespaceSymbol)y);
                             case SymbolKind.NamedType:
                             case SymbolKind.Event:
                             case SymbolKind.Field:
@@ -59,7 +52,7 @@ namespace Roslynator.CommandLine
                             case SymbolKind.Namespace:
                                 return CompareSymbolAndNamespaceSymbol(namedTypeSymbol, (INamespaceSymbol)y);
                             case SymbolKind.NamedType:
-                                return CompareNamedType(namedTypeSymbol, (INamedTypeSymbol)y);
+                                return CompareNamedTypeSymbol(namedTypeSymbol, (INamedTypeSymbol)y);
                             case SymbolKind.Event:
                             case SymbolKind.Field:
                             case SymbolKind.Method:
@@ -94,7 +87,7 @@ namespace Roslynator.CommandLine
             throw new InvalidOperationException();
         }
 
-        private int CompareNamespace(INamespaceSymbol x, INamespaceSymbol y)
+        private static int CompareNamespaceSymbol(INamespaceSymbol x, INamespaceSymbol y)
         {
             if (object.ReferenceEquals(x, y))
                 return 0;
@@ -117,37 +110,21 @@ namespace Roslynator.CommandLine
             int count1 = CountContainingNamespaces(x);
             int count2 = CountContainingNamespaces(y);
 
-            if (SystemNamespaceFirst)
-            {
-                INamespaceSymbol rootNamespace1 = GetContainingNamespace(x, count1);
-                INamespaceSymbol rootNamespace2 = GetContainingNamespace(y, count2);
-
-                if (rootNamespace1.Name == "System")
-                {
-                    if (rootNamespace2.Name != "System")
-                        return -1;
-                }
-                else if (rootNamespace2.Name == "System")
-                {
-                    return 1;
-                }
-            }
-
             while (true)
             {
-                if (count1 < 0)
-                    return (count2 < 0) ? 0 : -1;
+                INamespaceSymbol namespaceSymbol1 = GetNamespaceSymbol(x, count1);
+                INamespaceSymbol namespaceSymbol2 = GetNamespaceSymbol(y, count2);
 
-                if (count2 < 0)
-                    return 1;
-
-                INamespaceSymbol containingNamespace1 = GetContainingNamespace(x, count1);
-                INamespaceSymbol containingNamespace2 = GetContainingNamespace(y, count2);
-
-                int diff = string.CompareOrdinal(containingNamespace1.Name, containingNamespace2.Name);
+                int diff = CompareName(namespaceSymbol1, namespaceSymbol2);
 
                 if (diff != 0)
                     return diff;
+
+                if (count1 == 0)
+                    return (count2 == 0) ? 0 : -1;
+
+                if (count2 == 0)
+                    return 1;
 
                 count1--;
                 count2--;
@@ -170,7 +147,7 @@ namespace Roslynator.CommandLine
                 return count;
             }
 
-            INamespaceSymbol GetContainingNamespace(INamespaceSymbol namespaceSymbol, int count)
+            INamespaceSymbol GetNamespaceSymbol(INamespaceSymbol namespaceSymbol, int count)
             {
                 while (count > 0)
                 {
@@ -182,7 +159,7 @@ namespace Roslynator.CommandLine
             }
         }
 
-        public int CompareNamedType(INamedTypeSymbol x, INamedTypeSymbol y)
+        public static int CompareNamedTypeSymbol(INamedTypeSymbol x, INamedTypeSymbol y)
         {
             if (object.ReferenceEquals(x, y))
                 return 0;
@@ -193,7 +170,7 @@ namespace Roslynator.CommandLine
             if (y == null)
                 return 1;
 
-            int diff = CompareNamespace(x.ContainingNamespace, y.ContainingNamespace);
+            int diff = CompareNamespaceSymbol(x.ContainingNamespace, y.ContainingNamespace);
 
             if (diff != 0)
                 return diff;
@@ -227,7 +204,7 @@ namespace Roslynator.CommandLine
             }
         }
 
-        private int CompareMemberSymbol(ISymbol x, ISymbol y)
+        private static int CompareMemberSymbol(ISymbol x, ISymbol y)
         {
             if (object.ReferenceEquals(x, y))
                 return 0;
@@ -238,7 +215,7 @@ namespace Roslynator.CommandLine
             if (y == null)
                 return 1;
 
-            int diff = CompareNamespace(x.ContainingNamespace, y.ContainingNamespace);
+            int diff = CompareNamespaceSymbol(x.ContainingNamespace, y.ContainingNamespace);
 
             if (diff != 0)
                 return diff;
@@ -248,15 +225,15 @@ namespace Roslynator.CommandLine
             if (diff != 0)
                 return diff;
 
-            MemberDeclarationKind kind1 = GetMemberDeclarationKind(x);
-            MemberDeclarationKind kind2 = GetMemberDeclarationKind(y);
+            MemberDeclarationKind kind1 = x.GetMemberDeclarationKind();
+            MemberDeclarationKind kind2 = y.GetMemberDeclarationKind();
 
             diff = ((int)kind1).CompareTo((int)kind2);
 
             if (diff != 0)
                 return diff;
 
-            diff = string.CompareOrdinal(x.Name, y.Name);
+            diff = CompareName(x, y);
 
             if (diff != 0)
                 return diff;
@@ -264,7 +241,7 @@ namespace Roslynator.CommandLine
             switch (kind1)
             {
                 case MemberDeclarationKind.Constructor:
-                case MemberDeclarationKind.Method:
+                case MemberDeclarationKind.OrdinaryMethod:
                     {
                         var methodSymbol1 = (IMethodSymbol)x;
                         var methodSymbol2 = (IMethodSymbol)y;
@@ -287,57 +264,6 @@ namespace Roslynator.CommandLine
             }
 
             return 0;
-
-            MemberDeclarationKind GetMemberDeclarationKind(ISymbol symbol)
-            {
-                switch (symbol.Kind)
-                {
-                    case SymbolKind.Event:
-                        {
-                            return MemberDeclarationKind.Event;
-                        }
-                    case SymbolKind.Field:
-                        {
-                            var fieldSymbol = (IFieldSymbol)symbol;
-
-                            if (fieldSymbol.IsConst)
-                                return MemberDeclarationKind.Const;
-
-                            return MemberDeclarationKind.Field;
-                        }
-                    case SymbolKind.Method:
-                        {
-                            var methodSymbol = (IMethodSymbol)symbol;
-
-                            switch (methodSymbol.MethodKind)
-                            {
-                                case MethodKind.Constructor:
-                                    return MemberDeclarationKind.Constructor;
-                                case MethodKind.Conversion:
-                                    return MemberDeclarationKind.ConversionOperator;
-                                case MethodKind.UserDefinedOperator:
-                                    return MemberDeclarationKind.Operator;
-                                case MethodKind.Ordinary:
-                                    return MemberDeclarationKind.Method;
-                            }
-
-                            break;
-                        }
-                    case SymbolKind.Property:
-                        {
-                            var propertySymbol = (IPropertySymbol)symbol;
-
-                            if (propertySymbol.IsIndexer)
-                                return MemberDeclarationKind.Indexer;
-
-                            return MemberDeclarationKind.Property;
-                        }
-                }
-
-                Debug.Fail(symbol.ToDisplayString(SymbolDisplayFormats.Test));
-
-                return MemberDeclarationKind.None;
-            }
         }
 
         private static int CompareContainingTypes(INamedTypeSymbol x, INamedTypeSymbol y)
@@ -353,16 +279,10 @@ namespace Roslynator.CommandLine
 
             while (true)
             {
-                if (count1 < 0)
-                    return (count2 < 0) ? 0 : -1;
-
-                if (count2 < 0)
-                    return 1;
-
                 INamedTypeSymbol containingType1 = GetContainingType(x, count1);
                 INamedTypeSymbol containingType2 = GetContainingType(y, count2);
 
-                int diff = string.CompareOrdinal(containingType1.Name, containingType2.Name);
+                int diff = CompareName(containingType1, containingType2);
 
                 if (diff != 0)
                     return diff;
@@ -372,19 +292,25 @@ namespace Roslynator.CommandLine
                 if (diff != 0)
                     return diff;
 
+                if (count1 == 0)
+                    return (count2 == 0) ? 0 : -1;
+
+                if (count2 == 0)
+                    return 1;
+
                 count1--;
                 count2--;
             }
 
-            int CountContainingTypes(INamedTypeSymbol containingType)
+            int CountContainingTypes(INamedTypeSymbol namedType)
             {
                 int count = 0;
 
                 while (true)
                 {
-                    containingType = containingType.ContainingType;
+                    namedType = namedType.ContainingType;
 
-                    if (containingType == null)
+                    if (namedType == null)
                         break;
 
                     count++;
@@ -393,21 +319,21 @@ namespace Roslynator.CommandLine
                 return count;
             }
 
-            INamedTypeSymbol GetContainingType(INamedTypeSymbol containingType, int count)
+            INamedTypeSymbol GetContainingType(INamedTypeSymbol namedType, int count)
             {
                 while (count > 0)
                 {
-                    containingType = containingType.ContainingType;
+                    namedType = namedType.ContainingType;
                     count--;
                 }
 
-                return containingType;
+                return namedType;
             }
         }
 
-        private int CompareSymbolAndNamespaceSymbol(ISymbol symbol, INamespaceSymbol namespaceSymbol)
+        private static int CompareSymbolAndNamespaceSymbol(ISymbol symbol, INamespaceSymbol namespaceSymbol)
         {
-            int diff = CompareNamespace(symbol.ContainingNamespace, namespaceSymbol);
+            int diff = CompareNamespaceSymbol(symbol.ContainingNamespace, namespaceSymbol);
 
             if (diff != 0)
                 return diff;
@@ -415,9 +341,9 @@ namespace Roslynator.CommandLine
             return 1;
         }
 
-        private int CompareSymbolAndNamedTypeSymbol(ISymbol symbol, INamedTypeSymbol namedTypeSymbol)
+        private static int CompareSymbolAndNamedTypeSymbol(ISymbol symbol, INamedTypeSymbol namedTypeSymbol)
         {
-            int diff = CompareNamespace(symbol.ContainingNamespace, namedTypeSymbol.ContainingNamespace);
+            int diff = CompareNamespaceSymbol(symbol.ContainingNamespace, namedTypeSymbol.ContainingNamespace);
 
             if (diff != 0)
                 return diff;
@@ -466,8 +392,12 @@ namespace Roslynator.CommandLine
             if (diff != 0)
                 return diff;
 
-            //TODO: compare parameter type
-            return 0;
+            return CompareName(x, y);
+        }
+
+        private static int CompareName(ISymbol symbol1, ISymbol symbol2)
+        {
+            return string.Compare(symbol1.Name, symbol2.Name, StringComparison.Ordinal);
         }
     }
 }
