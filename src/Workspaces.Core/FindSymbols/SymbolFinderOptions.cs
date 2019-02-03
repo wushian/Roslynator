@@ -88,10 +88,10 @@ namespace Roslynator.FindSymbols
         [Flags]
         internal enum VisibilityFlags
         {
-            None,
-            Public,
-            Internal,
-            Private
+            None = 0,
+            Public = 1,
+            Internal = 2,
+            Private = 4
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-namespace Roslynator.Documentation
+namespace Roslynator
 {
-    public enum MemberDeclarationKind
+    internal enum MemberDeclarationKind
     {
         None = 0,
         Const = 1,
@@ -11,7 +11,7 @@ namespace Roslynator.Documentation
         Event = 4,
         Indexer = 5,
         Property = 6,
-        Method = 7,
+        Method = 7, //TODO: OrdinaryMethod
         ConversionOperator = 8,
         Operator = 9
     }

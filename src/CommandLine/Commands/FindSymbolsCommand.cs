@@ -69,6 +69,8 @@ namespace Roslynator.CommandLine
                     {
                         (symbols ?? (symbols = ImmutableArray.CreateBuilder<ISymbol>())).AddRange(symbols2);
                     }
+
+                    WriteLine($"  {symbols.Count} {((symbols.Count == 1) ? "symbol" : "symbols")} found", Verbosity.Normal);
                 }
 
                 allSymbols = symbols?.ToImmutableArray() ?? ImmutableArray<ISymbol>.Empty;
@@ -78,13 +80,20 @@ namespace Roslynator.CommandLine
             {
                 WriteLine(Verbosity.Normal);
 
+                foreach (ISymbol symbol in allSymbols.OrderBy(f => f, SymbolDefinitionComparer.Instance))
+                {
+                    WriteLine(symbol.ToDisplayString(), Verbosity.Normal);
+                }
+
+                WriteLine(Verbosity.Normal);
+
                 Dictionary<SymbolSpecialKind, int> countByKind = allSymbols
                     .GroupBy(f => f.GetSpecialKind())
                     .OrderByDescending(f => f.Count())
                     .ThenBy(f => f.Key)
                     .ToDictionary(f => f.Key, f => f.Count());
 
-                int maxCountLength = countByKind.Sum(f => f.Value.ToString().Length);
+                int maxCountLength = countByKind.Max(f => f.Value.ToString().Length);
 
                 foreach (KeyValuePair<SymbolSpecialKind, int> kvp in countByKind)
                 {
@@ -134,17 +143,18 @@ namespace Roslynator.CommandLine
 
             public void OnSymbolFound(ISymbol symbol)
             {
-                if (UnusedOnly)
-                {
-                    WriteLine($"  Unused {symbol.GetSpecialKind().ToString()} {symbol.ToDisplayString()}", Verbosity.Normal);
-                }
-                else
-                {
-                    WriteLine($"  {symbol.ToDisplayString()}", Verbosity.Normal);
-                }
+                //TODO: 
+                //if (UnusedOnly)
+                //{
+                //    WriteLine($"  Unused {symbol.GetSpecialKind().ToString()} {symbol.ToDisplayString()}", Verbosity.Normal);
+                //}
+                //else
+                //{
+                //    WriteLine($"  {symbol.ToDisplayString()}", Verbosity.Normal);
+                //}
 
-                WriteLine($"    Location: {FormatLocation(symbol.Locations[0])}", ConsoleColor.DarkGray, Verbosity.Detailed);
-                WriteLine($"    Id:       {symbol.GetDocumentationCommentId()}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                //WriteLine($"    Location: {FormatLocation(symbol.Locations[0])}", ConsoleColor.DarkGray, Verbosity.Detailed);
+                //WriteLine($"    Id:       {symbol.GetDocumentationCommentId()}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
             }
 
             private static string FormatLocation(Location location)

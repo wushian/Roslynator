@@ -162,7 +162,35 @@ namespace Roslynator.FindSymbols
                     }
                 case SymbolKind.Method:
                     {
-                        return SymbolSpecialKinds.Method;
+                        var methodSymbol = (IMethodSymbol)symbol;
+
+                        switch (methodSymbol.MethodKind)
+                        {
+                            case MethodKind.Constructor:
+                            case MethodKind.Conversion:
+                            case MethodKind.UserDefinedOperator:
+                            case MethodKind.Ordinary:
+                                return SymbolSpecialKinds.Method;
+                            case MethodKind.AnonymousFunction:
+                            case MethodKind.DelegateInvoke:
+                            case MethodKind.Destructor:
+                            case MethodKind.EventAdd:
+                            case MethodKind.EventRaise:
+                            case MethodKind.EventRemove:
+                            case MethodKind.ExplicitInterfaceImplementation:
+                            case MethodKind.PropertyGet:
+                            case MethodKind.PropertySet:
+                            case MethodKind.ReducedExtension:
+                            case MethodKind.StaticConstructor:
+                            case MethodKind.BuiltinOperator:
+                            case MethodKind.DeclareMethod:
+                            case MethodKind.LocalFunction:
+                                return SymbolSpecialKinds.None;
+                        }
+
+                        Debug.Fail(methodSymbol.MethodKind.ToString());
+
+                        return SymbolSpecialKinds.None;
                     }
                 case SymbolKind.Property:
                     {

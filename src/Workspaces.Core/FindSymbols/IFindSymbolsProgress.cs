@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator.FindSymbols
 {
-    public interface IFindSymbolsProgress
+    internal interface IFindSymbolsProgress
     {
         void OnSymbolFound(ISymbol symbol);
     }
