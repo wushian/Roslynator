@@ -12,6 +12,7 @@ set _msbuildPath="C:\Program Files\Microsoft Visual Studio\2017\Community\MSBuil
   "System.ObsoleteAttribute" ^
   "Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzerAttribute" ^
   "Microsoft.CodeAnalysis.CodeFixes.ExportCodeFixProviderAttribute" ^
+  "System.Composition.ExportAttribute" ^
  --unused-only ^
  --ignored-projects Analyzers.Tests CodeFixes.Tests Refactorings.Tests TestFramework.VisualBasic TestLibrary ^
  --verbosity n ^

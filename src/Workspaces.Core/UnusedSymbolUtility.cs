@@ -72,7 +72,8 @@ namespace Roslynator
                                 }
                             case MethodKind.Constructor:
                                 {
-                                    return true;
+                                    return methodSymbol.Parameters.Any()
+                                        || !methodSymbol.ContainingType.IsAbstract;
                                 }
                         }
 
@@ -125,6 +126,25 @@ namespace Roslynator
                         {
                             return false;
                         }
+                    }
+                }
+            }
+
+            if (symbol.Kind == SymbolKind.Field)
+            {
+                INamedTypeSymbol containingType = symbol.ContainingType;
+
+                if (containingType.TypeKind == TypeKind.Enum
+                    && containingType.HasAttribute(MetadataNames.System_FlagsAttribute))
+                {
+                    var fieldSymbol = (IFieldSymbol)symbol;
+
+                    if (fieldSymbol.HasConstantValue)
+                    {
+                        ulong value = SymbolUtility.GetEnumValueAsUInt64(fieldSymbol.ConstantValue, containingType);
+
+                        if (value == 0)
+                            return false;
                     }
                 }
             }
