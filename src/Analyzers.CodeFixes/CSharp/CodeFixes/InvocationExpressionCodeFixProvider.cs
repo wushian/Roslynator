@@ -88,7 +88,7 @@ namespace Roslynator.CSharp.CodeFixes
                         {
                             CodeAction codeAction = CodeAction.Create(
                                 "Remove redundant 'ToString' call",
-                                cancellationToken => context.Document.ReplaceNodeAsync(invocation, RefactoringUtility.RemoveInvocation(invocation).WithFormatterAnnotation(), cancellationToken),
+                                cancellationToken => context.Document.ReplaceNodeAsync(invocation, RemoveInvocation(invocation).WithFormatterAnnotation(), cancellationToken),
                                 GetEquivalenceKey(diagnostic));
 
                             context.RegisterCodeFix(codeAction, diagnostic);
@@ -98,7 +98,7 @@ namespace Roslynator.CSharp.CodeFixes
                         {
                             CodeAction codeAction = CodeAction.Create(
                                 "Remove redundant 'ToCharArray' call",
-                                cancellationToken => context.Document.ReplaceNodeAsync(invocation, RefactoringUtility.RemoveInvocation(invocation).WithFormatterAnnotation(), cancellationToken),
+                                cancellationToken => context.Document.ReplaceNodeAsync(invocation, RemoveInvocation(invocation).WithFormatterAnnotation(), cancellationToken),
                                 GetEquivalenceKey(diagnostic));
 
                             context.RegisterCodeFix(codeAction, diagnostic);
@@ -248,6 +248,25 @@ namespace Roslynator.CSharp.CodeFixes
                 .WithFormatterAnnotation();
 
             return await document.ReplaceNodeAsync(expressionStatement, forEachStatement, cancellationToken).ConfigureAwait(false);
+        }
+
+        private static ExpressionSyntax RemoveInvocation(InvocationExpressionSyntax invocation)
+        {
+            var memberAccess = (MemberAccessExpressionSyntax)invocation.Expression;
+
+            ArgumentListSyntax argumentList = invocation.ArgumentList;
+
+            SyntaxToken closeParen = argumentList.CloseParenToken;
+
+            return memberAccess.Expression
+                .AppendToTrailingTrivia(
+                    memberAccess.OperatorToken.GetAllTrivia()
+                        .Concat(memberAccess.Name.GetLeadingAndTrailingTrivia())
+                        .Concat(argumentList.OpenParenToken.GetAllTrivia())
+                        .Concat(closeParen.LeadingTrivia)
+                        .ToSyntaxTriviaList()
+                        .EmptyIfWhitespace()
+                        .AddRange(closeParen.TrailingTrivia));
         }
     }
 }
