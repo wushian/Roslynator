@@ -227,33 +227,5 @@ namespace Roslynator
             WriteLine($"{fixedCount} {((fixedCount == 1) ? "diagnostic" : "diagnostics")} fixed", ConsoleColor.Green, Verbosity.Minimal);
             WriteLine(Verbosity.Minimal);
         }
-
-        public static void WriteLocation(Location location, ConsoleColor color, Verbosity verbosity)
-        {
-            switch (location.Kind)
-            {
-                case LocationKind.SourceFile:
-                case LocationKind.XmlFile:
-                case LocationKind.ExternalFile:
-                    {
-                        FileLinePositionSpan span = location.GetMappedLineSpan();
-
-                        if (span.IsValid)
-                        {
-                            Write(span.Path, color, verbosity);
-
-                            LinePosition linePosition = span.Span.Start;
-
-                            Write("(", color, verbosity);
-                            Write((linePosition.Line + 1).ToString(), color, verbosity);
-                            Write(",", color, verbosity);
-                            Write((linePosition.Character + 1).ToString(), color, verbosity);
-                            Write("): ", color, verbosity);
-                        }
-
-                        break;
-                    }
-            }
-        }
     }
 }

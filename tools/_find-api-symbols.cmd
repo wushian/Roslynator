@@ -9,7 +9,7 @@ set _msbuildPath="C:\Program Files\Microsoft Visual Studio\2017\Community\MSBuil
  --visibility public ^
  --symbol-kinds type ^
  --ignored-attributes ^
-  "System.ObsoleteAttribute" ^
+ --ignore-obsolete ^
  --verbosity n ^
  --file-log "roslynator.log" ^
  --file-log-verbosity n

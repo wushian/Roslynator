@@ -7,7 +7,6 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: Remove, Accessibility, GroupBy (Project, TypeKind, MemberKind)
 #if DEBUG
     [Verb("find-symbols", HelpText = "Finds symbols in the specified project or solution.")]
 #endif
@@ -15,6 +14,9 @@ namespace Roslynator.CommandLine
     {
         [Option(longName: "ignored-attributes")]
         public IEnumerable<string> IgnoredAttributes { get; set; }
+
+        [Option(longName: "ignore-obsolete")]
+        public bool IgnoreObsolete { get; set; }
 
         [Option(longName: "ignored-symbols")]
         public IEnumerable<string> IgnoredSymbols { get; set; }

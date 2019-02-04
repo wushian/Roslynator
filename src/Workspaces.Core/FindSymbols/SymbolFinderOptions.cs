@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator.FindSymbols
 {
-    //TODO: SymbolNamePattern, IgnoredModifiers, IgnoredSymbolNames
+    //TODO: SymbolNamePattern
     internal class SymbolFinderOptions
     {
         private static readonly ImmutableArray<Visibility> _allVisibilities = ImmutableArray.Create(Visibility.Public, Visibility.Internal, Visibility.Private);
@@ -19,6 +19,7 @@ namespace Roslynator.FindSymbols
             SymbolSpecialKinds symbolKinds = SymbolSpecialKinds.TypeOrMember,
             ImmutableArray<Visibility> visibilities = default,
             ImmutableArray<MetadataName> ignoredAttributes = default,
+            bool ignoreObsolete = false,
             bool includeGeneratedCode = false,
             bool unusedOnly = false)
         {
@@ -27,6 +28,7 @@ namespace Roslynator.FindSymbols
             IgnoredAttributes = (!ignoredAttributes.IsDefault) ? ignoredAttributes : ImmutableArray<MetadataName>.Empty;
             IncludeGeneratedCode = includeGeneratedCode;
             UnusedOnly = unusedOnly;
+            IgnoreObsolete = ignoreObsolete;
 
             foreach (Visibility visibility in Visibilities)
             {
@@ -60,6 +62,8 @@ namespace Roslynator.FindSymbols
         public SymbolSpecialKinds SymbolKinds { get; }
 
         public ImmutableArray<Visibility> Visibilities { get; }
+
+        public bool IgnoreObsolete { get; }
 
         public bool IncludeGeneratedCode { get; }
 

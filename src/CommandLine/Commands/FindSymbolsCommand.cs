@@ -50,13 +50,29 @@ namespace Roslynator.CommandLine
         {
             AssemblyResolver.Register();
 
+            HashSet<string> ignoredSymbols = (Options.IgnoredSymbols.Any())
+                ? new HashSet<string>(Options.IgnoredSymbols)
+                : null;
+
+            var options = new SymbolFinderOptions(
+                symbolKinds: SymbolKinds,
+                visibilities: Visibilities,
+                ignoredAttributes: IgnoredAttributes,
+                ignoreObsolete: Options.IgnoreObsolete,
+                includeGeneratedCode: Options.IncludeGeneratedCode,
+                unusedOnly: Options.UnusedOnly);
+
+            var progress = new FindSymbolsProgress();
+
             ImmutableArray<ISymbol> allSymbols;
 
             if (projectOrSolution.IsProject)
             {
                 Project project = projectOrSolution.AsProject();
 
-                allSymbols = await AnalyzeProject(project, cancellationToken);
+                WriteLine($"Analyze '{project.Name}'", Verbosity.Minimal);
+
+                allSymbols = await AnalyzeProject(project, options, progress, cancellationToken);
             }
             else
             {
@@ -64,9 +80,9 @@ namespace Roslynator.CommandLine
 
                 WriteLine($"Analyze solution '{solution.FilePath}'", Verbosity.Minimal);
 
-                Stopwatch stopwatch = Stopwatch.StartNew();
-
                 ImmutableArray<ISymbol>.Builder symbols = null;
+
+                Stopwatch stopwatch = Stopwatch.StartNew();
 
                 foreach (Project project in FilterProjects(solution, Options, s => s
                     .GetProjectDependencyGraph()
@@ -75,10 +91,41 @@ namespace Roslynator.CommandLine
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    ImmutableArray<ISymbol> symbols2 = await AnalyzeProject(project, cancellationToken);
+                    WriteLine($"  Analyze '{project.Name}'", Verbosity.Minimal);
 
-                    if (symbols2.Any())
-                        (symbols ?? (symbols = ImmutableArray.CreateBuilder<ISymbol>())).AddRange(symbols2);
+                    ImmutableArray<ISymbol> projectSymbols = await AnalyzeProject(project, options, progress, cancellationToken);
+
+                    if (!projectSymbols.Any())
+                        continue;
+
+                    if (ignoredSymbols?.Count > 0)
+                    {
+                        Compilation compilation = await project.GetCompilationAsync(cancellationToken);
+
+                        ImmutableDictionary<string, ISymbol> symbolsById = ignoredSymbols
+                            .Select(f => (id: f, symbol: DocumentationCommentId.GetFirstSymbolForDeclarationId(f, compilation)))
+                            .Where(f => f.id != null)
+                            .ToImmutableDictionary(f => f.id, f => f.symbol);
+
+                        ignoredSymbols.ExceptWith(symbolsById.Select(f => f.Key));
+
+                        projectSymbols = projectSymbols.Except(symbolsById.Select(f => f.Value)).ToImmutableArray();
+
+                        if (!projectSymbols.Any())
+                            continue;
+                    }
+
+                    int maxKindLength = projectSymbols
+                        .Select(f => f.GetSpecialKind())
+                        .Distinct()
+                        .Max(f => f.ToString().Length);
+
+                    foreach (ISymbol symbol in projectSymbols.OrderBy(f => f, SymbolDefinitionComparer.Instance))
+                    {
+                        WriteSymbol(symbol, Verbosity.Normal, indentation: "    ", addCommentId: true, padding: maxKindLength);
+                    }
+
+                        (symbols ?? (symbols = ImmutableArray.CreateBuilder<ISymbol>())).AddRange(projectSymbols);
                 }
 
                 stopwatch.Stop();
@@ -102,15 +149,9 @@ namespace Roslynator.CommandLine
 
                 WriteLine(Verbosity.Normal);
 
-                //TODO: group by namespace
                 foreach (ISymbol symbol in allSymbols.OrderBy(f => f, SymbolDefinitionComparer.Instance))
                 {
-                    WriteSymbol(symbol, Verbosity.Normal, colorNamespace: true, kindPadding: maxKindLength);
-
-                    //Write("  Location: ", ConsoleColor.DarkGray, Verbosity.Detailed);
-                    //LogHelpers.WriteLocation(symbol.Locations[0], ConsoleColor.DarkGray, Verbosity.Detailed);
-                    //WriteLine(Verbosity.Detailed);
-                    //WriteLine($"  Id:       {symbol.GetDocumentationCommentId()}", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                    WriteSymbol(symbol, Verbosity.Normal, colorNamespace: true, padding: maxKindLength);
                 }
 
                 WriteLine(Verbosity.Normal);
@@ -128,28 +169,13 @@ namespace Roslynator.CommandLine
             return CommandResult.Success;
         }
 
-        private async Task<ImmutableArray<ISymbol>> AnalyzeProject(Project project, CancellationToken cancellationToken)
+        private static Task<ImmutableArray<ISymbol>> AnalyzeProject(
+            Project project,
+            SymbolFinderOptions options,
+            IFindSymbolsProgress progress,
+            CancellationToken cancellationToken)
         {
-            WriteLine($"  Analyze '{project.Name}'", Verbosity.Minimal);
-
-            Compilation compilation = await project.GetCompilationAsync(cancellationToken);
-
-            //TODO: IgnoredSymbols
-            ImmutableHashSet<ISymbol> ignoredSymbols = Options.IgnoredSymbols
-                .Select(f => DocumentationCommentId.GetFirstSymbolForDeclarationId(f, compilation))
-                .Where(f => f != null)
-                .ToImmutableHashSet();
-
-            var options = new SymbolFinderOptions(
-                symbolKinds: SymbolKinds,
-                visibilities: Visibilities,
-                ignoredAttributes: IgnoredAttributes,
-                includeGeneratedCode: Options.IncludeGeneratedCode,
-                unusedOnly: Options.UnusedOnly);
-
-            var progress = new FindSymbolsProgress();
-
-            return await SymbolFinder.FindSymbolsAsync(project, options, progress, cancellationToken).ConfigureAwait(false);
+            return SymbolFinder.FindSymbolsAsync(project, options, progress, cancellationToken);
         }
 
         protected override void OperationCanceled(OperationCanceledException ex)
@@ -160,26 +186,30 @@ namespace Roslynator.CommandLine
         private static void WriteSymbol(
             ISymbol symbol,
             Verbosity verbosity,
+            string indentation = "",
+            bool addCommentId = false,
             bool colorNamespace = false,
-            int kindPadding = 0)
+            int padding = 0)
         {
             if (!ShouldWrite(verbosity))
                 return;
 
             bool isObsolete = symbol.HasAttribute(MetadataNames.System_ObsoleteAttribute);
 
-            string kindText = symbol.GetSpecialKind().ToString().ToLowerInvariant().PadRight(kindPadding);
+            Write(indentation, verbosity);
+
+            string kindText = symbol.GetSpecialKind().ToString().ToLowerInvariant();
 
             if (isObsolete)
             {
-                Write(kindText, ConsoleColor.DarkGray, Verbosity.Normal);
+                Write(kindText, ConsoleColor.DarkGray, verbosity);
             }
             else
             {
-                Write(kindText, Verbosity.Normal);
+                Write(kindText, verbosity);
             }
 
-            Write(" ", Verbosity.Normal);
+            Write(' ', padding - kindText.Length + 1, verbosity);
 
             string namespaceText = symbol.ContainingNamespace.ToDisplayString();
 
@@ -208,15 +238,25 @@ namespace Roslynator.CommandLine
                 Write(nameText, verbosity);
             }
 
-            WriteLine(verbosity);
+            if (addCommentId
+                && ShouldWrite(Verbosity.Diagnostic))
+            {
+                WriteLine(verbosity);
+                Write(indentation);
+                Write("ID:", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+                Write(' ', padding - 2, Verbosity.Diagnostic);
+                WriteLine(symbol.GetDocumentationCommentId(), ConsoleColor.DarkGray, Verbosity.Diagnostic);
+            }
+            else
+            {
+                WriteLine(verbosity);
+            }
         }
 
         private class FindSymbolsProgress : IFindSymbolsProgress
         {
             public void OnSymbolFound(ISymbol symbol)
             {
-                Write("    ", Verbosity.Normal);
-                WriteSymbol(symbol, Verbosity.Normal);
             }
         }
     }

@@ -38,6 +38,12 @@ namespace Roslynator.FindSymbols
                     if (symbol.IsImplicitlyDeclared)
                         continue;
 
+                    if (options.IgnoreObsolete
+                        && symbol.HasAttribute(MetadataNames.System_ObsoleteAttribute))
+                    {
+                        continue;
+                    }
+
                     SymbolKind kind = symbol.Kind;
 
                     if (kind == SymbolKind.Namespace)
