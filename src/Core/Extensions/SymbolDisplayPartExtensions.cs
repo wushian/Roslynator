@@ -2,7 +2,7 @@
 
 using Microsoft.CodeAnalysis;
 
-namespace Roslynator.Documentation
+namespace Roslynator
 {
     internal static class SymbolDisplayPartExtensions
     {

@@ -5,14 +5,15 @@ using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
-namespace Roslynator.Documentation
+namespace Roslynator.CSharp
 {
-    //TODO: SystemNamespaceFirst
-    public class DeclarationListOptions
+    //TODO: remove UseDefaultLiteral, NewLineBeforeBrace, FullyQualifiedNames
+    //TODO: add AddAssemblyAttributes, SystemNamespaceFirst
+    internal class DefinitionListOptions
     {
         private readonly ImmutableArray<MetadataName> _ignoredMetadataNames;
 
-        public DeclarationListOptions(
+        public DefinitionListOptions(
             Visibility visibility = DefaultValues.Visibility,
             IEnumerable<string> ignoredNames = null,
             bool indent = DefaultValues.Indent,
@@ -28,8 +29,7 @@ namespace Roslynator.Documentation
             bool omitIEnumerable = DefaultValues.OmitIEnumerable,
             bool useDefaultLiteral = DefaultValues.UseDefaultLiteral,
             bool fullyQualifiedNames = DefaultValues.FullyQualifiedNames,
-            DocumentationDepth depth = DefaultValues.Depth,
-            DeclarationListParts ignoredParts = DeclarationListParts.None)
+            DefinitionListDepth depth = DefaultValues.Depth)
         {
             _ignoredMetadataNames = ignoredNames?.Select(name => MetadataName.Parse(name)).ToImmutableArray() ?? default;
 
@@ -49,18 +49,15 @@ namespace Roslynator.Documentation
             UseDefaultLiteral = useDefaultLiteral;
             FullyQualifiedNames = fullyQualifiedNames;
             Depth = depth;
-            IgnoredParts = ignoredParts;
         }
 
-        public static DeclarationListOptions Default { get; } = new DeclarationListOptions();
+        public static DefinitionListOptions Default { get; } = new DefinitionListOptions();
 
         public Visibility Visibility { get; }
 
         public ImmutableArray<string> IgnoredNames { get; }
 
-        public DeclarationListParts IgnoredParts { get; }
-
-        public DocumentationDepth Depth { get; }
+        public DefinitionListDepth Depth { get; }
 
         public bool Indent { get; }
 
@@ -115,7 +112,7 @@ namespace Roslynator.Documentation
         internal static class DefaultValues
         {
             public const Visibility Visibility = Roslynator.Visibility.Private;
-            public const DocumentationDepth Depth = DocumentationOptions.DefaultValues.Depth;
+            public const DefinitionListDepth Depth = DefinitionListDepth.Member;
             public const bool EmptyLineBetweenMembers = false;
             public const bool FormatBaseList = false;
             public const bool FormatConstraints = false;

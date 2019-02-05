@@ -599,6 +599,21 @@ namespace Roslynator
             return visibility;
         }
 
+        internal static bool IsVisible(this ISymbol symbol, Visibility visibility)
+        {
+            switch (visibility)
+            {
+                case Visibility.Public:
+                    return IsPubliclyVisible(symbol);
+                case Visibility.Internal:
+                    return IsPubliclyOrInternallyVisible(symbol);
+                case Visibility.Private:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown value '{visibility}'.", nameof(visibility));
+            }
+        }
+
         /// <summary>
         /// Returns true if a symbol has the specified <see cref="MetadataName"/>.
         /// </summary>
@@ -608,6 +623,21 @@ namespace Roslynator
         public static bool HasMetadataName(this ISymbol symbol, in MetadataName metadataName)
         {
             return metadataName.Equals(symbol);
+        }
+
+        internal static ImmutableArray<IParameterSymbol> GetParameters(this ISymbol symbol)
+        {
+            switch (symbol.Kind)
+            {
+                case SymbolKind.Method:
+                    return ((IMethodSymbol)symbol).Parameters;
+                case SymbolKind.NamedType:
+                    return ((INamedTypeSymbol)symbol).DelegateInvokeMethod?.Parameters ?? ImmutableArray<IParameterSymbol>.Empty;
+                case SymbolKind.Property:
+                    return ((IPropertySymbol)symbol).Parameters;
+            }
+
+            return ImmutableArray<IParameterSymbol>.Empty;
         }
         #endregion ISymbol
 

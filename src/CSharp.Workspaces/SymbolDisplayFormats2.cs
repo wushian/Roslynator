@@ -2,9 +2,10 @@
 
 using Microsoft.CodeAnalysis;
 
-namespace Roslynator.Documentation
+namespace Roslynator
 {
-    internal static class SymbolDisplayFormats
+    //TODO: SymbolDisplayFormats2
+    internal static class SymbolDisplayFormats2
     {
         internal static SymbolDisplayFormat Default { get; } = new SymbolDisplayFormat(
              globalNamespaceStyle: DefaultGlobalNamespaceStyle,
@@ -19,36 +20,15 @@ namespace Roslynator.Documentation
              kindOptions: DefaultKindOptions,
              miscellaneousOptions: DefaultMiscellaneousOptions);
 
-        public static SymbolDisplayFormat TypeName { get; } = Default.Update(
-            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameOnly,
-            genericsOptions: SymbolDisplayGenericsOptions.None,
-            memberOptions: SymbolDisplayMemberOptions.IncludeContainingType);
-
-        public static SymbolDisplayFormat TypeNameAndTypeParameters { get; } = Default.Update(
-            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameOnly,
-            genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
-            memberOptions: SymbolDisplayMemberOptions.IncludeContainingType);
-
         public static SymbolDisplayFormat TypeNameAndContainingTypes { get; } = Default.Update(
             typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypes,
             genericsOptions: SymbolDisplayGenericsOptions.None,
-            memberOptions: SymbolDisplayMemberOptions.IncludeContainingType);
-
-        public static SymbolDisplayFormat TypeNameAndContainingTypesAndTypeParameters { get; } = Default.Update(
-            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypes,
-            genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
             memberOptions: SymbolDisplayMemberOptions.IncludeContainingType);
 
         public static SymbolDisplayFormat TypeNameAndContainingTypesAndNamespaces { get; } = Default.Update(
             globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.OmittedAsContaining,
             typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
             genericsOptions: SymbolDisplayGenericsOptions.None,
-            memberOptions: SymbolDisplayMemberOptions.IncludeContainingType);
-
-        public static SymbolDisplayFormat TypeNameAndContainingTypesAndNamespacesAndTypeParameters { get; } = Default.Update(
-            globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.OmittedAsContaining,
-            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
-            genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
             memberOptions: SymbolDisplayMemberOptions.IncludeContainingType);
 
         public static SymbolDisplayFormat NamespaceDeclaration { get; } = Default.Update(
@@ -80,35 +60,6 @@ namespace Roslynator.Documentation
              miscellaneousOptions: SymbolDisplayMiscellaneousOptions.UseSpecialTypes
                 | SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers
             );
-
-        public static SymbolDisplayFormat SimpleDeclaration { get; } = Default.Update(
-            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameOnly,
-            genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
-            memberOptions: SymbolDisplayMemberOptions.IncludeExplicitInterface
-                | SymbolDisplayMemberOptions.IncludeParameters,
-            delegateStyle: SymbolDisplayDelegateStyle.NameAndParameters,
-            parameterOptions: SymbolDisplayParameterOptions.IncludeType);
-
-        public static SymbolDisplayFormat ExplicitImplementationFullName { get; } = Default.Update(
-             typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
-             genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
-             memberOptions: SymbolDisplayMemberOptions.IncludeExplicitInterface
-                | SymbolDisplayMemberOptions.IncludeContainingType);
-
-        public static SymbolDisplayFormat MemberTitle { get; } = Default.Update(
-            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypes,
-            genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
-            memberOptions: SymbolDisplayMemberOptions.IncludeExplicitInterface
-                | SymbolDisplayMemberOptions.IncludeParameters
-                | SymbolDisplayMemberOptions.IncludeContainingType,
-            delegateStyle: SymbolDisplayDelegateStyle.NameAndParameters,
-            parameterOptions: SymbolDisplayParameterOptions.IncludeType);
-
-        public static SymbolDisplayFormat OverloadedMemberTitle { get; } = Default.Update(
-            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypes,
-            genericsOptions: SymbolDisplayGenericsOptions.None,
-            memberOptions: SymbolDisplayMemberOptions.IncludeExplicitInterface
-                | SymbolDisplayMemberOptions.IncludeContainingType);
 
         internal const SymbolDisplayGlobalNamespaceStyle DefaultGlobalNamespaceStyle
             = SymbolDisplayGlobalNamespaceStyle.Omitted;

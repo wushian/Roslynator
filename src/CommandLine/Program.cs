@@ -394,6 +394,7 @@ namespace Roslynator.CommandLine
                 return 1;
 
             var declarationListOptions = new DeclarationListOptions(
+                visibility: visibility,
                 ignoredNames: options.IgnoredNames,
                 indent: !options.NoIndent,
                 indentChars: options.IndentChars,
@@ -425,7 +426,7 @@ namespace Roslynator.CommandLine
             Task<string> task = DeclarationListGenerator.GenerateAsync(
                 documentationModel,
                 declarationListOptions,
-                namespaceComparer: NamespaceSymbolComparer.GetInstance(systemNamespaceFirst: !options.NoPrecedenceForSystem),
+                namespaceComparer: NamespaceSymbolDefinitionComparer.GetInstance(systemNamespaceFirst: !options.NoPrecedenceForSystem),
                 cancellationToken: cancellationToken);
 
             string content = task.Result;

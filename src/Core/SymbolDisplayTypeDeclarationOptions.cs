@@ -2,10 +2,10 @@
 
 using System;
 
-namespace Roslynator.Documentation
+namespace Roslynator
 {
     [Flags]
-    public enum SymbolDisplayTypeDeclarationOptions
+    internal enum SymbolDisplayTypeDeclarationOptions
     {
         None = 0,
         IncludeModifiers = 1,

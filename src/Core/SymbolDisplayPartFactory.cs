@@ -3,7 +3,7 @@
 using System;
 using Microsoft.CodeAnalysis;
 
-namespace Roslynator.Documentation
+namespace Roslynator
 {
     internal static class SymbolDisplayPartFactory
     {

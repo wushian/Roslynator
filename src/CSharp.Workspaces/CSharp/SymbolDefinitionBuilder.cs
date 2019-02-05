@@ -7,11 +7,10 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Roslynator.CSharp;
 
-namespace Roslynator.Documentation
+namespace Roslynator.CSharp
 {
-    internal static class SymbolDeclarationBuilder
+    internal static class SymbolDefinitionBuilder
     {
         public static ImmutableArray<SymbolDisplayPart> GetDisplayParts(
             ISymbol symbol,
@@ -147,8 +146,8 @@ namespace Roslynator.Documentation
                     if (!MetadataNameEqualityComparer<INamespaceSymbol>.Instance.Equals(n1, n2))
                     {
                         return string.CompareOrdinal(
-                            n1.ToDisplayString(SymbolDisplayFormats.TypeNameAndContainingTypesAndNamespaces),
-                            n2.ToDisplayString(SymbolDisplayFormats.TypeNameAndContainingTypesAndNamespaces));
+                            n1.ToDisplayString(SymbolDisplayFormats2.TypeNameAndContainingTypesAndNamespaces),
+                            n2.ToDisplayString(SymbolDisplayFormats2.TypeNameAndContainingTypesAndNamespaces));
                     }
 
                     return string.CompareOrdinal(
@@ -235,7 +234,7 @@ namespace Roslynator.Documentation
                 ImmutableArray<IParameterSymbol> parameters = symbol.GetParameters();
 
                 if (parameters.Length > 1)
-                    FormatParameters(symbol, builder, DeclarationListOptions.DefaultValues.IndentChars);
+                    FormatParameters(symbol, builder, DefinitionListOptions.DefaultValues.IndentChars);
             }
 
             return builder.ToImmutableArray();
@@ -769,11 +768,11 @@ namespace Roslynator.Documentation
             if (containingNamespace != null
                 && symbol.ContainingNamespace == containingNamespace)
             {
-                builder.AddRange(symbol.ToDisplayParts(SymbolDisplayFormats.TypeNameAndContainingTypes));
+                builder.AddRange(symbol.ToDisplayParts(SymbolDisplayFormats2.TypeNameAndContainingTypes));
             }
             else
             {
-                builder.AddRange(symbol.ToDisplayParts(SymbolDisplayFormats.TypeNameAndContainingTypesAndNamespaces));
+                builder.AddRange(symbol.ToDisplayParts(SymbolDisplayFormats2.TypeNameAndContainingTypesAndNamespaces));
             }
 
             if (!(symbol is INamedTypeSymbol typeSymbol))
