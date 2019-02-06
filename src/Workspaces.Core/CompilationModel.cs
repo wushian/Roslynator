@@ -9,12 +9,11 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator
 {
-    //TODO: SolutionModel?
-    internal sealed class SolutionModel
+    internal sealed class CompilationModel
     {
         private readonly ImmutableArray<Compilation> _compilations;
 
-        private SolutionModel(
+        private CompilationModel(
             ImmutableArray<Compilation> compilations,
             Visibility visibility)
         {
@@ -39,7 +38,7 @@ namespace Roslynator
             return symbol.IsVisible(Visibility);
         }
 
-        public static async Task<SolutionModel> CreateAsync(
+        public static async Task<CompilationModel> CreateAsync(
             Solution solution,
             IEnumerable<string> projectNames = null,
             IEnumerable<string> ignoredProjectNames = null,
@@ -55,13 +54,13 @@ namespace Roslynator
                 compilations.Add(compilation);
             }
 
-            return new SolutionModel(compilations.ToImmutableArray(), visibility);
+            return new CompilationModel(compilations.ToImmutableArray(), visibility);
 
             IEnumerable<Project> FilterProjects()
             {
-                ImmutableHashSet<string> names = projectNames.ToImmutableHashSet();
+                ImmutableHashSet<string> names = projectNames?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
 
-                ImmutableHashSet<string> ignoredNames = ignoredProjectNames.ToImmutableHashSet();
+                ImmutableHashSet<string> ignoredNames = ignoredProjectNames?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
 
                 foreach (ProjectId projectId in solution
                     .GetProjectDependencyGraph()

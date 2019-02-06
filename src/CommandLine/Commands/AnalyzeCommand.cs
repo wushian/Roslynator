@@ -39,10 +39,7 @@ namespace Roslynator.CommandLine
                 logAnalyzerExecutionTime: Options.ExecutionTime,
                 severityLevel: SeverityLevel,
                 supportedDiagnosticIds: Options.SupportedDiagnostics,
-                ignoredDiagnosticIds: Options.IgnoredDiagnostics,
-                projectNames: Options.Projects,
-                ignoredProjectNames: Options.IgnoredProjects,
-                language: Language);
+                ignoredDiagnosticIds: Options.IgnoredDiagnostics);
 
             IEnumerable<AnalyzerAssembly> analyzerAssemblies = Options.AnalyzerAssemblies
                 .SelectMany(path => AnalyzerAssemblyLoader.LoadFrom(path, loadFixers: false).Select(info => info.AnalyzerAssembly));
@@ -78,7 +75,9 @@ namespace Roslynator.CommandLine
             {
                 Solution solution = projectOrSolution.AsSolution();
 
-                ImmutableArray<ProjectAnalysisResult> results = await codeAnalyzer.AnalyzeSolutionAsync(solution, cancellationToken);
+                var projectFilter = new ProjectFilter(Options.Projects, Options.IgnoredProjects, Language);
+
+                ImmutableArray<ProjectAnalysisResult> results = await codeAnalyzer.AnalyzeSolutionAsync(solution, projectFilter.IsMatch, cancellationToken);
 
                 if (Options.Output != null
                     && results.Any(f => f.Diagnostics.Any()))

@@ -48,13 +48,10 @@ namespace Roslynator.CommandLine
                 supportedDiagnosticIds: Options.SupportedDiagnostics,
                 ignoredDiagnosticIds: Options.IgnoredDiagnostics,
                 ignoredCompilerDiagnosticIds: Options.IgnoredCompilerDiagnostics,
-                projectNames: Options.Projects,
-                ignoredProjectNames: Options.IgnoredProjects,
                 diagnosticIdsFixableOneByOne: Options.DiagnosticsFixableOneByOne,
                 diagnosticFixMap: DiagnosticFixMap,
                 diagnosticFixerMap: DiagnosticFixerMap,
                 fileBanner: Options.FileBanner,
-                language: Language,
                 maxIterations: Options.MaxIterations,
                 batchSize: Options.BatchSize,
                 format: Options.Format);
@@ -64,13 +61,16 @@ namespace Roslynator.CommandLine
 
             CultureInfo culture = (Options.Culture != null) ? CultureInfo.GetCultureInfo(Options.Culture) : null;
 
-            return await FixAsync(projectOrSolution, analyzerAssemblies, codeFixerOptions, culture, cancellationToken);
+            var projectFilter = new ProjectFilter(Options.Projects, Options.IgnoredProjects, Language);
+
+            return await FixAsync(projectOrSolution, analyzerAssemblies, codeFixerOptions, projectFilter, culture, cancellationToken);
         }
 
         internal static async Task<CommandResult> FixAsync(
             ProjectOrSolution projectOrSolution,
             IEnumerable<AnalyzerAssembly> analyzerAssemblies,
             CodeFixerOptions codeFixerOptions,
+            ProjectFilter projectFilter,
             IFormatProvider formatProvider = null,
             CancellationToken cancellationToken = default)
         {
@@ -98,7 +98,7 @@ namespace Roslynator.CommandLine
 
                 CodeFixer codeFixer = GetCodeFixer(solution);
 
-                await codeFixer.FixSolutionAsync(cancellationToken);
+                await codeFixer.FixSolutionAsync(projectFilter.IsMatch, cancellationToken);
             }
 
             return CommandResult.Success;

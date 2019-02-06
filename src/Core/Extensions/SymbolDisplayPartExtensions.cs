@@ -11,6 +11,12 @@ namespace Roslynator
             return part.Kind == SymbolDisplayPartKind.Punctuation;
         }
 
+        public static bool IsPunctuation(this SymbolDisplayPart part, string text)
+        {
+            return part.Kind == SymbolDisplayPartKind.Punctuation
+                && part.ToString() == text;
+        }
+
         public static bool IsSpace(this SymbolDisplayPart part)
         {
             return part.Kind == SymbolDisplayPartKind.Space;

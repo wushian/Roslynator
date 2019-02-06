@@ -25,13 +25,10 @@ namespace Roslynator.CodeFixes
             IEnumerable<string> supportedDiagnosticIds = null,
             IEnumerable<string> ignoredDiagnosticIds = null,
             IEnumerable<string> ignoredCompilerDiagnosticIds = null,
-            IEnumerable<string> projectNames = null,
-            IEnumerable<string> ignoredProjectNames = null,
             IEnumerable<string> diagnosticIdsFixableOneByOne = null,
             IEnumerable<KeyValuePair<string, string>> diagnosticFixMap = null,
             IEnumerable<KeyValuePair<string, string>> diagnosticFixerMap = null,
             string fileBanner = null,
-            string language = null,
             int maxIterations = -1,
             int batchSize = -1,
             bool format = false) : base(
@@ -39,10 +36,7 @@ namespace Roslynator.CodeFixes
                 ignoreAnalyzerReferences: ignoreAnalyzerReferences,
                 concurrentAnalysis: concurrentAnalysis,
                 supportedDiagnosticIds: supportedDiagnosticIds,
-                ignoredDiagnosticIds: ignoredDiagnosticIds,
-                projectNames: projectNames,
-                ignoredProjectNames: ignoredProjectNames,
-                language: language)
+                ignoredDiagnosticIds: ignoredDiagnosticIds)
         {
             IgnoreCompilerErrors = ignoreCompilerErrors;
             IgnoredCompilerDiagnosticIds = ignoredCompilerDiagnosticIds?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;

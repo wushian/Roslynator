@@ -22,7 +22,7 @@ namespace Roslynator.CommandLine
 
                 if (index == -1)
                 {
-                    WriteLine($"Unable to parse property '{property}'", ConsoleColor.Red, Verbosity.Quiet);
+                    WriteLine($"Unable to parse property '{property}'", Verbosity.Quiet);
                     return false;
                 }
 
@@ -55,7 +55,7 @@ namespace Roslynator.CommandLine
 
                 if (index == -1)
                 {
-                    WriteLine($"Unable to parse key/value pair '{property}'", ConsoleColor.Red, Verbosity.Quiet);
+                    WriteLine($"Unable to parse key/value pair '{property}'", Verbosity.Quiet);
                     return false;
                 }
 
@@ -248,6 +248,28 @@ namespace Roslynator.CommandLine
             return true;
         }
 
+        public static bool TryParseDefinitionListDepth(string value, out DefinitionListDepth depth)
+        {
+            if (!Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out depth))
+            {
+                WriteLine($"Unknown definition list depth '{value}'.", Verbosity.Quiet);
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool TryParseDocumentationDepth(string value, out DocumentationDepth depth)
+        {
+            if (!Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out depth))
+            {
+                WriteLine($"Unknown documentation depth '{value}'.", Verbosity.Quiet);
+                return false;
+            }
+
+            return true;
+        }
+
         public static bool TryParseVerbosity(string value, out Verbosity verbosity)
         {
             switch (value)
@@ -338,7 +360,7 @@ namespace Roslynator.CommandLine
             {
                 if (!MetadataName.TryParse(value, out MetadataName metadataName))
                 {
-                    WriteLine($"Unable to parse metadata name '{value}'.", ConsoleColor.Red, Verbosity.Quiet);
+                    WriteLine($"Unable to parse metadata name '{value}'.", Verbosity.Quiet);
                     return false;
                 }
 

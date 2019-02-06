@@ -286,10 +286,7 @@ namespace Roslynator.Documentation
                             case TypeKind.Class:
                                 {
                                     BeginTypeContent();
-
-                                    if (Options.Depth == DocumentationDepth.Member)
-                                        AppendMembers(en.Current);
-
+                                    AppendMembers(en.Current);
                                     EndTypeContent();
                                     break;
                                 }
@@ -302,14 +299,17 @@ namespace Roslynator.Documentation
                                 {
                                     BeginTypeContent();
 
-                                    foreach (ISymbol member in en.Current.GetMembers())
+                                    if (Options.Depth == DocumentationDepth.Member)
                                     {
-                                        if (member.Kind == SymbolKind.Field
-                                            && member.DeclaredAccessibility == Accessibility.Public)
+                                        foreach (ISymbol member in en.Current.GetMembers())
                                         {
-                                            Append(member, _enumFieldFormat);
-                                            Append(",");
-                                            AppendLine();
+                                            if (member.Kind == SymbolKind.Field
+                                                && member.DeclaredAccessibility == Accessibility.Public)
+                                            {
+                                                Append(member, _enumFieldFormat);
+                                                Append(",");
+                                                AppendLine();
+                                            }
                                         }
                                     }
 
@@ -319,20 +319,14 @@ namespace Roslynator.Documentation
                             case TypeKind.Interface:
                                 {
                                     BeginTypeContent();
-
-                                    if (Options.Depth == DocumentationDepth.Member)
-                                        AppendMembers(en.Current);
-
+                                    AppendMembers(en.Current);
                                     EndTypeContent();
                                     break;
                                 }
                             case TypeKind.Struct:
                                 {
                                     BeginTypeContent();
-
-                                    if (Options.Depth == DocumentationDepth.Member)
-                                        AppendMembers(en.Current);
-
+                                    AppendMembers(en.Current);
                                     EndTypeContent();
                                     break;
                                 }
@@ -379,88 +373,94 @@ namespace Roslynator.Documentation
         {
             bool isAny = false;
 
-            using (IEnumerator<ISymbol> en = typeModel.GetMembers().Where(f => IsVisibleMember(f))
-                .OrderBy(f => f, MemberComparer)
-                .GetEnumerator())
+            if (Options.Depth == DocumentationDepth.Member)
             {
-                if (en.MoveNext())
+                using (IEnumerator<ISymbol> en = typeModel.GetMembers().Where(f => IsVisibleMember(f))
+                    .OrderBy(f => f, MemberComparer)
+                    .GetEnumerator())
                 {
-                    MemberDeclarationKind kind = en.Current.GetMemberDeclarationKind();
-
-                    while (true)
+                    if (en.MoveNext())
                     {
-                        ImmutableArray<SymbolDisplayPart> attributeParts = SymbolDeclarationBuilder.GetAttributesParts(
-                            en.Current.GetAttributes(),
-                            predicate: IsVisibleAttribute,
-                            splitAttributes: Options.SplitAttributes,
-                            includeAttributeArguments: Options.IncludeAttributeArguments);
+                        MemberDeclarationKind kind = en.Current.GetMemberDeclarationKind();
 
-                        Append(attributeParts);
-
-                        ImmutableArray<SymbolDisplayPart> parts = en.Current.ToDisplayParts(_memberFormat);
-
-                        //XTODO: attribute on event accessor
-                        if (en.Current.Kind == SymbolKind.Property)
+                        while (true)
                         {
-                            var propertySymbol = (IPropertySymbol)en.Current;
+                            ImmutableArray<SymbolDisplayPart> attributeParts = SymbolDeclarationBuilder.GetAttributesParts(
+                                en.Current.GetAttributes(),
+                                predicate: IsVisibleAttribute,
+                                splitAttributes: Options.SplitAttributes,
+                                includeAttributeArguments: Options.IncludeAttributeArguments);
 
-                            IMethodSymbol getMethod = propertySymbol.GetMethod;
+                            Append(attributeParts);
 
-                            if (getMethod != null)
-                                parts = AppendAccessorAttributes(parts, getMethod, "get");
+                            ImmutableArray<SymbolDisplayPart> parts = en.Current.ToDisplayParts(_memberFormat);
 
-                            IMethodSymbol setMethod = propertySymbol.SetMethod;
-
-                            if (setMethod != null)
-                                parts = AppendAccessorAttributes(parts, setMethod, "set");
-                        }
-
-                        ImmutableArray<IParameterSymbol> parameters = en.Current.GetParameters();
-
-                        if (parameters.Any())
-                        {
-                            parts = AppendParameterAttributes(parts, en.Current, parameters);
-
-                            if (Options.FormatParameters
-                                && parameters.Length > 1)
+                            //XTODO: attribute on event accessor
+                            if (en.Current.Kind == SymbolKind.Property)
                             {
-                                ImmutableArray<SymbolDisplayPart>.Builder builder = parts.ToBuilder();
-                                SymbolDeclarationBuilder.FormatParameters(en.Current, builder, Options.IndentChars);
+                                var propertySymbol = (IPropertySymbol)en.Current;
 
-                                parts = builder.ToImmutableArray();
-                            }
-                        }
+                                IMethodSymbol getMethod = propertySymbol.GetMethod;
 
-                        Append(parts);
+                                if (getMethod != null)
+                                    parts = AppendAccessorAttributes(parts, getMethod, "get");
 
-                        if (en.Current.Kind != SymbolKind.Property)
-                            Append(";");
+                                IMethodSymbol setMethod = propertySymbol.SetMethod;
 
-                        AppendLine();
-
-                        isAny = true;
-
-                        if (en.MoveNext())
-                        {
-                            MemberDeclarationKind kind2 = en.Current.GetMemberDeclarationKind();
-
-                            if (kind != kind2
-                                || Options.EmptyLineBetweenMembers)
-                            {
-                                AppendLine();
+                                if (setMethod != null)
+                                    parts = AppendAccessorAttributes(parts, setMethod, "set");
                             }
 
-                            kind = kind2;
-                        }
-                        else
-                        {
-                            break;
+                            ImmutableArray<IParameterSymbol> parameters = en.Current.GetParameters();
+
+                            if (parameters.Any())
+                            {
+                                parts = AppendParameterAttributes(parts, en.Current, parameters);
+
+                                if (Options.FormatParameters
+                                    && parameters.Length > 1)
+                                {
+                                    ImmutableArray<SymbolDisplayPart>.Builder builder = parts.ToBuilder();
+                                    SymbolDeclarationBuilder.FormatParameters(en.Current, builder, Options.IndentChars);
+
+                                    parts = builder.ToImmutableArray();
+                                }
+                            }
+
+                            Append(parts);
+
+                            if (en.Current.Kind != SymbolKind.Property)
+                                Append(";");
+
+                            AppendLine();
+
+                            isAny = true;
+
+                            if (en.MoveNext())
+                            {
+                                MemberDeclarationKind kind2 = en.Current.GetMemberDeclarationKind();
+
+                                if (kind != kind2
+                                    || Options.EmptyLineBetweenMembers)
+                                {
+                                    AppendLine();
+                                }
+
+                                kind = kind2;
+                            }
+                            else
+                            {
+                                break;
+                            }
                         }
                     }
                 }
             }
 
-            AppendTypes(typeModel.GetTypeMembers().Where(f => IsVisibleType(f)), insertNewLineBeforeFirstType: isAny);
+            if (Options.Depth <= DocumentationDepth.Type)
+            {
+                AppendTypes(typeModel.GetTypeMembers().Where(f => IsVisibleType(f)), insertNewLineBeforeFirstType: isAny);
+            }
         }
 
         private ImmutableArray<SymbolDisplayPart> AppendParameterAttributes(

@@ -41,18 +41,18 @@ namespace Roslynator.CommandLine
                     ignoreCompilerErrors: true,
                     ignoreAnalyzerReferences: true,
                     supportedDiagnosticIds: supportedDiagnosticIds,
-                    projectNames: Options.Projects,
-                    ignoredProjectNames: Options.IgnoredProjects,
-                    language: Language,
                     batchSize: 1000,
                     format: true);
 
                 CultureInfo culture = (Options.Culture != null) ? CultureInfo.GetCultureInfo(Options.Culture) : null;
 
+                var projectFilter = new ProjectFilter(Options.Projects, Options.IgnoredProjects, Language);
+
                 return await FixCommand.FixAsync(
                     projectOrSolution,
                     RoslynatorAnalyzerAssemblies.AnalyzersAndCodeFixes,
                     codeFixerOptions,
+                    projectFilter,
                     culture,
                     cancellationToken);
             }

@@ -236,14 +236,13 @@ namespace Roslynator.CSharp
             }
         }
 
-        private void WriteTypes(IEnumerable<INamedTypeSymbol> types, bool insertNewLineBeforeFirstType = false)
+        private void WriteTypes(IEnumerable<INamedTypeSymbol> types)
         {
             using (IEnumerator<INamedTypeSymbol> en = types.OrderBy(f => f, Comparer).GetEnumerator())
             {
                 if (en.MoveNext())
                 {
-                    if (insertNewLineBeforeFirstType)
-                        WriteLine();
+                    WriteLine();
 
                     while (true)
                     {
@@ -259,7 +258,9 @@ namespace Roslynator.CSharp
                             formatParameters: Options.FormatParameters,
                             splitAttributes: Options.SplitAttributes,
                             includeAttributeArguments: Options.IncludeAttributeArguments,
-                            omitIEnumerable: Options.OmitIEnumerable));
+                            omitIEnumerable: Options.OmitIEnumerable,
+                            useNameOnlyIfPossible: !Options.FullyQualifiedNames,
+                            useDefaultLiteral: Options.UseDefaultLiteral));
 
                         switch (typeKind)
                         {
@@ -267,8 +268,7 @@ namespace Roslynator.CSharp
                                 {
                                     BeginTypeContent();
 
-                                    if (Options.Depth == DefinitionListDepth.Member)
-                                        WriteMembers(en.Current);
+                                    WriteMembers(en.Current);
 
                                     EndTypeContent();
                                     break;
@@ -282,14 +282,17 @@ namespace Roslynator.CSharp
                                 {
                                     BeginTypeContent();
 
-                                    foreach (ISymbol member in en.Current.GetMembers())
+                                    if (Options.Depth == DefinitionListDepth.Member)
                                     {
-                                        if (member.Kind == SymbolKind.Field
-                                            && member.DeclaredAccessibility == Accessibility.Public)
+                                        foreach (ISymbol member in en.Current.GetMembers())
                                         {
-                                            Write(member, _enumFieldFormat);
-                                            Write(",");
-                                            WriteLine();
+                                            if (member.Kind == SymbolKind.Field
+                                                && member.DeclaredAccessibility == Accessibility.Public)
+                                            {
+                                                Write(member, _enumFieldFormat);
+                                                Write(",");
+                                                WriteLine();
+                                            }
                                         }
                                     }
 
@@ -300,8 +303,7 @@ namespace Roslynator.CSharp
                                 {
                                     BeginTypeContent();
 
-                                    if (Options.Depth == DefinitionListDepth.Member)
-                                        WriteMembers(en.Current);
+                                    WriteMembers(en.Current);
 
                                     EndTypeContent();
                                     break;
@@ -310,8 +312,7 @@ namespace Roslynator.CSharp
                                 {
                                     BeginTypeContent();
 
-                                    if (Options.Depth == DefinitionListDepth.Member)
-                                        WriteMembers(en.Current);
+                                    WriteMembers(en.Current);
 
                                     EndTypeContent();
                                     break;
@@ -343,96 +344,104 @@ namespace Roslynator.CSharp
             Debug.Assert(_indentationLevel > 0, "Cannot decrease indentation level.");
 
             _indentationLevel--;
-
-            WriteLine();
         }
 
-        private void WriteMembers(INamedTypeSymbol typeModel)
+        private void WriteMembers(INamedTypeSymbol namedType)
         {
-            bool isAny = false;
-
-            using (IEnumerator<ISymbol> en = typeModel.GetMembers().Where(f => IsVisibleMember(f))
-                .OrderBy(f => f, Comparer)
-                .GetEnumerator())
+            if (Options.Depth == DefinitionListDepth.Member)
             {
-                if (en.MoveNext())
+                using (IEnumerator<ISymbol> en = namedType.GetMembers().Where(f => IsVisibleMember(f))
+                    .OrderBy(f => f, Comparer)
+                    .GetEnumerator())
                 {
-                    MemberDeclarationKind kind = en.Current.GetMemberDeclarationKind();
-
-                    while (true)
+                    if (en.MoveNext())
                     {
-                        ImmutableArray<SymbolDisplayPart> attributeParts = SymbolDefinitionBuilder.GetAttributesParts(
-                            en.Current.GetAttributes(),
-                            predicate: IsVisibleAttribute,
-                            splitAttributes: Options.SplitAttributes,
-                            includeAttributeArguments: Options.IncludeAttributeArguments);
-
-                        Write(attributeParts);
-
-                        ImmutableArray<SymbolDisplayPart> parts = en.Current.ToDisplayParts(_memberFormat);
-
-                        //XTODO: attribute on event accessor
-                        if (en.Current.Kind == SymbolKind.Property)
-                        {
-                            var propertySymbol = (IPropertySymbol)en.Current;
-
-                            IMethodSymbol getMethod = propertySymbol.GetMethod;
-
-                            if (getMethod != null)
-                                parts = WriteAccessorAttributes(parts, getMethod, "get");
-
-                            IMethodSymbol setMethod = propertySymbol.SetMethod;
-
-                            if (setMethod != null)
-                                parts = WriteAccessorAttributes(parts, setMethod, "set");
-                        }
-
-                        ImmutableArray<IParameterSymbol> parameters = en.Current.GetParameters();
-
-                        if (parameters.Any())
-                        {
-                            parts = WriteParameterAttributes(parts, en.Current, parameters);
-
-                            if (Options.FormatParameters
-                                && parameters.Length > 1)
-                            {
-                                ImmutableArray<SymbolDisplayPart>.Builder builder = parts.ToBuilder();
-                                SymbolDefinitionBuilder.FormatParameters(en.Current, builder, Options.IndentChars);
-
-                                parts = builder.ToImmutableArray();
-                            }
-                        }
-
-                        Write(parts);
-
-                        if (en.Current.Kind != SymbolKind.Property)
-                            Write(";");
-
                         WriteLine();
 
-                        isAny = true;
+                        MemberDeclarationKind kind = en.Current.GetMemberDeclarationKind();
 
-                        if (en.MoveNext())
+                        while (true)
                         {
-                            MemberDeclarationKind kind2 = en.Current.GetMemberDeclarationKind();
+                            ImmutableArray<SymbolDisplayPart> attributeParts = SymbolDefinitionBuilder.GetAttributesParts(
+                                en.Current.GetAttributes(),
+                                predicate: IsVisibleAttribute,
+                                splitAttributes: Options.SplitAttributes,
+                                includeAttributeArguments: Options.IncludeAttributeArguments);
 
-                            if (kind != kind2
-                                || Options.EmptyLineBetweenMembers)
+                            Write(attributeParts);
+
+                            ImmutableArray<SymbolDisplayPart> parts = en.Current.ToDisplayParts(_memberFormat);
+
+                            if (Options.UseDefaultLiteral
+                                && en.Current.GetParameters().Any(f => f.HasExplicitDefaultValue))
                             {
-                                WriteLine();
+                                parts = SymbolDefinitionBuilder.ReplaceDefaultExpressionWithDefaultLiteral(en.Current, parts);
                             }
 
-                            kind = kind2;
-                        }
-                        else
-                        {
-                            break;
+                            //XTODO: attribute on event accessor
+                            if (en.Current.Kind == SymbolKind.Property)
+                            {
+                                var propertySymbol = (IPropertySymbol)en.Current;
+
+                                IMethodSymbol getMethod = propertySymbol.GetMethod;
+
+                                if (getMethod != null)
+                                    parts = WriteAccessorAttributes(parts, getMethod, "get");
+
+                                IMethodSymbol setMethod = propertySymbol.SetMethod;
+
+                                if (setMethod != null)
+                                    parts = WriteAccessorAttributes(parts, setMethod, "set");
+                            }
+
+                            ImmutableArray<IParameterSymbol> parameters = en.Current.GetParameters();
+
+                            if (parameters.Any())
+                            {
+                                parts = WriteParameterAttributes(parts, en.Current, parameters);
+
+                                if (Options.FormatParameters
+                                    && parameters.Length > 1)
+                                {
+                                    ImmutableArray<SymbolDisplayPart>.Builder builder = parts.ToBuilder();
+                                    SymbolDefinitionBuilder.FormatParameters(en.Current, builder, Options.IndentChars);
+
+                                    parts = builder.ToImmutableArray();
+                                }
+                            }
+
+                            Write(parts);
+
+                            if (en.Current.Kind != SymbolKind.Property)
+                                Write(";");
+
+                            WriteLine();
+
+                            if (en.MoveNext())
+                            {
+                                MemberDeclarationKind kind2 = en.Current.GetMemberDeclarationKind();
+
+                                if (kind != kind2
+                                    || Options.EmptyLineBetweenMembers)
+                                {
+                                    WriteLine();
+                                }
+
+                                kind = kind2;
+                            }
+                            else
+                            {
+                                break;
+                            }
                         }
                     }
                 }
             }
 
-            WriteTypes(typeModel.GetTypeMembers().Where(f => IsVisibleType(f)), insertNewLineBeforeFirstType: isAny);
+            if (Options.Depth <= DefinitionListDepth.Type)
+            {
+                WriteTypes(namedType.GetTypeMembers().Where(f => IsVisibleType(f)));
+            }
         }
 
         private ImmutableArray<SymbolDisplayPart> WriteParameterAttributes(

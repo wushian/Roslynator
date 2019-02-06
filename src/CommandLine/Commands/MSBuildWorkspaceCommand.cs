@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
-using Roslynator.Host.Mef;
 using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
@@ -189,9 +188,7 @@ namespace Roslynator.CommandLine
             MSBuildCommandLineOptions options,
             Func<Solution, ImmutableArray<ProjectId>> getProjects = null)
         {
-            ImmutableHashSet<string> projectNames = options.GetProjectNames();
-
-            ImmutableHashSet<string> ignoredProjectNames = options.GetIgnoredProjectNames();
+            var projectFilter = new ProjectFilter(options.Projects, options.IgnoredProjects, Language);
 
             Workspace workspace = solution.Workspace;
 
@@ -199,8 +196,7 @@ namespace Roslynator.CommandLine
             {
                 Project project = workspace.CurrentSolution.GetProject(projectId);
 
-                if ((Language == null || Language == project.Language)
-                    && ((projectNames.Count > 0) ? projectNames.Contains(project.Name) : !ignoredProjectNames.Contains(project.Name)))
+                if (projectFilter.IsMatch(project))
                 {
                     yield return project;
                 }

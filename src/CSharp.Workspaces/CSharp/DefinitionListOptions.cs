@@ -7,13 +7,15 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator.CSharp
 {
-    //TODO: remove UseDefaultLiteral, FullyQualifiedNames
+    //TODO: AddSemicolon
+    //TODO: NamespaceDisplayOptions Omit, OmitAsContaining, Always
     internal class DefinitionListOptions
     {
         private readonly ImmutableArray<MetadataName> _ignoredMetadataNames;
 
         public DefinitionListOptions(
             Visibility visibility = DefaultValues.Visibility,
+            DefinitionListDepth depth = DefaultValues.Depth,
             IEnumerable<string> ignoredNames = null,
             bool indent = DefaultValues.Indent,
             string indentChars = DefaultValues.IndentChars,
@@ -26,12 +28,12 @@ namespace Roslynator.CSharp
             bool includeAttributeArguments = DefaultValues.IncludeAttributeArguments,
             bool omitIEnumerable = DefaultValues.OmitIEnumerable,
             bool useDefaultLiteral = DefaultValues.UseDefaultLiteral,
-            bool fullyQualifiedNames = DefaultValues.FullyQualifiedNames,
-            DefinitionListDepth depth = DefaultValues.Depth)
+            bool fullyQualifiedNames = DefaultValues.FullyQualifiedNames)
         {
-            _ignoredMetadataNames = ignoredNames?.Select(name => MetadataName.Parse(name)).ToImmutableArray() ?? default;
+            _ignoredMetadataNames = ignoredNames?.Select(name => MetadataName.Parse(name)).ToImmutableArray() ?? ImmutableArray<MetadataName>.Empty;
 
             Visibility = visibility;
+            Depth = depth;
             IgnoredNames = ignoredNames?.ToImmutableArray() ?? ImmutableArray<string>.Empty;
             Indent = indent;
             IndentChars = indentChars;
@@ -45,16 +47,15 @@ namespace Roslynator.CSharp
             OmitIEnumerable = omitIEnumerable;
             UseDefaultLiteral = useDefaultLiteral;
             FullyQualifiedNames = fullyQualifiedNames;
-            Depth = depth;
         }
 
         public static DefinitionListOptions Default { get; } = new DefinitionListOptions();
 
         public Visibility Visibility { get; }
 
-        public ImmutableArray<string> IgnoredNames { get; }
-
         public DefinitionListDepth Depth { get; }
+
+        public ImmutableArray<string> IgnoredNames { get; }
 
         public bool Indent { get; }
 
@@ -116,9 +117,8 @@ namespace Roslynator.CSharp
             public const bool FormatParameters = false;
             public const bool IncludeAttributeArguments = true;
             public const bool Indent = true;
-            public const string IndentChars = "    ";
+            public const string IndentChars = "  ";
             public const bool NestNamespaces = false;
-            public const bool NewLineBeforeOpenBrace = true;
             public const bool OmitIEnumerable = true;
             public const bool SplitAttributes = true;
             public const bool UseDefaultLiteral = true;

@@ -36,7 +36,7 @@ namespace Roslynator.CommandLine
             Default = DocumentationOptions.DefaultValues.Depth,
             HelpText = "Defines a depth of a documentation. Allowed values are member, type or namespace. Default value is member.",
             MetaValue = "<DEPTH>")]
-        public DocumentationDepth Depth { get; set; }
+        public string Depth { get; set; }
 
         [Option(longName: "ignored-names",
             HelpText = "Defines a list of metadata names that should be excluded from a documentation. Namespace of type names can be specified.",

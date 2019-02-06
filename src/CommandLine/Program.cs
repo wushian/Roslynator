@@ -42,6 +42,7 @@ namespace Roslynator.CommandLine
 #if DEBUG
                     AnalyzeAssemblyCommandLineOptions,
                     FindSymbolsCommandLineOptions,
+                    ListSymbolsCommandLineOptions,
 #endif
                     FormatCommandLineOptions,
                     SlnListCommandLineOptions,
@@ -89,6 +90,7 @@ namespace Roslynator.CommandLine
 #if DEBUG
                     (AnalyzeAssemblyCommandLineOptions options) => AnalyzeAssembly(options),
                     (FindSymbolsCommandLineOptions options) => FindSymbolsAsync(options).Result,
+                    (ListSymbolsCommandLineOptions options) => ListSymbolsAsync(options).Result,
 #endif
                     (FormatCommandLineOptions options) => FormatAsync(options).Result,
                     (SlnListCommandLineOptions options) => SlnListAsync(options).Result,
@@ -201,6 +203,28 @@ namespace Roslynator.CommandLine
             return (result.Kind == CommandResultKind.Success) ? 0 : 1;
         }
 
+        private static async Task<int> ListSymbolsAsync(ListSymbolsCommandLineOptions options)
+        {
+            if (!options.TryGetLanguage(out string language))
+                return 1;
+
+            if (!TryParseDefinitionListDepth(options.Depth, out DefinitionListDepth depth))
+                return 1;
+
+            if (!TryParseVisibility(options.Visibility, out Visibility visibility))
+                return 1;
+
+            var command = new ListSymbolsCommand(
+                options: options,
+                depth: depth,
+                visibility: visibility,
+                language: language);
+
+            CommandResult result = await command.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
+
+            return (result.Kind == CommandResultKind.Success) ? 0 : 1;
+        }
+
         private static async Task<int> FormatAsync(FormatCommandLineOptions options)
         {
             if (!options.TryGetLanguage(out string language))
@@ -285,6 +309,9 @@ namespace Roslynator.CommandLine
                 return 1;
             }
 
+            if (!TryParseDocumentationDepth(options.Depth, out DocumentationDepth depth))
+                return 1;
+
             if (!TryParseIgnoredRootParts(options.IgnoredRootParts, out RootDocumentationParts ignoredRootParts))
                 return 1;
 
@@ -326,7 +353,7 @@ namespace Roslynator.CommandLine
                 includeAttributeArguments: !options.OmitAttributeArguments,
                 includeInheritedAttributes: !options.OmitInheritedAttributes,
                 omitIEnumerable: !options.IncludeIEnumerable,
-                depth: options.Depth,
+                depth: depth,
                 inheritanceStyle: options.InheritanceStyle,
                 ignoredRootParts: ignoredRootParts,
                 ignoredNamespaceParts: ignoredNamespaceParts,
@@ -382,6 +409,9 @@ namespace Roslynator.CommandLine
 
         private static int GenerateDeclarations(GenerateDeclarationsCommandLineOptions options)
         {
+            if (!TryParseDocumentationDepth(options.Depth, out DocumentationDepth depth))
+                return 1;
+
             if (!TryParseIgnoredDeclarationListParts(options.IgnoredParts, out DeclarationListParts ignoredParts))
                 return 1;
 
@@ -409,7 +439,7 @@ namespace Roslynator.CommandLine
                 omitIEnumerable: !options.IncludeIEnumerable,
                 useDefaultLiteral: !options.NoDefaultLiteral,
                 fullyQualifiedNames: options.FullyQualifiedNames,
-                depth: options.Depth,
+                depth: depth,
                 ignoredParts: ignoredParts);
 
             var cts = new CancellationTokenSource();
@@ -451,6 +481,9 @@ namespace Roslynator.CommandLine
             if (documentationModel == null)
                 return 1;
 
+            if (!TryParseDocumentationDepth(options.Depth, out DocumentationDepth depth))
+                return 1;
+
             if (!TryParseIgnoredRootParts(options.IgnoredParts, out RootDocumentationParts ignoredParts))
                 return 1;
 
@@ -460,7 +493,7 @@ namespace Roslynator.CommandLine
                 includeClassHierarchy: !options.NoClassHierarchy,
                 placeSystemNamespaceFirst: !options.NoPrecedenceForSystem,
                 markObsolete: !options.NoMarkObsolete,
-                depth: options.Depth,
+                depth: depth,
                 ignoredRootParts: ignoredParts,
                 omitContainingNamespaceParts: (options.OmitContainingNamespace) ? OmitContainingNamespaceParts.Root : OmitContainingNamespaceParts.None,
                 scrollToContent: options.ScrollToContent);

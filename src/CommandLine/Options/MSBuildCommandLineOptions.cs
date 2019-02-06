@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using CommandLine;
 
 namespace Roslynator.CommandLine
@@ -39,20 +38,6 @@ namespace Roslynator.CommandLine
             HelpText = "Defines one or more MSBuild properties.",
             MetaValue = "<NAME=VALUE>")]
         public IEnumerable<string> Properties { get; set; }
-
-        internal ImmutableHashSet<string> GetProjectNames()
-        {
-            return (Projects != null)
-                ? Projects.ToImmutableHashSet()
-                : ImmutableHashSet<string>.Empty;
-        }
-
-        internal ImmutableHashSet<string> GetIgnoredProjectNames()
-        {
-            return (IgnoredProjects != null)
-                ? IgnoredProjects.ToImmutableHashSet()
-                : ImmutableHashSet<string>.Empty;
-        }
 
         internal bool TryGetLanguage(out string value)
         {

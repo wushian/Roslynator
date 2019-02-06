@@ -8,7 +8,6 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator.FindSymbols
 {
-    //TODO: SymbolNamePattern
     internal class SymbolFinderOptions
     {
         private static readonly ImmutableArray<Visibility> _allVisibilities = ImmutableArray.Create(Visibility.Public, Visibility.Internal, Visibility.Private);

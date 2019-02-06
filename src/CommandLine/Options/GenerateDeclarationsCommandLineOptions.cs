@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using CommandLine;
-using Roslynator.Documentation;
 using static Roslynator.Documentation.DeclarationListOptions;
 
 namespace Roslynator.CommandLine
@@ -37,7 +36,7 @@ namespace Roslynator.CommandLine
             Default = DefaultValues.Depth,
             HelpText = "Defines a depth of a documentation. Allowed values are member, type or namespace. Default value is member.",
             MetaValue = "<DEPTH>")]
-        public DocumentationDepth Depth { get; set; }
+        public string Depth { get; set; }
 
         [Option(longName: "empty-line-between-members",
             HelpText = "Indicates whether an empty line should be added between two member declarations.")]

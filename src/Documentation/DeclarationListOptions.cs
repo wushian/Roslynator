@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator.Documentation
 {
-    //TODO: SystemNamespaceFirst
+    //TODO: SystemNamespaceFirst, IgnoreObsolete, IndentChars = "  "
     public class DeclarationListOptions
     {
         private readonly ImmutableArray<MetadataName> _ignoredMetadataNames;
@@ -31,7 +31,7 @@ namespace Roslynator.Documentation
             DocumentationDepth depth = DefaultValues.Depth,
             DeclarationListParts ignoredParts = DeclarationListParts.None)
         {
-            _ignoredMetadataNames = ignoredNames?.Select(name => MetadataName.Parse(name)).ToImmutableArray() ?? default;
+            _ignoredMetadataNames = ignoredNames?.Select(name => MetadataName.Parse(name)).ToImmutableArray() ?? ImmutableArray<MetadataName>.Empty;
 
             Visibility = visibility;
             IgnoredNames = ignoredNames?.ToImmutableArray() ?? ImmutableArray<string>.Empty;
