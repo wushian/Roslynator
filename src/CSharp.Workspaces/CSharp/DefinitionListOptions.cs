@@ -7,8 +7,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator.CSharp
 {
-    //TODO: remove UseDefaultLiteral, NewLineBeforeBrace, FullyQualifiedNames
-    //TODO: add AddAssemblyAttributes, SystemNamespaceFirst
+    //TODO: remove UseDefaultLiteral, FullyQualifiedNames
     internal class DefinitionListOptions
     {
         private readonly ImmutableArray<MetadataName> _ignoredMetadataNames;
@@ -19,7 +18,6 @@ namespace Roslynator.CSharp
             bool indent = DefaultValues.Indent,
             string indentChars = DefaultValues.IndentChars,
             bool nestNamespaces = DefaultValues.NestNamespaces,
-            bool newLineBeforeOpenBrace = DefaultValues.NewLineBeforeOpenBrace,
             bool emptyLineBetweenMembers = DefaultValues.EmptyLineBetweenMembers,
             bool formatBaseList = DefaultValues.FormatBaseList,
             bool formatConstraints = DefaultValues.FormatConstraints,
@@ -38,7 +36,6 @@ namespace Roslynator.CSharp
             Indent = indent;
             IndentChars = indentChars;
             NestNamespaces = nestNamespaces;
-            NewLineBeforeOpenBrace = newLineBeforeOpenBrace;
             EmptyLineBetweenMembers = emptyLineBetweenMembers;
             FormatBaseList = formatBaseList;
             FormatConstraints = formatConstraints;
@@ -65,7 +62,7 @@ namespace Roslynator.CSharp
 
         public bool NestNamespaces { get; }
 
-        public bool NewLineBeforeOpenBrace { get; }
+        public bool SystemNamespaceFirst { get; }
 
         public bool EmptyLineBetweenMembers { get; }
 

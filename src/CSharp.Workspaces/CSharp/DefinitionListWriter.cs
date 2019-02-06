@@ -9,21 +9,20 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator.CSharp
 {
-    //TODO: simplify default(T) to default
     internal class DefinitionListWriter
     {
-        private static readonly SymbolDisplayFormat _namespaceFormat = SymbolDisplayFormats2.NamespaceDeclaration;
+        private static readonly SymbolDisplayFormat _namespaceFormat = SymbolDefinitionDisplayFormats.NamespaceDeclaration;
 
-        private static readonly SymbolDisplayFormat _namespaceHierarchyFormat = SymbolDisplayFormats2.NamespaceDeclaration.Update(
+        private static readonly SymbolDisplayFormat _namespaceHierarchyFormat = SymbolDefinitionDisplayFormats.NamespaceDeclaration.Update(
             typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameOnly);
 
-        private static readonly SymbolDisplayFormat _typeFormat = SymbolDisplayFormats2.FullDeclaration.Update(
+        private static readonly SymbolDisplayFormat _typeFormat = SymbolDefinitionDisplayFormats.FullDeclaration.Update(
             typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameOnly);
 
-        private static readonly SymbolDisplayFormat _memberFormat = SymbolDisplayFormats2.FullDeclaration.Update(
+        private static readonly SymbolDisplayFormat _memberFormat = SymbolDefinitionDisplayFormats.FullDeclaration.Update(
             typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces);
 
-        private static readonly SymbolDisplayFormat _enumFieldFormat = SymbolDisplayFormats2.FullDeclaration;
+        private static readonly SymbolDisplayFormat _enumFieldFormat = SymbolDefinitionDisplayFormats.FullDeclaration;
 
         private bool _pendingIndentation;
         private int _indentationLevel;
@@ -110,7 +109,7 @@ namespace Roslynator.CSharp
 
         public virtual bool IsVisibleAttribute(INamedTypeSymbol attributeType)
         {
-            return DocumentationUtility2.IsVisibleAttribute(attributeType);
+            return DocumentationUtility.IsVisibleAttribute(attributeType);
         }
 
         public void Write(IEnumerable<IAssemblySymbol> assemblies)
@@ -202,7 +201,7 @@ namespace Roslynator.CSharp
                             WriteLine();
 
                         Write("// ");
-                        Write(namespaceSymbol, SymbolDisplayFormats2.TypeNameAndContainingTypesAndNamespaces);
+                        Write(namespaceSymbol, SymbolDefinitionDisplayFormats.TypeNameAndContainingTypesAndNamespaces);
                         WriteLine();
                     }
 
@@ -334,15 +333,7 @@ namespace Roslynator.CSharp
 
         private void BeginTypeContent()
         {
-            if (Options.NewLineBeforeOpenBrace)
-            {
-                WriteLine();
-                WriteLine("{");
-            }
-            else
-            {
-                WriteLine(" {");
-            }
+            WriteLine();
 
             _indentationLevel++;
         }
@@ -353,7 +344,7 @@ namespace Roslynator.CSharp
 
             _indentationLevel--;
 
-            WriteLine("}");
+            WriteLine();
         }
 
         private void WriteMembers(INamedTypeSymbol typeModel)

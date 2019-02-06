@@ -12,30 +12,21 @@ namespace Roslynator
     //TODO: SolutionModel?
     internal sealed class SolutionModel
     {
-        private readonly ImmutableDictionary<ProjectId, Compilation> _compilationsByProject;
+        private readonly ImmutableArray<Compilation> _compilations;
 
         private SolutionModel(
-            Solution solution,
-            ImmutableDictionary<ProjectId, Compilation> compilationsByProject,
+            ImmutableArray<Compilation> compilations,
             Visibility visibility)
         {
-            Solution = solution;
-            _compilationsByProject = compilationsByProject;
+            _compilations = compilations;
             Visibility = visibility;
         }
 
         public Visibility Visibility { get; }
 
-        public Solution Solution { get; }
-
-        public IEnumerable<Project> Projects
-        {
-            get { return _compilationsByProject.Select(kvp => kvp.Key).Select(projectId => Solution.GetProject(projectId)); }
-        }
-
         public IEnumerable<IAssemblySymbol> Assemblies
         {
-            get { return _compilationsByProject.Select(kvp => kvp.Value.Assembly); }
+            get { return _compilations.Select(kvp => kvp.Assembly); }
         }
 
         public IEnumerable<INamedTypeSymbol> Types
@@ -56,14 +47,15 @@ namespace Roslynator
             Visibility visibility = Visibility.Public,
             CancellationToken cancellationToken = default)
         {
-            var compilations = new Dictionary<ProjectId, Compilation>();
+            ImmutableArray<Compilation>.Builder compilations = ImmutableArray.CreateBuilder<Compilation>();
 
             foreach (Project project in FilterProjects())
             {
-                compilations[project.Id] = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
+                Compilation compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
+                compilations.Add(compilation);
             }
 
-            return new SolutionModel(solution, compilations.ToImmutableDictionary(), visibility);
+            return new SolutionModel(compilations.ToImmutableArray(), visibility);
 
             IEnumerable<Project> FilterProjects()
             {

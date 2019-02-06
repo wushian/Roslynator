@@ -10,6 +10,7 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace Roslynator.CSharp
 {
+    //TODO: UseDefaultLiteral
     internal static class SymbolDefinitionBuilder
     {
         public static ImmutableArray<SymbolDisplayPart> GetDisplayParts(
@@ -146,8 +147,8 @@ namespace Roslynator.CSharp
                     if (!MetadataNameEqualityComparer<INamespaceSymbol>.Instance.Equals(n1, n2))
                     {
                         return string.CompareOrdinal(
-                            n1.ToDisplayString(SymbolDisplayFormats2.TypeNameAndContainingTypesAndNamespaces),
-                            n2.ToDisplayString(SymbolDisplayFormats2.TypeNameAndContainingTypesAndNamespaces));
+                            n1.ToDisplayString(SymbolDefinitionDisplayFormats.TypeNameAndContainingTypesAndNamespaces),
+                            n2.ToDisplayString(SymbolDefinitionDisplayFormats.TypeNameAndContainingTypesAndNamespaces));
                     }
 
                     return string.CompareOrdinal(
@@ -768,11 +769,11 @@ namespace Roslynator.CSharp
             if (containingNamespace != null
                 && symbol.ContainingNamespace == containingNamespace)
             {
-                builder.AddRange(symbol.ToDisplayParts(SymbolDisplayFormats2.TypeNameAndContainingTypes));
+                builder.AddRange(symbol.ToDisplayParts(SymbolDefinitionDisplayFormats.TypeNameAndContainingTypes));
             }
             else
             {
-                builder.AddRange(symbol.ToDisplayParts(SymbolDisplayFormats2.TypeNameAndContainingTypesAndNamespaces));
+                builder.AddRange(symbol.ToDisplayParts(SymbolDefinitionDisplayFormats.TypeNameAndContainingTypesAndNamespaces));
             }
 
             if (!(symbol is INamedTypeSymbol typeSymbol))

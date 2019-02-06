@@ -4,8 +4,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator
 {
-    //TODO: SymbolDisplayFormats2
-    internal static class SymbolDisplayFormats2
+    internal static class SymbolDefinitionDisplayFormats
     {
         internal static SymbolDisplayFormat Default { get; } = new SymbolDisplayFormat(
              globalNamespaceStyle: DefaultGlobalNamespaceStyle,

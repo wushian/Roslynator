@@ -5,8 +5,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator
 {
-    //TODO: DocumentationUtility2
-    internal static class DocumentationUtility2
+    internal static class DocumentationUtility
     {
         public static bool IsVisibleAttribute(INamedTypeSymbol attributeType)
         {
