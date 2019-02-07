@@ -119,7 +119,7 @@ namespace Roslynator.Documentation
 
         public virtual bool IsVisibleAttribute(INamedTypeSymbol attributeType)
         {
-            return DocumentationUtility.IsVisibleAttribute(attributeType);
+            return AttributeDisplay.ShouldBeDisplayed(attributeType);
         }
 
         public void Append(DocumentationModel documentationModel)

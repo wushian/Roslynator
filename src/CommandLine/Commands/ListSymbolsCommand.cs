@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -18,11 +19,13 @@ namespace Roslynator.CommandLine
             ListSymbolsCommandLineOptions options,
             DefinitionListDepth depth,
             Visibility visibility,
+            SymbolDisplayContainingNamespaceStyle containingNamespaceStyle,
             string language) : base(language)
         {
             Options = options;
             Depth = depth;
             Visibility = visibility;
+            ContainingNamespaceStyle = containingNamespaceStyle;
         }
 
         public ListSymbolsCommandLineOptions Options { get; }
@@ -31,13 +34,16 @@ namespace Roslynator.CommandLine
 
         public Visibility Visibility { get; }
 
+        public SymbolDisplayContainingNamespaceStyle ContainingNamespaceStyle { get; }
+
         public override async Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default)
         {
             AssemblyResolver.Register();
 
             var options = new DefinitionListOptions(
                 visibility: Visibility,
-                depth: Depth);
+                depth: Depth,
+                containingNamespaceStyle: ContainingNamespaceStyle);
 
             var assemblies = new List<IAssemblySymbol>();
 
@@ -84,7 +90,8 @@ namespace Roslynator.CommandLine
             {
                 var builder = new DefinitionListWriter(
                     writer,
-                    options: options);
+                    options: options,
+                    comparer: SymbolDefinitionComparer.GetInstance(systemNamespaceFirst: !Options.NoPrecedenceForSystem));
 
                 builder.Write(assemblies);
 
@@ -93,6 +100,9 @@ namespace Roslynator.CommandLine
 
             WriteLine(Verbosity.Minimal);
             WriteLine(text, Verbosity.Minimal);
+
+            if (Options.Output != null)
+                File.WriteAllText(Options.Output, text, Encoding.UTF8);
 
             return CommandResult.Success;
         }

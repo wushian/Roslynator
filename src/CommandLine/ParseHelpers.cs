@@ -4,14 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
-using Roslynator.Documentation;
 using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
 {
     internal static class ParseHelpers
     {
+        private static readonly Regex _lowerLetterUpperLetterRegex = new Regex(@"\p{Ll}\p{Lu}");
+
         public static bool TryParseMSBuildProperties(IEnumerable<string> values, out Dictionary<string, string> properties)
         {
             properties = null;
@@ -70,200 +72,83 @@ namespace Roslynator.CommandLine
             return true;
         }
 
-        public static bool TryParseDiagnosticSeverity(string value, out DiagnosticSeverity severity)
+        public static bool TryParseParameterValueAsEnumFlags<TEnum>(
+            IEnumerable<string> values,
+            string parameterName,
+            out TEnum result,
+            TEnum? defaultValue = null) where TEnum : struct
         {
-            if (!Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out severity))
-            {
-                WriteLine($"Unknown diagnostic severity '{value}'.", Verbosity.Quiet);
-                return false;
-            }
+            result = (TEnum)(object)0;
 
-            return true;
-        }
-
-        public static bool TryParseIgnoredRootParts(IEnumerable<string> values, out RootDocumentationParts parts)
-        {
-            if (!values.Any())
+            if (values?.Any() != true)
             {
-                parts = DocumentationOptions.Default.IgnoredRootParts;
+                if (defaultValue != null)
+                {
+                    result = (TEnum)(object)defaultValue;
+                }
+
                 return true;
             }
 
-            parts = RootDocumentationParts.None;
+            int flags = 0;
 
             foreach (string value in values)
             {
-                if (Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out RootDocumentationParts result))
-                {
-                    parts |= result;
-                }
-                else
-                {
-                    WriteLine($"Unknown root documentation part '{value}'.", Verbosity.Quiet);
+                if (!TryParseParameterValueAsEnum(value, parameterName, out TEnum result2))
                     return false;
-                }
+
+                flags |= (int)(object)result2;
             }
+
+            result = (TEnum)(object)flags;
 
             return true;
         }
 
-        public static bool TryParseIgnoredNamespaceParts(IEnumerable<string> values, out NamespaceDocumentationParts parts)
+        public static bool TryParseParameterValueAsEnumValues<TEnum>(
+            IEnumerable<string> values,
+            string parameterName,
+            out ImmutableArray<TEnum> result,
+            ImmutableArray<TEnum> defaultValue = default) where TEnum : struct
         {
-            if (!values.Any())
+            if (values?.Any() != true)
             {
-                parts = DocumentationOptions.Default.IgnoredNamespaceParts;
+                result = (defaultValue.IsDefault) ? ImmutableArray<TEnum>.Empty : defaultValue;
+
                 return true;
             }
 
-            parts = NamespaceDocumentationParts.None;
+            ImmutableArray<TEnum>.Builder builder = ImmutableArray.CreateBuilder<TEnum>();
 
             foreach (string value in values)
             {
-                if (Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out NamespaceDocumentationParts result))
-                {
-                    parts |= result;
-                }
-                else
-                {
-                    WriteLine($"Unknown namespace documentation part '{value}'.", Verbosity.Quiet);
+                if (!TryParseParameterValueAsEnum(value, parameterName, out TEnum result2))
                     return false;
-                }
+
+                builder.Add(result2);
             }
+
+            result = builder.ToImmutableArray();
 
             return true;
         }
 
-        public static bool TryParseIgnoredTypeParts(IEnumerable<string> values, out TypeDocumentationParts parts)
+        public static bool TryParseParameterValueAsEnum<TEnum>(string value, string parameterName, out TEnum result, TEnum? defaultValue = null) where TEnum : struct
         {
-            if (!values.Any())
+            if (value == null
+                && defaultValue != null)
             {
-                parts = DocumentationOptions.Default.IgnoredTypeParts;
+                result = defaultValue.Value;
                 return true;
             }
 
-            parts = TypeDocumentationParts.None;
-
-            foreach (string value in values)
+            if (!Enum.TryParse(value?.Replace("-", ""), ignoreCase: true, out result))
             {
-                if (Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out TypeDocumentationParts result))
-                {
-                    parts |= result;
-                }
-                else
-                {
-                    WriteLine($"Unknown type documentation part '{value}'.", Verbosity.Quiet);
-                    return false;
-                }
-            }
+                IEnumerable<string> values = Enum.GetValues(typeof(TEnum))
+                    .Cast<TEnum>()
+                    .Select(f => _lowerLetterUpperLetterRegex.Replace(f.ToString(), e => e.Value.Insert(1, "-")).ToLowerInvariant());
 
-            return true;
-        }
-
-        public static bool TryParseIgnoredMemberParts(IEnumerable<string> values, out MemberDocumentationParts parts)
-        {
-            if (!values.Any())
-            {
-                parts = DocumentationOptions.Default.IgnoredMemberParts;
-                return true;
-            }
-
-            parts = MemberDocumentationParts.None;
-
-            foreach (string value in values)
-            {
-                if (Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out MemberDocumentationParts result))
-                {
-                    parts |= result;
-                }
-                else
-                {
-                    WriteLine($"Unknown member documentation part '{value}'.", Verbosity.Quiet);
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        public static bool TryParseIgnoredDeclarationListParts(IEnumerable<string> values, out DeclarationListParts parts)
-        {
-            if (!values.Any())
-            {
-                parts = DeclarationListOptions.Default.IgnoredParts;
-                return true;
-            }
-
-            parts = DeclarationListParts.None;
-
-            foreach (string value in values)
-            {
-                if (Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out DeclarationListParts result))
-                {
-                    parts |= result;
-                }
-                else
-                {
-                    WriteLine($"Unknown declaration list part '{value}'.", Verbosity.Quiet);
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        public static bool TryParseOmitContainingNamespaceParts(IEnumerable<string> values, out OmitContainingNamespaceParts parts)
-        {
-            if (!values.Any())
-            {
-                parts = DocumentationOptions.Default.OmitContainingNamespaceParts;
-                return true;
-            }
-
-            parts = OmitContainingNamespaceParts.None;
-
-            foreach (string value in values)
-            {
-                if (Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out OmitContainingNamespaceParts result))
-                {
-                    parts |= result;
-                }
-                else
-                {
-                    WriteLine($"Unknown omit containing namespace part '{value}'.", Verbosity.Quiet);
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        public static bool TryParseVisibility(string value, out Visibility visibility)
-        {
-            if (!Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out visibility))
-            {
-                WriteLine($"Unknown visibility '{value}'.", Verbosity.Quiet);
-                return false;
-            }
-
-            return true;
-        }
-
-        public static bool TryParseDefinitionListDepth(string value, out DefinitionListDepth depth)
-        {
-            if (!Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out depth))
-            {
-                WriteLine($"Unknown definition list depth '{value}'.", Verbosity.Quiet);
-                return false;
-            }
-
-            return true;
-        }
-
-        public static bool TryParseDocumentationDepth(string value, out DocumentationDepth depth)
-        {
-            if (!Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out depth))
-            {
-                WriteLine($"Unknown documentation depth '{value}'.", Verbosity.Quiet);
+                WriteLine($"Parameter '{parameterName}' has unknown value '{value}'. Known values: {string.Join(", ", values)}.", Verbosity.Quiet);
                 return false;
             }
 
@@ -330,26 +215,6 @@ namespace Roslynator.CommandLine
 
             language = null;
             return false;
-        }
-
-        public static bool TryParseSymbolKinds(IEnumerable<string> values, out SymbolSpecialKinds kinds)
-        {
-            kinds = SymbolSpecialKinds.None;
-
-            foreach (string value in values)
-            {
-                if (Enum.TryParse(value.Replace("-", ""), ignoreCase: true, out SymbolSpecialKinds result))
-                {
-                    kinds |= result;
-                }
-                else
-                {
-                    WriteLine($"Unknown symbol kind '{value}'.", Verbosity.Quiet);
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         public static bool TryParseMetadataNames(IEnumerable<string> values, out ImmutableArray<MetadataName> metadataNames)

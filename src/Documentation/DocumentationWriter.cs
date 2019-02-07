@@ -446,7 +446,7 @@ namespace Roslynator.Documentation
                 symbol,
                 SymbolDisplayFormats.FullDeclaration,
                 typeDeclarationOptions: SymbolDisplayTypeDeclarationOptions.IncludeAccessibility | SymbolDisplayTypeDeclarationOptions.IncludeModifiers,
-                isVisibleAttribute: f => DocumentationUtility.IsVisibleAttribute(f),
+                isVisibleAttribute: f => AttributeDisplay.ShouldBeDisplayed(f),
                 formatBaseList: Options.FormatDeclarationBaseList,
                 formatConstraints: Options.FormatDeclarationConstraints,
                 includeAttributeArguments: Options.IncludeAttributeArguments,
@@ -695,13 +695,13 @@ namespace Roslynator.Documentation
             if (symbol is INamedTypeSymbol typeSymbol
                 && Options.IncludeInheritedAttributes)
             {
-                attributes = typeSymbol.GetAttributesIncludingInherited(f => DocumentationUtility.IsVisibleAttribute(f));
+                attributes = typeSymbol.GetAttributesIncludingInherited(f => AttributeDisplay.ShouldBeDisplayed(f));
             }
             else
             {
                 attributes = symbol
                     .GetAttributes()
-                    .Where(f => DocumentationUtility.IsVisibleAttribute(f.AttributeClass))
+                    .Where(f => AttributeDisplay.ShouldBeDisplayed(f.AttributeClass))
                     .Select(f => new AttributeInfo(symbol, f))
                     .ToImmutableArray();
             }

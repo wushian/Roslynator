@@ -5,14 +5,9 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator
 {
-    internal static class DocumentationUtility
+    internal static class AttributeDisplay
     {
-        public static bool IsVisibleAttribute(INamedTypeSymbol attributeType)
-        {
-            return !IsNotVisibleAttribute(attributeType);
-        }
-
-        private static bool IsNotVisibleAttribute(INamedTypeSymbol attributeType)
+        public static bool ShouldBeDisplayed(INamedTypeSymbol attributeType)
         {
             switch (attributeType.MetadataName)
             {
@@ -26,12 +21,13 @@ namespace Roslynator
                 case "DebuggerStepThroughAttribute":
                 case "DebuggerTypeProxyAttribute":
                 case "DebuggerVisualizerAttribute":
-                    return attributeType.ContainingNamespace.HasMetadataName(MetadataNames.System_Diagnostics);
+                    return !attributeType.ContainingNamespace.HasMetadataName(MetadataNames.System_Diagnostics);
                 case "SuppressMessageAttribute":
-                    return attributeType.ContainingNamespace.HasMetadataName(MetadataNames.System_Diagnostics_CodeAnalysis);
+                    return !attributeType.ContainingNamespace.HasMetadataName(MetadataNames.System_Diagnostics_CodeAnalysis);
                 case "DefaultMemberAttribute":
                 case "AssemblyConfigurationAttribute":
-                    return attributeType.ContainingNamespace.HasMetadataName(MetadataNames.System_Reflection);
+                case "AssemblyVersionAttribute":
+                    return !attributeType.ContainingNamespace.HasMetadataName(MetadataNames.System_Reflection);
                 case "AsyncStateMachineAttribute":
                 case "CompilationRelaxationsAttribute":
                 case "CompilerGeneratedAttribute":
@@ -44,7 +40,7 @@ namespace Roslynator
                 case "TupleElementNamesAttribute":
                 case "TypeForwardedFromAttribute":
                 case "TypeForwardedToAttribute":
-                    return attributeType.ContainingNamespace.HasMetadataName(MetadataNames.System_Runtime_CompilerServices);
+                    return !attributeType.ContainingNamespace.HasMetadataName(MetadataNames.System_Runtime_CompilerServices);
 #if DEBUG
                 case "AssemblyCompanyAttribute":
                 case "AssemblyCopyrightAttribute":
@@ -59,12 +55,12 @@ namespace Roslynator
                 case "FooAttribute":
                 case "ObsoleteAttribute":
                 case "TargetFrameworkAttribute":
-                    return false;
+                    return true;
 #endif
             }
 
             Debug.Fail(attributeType.ToDisplayString());
-            return false;
+            return true;
         }
     }
 }

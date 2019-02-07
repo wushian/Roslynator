@@ -7,7 +7,6 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator.Documentation
 {
-    //TODO: SystemNamespaceFirst, IgnoreObsolete
     public class DeclarationListOptions
     {
         private readonly ImmutableArray<MetadataName> _ignoredMetadataNames;

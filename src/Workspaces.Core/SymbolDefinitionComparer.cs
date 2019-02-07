@@ -9,9 +9,21 @@ namespace Roslynator
 {
     internal class SymbolDefinitionComparer : IComparer<ISymbol>
     {
+        public static SymbolDefinitionComparer Instance { get; } = new SymbolDefinitionComparer(systemNamespaceFirst: false);
+
+        public static SymbolDefinitionComparer SystemNamespaceFirstInstance { get; } = new SymbolDefinitionComparer(systemNamespaceFirst: true);
+
         public bool SystemNamespaceFirst { get; }
 
-        public static SymbolDefinitionComparer Instance { get; } = new SymbolDefinitionComparer();
+        internal SymbolDefinitionComparer(bool systemNamespaceFirst = false)
+        {
+            SystemNamespaceFirst = systemNamespaceFirst;
+        }
+
+        public static SymbolDefinitionComparer GetInstance(bool systemNamespaceFirst)
+        {
+            return (systemNamespaceFirst) ? SystemNamespaceFirstInstance : Instance;
+        }
 
         public int Compare(ISymbol x, ISymbol y)
         {

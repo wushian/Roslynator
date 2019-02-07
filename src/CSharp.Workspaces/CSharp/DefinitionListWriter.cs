@@ -109,11 +109,18 @@ namespace Roslynator.CSharp
 
         public virtual bool IsVisibleAttribute(INamedTypeSymbol attributeType)
         {
-            return DocumentationUtility.IsVisibleAttribute(attributeType);
+            return AttributeDisplay.ShouldBeDisplayed(attributeType);
         }
 
         public void Write(IEnumerable<IAssemblySymbol> assemblies)
         {
+            foreach (IAssemblySymbol assembly in assemblies
+                .OrderBy(f => f.Name)
+                .ThenBy(f => f.Identity.Version))
+            {
+                AppendAssemblyAttributes(assembly);
+            }
+
             IEnumerable<INamedTypeSymbol> types = assemblies.SelectMany(a => a.GetTypes(t => t.ContainingType == null
                 && t.IsVisible(Options.Visibility)
                 && !Options.ShouldBeIgnored(t)));
@@ -252,6 +259,7 @@ namespace Roslynator.CSharp
                             en.Current,
                             _typeFormat,
                             SymbolDisplayTypeDeclarationOptions.IncludeAccessibility | SymbolDisplayTypeDeclarationOptions.IncludeModifiers,
+                            containingNamespaceStyle: Options.ContainingNamespaceStyle,
                             isVisibleAttribute: IsVisibleAttribute,
                             formatBaseList: Options.FormatBaseList,
                             formatConstraints: Options.FormatConstraints,
@@ -259,7 +267,6 @@ namespace Roslynator.CSharp
                             splitAttributes: Options.SplitAttributes,
                             includeAttributeArguments: Options.IncludeAttributeArguments,
                             omitIEnumerable: Options.OmitIEnumerable,
-                            useNameOnlyIfPossible: !Options.FullyQualifiedNames,
                             useDefaultLiteral: Options.UseDefaultLiteral));
 
                         switch (typeKind)
@@ -363,8 +370,9 @@ namespace Roslynator.CSharp
                         while (true)
                         {
                             ImmutableArray<SymbolDisplayPart> attributeParts = SymbolDefinitionDisplay.GetAttributesParts(
-                                en.Current.GetAttributes(),
+                                en.Current,
                                 predicate: IsVisibleAttribute,
+                                containingNamespaceStyle: Options.ContainingNamespaceStyle,
                                 splitAttributes: Options.SplitAttributes,
                                 includeAttributeArguments: Options.IncludeAttributeArguments);
 
@@ -411,7 +419,11 @@ namespace Roslynator.CSharp
 
                             if (parameters.Any())
                             {
-                                parts = SymbolDefinitionDisplay.AddParameterAttributes(parts, en.Current, parameters);
+                                parts = SymbolDefinitionDisplay.AddParameterAttributes(
+                                    parts,
+                                    en.Current,
+                                    parameters,
+                                    containingNamespaceStyle: Options.ContainingNamespaceStyle);
 
                                 if (Options.FormatParameters
                                     && parameters.Length > 1)
@@ -454,6 +466,23 @@ namespace Roslynator.CSharp
             if (Options.Depth <= DefinitionListDepth.Type)
             {
                 WriteTypes(namedType.GetTypeMembers().Where(f => IsVisibleType(f)));
+            }
+        }
+
+        private void AppendAssemblyAttributes(IAssemblySymbol assemblySymbol)
+        {
+            ImmutableArray<SymbolDisplayPart> attributeParts = SymbolDefinitionDisplay.GetAttributesParts(
+                assemblySymbol,
+                IsVisibleAttribute,
+                containingNamespaceStyle: Options.ContainingNamespaceStyle,
+                splitAttributes: Options.SplitAttributes,
+                includeAttributeArguments: Options.IncludeAttributeArguments);
+
+            if (attributeParts.Any())
+            {
+                WriteLine(assemblySymbol.Identity.ToString());
+                Write(attributeParts);
+                WriteLine();
             }
         }
 

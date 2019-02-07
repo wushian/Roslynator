@@ -32,8 +32,7 @@ namespace Roslynator.CommandLine
             MetaValue = "<ASSEMBLY_REFERENCE | ASSEMBLY_REFERENCES_FILE>")]
         public IEnumerable<string> References { get; set; }
 
-        [Option(longName: "depth",
-            Default = DocumentationOptions.DefaultValues.Depth,
+        [Option(longName: ParameterNames.Depth,
             HelpText = "Defines a depth of a documentation. Allowed values are member, type or namespace. Default value is member.",
             MetaValue = "<DEPTH>")]
         public string Depth { get; set; }
@@ -59,7 +58,7 @@ namespace Roslynator.CommandLine
             HelpText = "Indicates whether a link should lead to the top of the documentation content.")]
         public bool ScrollToContent { get; set; }
 
-        [Option(longName: "visibility",
+        [Option(longName: ParameterNames.Visibility,
             Default = nameof(Roslynator.Visibility.Public),
             HelpText = "Defines a visibility of a type or a member. Allowed values are public, internal or private. Default value is public.",
             MetaValue = "<VISIBILITY>")]

@@ -7,7 +7,6 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator.CSharp
 {
-    //TODO: SymbolDisplayContainingNamespaceStyle Omitted, Included
     internal class DefinitionListOptions
     {
         private readonly ImmutableArray<MetadataName> _ignoredMetadataNames;
@@ -15,6 +14,7 @@ namespace Roslynator.CSharp
         public DefinitionListOptions(
             Visibility visibility = DefaultValues.Visibility,
             DefinitionListDepth depth = DefaultValues.Depth,
+            SymbolDisplayContainingNamespaceStyle containingNamespaceStyle = DefaultValues.ContainingNamespaceStyle,
             IEnumerable<string> ignoredNames = null,
             bool indent = DefaultValues.Indent,
             string indentChars = DefaultValues.IndentChars,
@@ -26,13 +26,13 @@ namespace Roslynator.CSharp
             bool splitAttributes = DefaultValues.SplitAttributes,
             bool includeAttributeArguments = DefaultValues.IncludeAttributeArguments,
             bool omitIEnumerable = DefaultValues.OmitIEnumerable,
-            bool useDefaultLiteral = DefaultValues.UseDefaultLiteral,
-            bool fullyQualifiedNames = DefaultValues.FullyQualifiedNames)
+            bool useDefaultLiteral = DefaultValues.UseDefaultLiteral)
         {
             _ignoredMetadataNames = ignoredNames?.Select(name => MetadataName.Parse(name)).ToImmutableArray() ?? ImmutableArray<MetadataName>.Empty;
 
             Visibility = visibility;
             Depth = depth;
+            ContainingNamespaceStyle = containingNamespaceStyle;
             IgnoredNames = ignoredNames?.ToImmutableArray() ?? ImmutableArray<string>.Empty;
             Indent = indent;
             IndentChars = indentChars;
@@ -45,7 +45,6 @@ namespace Roslynator.CSharp
             IncludeAttributeArguments = includeAttributeArguments;
             OmitIEnumerable = omitIEnumerable;
             UseDefaultLiteral = useDefaultLiteral;
-            FullyQualifiedNames = fullyQualifiedNames;
         }
 
         public static DefinitionListOptions Default { get; } = new DefinitionListOptions();
@@ -54,6 +53,8 @@ namespace Roslynator.CSharp
 
         public DefinitionListDepth Depth { get; }
 
+        public SymbolDisplayContainingNamespaceStyle ContainingNamespaceStyle { get; }
+
         public ImmutableArray<string> IgnoredNames { get; }
 
         public bool Indent { get; }
@@ -61,8 +62,6 @@ namespace Roslynator.CSharp
         public string IndentChars { get; }
 
         public bool NestNamespaces { get; }
-
-        public bool SystemNamespaceFirst { get; }
 
         public bool EmptyLineBetweenMembers { get; }
 
@@ -79,8 +78,6 @@ namespace Roslynator.CSharp
         public bool OmitIEnumerable { get; }
 
         public bool UseDefaultLiteral { get; }
-
-        public bool FullyQualifiedNames { get; }
 
         internal bool ShouldBeIgnored(INamedTypeSymbol typeSymbol)
         {
@@ -110,6 +107,7 @@ namespace Roslynator.CSharp
         {
             public const Visibility Visibility = Roslynator.Visibility.Private;
             public const DefinitionListDepth Depth = DefinitionListDepth.Member;
+            public const SymbolDisplayContainingNamespaceStyle ContainingNamespaceStyle = SymbolDisplayContainingNamespaceStyle.Omitted;
             public const bool EmptyLineBetweenMembers = false;
             public const bool FormatBaseList = false;
             public const bool FormatConstraints = false;
@@ -121,7 +119,6 @@ namespace Roslynator.CSharp
             public const bool OmitIEnumerable = true;
             public const bool SplitAttributes = true;
             public const bool UseDefaultLiteral = true;
-            public const bool FullyQualifiedNames = false;
         }
     }
 }

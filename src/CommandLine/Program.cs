@@ -14,6 +14,7 @@ using CommandLine;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Roslynator.CodeFixes;
+using Roslynator.CSharp;
 using Roslynator.Diagnostics;
 using Roslynator.Documentation;
 using Roslynator.Documentation.Markdown;
@@ -121,7 +122,7 @@ namespace Roslynator.CommandLine
 
         private static async Task<int> FixAsync(FixCommandLineOptions options)
         {
-            if (!options.TryGetDiagnosticSeverity(CodeFixerOptions.Default.SeverityLevel, out DiagnosticSeverity severityLevel))
+            if (!options.TryParseDiagnosticSeverity(CodeFixerOptions.Default.SeverityLevel, out DiagnosticSeverity severityLevel))
                 return 1;
 
             if (!TryParseKeyValuePairs(options.DiagnosticFixMap, out Dictionary<string, string> diagnosticFixMap))
@@ -147,7 +148,7 @@ namespace Roslynator.CommandLine
 
         private static async Task<int> AnalyzeAsync(AnalyzeCommandLineOptions options)
         {
-            if (!options.TryGetDiagnosticSeverity(CodeAnalyzerOptions.Default.SeverityLevel, out DiagnosticSeverity severityLevel))
+            if (!options.TryParseDiagnosticSeverity(CodeAnalyzerOptions.Default.SeverityLevel, out DiagnosticSeverity severityLevel))
                 return 1;
 
             if (!options.TryGetLanguage(out string language))
@@ -182,10 +183,10 @@ namespace Roslynator.CommandLine
             if (!options.TryGetLanguage(out string language))
                 return 1;
 
-            if (!options.TryGetSymbolKinds(SymbolSpecialKinds.TypeOrMember, out SymbolSpecialKinds symbolKinds))
+            if (!TryParseParameterValueAsEnumFlags(options.SymbolKinds, ParameterNames.SymbolKinds, out SymbolSpecialKinds symbolKinds, SymbolFinderOptions.Default.SymbolKinds))
                 return 1;
 
-            if (!options.TryGetVisibility(SymbolFinderOptions.Default.Visibilities, out ImmutableArray< Visibility> visibilities))
+            if (!TryParseParameterValueAsEnumValues(options.Visibility, ParameterNames.Visibility, out ImmutableArray<Visibility> visibilities, SymbolFinderOptions.Default.Visibilities))
                 return 1;
 
             if (!TryParseMetadataNames(options.IgnoredAttributes, out ImmutableArray<MetadataName> ignoredAttributes))
@@ -208,16 +209,20 @@ namespace Roslynator.CommandLine
             if (!options.TryGetLanguage(out string language))
                 return 1;
 
-            if (!TryParseDefinitionListDepth(options.Depth, out DefinitionListDepth depth))
+            if (!TryParseParameterValueAsEnum(options.ContainingNamespaceStyle, ParameterNames.ContainingNamespaceStyle, out SymbolDisplayContainingNamespaceStyle containingNamespaceStyle, DefinitionListOptions.Default.ContainingNamespaceStyle))
                 return 1;
 
-            if (!TryParseVisibility(options.Visibility, out Visibility visibility))
+            if (!TryParseParameterValueAsEnum(options.Depth, ParameterNames.Depth, out DefinitionListDepth depth, DefinitionListOptions.Default.Depth))
+                return 1;
+
+            if (!TryParseParameterValueAsEnum(options.Visibility, ParameterNames.Visibility, out Visibility visibility, DefinitionListOptions.Default.Visibility))
                 return 1;
 
             var command = new ListSymbolsCommand(
                 options: options,
                 depth: depth,
                 visibility: visibility,
+                containingNamespaceStyle: containingNamespaceStyle,
                 language: language);
 
             CommandResult result = await command.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
@@ -309,25 +314,25 @@ namespace Roslynator.CommandLine
                 return 1;
             }
 
-            if (!TryParseDocumentationDepth(options.Depth, out DocumentationDepth depth))
+            if (!TryParseParameterValueAsEnum(options.Depth, ParameterNames.Depth, out DocumentationDepth depth, DocumentationOptions.Default.Depth))
                 return 1;
 
-            if (!TryParseIgnoredRootParts(options.IgnoredRootParts, out RootDocumentationParts ignoredRootParts))
+            if (!TryParseParameterValueAsEnumFlags(options.IgnoredRootParts, ParameterNames.IgnoredRootParts, out RootDocumentationParts ignoredRootParts, DocumentationOptions.Default.IgnoredRootParts))
                 return 1;
 
-            if (!TryParseIgnoredNamespaceParts(options.IgnoredNamespaceParts, out NamespaceDocumentationParts ignoredNamespaceParts))
+            if (!TryParseParameterValueAsEnumFlags(options.IgnoredNamespaceParts, ParameterNames.IgnoredNamespaceParts, out NamespaceDocumentationParts ignoredNamespaceParts, DocumentationOptions.Default.IgnoredNamespaceParts))
                 return 1;
 
-            if (!TryParseIgnoredTypeParts(options.IgnoredTypeParts, out TypeDocumentationParts ignoredTypeParts))
+            if (!TryParseParameterValueAsEnumFlags(options.IgnoredTypeParts, ParameterNames.IgnoredTypeParts, out TypeDocumentationParts ignoredTypeParts, DocumentationOptions.Default.IgnoredTypeParts))
                 return 1;
 
-            if (!TryParseIgnoredMemberParts(options.IgnoredMemberParts, out MemberDocumentationParts ignoredMemberParts))
+            if (!TryParseParameterValueAsEnumFlags(options.IgnoredMemberParts, ParameterNames.IgnoredMemberParts, out MemberDocumentationParts ignoredMemberParts, DocumentationOptions.Default.IgnoredMemberParts))
                 return 1;
 
-            if (!TryParseOmitContainingNamespaceParts(options.OmitContainingNamespaceParts, out OmitContainingNamespaceParts omitContainingNamespaceParts))
+            if (!TryParseParameterValueAsEnumFlags(options.OmitContainingNamespaceParts, ParameterNames.OmitContainingNamespaceParts, out OmitContainingNamespaceParts omitContainingNamespaceParts, DocumentationOptions.Default.OmitContainingNamespaceParts))
                 return 1;
 
-            if (!TryParseVisibility(options.Visibility, out Visibility visibility))
+            if (!TryParseParameterValueAsEnum(options.Visibility, ParameterNames.Visibility, out Visibility visibility))
                 return 1;
 
             DocumentationModel documentationModel = CreateDocumentationModel(options.References, options.Assemblies, visibility, options.AdditionalXmlDocumentation);
@@ -409,13 +414,13 @@ namespace Roslynator.CommandLine
 
         private static int GenerateDeclarations(GenerateDeclarationsCommandLineOptions options)
         {
-            if (!TryParseDocumentationDepth(options.Depth, out DocumentationDepth depth))
+            if (!TryParseParameterValueAsEnum(options.Depth, ParameterNames.Depth, out DocumentationDepth depth, DeclarationListOptions.Default.Depth))
                 return 1;
 
-            if (!TryParseIgnoredDeclarationListParts(options.IgnoredParts, out DeclarationListParts ignoredParts))
+            if (!TryParseParameterValueAsEnumFlags(options.IgnoredParts, ParameterNames.IgnoredParts, out DeclarationListParts ignoredParts, DeclarationListOptions.Default.IgnoredParts))
                 return 1;
 
-            if (!TryParseVisibility(options.Visibility, out Visibility visibility))
+            if (!TryParseParameterValueAsEnum(options.Visibility, ParameterNames.Visibility, out Visibility visibility))
                 return 1;
 
             DocumentationModel documentationModel = CreateDocumentationModel(options.References, options.Assemblies, visibility, options.AdditionalXmlDocumentation);
@@ -473,7 +478,7 @@ namespace Roslynator.CommandLine
 
         private static int GenerateDocRoot(GenerateDocRootCommandLineOptions options)
         {
-            if (!TryParseVisibility(options.Visibility, out Visibility visibility))
+            if (!TryParseParameterValueAsEnum(options.Visibility, ParameterNames.Visibility, out Visibility visibility))
                 return 1;
 
             DocumentationModel documentationModel = CreateDocumentationModel(options.References, options.Assemblies, visibility);
@@ -481,10 +486,10 @@ namespace Roslynator.CommandLine
             if (documentationModel == null)
                 return 1;
 
-            if (!TryParseDocumentationDepth(options.Depth, out DocumentationDepth depth))
+            if (!TryParseParameterValueAsEnum(options.Depth, ParameterNames.Depth, out DocumentationDepth depth, DocumentationOptions.Default.Depth))
                 return 1;
 
-            if (!TryParseIgnoredRootParts(options.IgnoredParts, out RootDocumentationParts ignoredParts))
+            if (!TryParseParameterValueAsEnumFlags(options.IgnoredParts, ParameterNames.IgnoredRootParts, out RootDocumentationParts ignoredParts, DocumentationOptions.Default.IgnoredRootParts))
                 return 1;
 
             var documentationOptions = new DocumentationOptions(

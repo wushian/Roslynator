@@ -32,8 +32,7 @@ namespace Roslynator.CommandLine
             MetaValue = "<XML_DOCUMENTATION_FILE>")]
         public IEnumerable<string> AdditionalXmlDocumentation { get; set; }
 
-        [Option(longName: "depth",
-            Default = DefaultValues.Depth,
+        [Option(longName: ParameterNames.Depth,
             HelpText = "Defines a depth of a documentation. Allowed values are member, type or namespace. Default value is member.",
             MetaValue = "<DEPTH>")]
         public string Depth { get; set; }
@@ -63,7 +62,7 @@ namespace Roslynator.CommandLine
             MetaValue = "<FULLY_QUALIFIED_METADATA_NAME>")]
         public IEnumerable<string> IgnoredNames { get; set; }
 
-        [Option(longName: "ignored-parts",
+        [Option(longName: ParameterNames.IgnoredParts,
             HelpText = "Defines parts of a declaration list that should be excluded. Allowed values are auto-generated-comment and assembly-attributes.",
             MetaValue = "<IGNORED_PARTS>")]
         public IEnumerable<string> IgnoredParts { get; set; }
@@ -106,7 +105,7 @@ namespace Roslynator.CommandLine
             HelpText = "Indicates whether attribute arguments should be omitted when displaying an attribute.")]
         public bool OmitAttributeArguments { get; set; }
 
-        [Option(longName: "visibility",
+        [Option(longName: ParameterNames.Visibility,
             Default = nameof(Roslynator.Visibility.Public),
             HelpText = "Defines a visibility of a type or a member. Allowed values are public, internal or private. Default value is public.",
             MetaValue = "<VISIBILITY>")]
