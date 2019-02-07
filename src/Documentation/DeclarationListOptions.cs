@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator.Documentation
 {
-    //TODO: SystemNamespaceFirst, IgnoreObsolete, IndentChars = "  "
+    //TODO: SystemNamespaceFirst, IgnoreObsolete
     public class DeclarationListOptions
     {
         private readonly ImmutableArray<MetadataName> _ignoredMetadataNames;
@@ -122,7 +122,7 @@ namespace Roslynator.Documentation
             public const bool FormatParameters = false;
             public const bool IncludeAttributeArguments = true;
             public const bool Indent = true;
-            public const string IndentChars = "    ";
+            public const string IndentChars = "  ";
             public const bool NestNamespaces = false;
             public const bool NewLineBeforeOpenBrace = true;
             public const bool OmitIEnumerable = true;

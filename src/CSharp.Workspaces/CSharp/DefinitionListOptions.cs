@@ -7,8 +7,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Roslynator.CSharp
 {
-    //TODO: AddSemicolon
-    //TODO: NamespaceDisplayOptions Omit, OmitAsContaining, Always
+    //TODO: SymbolDisplayContainingNamespaceStyle Omitted, Included
     internal class DefinitionListOptions
     {
         private readonly ImmutableArray<MetadataName> _ignoredMetadataNames;

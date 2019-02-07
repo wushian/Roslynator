@@ -4,7 +4,7 @@ using CommandLine;
 
 namespace Roslynator.CommandLine
 {
-    //TODO: AddAssemblyAttributes
+    //TODO: Output, XmlOutput, AddAssemblyAttributes
 #if DEBUG
     [Verb("list-symbols", HelpText = "Lists symbols in the specified project or solution.")]
 #endif

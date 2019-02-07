@@ -10,7 +10,7 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace Roslynator.CSharp
 {
-    internal static class SymbolDefinitionBuilder
+    internal static class SymbolDefinitionDisplay
     {
         public static ImmutableArray<SymbolDisplayPart> GetDisplayParts(
             ISymbol symbol,
@@ -246,169 +246,6 @@ namespace Roslynator.CSharp
             }
 
             return builder.ToImmutableArray();
-        }
-
-        internal static ImmutableArray<SymbolDisplayPart> ReplaceDefaultExpressionWithDefaultLiteral(
-            ISymbol symbol,
-            ImmutableArray<SymbolDisplayPart> parts)
-        {
-            int parenthesesDepth = 0;
-            int bracketsDepth = 0;
-
-            int i = FindParameterListStart(symbol, parts);
-
-            Debug.Assert(i >= 0);
-
-            if (i == -1)
-                return parts;
-
-            int prevIndex = 0;
-
-            ImmutableArray<SymbolDisplayPart>.Builder builder = null;
-
-            while (i < parts.Length)
-            {
-                SymbolDisplayPart part = parts[i];
-
-                if (part.Kind == SymbolDisplayPartKind.Punctuation)
-                {
-                    switch (part.ToString())
-                    {
-                        case "(":
-                            {
-                                parenthesesDepth++;
-                                break;
-                            }
-                        case ")":
-                            {
-                                Debug.Assert(parenthesesDepth >= 0);
-                                parenthesesDepth--;
-
-                                if (parenthesesDepth == 0
-                                    && bracketsDepth == 0)
-                                {
-                                    return GetResult();
-                                }
-
-                                break;
-                            }
-                        case "[":
-                            {
-                                bracketsDepth++;
-                                break;
-                            }
-                        case "]":
-                            {
-                                Debug.Assert(bracketsDepth >= 0);
-                                bracketsDepth--;
-
-                                if (bracketsDepth == 0
-                                    && parenthesesDepth == 0)
-                                {
-                                    return GetResult();
-                                }
-
-                                break;
-                            }
-                        case "=":
-                            {
-                                ReplaceDefaultExpressionWithDefaultLiteral();
-                                break;
-                            }
-                    }
-                }
-
-                i++;
-            }
-
-            return GetResult();
-
-            void ReplaceDefaultExpressionWithDefaultLiteral()
-            {
-                int j = i + 1;
-                if (j >= parts.Length
-                    || !parts[j].IsSpace())
-                {
-                    return;
-                }
-
-                j++;
-                if (j >= parts.Length
-                    || !parts[j].IsKeyword("default"))
-                {
-                    return;
-                }
-
-                j++;
-                if (j >= parts.Length
-                    || !parts[j].IsPunctuation("("))
-                {
-                    return;
-                }
-
-                int k = FindClosingParentheses(j + 1);
-
-                if (k == -1)
-                    return;
-
-                if (builder == null)
-                    builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>(parts.Length);
-
-                for (int l = prevIndex; l < j; l++)
-                    builder.Add(parts[l]);
-
-                i = k;
-
-                prevIndex = i + 1;
-            }
-
-            int FindClosingParentheses(int startIndex)
-            {
-                int depth = 1;
-
-                int j = startIndex;
-
-                while (j < parts.Length)
-                {
-                    SymbolDisplayPart part = parts[j];
-
-                    if (part.IsPunctuation())
-                    {
-                        string text = part.ToString();
-
-                        if (text == "(")
-                        {
-                            depth++;
-                        }
-                        else if (text == ")")
-                        {
-                            Debug.Assert(parenthesesDepth > 0);
-
-                            depth--;
-
-                            if (depth == 0)
-                                return j;
-                        }
-                    }
-
-                    j++;
-                }
-
-                return -1;
-            }
-
-            ImmutableArray<SymbolDisplayPart> GetResult()
-            {
-                if (builder == null)
-                    return parts;
-
-                for (int j = prevIndex; j < parts.Length; j++)
-                {
-                    builder.Add(parts[j]);
-                }
-
-                return builder.ToImmutableArray();
-            }
         }
 
         public static ImmutableArray<SymbolDisplayPart> GetAttributesParts(
@@ -714,6 +551,230 @@ namespace Roslynator.CSharp
             }
         }
 
+        public static ImmutableArray<SymbolDisplayPart> AddParameterAttributes(
+            ImmutableArray<SymbolDisplayPart> parts,
+            ISymbol symbol,
+            ImmutableArray<IParameterSymbol> parameters,
+            Func<INamedTypeSymbol, bool> predicate = null,
+            bool splitAttributes = true,
+            bool includeAttributeArguments = false)
+        {
+            int i = FindParameterListStart(symbol, parts);
+
+            if (i == -1)
+                return parts;
+
+            int parameterIndex = 0;
+
+            IParameterSymbol parameter = parameters[parameterIndex];
+
+            ImmutableArray<SymbolDisplayPart> attributeParts = GetAttributesParts(
+                parameter.GetAttributes(),
+                predicate: predicate,
+                splitAttributes: splitAttributes,
+                includeAttributeArguments: includeAttributeArguments,
+                addNewLine: false);
+
+            if (attributeParts.Any())
+            {
+                parts = parts.Insert(i + 1, SymbolDisplayPartFactory.Space());
+                parts = parts.InsertRange(i + 1, attributeParts);
+            }
+
+            int parenthesesDepth = 0;
+            int bracesDepth = 0;
+            int bracketsDepth = 0;
+            int angleBracketsDepth = 0;
+
+            ImmutableArray<SymbolDisplayPart>.Builder builder = null;
+
+            int prevIndex = 0;
+
+            AddParameterAttributes();
+
+            if (builder != null)
+            {
+                while (prevIndex < parts.Length)
+                {
+                    builder.Add(parts[prevIndex]);
+                    prevIndex++;
+                }
+
+                return builder.ToImmutableArray();
+            }
+
+            return parts;
+
+            void AddParameterAttributes()
+            {
+                while (i < parts.Length)
+                {
+                    SymbolDisplayPart part = parts[i];
+
+                    if (part.Kind == SymbolDisplayPartKind.Punctuation)
+                    {
+                        switch (part.ToString())
+                        {
+                            case ",":
+                                {
+                                    if (((angleBracketsDepth == 0 && parenthesesDepth == 1 && bracesDepth == 0 && bracketsDepth == 0)
+                                            || (angleBracketsDepth == 0 && parenthesesDepth == 0 && bracesDepth == 0 && bracketsDepth == 1))
+                                        && i < parts.Length - 1)
+                                    {
+                                        SymbolDisplayPart nextPart = parts[i + 1];
+
+                                        if (nextPart.Kind == SymbolDisplayPartKind.Space)
+                                        {
+                                            parameterIndex++;
+
+                                            attributeParts = GetAttributesParts(
+                                                parameters[parameterIndex].GetAttributes(),
+                                                predicate: predicate,
+                                                splitAttributes: splitAttributes,
+                                                includeAttributeArguments: includeAttributeArguments,
+                                                addNewLine: false);
+
+                                            if (attributeParts.Any())
+                                            {
+                                                if (builder == null)
+                                                {
+                                                    builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
+
+                                                    builder.AddRange(parts, i + 1);
+                                                }
+                                                else
+                                                {
+                                                    for (int j = prevIndex; j <= i; j++)
+                                                        builder.Add(parts[j]);
+                                                }
+
+                                                builder.Add(SymbolDisplayPartFactory.Space());
+                                                builder.AddRange(attributeParts);
+
+                                                prevIndex = i + 1;
+                                            }
+                                        }
+                                    }
+
+                                    break;
+                                }
+                            case "(":
+                                {
+                                    parenthesesDepth++;
+                                    break;
+                                }
+                            case ")":
+                                {
+                                    Debug.Assert(parenthesesDepth >= 0);
+                                    parenthesesDepth--;
+
+                                    if (parenthesesDepth == 0
+                                        && symbol.IsKind(SymbolKind.Method, SymbolKind.NamedType))
+                                    {
+                                        return;
+                                    }
+
+                                    break;
+                                }
+                            case "[":
+                                {
+                                    bracketsDepth++;
+                                    break;
+                                }
+                            case "]":
+                                {
+                                    Debug.Assert(bracketsDepth >= 0);
+                                    bracketsDepth--;
+
+                                    if (bracketsDepth == 0
+                                        && symbol.Kind == SymbolKind.Property)
+                                    {
+                                        return;
+                                    }
+
+                                    break;
+                                }
+                            case "{":
+                                {
+                                    bracesDepth++;
+                                    break;
+                                }
+                            case "}":
+                                {
+                                    Debug.Assert(bracesDepth >= 0);
+                                    bracesDepth--;
+                                    break;
+                                }
+                            case "<":
+                                {
+                                    angleBracketsDepth++;
+                                    break;
+                                }
+                            case ">":
+                                {
+                                    Debug.Assert(angleBracketsDepth >= 0);
+                                    angleBracketsDepth--;
+                                    break;
+                                }
+                        }
+                    }
+
+                    i++;
+                }
+            }
+        }
+
+        public static ImmutableArray<SymbolDisplayPart> AddAccessorAttributes(
+            ImmutableArray<SymbolDisplayPart> parts,
+            IMethodSymbol methodSymbol,
+            Func<INamedTypeSymbol, bool> predicate = null,
+            bool splitAttributes = true,
+            bool includeAttributeArguments = false)
+        {
+            ImmutableArray<SymbolDisplayPart> attributeParts = GetAttributesParts(
+                methodSymbol.GetAttributes(),
+                predicate: predicate,
+                splitAttributes: splitAttributes,
+                includeAttributeArguments: includeAttributeArguments,
+                addNewLine: false);
+
+            if (attributeParts.Any())
+            {
+                string keyword = GetKeyword();
+
+                SymbolDisplayPart part = parts.FirstOrDefault(f => f.IsKeyword(keyword));
+
+                Debug.Assert(part.Kind == SymbolDisplayPartKind.Keyword);
+
+                if (part.Kind == SymbolDisplayPartKind.Keyword)
+                {
+                    int index = parts.IndexOf(part);
+
+                    parts = parts.Insert(index, SymbolDisplayPartFactory.Space());
+                    parts = parts.InsertRange(index, attributeParts);
+                }
+            }
+
+            return parts;
+
+            string GetKeyword()
+            {
+                switch (methodSymbol.MethodKind)
+                {
+                    case MethodKind.EventAdd:
+                        return "add";
+                    case MethodKind.EventRemove:
+                        return "remove";
+                    case MethodKind.PropertyGet:
+                        return "get";
+                    case MethodKind.PropertySet:
+                        return "set";
+                    default:
+                        throw new InvalidOperationException();
+                }
+            }
+        }
+
         internal static void FormatParameters(
             ISymbol symbol,
             ImmutableArray<SymbolDisplayPart>.Builder builder,
@@ -918,6 +979,169 @@ namespace Roslynator.CSharp
             }
 
             return -1;
+        }
+
+        internal static ImmutableArray<SymbolDisplayPart> ReplaceDefaultExpressionWithDefaultLiteral(
+            ISymbol symbol,
+            ImmutableArray<SymbolDisplayPart> parts)
+        {
+            int parenthesesDepth = 0;
+            int bracketsDepth = 0;
+
+            int i = FindParameterListStart(symbol, parts);
+
+            Debug.Assert(i >= 0);
+
+            if (i == -1)
+                return parts;
+
+            int prevIndex = 0;
+
+            ImmutableArray<SymbolDisplayPart>.Builder builder = null;
+
+            while (i < parts.Length)
+            {
+                SymbolDisplayPart part = parts[i];
+
+                if (part.Kind == SymbolDisplayPartKind.Punctuation)
+                {
+                    switch (part.ToString())
+                    {
+                        case "(":
+                            {
+                                parenthesesDepth++;
+                                break;
+                            }
+                        case ")":
+                            {
+                                Debug.Assert(parenthesesDepth >= 0);
+                                parenthesesDepth--;
+
+                                if (parenthesesDepth == 0
+                                    && bracketsDepth == 0)
+                                {
+                                    return GetResult();
+                                }
+
+                                break;
+                            }
+                        case "[":
+                            {
+                                bracketsDepth++;
+                                break;
+                            }
+                        case "]":
+                            {
+                                Debug.Assert(bracketsDepth >= 0);
+                                bracketsDepth--;
+
+                                if (bracketsDepth == 0
+                                    && parenthesesDepth == 0)
+                                {
+                                    return GetResult();
+                                }
+
+                                break;
+                            }
+                        case "=":
+                            {
+                                ReplaceDefaultExpressionWithDefaultLiteral();
+                                break;
+                            }
+                    }
+                }
+
+                i++;
+            }
+
+            return GetResult();
+
+            void ReplaceDefaultExpressionWithDefaultLiteral()
+            {
+                int j = i + 1;
+                if (j >= parts.Length
+                    || !parts[j].IsSpace())
+                {
+                    return;
+                }
+
+                j++;
+                if (j >= parts.Length
+                    || !parts[j].IsKeyword("default"))
+                {
+                    return;
+                }
+
+                j++;
+                if (j >= parts.Length
+                    || !parts[j].IsPunctuation("("))
+                {
+                    return;
+                }
+
+                int k = FindClosingParentheses(j + 1);
+
+                if (k == -1)
+                    return;
+
+                if (builder == null)
+                    builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>(parts.Length);
+
+                for (int l = prevIndex; l < j; l++)
+                    builder.Add(parts[l]);
+
+                i = k;
+
+                prevIndex = i + 1;
+            }
+
+            int FindClosingParentheses(int startIndex)
+            {
+                int depth = 1;
+
+                int j = startIndex;
+
+                while (j < parts.Length)
+                {
+                    SymbolDisplayPart part = parts[j];
+
+                    if (part.IsPunctuation())
+                    {
+                        string text = part.ToString();
+
+                        if (text == "(")
+                        {
+                            depth++;
+                        }
+                        else if (text == ")")
+                        {
+                            Debug.Assert(parenthesesDepth > 0);
+
+                            depth--;
+
+                            if (depth == 0)
+                                return j;
+                        }
+                    }
+
+                    j++;
+                }
+
+                return -1;
+            }
+
+            ImmutableArray<SymbolDisplayPart> GetResult()
+            {
+                if (builder == null)
+                    return parts;
+
+                for (int j = prevIndex; j < parts.Length; j++)
+                {
+                    builder.Add(parts[j]);
+                }
+
+                return builder.ToImmutableArray();
+            }
         }
 
         private static string ToDisplayString(INamedTypeSymbol symbol, INamespaceSymbol containingNamespace)

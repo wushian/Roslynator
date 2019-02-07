@@ -248,7 +248,7 @@ namespace Roslynator.CSharp
                     {
                         TypeKind typeKind = en.Current.TypeKind;
 
-                        Write(SymbolDefinitionBuilder.GetDisplayParts(
+                        Write(SymbolDefinitionDisplay.GetDisplayParts(
                             en.Current,
                             _typeFormat,
                             SymbolDisplayTypeDeclarationOptions.IncludeAccessibility | SymbolDisplayTypeDeclarationOptions.IncludeModifiers,
@@ -362,7 +362,7 @@ namespace Roslynator.CSharp
 
                         while (true)
                         {
-                            ImmutableArray<SymbolDisplayPart> attributeParts = SymbolDefinitionBuilder.GetAttributesParts(
+                            ImmutableArray<SymbolDisplayPart> attributeParts = SymbolDefinitionDisplay.GetAttributesParts(
                                 en.Current.GetAttributes(),
                                 predicate: IsVisibleAttribute,
                                 splitAttributes: Options.SplitAttributes,
@@ -375,10 +375,9 @@ namespace Roslynator.CSharp
                             if (Options.UseDefaultLiteral
                                 && en.Current.GetParameters().Any(f => f.HasExplicitDefaultValue))
                             {
-                                parts = SymbolDefinitionBuilder.ReplaceDefaultExpressionWithDefaultLiteral(en.Current, parts);
+                                parts = SymbolDefinitionDisplay.ReplaceDefaultExpressionWithDefaultLiteral(en.Current, parts);
                             }
 
-                            //XTODO: attribute on event accessor
                             if (en.Current.Kind == SymbolKind.Property)
                             {
                                 var propertySymbol = (IPropertySymbol)en.Current;
@@ -386,25 +385,39 @@ namespace Roslynator.CSharp
                                 IMethodSymbol getMethod = propertySymbol.GetMethod;
 
                                 if (getMethod != null)
-                                    parts = WriteAccessorAttributes(parts, getMethod, "get");
+                                    parts = SymbolDefinitionDisplay.AddAccessorAttributes(parts, getMethod);
 
                                 IMethodSymbol setMethod = propertySymbol.SetMethod;
 
                                 if (setMethod != null)
-                                    parts = WriteAccessorAttributes(parts, setMethod, "set");
+                                    parts = SymbolDefinitionDisplay.AddAccessorAttributes(parts, setMethod);
+                            }
+                            else if (en.Current.Kind == SymbolKind.Event)
+                            {
+                                var eventSymbol = (IEventSymbol)en.Current;
+
+                                IMethodSymbol addMethod = eventSymbol.AddMethod;
+
+                                if (addMethod != null)
+                                    parts = SymbolDefinitionDisplay.AddAccessorAttributes(parts, addMethod);
+
+                                IMethodSymbol removeMethod = eventSymbol.RemoveMethod;
+
+                                if (removeMethod != null)
+                                    parts = SymbolDefinitionDisplay.AddAccessorAttributes(parts, removeMethod);
                             }
 
                             ImmutableArray<IParameterSymbol> parameters = en.Current.GetParameters();
 
                             if (parameters.Any())
                             {
-                                parts = WriteParameterAttributes(parts, en.Current, parameters);
+                                parts = SymbolDefinitionDisplay.AddParameterAttributes(parts, en.Current, parameters);
 
                                 if (Options.FormatParameters
                                     && parameters.Length > 1)
                                 {
                                     ImmutableArray<SymbolDisplayPart>.Builder builder = parts.ToBuilder();
-                                    SymbolDefinitionBuilder.FormatParameters(en.Current, builder, Options.IndentChars);
+                                    SymbolDefinitionDisplay.FormatParameters(en.Current, builder, Options.IndentChars);
 
                                     parts = builder.ToImmutableArray();
                                 }
@@ -442,206 +455,6 @@ namespace Roslynator.CSharp
             {
                 WriteTypes(namedType.GetTypeMembers().Where(f => IsVisibleType(f)));
             }
-        }
-
-        private ImmutableArray<SymbolDisplayPart> WriteParameterAttributes(
-            ImmutableArray<SymbolDisplayPart> parts,
-            ISymbol symbol,
-            ImmutableArray<IParameterSymbol> parameters)
-        {
-            int i = SymbolDefinitionBuilder.FindParameterListStart(symbol, parts);
-
-            if (i == -1)
-                return parts;
-
-            int parameterIndex = 0;
-
-            IParameterSymbol parameter = parameters[parameterIndex];
-
-            ImmutableArray<SymbolDisplayPart> attributeParts = SymbolDefinitionBuilder.GetAttributesParts(
-                parameter.GetAttributes(),
-                predicate: IsVisibleAttribute,
-                splitAttributes: Options.SplitAttributes,
-                includeAttributeArguments: Options.IncludeAttributeArguments,
-                addNewLine: false);
-
-            if (attributeParts.Any())
-            {
-                parts = parts.Insert(i + 1, SymbolDisplayPartFactory.Space());
-                parts = parts.InsertRange(i + 1, attributeParts);
-            }
-
-            int parenthesesDepth = 0;
-            int bracesDepth = 0;
-            int bracketsDepth = 0;
-            int angleBracketsDepth = 0;
-
-            ImmutableArray<SymbolDisplayPart>.Builder builder = null;
-
-            int prevIndex = 0;
-
-            AddParameterAttributes();
-
-            if (builder != null)
-            {
-                while (prevIndex < parts.Length)
-                {
-                    builder.Add(parts[prevIndex]);
-                    prevIndex++;
-                }
-
-                return builder.ToImmutableArray();
-            }
-
-            return parts;
-
-            void AddParameterAttributes()
-            {
-                while (i < parts.Length)
-                {
-                    SymbolDisplayPart part = parts[i];
-
-                    if (part.Kind == SymbolDisplayPartKind.Punctuation)
-                    {
-                        switch (part.ToString())
-                        {
-                            case ",":
-                                {
-                                    if (((angleBracketsDepth == 0 && parenthesesDepth == 1 && bracesDepth == 0 && bracketsDepth == 0)
-                                            || (angleBracketsDepth == 0 && parenthesesDepth == 0 && bracesDepth == 0 && bracketsDepth == 1))
-                                        && i < parts.Length - 1)
-                                    {
-                                        SymbolDisplayPart nextPart = parts[i + 1];
-
-                                        if (nextPart.Kind == SymbolDisplayPartKind.Space)
-                                        {
-                                            parameterIndex++;
-
-                                            attributeParts = SymbolDefinitionBuilder.GetAttributesParts(
-                                                parameters[parameterIndex].GetAttributes(),
-                                                predicate: IsVisibleAttribute,
-                                                splitAttributes: Options.SplitAttributes,
-                                                includeAttributeArguments: Options.IncludeAttributeArguments,
-                                                addNewLine: false);
-
-                                            if (attributeParts.Any())
-                                            {
-                                                if (builder == null)
-                                                {
-                                                    builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
-
-                                                    builder.AddRange(parts, i + 1);
-                                                }
-                                                else
-                                                {
-                                                    for (int j = prevIndex; j <= i; j++)
-                                                        builder.Add(parts[j]);
-                                                }
-
-                                                builder.Add(SymbolDisplayPartFactory.Space());
-                                                builder.AddRange(attributeParts);
-
-                                                prevIndex = i + 1;
-                                            }
-                                        }
-                                    }
-
-                                    break;
-                                }
-                            case "(":
-                                {
-                                    parenthesesDepth++;
-                                    break;
-                                }
-                            case ")":
-                                {
-                                    Debug.Assert(parenthesesDepth >= 0);
-                                    parenthesesDepth--;
-
-                                    if (parenthesesDepth == 0
-                                        && symbol.IsKind(SymbolKind.Method, SymbolKind.NamedType))
-                                    {
-                                        return;
-                                    }
-
-                                    break;
-                                }
-                            case "[":
-                                {
-                                    bracketsDepth++;
-                                    break;
-                                }
-                            case "]":
-                                {
-                                    Debug.Assert(bracketsDepth >= 0);
-                                    bracketsDepth--;
-
-                                    if (bracketsDepth == 0
-                                        && symbol.Kind == SymbolKind.Property)
-                                    {
-                                        return;
-                                    }
-
-                                    break;
-                                }
-                            case "{":
-                                {
-                                    bracesDepth++;
-                                    break;
-                                }
-                            case "}":
-                                {
-                                    Debug.Assert(bracesDepth >= 0);
-                                    bracesDepth--;
-                                    break;
-                                }
-                            case "<":
-                                {
-                                    angleBracketsDepth++;
-                                    break;
-                                }
-                            case ">":
-                                {
-                                    Debug.Assert(angleBracketsDepth >= 0);
-                                    angleBracketsDepth--;
-                                    break;
-                                }
-                        }
-                    }
-
-                    i++;
-                }
-            }
-        }
-
-        private ImmutableArray<SymbolDisplayPart> WriteAccessorAttributes(
-            ImmutableArray<SymbolDisplayPart> parts,
-            IMethodSymbol method,
-            string keyword)
-        {
-            ImmutableArray<SymbolDisplayPart> attributeParts = SymbolDefinitionBuilder.GetAttributesParts(
-                method.GetAttributes(),
-                predicate: IsVisibleAttribute,
-                splitAttributes: Options.SplitAttributes,
-                includeAttributeArguments: Options.IncludeAttributeArguments,
-                addNewLine: false);
-
-            if (attributeParts.Any())
-            {
-                SymbolDisplayPart part = parts.FirstOrDefault(f => f.IsKeyword(keyword));
-
-                Debug.Assert(part.Kind == SymbolDisplayPartKind.Keyword);
-
-                if (part.Kind == SymbolDisplayPartKind.Keyword)
-                {
-                    int index = parts.IndexOf(part);
-
-                    parts = parts.Insert(index, SymbolDisplayPartFactory.Space());
-                    parts = parts.InsertRange(index, attributeParts);
-                }
-            }
-
-            return parts;
         }
 
         private void Write(ISymbol symbol, SymbolDisplayFormat format)
