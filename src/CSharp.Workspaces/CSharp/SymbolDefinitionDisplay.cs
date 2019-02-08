@@ -305,7 +305,7 @@ namespace Roslynator.CSharp
 
                     while (true)
                     {
-                        builder.AddDisplayParts(en.Current.AttributeClass, containingNamespace, containingNamespaceStyle);
+                        builder.AddDisplayParts(en.Current.AttributeClass, containingNamespace, containingNamespaceStyle, removeAttributeSuffix: true);
 
                         if (includeAttributeArguments)
                             AddAttributeArguments(en.Current);
@@ -1173,7 +1173,8 @@ namespace Roslynator.CSharp
             this ImmutableArray<SymbolDisplayPart>.Builder builder,
             ISymbol symbol,
             INamespaceSymbol containingNamespace,
-            SymbolDisplayContainingNamespaceStyle containingNamespaceStyle)
+            SymbolDisplayContainingNamespaceStyle containingNamespaceStyle,
+            bool removeAttributeSuffix = false)
         {
             SymbolDisplayFormat format = (CanOmitNamespace())
                 ? SymbolDefinitionDisplayFormats.TypeNameAndContainingTypes
@@ -1183,6 +1184,22 @@ namespace Roslynator.CSharp
 
             if (!(symbol is INamedTypeSymbol typeSymbol))
                 return;
+
+            if (removeAttributeSuffix)
+            {
+                SymbolDisplayPart last = builder.Last();
+
+                if (last.Kind == SymbolDisplayPartKind.ClassName)
+                {
+                    const string attributeSuffix = "Attribute";
+
+                    string text = last.ToString();
+                    if (text.EndsWith(attributeSuffix, StringComparison.Ordinal))
+                    {
+                        builder[builder.Count - 1] = last.WithText(text.Remove(text.Length - attributeSuffix.Length));
+                    }
+                }
+            }
 
             ImmutableArray<ITypeSymbol> typeArguments = typeSymbol.TypeArguments;
 

@@ -11,6 +11,7 @@ namespace Roslynator.CommandLine
         public const string IgnoredParts = "ignored-parts";
         public const string IgnoredRootParts = "ignored-root-parts";
         public const string IgnoredTypeParts = "ignored-type-parts";
+        public const string MSBuildPath = "msbuild-path";
         public const string OmitContainingNamespaceParts = "omit-containing-namespace-parts";
         public const string SeveritLevel = "severity-level";
         public const string SymbolKinds = "symbol-kinds";

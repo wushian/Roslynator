@@ -35,7 +35,7 @@ namespace Roslynator.CommandLine
         {
             if (!string.Equals(Path.GetExtension(path), ".sln", StringComparison.OrdinalIgnoreCase))
             {
-                WriteLine($"File is not a solution file: '{path}'.", ConsoleColor.Red, Verbosity.Minimal);
+                WriteLine($"File is not a solution file: '{path}'.", Verbosity.Quiet);
                 return CommandResult.Fail;
             }
 

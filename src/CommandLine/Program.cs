@@ -310,7 +310,7 @@ namespace Roslynator.CommandLine
         {
             if (options.MaxDerivedTypes < 0)
             {
-                WriteLine("Maximum number of derived items must be equal or greater than 0.", ConsoleColor.Red, Verbosity.Quiet);
+                WriteLine("Maximum number of derived items must be equal or greater than 0.", Verbosity.Quiet);
                 return 1;
             }
 
@@ -380,7 +380,7 @@ namespace Roslynator.CommandLine
                 }
                 catch (IOException ex)
                 {
-                    WriteLine(ex.ToString(), ConsoleColor.Red, Verbosity.Quiet);
+                    WriteLine(ex.ToString(), Verbosity.Quiet);
                     return 1;
                 }
             }
@@ -481,15 +481,15 @@ namespace Roslynator.CommandLine
             if (!TryParseParameterValueAsEnum(options.Visibility, ParameterNames.Visibility, out Visibility visibility))
                 return 1;
 
-            DocumentationModel documentationModel = CreateDocumentationModel(options.References, options.Assemblies, visibility);
-
-            if (documentationModel == null)
-                return 1;
-
             if (!TryParseParameterValueAsEnum(options.Depth, ParameterNames.Depth, out DocumentationDepth depth, DocumentationOptions.Default.Depth))
                 return 1;
 
             if (!TryParseParameterValueAsEnumFlags(options.IgnoredParts, ParameterNames.IgnoredRootParts, out RootDocumentationParts ignoredParts, DocumentationOptions.Default.IgnoredRootParts))
+                return 1;
+
+            DocumentationModel documentationModel = CreateDocumentationModel(options.References, options.Assemblies, visibility);
+
+            if (documentationModel == null)
                 return 1;
 
             var documentationOptions = new DocumentationOptions(

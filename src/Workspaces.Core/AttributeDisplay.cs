@@ -26,6 +26,7 @@ namespace Roslynator
                     return !attributeType.ContainingNamespace.HasMetadataName(MetadataNames.System_Diagnostics_CodeAnalysis);
                 case "DefaultMemberAttribute":
                 case "AssemblyConfigurationAttribute":
+                case "AssemblyCultureAttribute":
                 case "AssemblyVersionAttribute":
                     return !attributeType.ContainingNamespace.HasMetadataName(MetadataNames.System_Reflection);
                 case "AsyncStateMachineAttribute":
@@ -49,12 +50,20 @@ namespace Roslynator
                 case "AssemblyInformationalVersionAttribute":
                 case "AssemblyProductAttribute":
                 case "AssemblyTitleAttribute":
+                case "AssemblyTrademarkAttribute":
                 case "AttributeUsageAttribute":
                 case "CLSCompliantAttribute":
+                case "ComVisibleAttribute":
+                case "DefaultValueAttribute":
                 case "FlagsAttribute":
                 case "FooAttribute":
+                case "GuidAttribute":
                 case "ObsoleteAttribute":
                 case "TargetFrameworkAttribute":
+                case "XmlArrayItemAttribute":
+                case "XmlAttributeAttribute":
+                case "XmlElementAttribute":
+                case "XmlRootAttribute":
                     return true;
 #endif
             }

@@ -135,7 +135,7 @@ namespace Roslynator.CommandLine
                 if (ex is FileNotFoundException
                     || ex is InvalidOperationException)
                 {
-                    WriteLine(ex.ToString(), ConsoleColor.Red, Verbosity.Minimal);
+                    WriteLine(ex.ToString(), Verbosity.Quiet);
                     return default;
                 }
                 else
@@ -161,7 +161,7 @@ namespace Roslynator.CommandLine
                 }
                 catch (InvalidOperationException)
                 {
-                    WriteLine("MSBuild location not found. Use option '--msbuild-path' to specify MSBuild location", ConsoleColor.Red, Verbosity.Quiet);
+                    WriteLine($"MSBuild location not found. Use option '{ParameterNames.MSBuildPath}' to specify MSBuild location", Verbosity.Quiet);
                     return null;
                 }
 

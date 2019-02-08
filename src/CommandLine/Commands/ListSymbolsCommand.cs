@@ -43,7 +43,20 @@ namespace Roslynator.CommandLine
             var options = new DefinitionListOptions(
                 visibility: Visibility,
                 depth: Depth,
-                containingNamespaceStyle: ContainingNamespaceStyle);
+                containingNamespaceStyle: ContainingNamespaceStyle,
+                ignoredNames: Options.IgnoredNames,
+                indent: !Options.NoIndent,
+                indentChars: Options.IndentChars,
+                placeSystemNamespaceFirst: !Options.NoPrecedenceForSystem,
+                nestNamespaces: Options.NestNamespaces,
+                emptyLineBetweenMembers: Options.EmptyLineBetweenMembers,
+                formatBaseList: Options.FormatBaseList,
+                formatConstraints: Options.FormatConstraints,
+                formatParameters: Options.FormatParameters,
+                splitAttributes: !Options.MergeAttributes,
+                includeAttributeArguments: !Options.NoAttributeArguments,
+                omitIEnumerable: !Options.IncludeIEnumerable,
+                assemblyAttributes: Options.AssemblyAttributes);
 
             var assemblies = new List<IAssemblySymbol>();
 

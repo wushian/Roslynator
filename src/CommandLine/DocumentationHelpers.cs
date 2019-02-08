@@ -37,7 +37,7 @@ namespace Roslynator.CommandLine
                     }
                     else
                     {
-                        WriteLine($"Assembly not found: '{assemblyPath}'", ConsoleColor.Red, Verbosity.Quiet);
+                        WriteLine($"Assembly not found: '{assemblyPath}'", Verbosity.Quiet);
                         return null;
                     }
                 }
@@ -64,7 +64,7 @@ namespace Roslynator.CommandLine
         {
             if (!File.Exists(path))
             {
-                WriteLine($"File not found: '{path}'", ConsoleColor.Red, Verbosity.Quiet);
+                WriteLine($"File not found: '{path}'", Verbosity.Quiet);
                 return null;
             }
 

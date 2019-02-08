@@ -18,6 +18,7 @@ namespace Roslynator.CSharp
             IEnumerable<string> ignoredNames = null,
             bool indent = DefaultValues.Indent,
             string indentChars = DefaultValues.IndentChars,
+            bool placeSystemNamespaceFirst = DefaultValues.PlaceSystemNamespaceFirst,
             bool nestNamespaces = DefaultValues.NestNamespaces,
             bool emptyLineBetweenMembers = DefaultValues.EmptyLineBetweenMembers,
             bool formatBaseList = DefaultValues.FormatBaseList,
@@ -26,7 +27,8 @@ namespace Roslynator.CSharp
             bool splitAttributes = DefaultValues.SplitAttributes,
             bool includeAttributeArguments = DefaultValues.IncludeAttributeArguments,
             bool omitIEnumerable = DefaultValues.OmitIEnumerable,
-            bool useDefaultLiteral = DefaultValues.UseDefaultLiteral)
+            bool useDefaultLiteral = DefaultValues.UseDefaultLiteral,
+            bool assemblyAttributes = DefaultValues.AssemblyAttributes)
         {
             _ignoredMetadataNames = ignoredNames?.Select(name => MetadataName.Parse(name)).ToImmutableArray() ?? ImmutableArray<MetadataName>.Empty;
 
@@ -36,6 +38,7 @@ namespace Roslynator.CSharp
             IgnoredNames = ignoredNames?.ToImmutableArray() ?? ImmutableArray<string>.Empty;
             Indent = indent;
             IndentChars = indentChars;
+            PlaceSystemNamespaceFirst = placeSystemNamespaceFirst;
             NestNamespaces = nestNamespaces;
             EmptyLineBetweenMembers = emptyLineBetweenMembers;
             FormatBaseList = formatBaseList;
@@ -45,6 +48,7 @@ namespace Roslynator.CSharp
             IncludeAttributeArguments = includeAttributeArguments;
             OmitIEnumerable = omitIEnumerable;
             UseDefaultLiteral = useDefaultLiteral;
+            AssemblyAttributes = assemblyAttributes;
         }
 
         public static DefinitionListOptions Default { get; } = new DefinitionListOptions();
@@ -60,6 +64,8 @@ namespace Roslynator.CSharp
         public bool Indent { get; }
 
         public string IndentChars { get; }
+
+        public bool PlaceSystemNamespaceFirst { get; }
 
         public bool NestNamespaces { get; }
 
@@ -78,6 +84,8 @@ namespace Roslynator.CSharp
         public bool OmitIEnumerable { get; }
 
         public bool UseDefaultLiteral { get; }
+
+        public bool AssemblyAttributes { get; }
 
         internal bool ShouldBeIgnored(INamedTypeSymbol typeSymbol)
         {
@@ -108,17 +116,19 @@ namespace Roslynator.CSharp
             public const Visibility Visibility = Roslynator.Visibility.Private;
             public const DefinitionListDepth Depth = DefinitionListDepth.Member;
             public const SymbolDisplayContainingNamespaceStyle ContainingNamespaceStyle = SymbolDisplayContainingNamespaceStyle.Omitted;
+            public const bool Indent = true;
+            public const string IndentChars = "  ";
+            public const bool PlaceSystemNamespaceFirst = true;
+            public const bool NestNamespaces = false;
             public const bool EmptyLineBetweenMembers = false;
             public const bool FormatBaseList = false;
             public const bool FormatConstraints = false;
             public const bool FormatParameters = false;
-            public const bool IncludeAttributeArguments = true;
-            public const bool Indent = true;
-            public const string IndentChars = "  ";
-            public const bool NestNamespaces = false;
-            public const bool OmitIEnumerable = true;
             public const bool SplitAttributes = true;
+            public const bool IncludeAttributeArguments = true;
+            public const bool OmitIEnumerable = true;
             public const bool UseDefaultLiteral = true;
+            public const bool AssemblyAttributes = false;
         }
     }
 }

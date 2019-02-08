@@ -73,7 +73,7 @@ namespace Roslynator.CommandLine
 
         [Option(longName: "indent-chars",
             Default = DefaultValues.IndentChars,
-            HelpText = "Defines characters that should be used for indentation. Default value is four spaces.",
+            HelpText = "Defines characters that should be used for indentation. Default value is two spaces.",
             MetaValue = "<INDENT_CHARS>")]
         public string IndentChars { get; set; }
 

@@ -24,7 +24,7 @@ namespace Roslynator.CommandLine
             MetaValue = "<LANGUAGE>")]
         public string Language { get; set; }
 
-        [Option(longName: "msbuild-path",
+        [Option(longName: ParameterNames.MSBuildPath,
             HelpText = "Defines a path to MSBuild. First found instance of MSBuild will be used if the path to MSBuild is not specified.",
             MetaValue = "<MSBUILD_PATH>")]
         public string MSBuildPath { get; set; }

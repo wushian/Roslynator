@@ -11,19 +11,6 @@ namespace Roslynator.CSharp
 {
     internal class DefinitionListWriter
     {
-        private static readonly SymbolDisplayFormat _namespaceFormat = SymbolDefinitionDisplayFormats.NamespaceDeclaration;
-
-        private static readonly SymbolDisplayFormat _namespaceHierarchyFormat = SymbolDefinitionDisplayFormats.NamespaceDeclaration.Update(
-            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameOnly);
-
-        private static readonly SymbolDisplayFormat _typeFormat = SymbolDefinitionDisplayFormats.FullDeclaration.Update(
-            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameOnly);
-
-        private static readonly SymbolDisplayFormat _memberFormat = SymbolDefinitionDisplayFormats.FullDeclaration.Update(
-            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces);
-
-        private static readonly SymbolDisplayFormat _enumFieldFormat = SymbolDefinitionDisplayFormats.FullDeclaration;
-
         private bool _pendingIndentation;
         private int _indentationLevel;
         private INamespaceSymbol _currentNamespace;
@@ -118,8 +105,26 @@ namespace Roslynator.CSharp
                 .OrderBy(f => f.Name)
                 .ThenBy(f => f.Identity.Version))
             {
-                AppendAssemblyAttributes(assembly);
+                WriteLine(assembly.Identity.ToString());
+
+                if (Options.AssemblyAttributes)
+                {
+                    ImmutableArray<SymbolDisplayPart> attributeParts = SymbolDefinitionDisplay.GetAttributesParts(
+                        assembly,
+                        IsVisibleAttribute,
+                        containingNamespaceStyle: Options.ContainingNamespaceStyle,
+                        splitAttributes: Options.SplitAttributes,
+                        includeAttributeArguments: Options.IncludeAttributeArguments);
+
+                    if (attributeParts.Any())
+                        Write(attributeParts);
+
+                    WriteLine();
+                }
             }
+
+            if (!Options.AssemblyAttributes)
+                WriteLine();
 
             IEnumerable<INamedTypeSymbol> types = assemblies.SelectMany(a => a.GetTypes(t => t.ContainingType == null
                 && t.IsVisible(Options.Visibility)
@@ -131,21 +136,22 @@ namespace Roslynator.CSharp
             }
             else
             {
-                foreach (INamespaceSymbol namespaceSymbol in types
-                    .Select(f => f.ContainingNamespace)
-                    .Distinct(MetadataNameEqualityComparer<INamespaceSymbol>.Instance)
-                    .OrderBy(f => f, Comparer))
+                foreach (IGrouping<INamespaceSymbol, INamedTypeSymbol> grouping in types
+                    .GroupBy(f => f.ContainingNamespace, MetadataNameEqualityComparer<INamespaceSymbol>.Instance)
+                    .OrderBy(f => f.Key, Comparer))
                 {
+                    INamespaceSymbol namespaceSymbol = grouping.Key;
+
                     if (!namespaceSymbol.IsGlobalNamespace)
                     {
-                        Write(namespaceSymbol, _namespaceFormat);
+                        Write(namespaceSymbol, SymbolDefinitionDisplayFormats.NamespaceDefinition);
                         BeginTypeContent();
                     }
 
                     _currentNamespace = namespaceSymbol;
 
                     if (Options.Depth <= DefinitionListDepth.Type)
-                        WriteTypes(types.Where(f => MetadataNameEqualityComparer<INamespaceSymbol>.Instance.Equals(f.ContainingNamespace, namespaceSymbol)));
+                        WriteTypes(grouping);
 
                     _currentNamespace = null;
 
@@ -212,7 +218,7 @@ namespace Roslynator.CSharp
                         WriteLine();
                     }
 
-                    Write(namespaceSymbol, _namespaceHierarchyFormat);
+                    Write(namespaceSymbol, SymbolDefinitionDisplayFormats.NamespaceDefinition_NameOnly);
                     BeginTypeContent();
                 }
 
@@ -257,7 +263,7 @@ namespace Roslynator.CSharp
 
                         Write(SymbolDefinitionDisplay.GetDisplayParts(
                             en.Current,
-                            _typeFormat,
+                            SymbolDefinitionDisplayFormats.FullDefinition_NameOnly,
                             SymbolDisplayTypeDeclarationOptions.IncludeAccessibility | SymbolDisplayTypeDeclarationOptions.IncludeModifiers,
                             containingNamespaceStyle: Options.ContainingNamespaceStyle,
                             isVisibleAttribute: IsVisibleAttribute,
@@ -289,19 +295,7 @@ namespace Roslynator.CSharp
                                 {
                                     BeginTypeContent();
 
-                                    if (Options.Depth == DefinitionListDepth.Member)
-                                    {
-                                        foreach (ISymbol member in en.Current.GetMembers())
-                                        {
-                                            if (member.Kind == SymbolKind.Field
-                                                && member.DeclaredAccessibility == Accessibility.Public)
-                                            {
-                                                Write(member, _enumFieldFormat);
-                                                Write(",");
-                                                WriteLine();
-                                            }
-                                        }
-                                    }
+                                    WriteEnumMembers(en.Current);
 
                                     EndTypeContent();
                                     break;
@@ -378,7 +372,12 @@ namespace Roslynator.CSharp
 
                             Write(attributeParts);
 
-                            ImmutableArray<SymbolDisplayPart> parts = en.Current.ToDisplayParts(_memberFormat);
+                            //TODO: OmittedAsContaining
+                            SymbolDisplayFormat format = (Options.ContainingNamespaceStyle == SymbolDisplayContainingNamespaceStyle.Omitted)
+                                ? SymbolDefinitionDisplayFormats.FullDefinition_NameAndContainingTypes
+                                : SymbolDefinitionDisplayFormats.FullDefinition_NameAndContainingTypesAndNamespaces;
+
+                            ImmutableArray<SymbolDisplayPart> parts = en.Current.ToDisplayParts(format);
 
                             if (Options.UseDefaultLiteral
                                 && en.Current.GetParameters().Any(f => f.HasExplicitDefaultValue))
@@ -469,20 +468,29 @@ namespace Roslynator.CSharp
             }
         }
 
-        private void AppendAssemblyAttributes(IAssemblySymbol assemblySymbol)
+        private void WriteEnumMembers(INamedTypeSymbol enumType)
         {
-            ImmutableArray<SymbolDisplayPart> attributeParts = SymbolDefinitionDisplay.GetAttributesParts(
-                assemblySymbol,
-                IsVisibleAttribute,
-                containingNamespaceStyle: Options.ContainingNamespaceStyle,
-                splitAttributes: Options.SplitAttributes,
-                includeAttributeArguments: Options.IncludeAttributeArguments);
+            if (Options.Depth != DefinitionListDepth.Member)
+                return;
 
-            if (attributeParts.Any())
+            using (IEnumerator<ISymbol> en = enumType
+                .GetMembers()
+                .Where(m => m.Kind == SymbolKind.Field
+                    && m.DeclaredAccessibility == Accessibility.Public).GetEnumerator())
             {
-                WriteLine(assemblySymbol.Identity.ToString());
-                Write(attributeParts);
-                WriteLine();
+                if (en.MoveNext())
+                {
+                    WriteLine();
+
+                    do
+                    {
+                        Write(en.Current, SymbolDefinitionDisplayFormats.FullDefinition_NameOnly);
+                        //TODO: comma?
+                        Write(",");
+                        WriteLine();
+                    }
+                    while (en.MoveNext());
+                }
             }
         }
 
@@ -495,9 +503,7 @@ namespace Roslynator.CSharp
         {
             foreach (SymbolDisplayPart part in parts)
             {
-                CheckPendingIndentation();
-
-                Writer.Write(part);
+                Write(part.ToString());
 
                 if (part.Kind == SymbolDisplayPartKind.LineBreak
                     && Options.Indent)
