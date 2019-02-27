@@ -118,10 +118,10 @@ namespace Roslynator.CommandLine
             if (!options.TryParseDiagnosticSeverity(CodeFixerOptions.Default.SeverityLevel, out DiagnosticSeverity severityLevel))
                 return 1;
 
-            if (!TryParseKeyValuePairs(options.DiagnosticFixMap, out Dictionary<string, string> diagnosticFixMap))
+            if (!TryParseKeyValuePairs(options.DiagnosticFixMap, out List<KeyValuePair<string, string>> diagnosticFixMap))
                 return 1;
 
-            if (!TryParseKeyValuePairs(options.DiagnosticFixerMap, out Dictionary<string, string> diagnosticFixerMap))
+            if (!TryParseKeyValuePairs(options.DiagnosticFixerMap, out List<KeyValuePair<string, string>> diagnosticFixerMap))
                 return 1;
 
             if (!options.TryGetProjectFilter(out ProjectFilter projectFilter))
@@ -130,8 +130,8 @@ namespace Roslynator.CommandLine
             var command = new FixCommand(
                 options: options,
                 severityLevel: severityLevel,
-                diagnosticFixMap: diagnosticFixMap?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty,
-                diagnosticFixerMap: diagnosticFixerMap?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty,
+                diagnosticFixMap: diagnosticFixMap,
+                diagnosticFixerMap: diagnosticFixerMap,
                 projectFilter: projectFilter);
 
             CommandResult result = await command.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);

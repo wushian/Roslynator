@@ -47,7 +47,7 @@ namespace Roslynator.CommandLine
             return true;
         }
 
-        public static bool TryParseKeyValuePairs(IEnumerable<string> values, out Dictionary<string, string> properties)
+        public static bool TryParseKeyValuePairs(IEnumerable<string> values, out List<KeyValuePair<string, string>> properties)
         {
             properties = null;
 
@@ -62,11 +62,9 @@ namespace Roslynator.CommandLine
                 }
 
                 string key = property.Substring(0, index);
+                string value = property.Substring(index + 1);
 
-                if (properties == null)
-                    properties = new Dictionary<string, string>();
-
-                properties[key] = property.Substring(index + 1);
+                (properties ?? (properties = new List<KeyValuePair<string, string>>())).Add(new KeyValuePair<string, string>(key, value));
             }
 
             return true;

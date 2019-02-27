@@ -183,32 +183,14 @@ namespace Roslynator.CommandLine
             {
                 MSBuildLocator.RegisterMSBuildPath(msbuildPath);
             }
+            else if (TryGetSingleInstance(out VisualStudioInstance instance))
+            {
+                MSBuildLocator.RegisterInstance(instance);
+                msbuildPath = instance.MSBuildPath;
+            }
             else
             {
-                VisualStudioInstance instance;
-
-                try
-                {
-                    VisualStudioInstance[] instances = MSBuildLocator.QueryVisualStudioInstances().ToArray();
-
-                    if (instances.Length > 1)
-                    {
-                        WriteLine("Multiple MSBuild locations available:", Verbosity.Diagnostic);
-
-                        foreach (VisualStudioInstance visualStudioInstance in instances)
-                            WriteLine($"  {visualStudioInstance.MSBuildPath}", Verbosity.Diagnostic);
-                    }
-
-                    WriteLine("Register default MSBuild instance", Verbosity.Diagnostic);
-                    instance = MSBuildLocator.RegisterDefaults();
-                }
-                catch (InvalidOperationException)
-                {
-                    WriteLine($"MSBuild location not found. Use option '--{ParameterNames.MSBuildPath}' to specify MSBuild location", Verbosity.Quiet);
-                    return null;
-                }
-
-                msbuildPath = instance.MSBuildPath;
+                return null;
             }
 
             WriteLine($"MSBuild location is '{msbuildPath}'", Verbosity.Diagnostic);
@@ -224,6 +206,41 @@ namespace Roslynator.CommandLine
                 properties["AlwaysCompileMarkupFilesInSeparateDomain"] = bool.FalseString;
 
             return MSBuildWorkspace.Create(properties);
+        }
+
+        private static bool TryGetSingleInstance(out VisualStudioInstance instance)
+        {
+            using (IEnumerator<VisualStudioInstance> en = MSBuildLocator.QueryVisualStudioInstances().GetEnumerator())
+            {
+                if (!en.MoveNext())
+                {
+                    WriteLine($"MSBuild location not found. Use option '--{ParameterNames.MSBuildPath}' to specify MSBuild location", Verbosity.Quiet);
+                    instance = null;
+                    return false;
+                }
+
+                VisualStudioInstance firstInstance = en.Current;
+
+                if (en.MoveNext())
+                {
+                    WriteLine("Multiple MSBuild locations found:", Verbosity.Quiet);
+
+                    WriteLine($"  {firstInstance.MSBuildPath}", Verbosity.Quiet);
+
+                    do
+                    {
+                        WriteLine($"  {en.Current.MSBuildPath}", Verbosity.Quiet);
+                    }
+                    while (en.MoveNext());
+
+                    WriteLine($"Use option '--{ParameterNames.MSBuildPath}' to specify MSBuild location", Verbosity.Quiet);
+                    instance = null;
+                    return false;
+                }
+
+                instance = firstInstance;
+                return true;
+            }
         }
 
         private protected IEnumerable<Project> FilterProjects(

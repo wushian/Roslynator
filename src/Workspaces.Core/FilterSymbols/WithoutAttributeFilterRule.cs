@@ -15,9 +15,9 @@ namespace Roslynator
 
         public override SymbolFilterReason Reason => SymbolFilterReason.WithoutAttibute;
 
-        public override bool IsMatch(ISymbol symbol)
+        public override bool IsMatch(ISymbol value)
         {
-            return !base.IsMatch(symbol);
+            return !base.IsMatch(value);
         }
     }
 }

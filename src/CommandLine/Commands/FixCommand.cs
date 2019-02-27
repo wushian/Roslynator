@@ -19,8 +19,8 @@ namespace Roslynator.CommandLine
         public FixCommand(
             FixCommandLineOptions options,
             DiagnosticSeverity severityLevel,
-            ImmutableDictionary<string, string> diagnosticFixMap,
-            ImmutableDictionary<string, string> diagnosticFixerMap,
+            IEnumerable<KeyValuePair<string, string>> diagnosticFixMap,
+            IEnumerable<KeyValuePair<string, string>> diagnosticFixerMap,
             in ProjectFilter projectFilter) : base(projectFilter)
         {
             Options = options;
@@ -33,9 +33,9 @@ namespace Roslynator.CommandLine
 
         public DiagnosticSeverity SeverityLevel { get; }
 
-        public ImmutableDictionary<string, string> DiagnosticFixMap { get; }
+        public IEnumerable<KeyValuePair<string, string>> DiagnosticFixMap { get; }
 
-        public ImmutableDictionary<string, string> DiagnosticFixerMap { get; }
+        public IEnumerable<KeyValuePair<string, string>> DiagnosticFixerMap { get; }
 
         public override async Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default)
         {

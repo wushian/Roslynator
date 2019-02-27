@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 
@@ -41,7 +42,18 @@ namespace Roslynator.CodeFixes
             IgnoreCompilerErrors = ignoreCompilerErrors;
             IgnoredCompilerDiagnosticIds = ignoredCompilerDiagnosticIds?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
             DiagnosticIdsFixableOneByOne = diagnosticIdsFixableOneByOne?.ToImmutableHashSet() ?? ImmutableHashSet<string>.Empty;
-            DiagnosticFixMap = diagnosticFixMap?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty;
+
+            if (diagnosticFixMap != null)
+            {
+                DiagnosticFixMap = diagnosticFixMap
+                    .GroupBy(kvp => kvp.Key)
+                    .ToImmutableDictionary(g => g.Key, g => g.Select(kvp => kvp.Value).ToImmutableArray());
+            }
+            else
+            {
+                DiagnosticFixMap = ImmutableDictionary<string, ImmutableArray<string>>.Empty;
+            }
+
             DiagnosticFixerMap = diagnosticFixerMap?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty;
             FileBanner = fileBanner;
             MaxIterations = maxIterations;
@@ -94,7 +106,7 @@ namespace Roslynator.CodeFixes
 
         public ImmutableHashSet<string> DiagnosticIdsFixableOneByOne { get; }
 
-        public ImmutableDictionary<string, string> DiagnosticFixMap { get; }
+        public ImmutableDictionary<string, ImmutableArray<string>> DiagnosticFixMap { get; }
 
         public ImmutableDictionary<string, string> DiagnosticFixerMap { get; }
 
