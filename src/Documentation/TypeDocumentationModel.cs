@@ -6,6 +6,7 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Roslynator.FilterSymbols;
 
 namespace Roslynator.Documentation
 {

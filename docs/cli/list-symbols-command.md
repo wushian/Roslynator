@@ -39,7 +39,7 @@ The project or solution to analyze.
 
 **`[--depth]`** `{member|type|namespace}`
 
-Defines a depth of a documentation. Default value is `member`.
+Defines a depth of a list of symbols. Allowed values are member, type or namespace. Default value is member.
 
 **`[--empty-line-between-members]`**
 

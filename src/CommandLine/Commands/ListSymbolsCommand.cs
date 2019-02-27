@@ -15,6 +15,7 @@ using Microsoft.CodeAnalysis;
 using Roslynator.Documentation;
 using Roslynator.Documentation.Markdown;
 using Roslynator.Documentation.Xml;
+using Roslynator.FilterSymbols;
 using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine

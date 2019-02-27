@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 
-namespace Roslynator
+namespace Roslynator.FilterSymbols
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     internal class WithoutAttributeFilterRule : WithAttributeFilterRule

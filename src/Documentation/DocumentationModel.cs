@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
+using Roslynator.FilterSymbols;
 
 namespace Roslynator.Documentation
 {

@@ -3,7 +3,7 @@
 using System;
 using Microsoft.CodeAnalysis;
 
-namespace Roslynator
+namespace Roslynator.FilterSymbols
 {
     internal class PredicateSymbolFilterRule : SymbolFilterRule
     {

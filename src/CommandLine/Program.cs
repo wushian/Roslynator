@@ -16,6 +16,7 @@ using Roslynator.CodeFixes;
 using Roslynator.CSharp;
 using Roslynator.Diagnostics;
 using Roslynator.Documentation;
+using Roslynator.FilterSymbols;
 using Roslynator.FindSymbols;
 using static Roslynator.CommandLine.ParseHelpers;
 using static Roslynator.Logger;
@@ -33,16 +34,17 @@ namespace Roslynator.CommandLine
 
             try
             {
-                ParserResult<object> parserResult = Parser.Default.ParseArguments<FixCommandLineOptions,
-                    AnalyzeCommandLineOptions,
+                ParserResult<object> parserResult = Parser.Default.ParseArguments<
 #if DEBUG
                     AnalyzeAssemblyCommandLineOptions,
                     FindSymbolsCommandLineOptions,
-#endif
-                    ListSymbolsCommandLineOptions,
-                    FormatCommandLineOptions,
                     SlnListCommandLineOptions,
                     ListVisualStudioCommandLineOptions,
+#endif
+                    FixCommandLineOptions,
+                    AnalyzeCommandLineOptions,
+                    ListSymbolsCommandLineOptions,
+                    FormatCommandLineOptions,
                     PhysicalLinesOfCodeCommandLineOptions,
                     LogicalLinesOfCodeCommandLineOptions,
                     GenerateDocCommandLineOptions,
@@ -80,16 +82,16 @@ namespace Roslynator.CommandLine
                     return 1;
 
                 return parserResult.MapResult(
-                    (FixCommandLineOptions options) => FixAsync(options).Result,
-                    (AnalyzeCommandLineOptions options) => AnalyzeAsync(options).Result,
 #if DEBUG
                     (AnalyzeAssemblyCommandLineOptions options) => AnalyzeAssembly(options),
                     (FindSymbolsCommandLineOptions options) => FindSymbolsAsync(options).Result,
+                    (SlnListCommandLineOptions options) => SlnListAsync(options).Result,
+                    (ListVisualStudioCommandLineOptions options) => ListVisualStudio(options),
 #endif
+                    (FixCommandLineOptions options) => FixAsync(options).Result,
+                    (AnalyzeCommandLineOptions options) => AnalyzeAsync(options).Result,
                     (ListSymbolsCommandLineOptions options) => ListSymbolsAsync(options).Result,
                     (FormatCommandLineOptions options) => FormatAsync(options).Result,
-                    (SlnListCommandLineOptions options) => SlnListAsync(options).Result,
-                    (ListVisualStudioCommandLineOptions options) => ListMSBuild(options),
                     (PhysicalLinesOfCodeCommandLineOptions options) => PhysicalLinesOfCodeAsync(options).Result,
                     (LogicalLinesOfCodeCommandLineOptions options) => LogicalLinesOrCodeAsync(options).Result,
                     (GenerateDocCommandLineOptions options) => GenerateDocAsync(options).Result,
@@ -335,7 +337,7 @@ namespace Roslynator.CommandLine
             return (result.Kind == CommandResultKind.Success) ? 0 : 1;
         }
 
-        private static int ListMSBuild(ListVisualStudioCommandLineOptions options)
+        private static int ListVisualStudio(ListVisualStudioCommandLineOptions options)
         {
             var command = new ListVisualStudioCommand(options);
 

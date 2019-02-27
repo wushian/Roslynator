@@ -13,7 +13,7 @@ namespace Roslynator.CommandLine
     public class ListSymbolsCommandLineOptions : MSBuildCommandLineOptions
     {
         [Option(longName: ParameterNames.Depth,
-            HelpText = "Defines a depth of a list. Allowed values are member, type or namespace. Default value is member.",
+            HelpText = "Defines a depth of a list of symbols. Allowed values are member, type or namespace. Default value is member.",
             MetaValue = "<DEPTH>")]
         public string Depth { get; set; }
 

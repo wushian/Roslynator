@@ -2,7 +2,7 @@
 
 using Microsoft.CodeAnalysis;
 
-namespace Roslynator
+namespace Roslynator.FilterSymbols
 {
     internal abstract class AttributeFilterRule : FilterRule<AttributeData>
     {

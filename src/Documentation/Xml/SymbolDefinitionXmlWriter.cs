@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using Microsoft.CodeAnalysis;
+using Roslynator.FilterSymbols;
 
 namespace Roslynator.Documentation.Xml
 {

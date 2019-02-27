@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 
-namespace Roslynator
+namespace Roslynator.FilterSymbols
 {
     internal static class SymbolFilterRuleFactory
     {
