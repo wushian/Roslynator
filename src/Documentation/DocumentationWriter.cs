@@ -440,18 +440,35 @@ namespace Roslynator.Documentation
                 headingLevelBase: headingLevelBase);
         }
 
+        //XTODO: WriteDeclaration > WriteDefinition
         public virtual void WriteDeclaration(ISymbol symbol)
         {
-            ImmutableArray<SymbolDisplayPart> parts = SymbolDeclarationBuilder.GetDisplayParts(
+            SymbolDisplayAdditionalOptions additionalOptions = SymbolDisplayAdditionalOptions.IncludeAttributes
+                | SymbolDisplayAdditionalOptions.FormatAttributes
+                | SymbolDisplayAdditionalOptions.PreferDefaultLiteral;
+
+            if (Options.IncludeAttributeArguments)
+                additionalOptions |= SymbolDisplayAdditionalOptions.IncludeAttributeArguments;
+
+            if (Options.FormatDeclarationBaseList)
+                additionalOptions |= SymbolDisplayAdditionalOptions.FormatBaseList;
+
+            if (Options.FormatDeclarationConstraints)
+                additionalOptions |= SymbolDisplayAdditionalOptions.FormatConstraints;
+
+            if (Options.OmitIEnumerable)
+                additionalOptions |= SymbolDisplayAdditionalOptions.OmitIEnumerable;
+
+            ImmutableArray<SymbolDisplayPart> parts = SymbolDefinitionDisplay.GetDisplayParts(
                 symbol,
-                SymbolDisplayFormats.FullDeclaration,
-                typeDeclarationOptions: SymbolDisplayTypeDeclarationOptions.IncludeAccessibility | SymbolDisplayTypeDeclarationOptions.IncludeModifiers,
-                isVisibleAttribute: f => DocumentationUtility.IsVisibleAttribute(f),
-                formatBaseList: Options.FormatDeclarationBaseList,
-                formatConstraints: Options.FormatDeclarationConstraints,
-                includeAttributeArguments: Options.IncludeAttributeArguments,
-                omitIEnumerable: Options.OmitIEnumerable,
-                useNameOnlyIfPossible: true);
+                (symbol.GetFirstExplicitInterfaceImplementation() != null)
+                    ? SymbolDisplayFormats.ExplicitImplementationFullDeclaration
+                    : SymbolDisplayFormats.FullDeclaration,
+                typeDeclarationOptions: SymbolDisplayTypeDeclarationOptions.IncludeAccessibility
+                    | SymbolDisplayTypeDeclarationOptions.IncludeModifiers
+                    | SymbolDisplayTypeDeclarationOptions.BaseList,
+                additionalOptions: additionalOptions,
+                shouldDisplayAttribute: (s, a) => DocumentationModel.Filter.IsMatch(s, a));
 
             WriteCodeBlock(parts.ToDisplayString(), symbol.Language);
         }
@@ -695,13 +712,13 @@ namespace Roslynator.Documentation
             if (symbol is INamedTypeSymbol typeSymbol
                 && Options.IncludeInheritedAttributes)
             {
-                attributes = typeSymbol.GetAttributesIncludingInherited(f => DocumentationUtility.IsVisibleAttribute(f));
+                attributes = typeSymbol.GetAttributesIncludingInherited((s, a) => DocumentationModel.Filter.IsMatch(s, a));
             }
             else
             {
                 attributes = symbol
                     .GetAttributes()
-                    .Where(f => DocumentationUtility.IsVisibleAttribute(f.AttributeClass))
+                    .Where(f => DocumentationModel.Filter.IsMatch(symbol, f))
                     .Select(f => new AttributeInfo(symbol, f))
                     .ToImmutableArray();
             }

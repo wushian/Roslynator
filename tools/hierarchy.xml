@@ -1,0 +1,970 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <assemblies>
+    <assembly name="Microsoft.CodeAnalysis, Version=2.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <attributes>
+        <attribute>AssemblyCompany("Microsoft Corporation")</attribute>
+        <attribute>AssemblyCopyright("© Microsoft Corporation. All rights reserved.")</attribute>
+        <attribute>AssemblyFileVersion("2.3.0.61908")</attribute>
+        <attribute>AssemblyInformationalVersion("2.3.0-beta4-61908-01. Commit Hash: 281ac90b8b5dd9fd923a353afd4af74f3246ca5c")</attribute>
+        <attribute>AssemblyMetadata("Serviceable", "True")</attribute>
+        <attribute>RuntimeCompatibility(WrapNonExceptionThrows = true)</attribute>
+        <attribute>TargetFramework(".NETStandard,Version=v1.3", FrameworkDisplayName = "")</attribute>
+      </attributes>
+    </assembly>
+    <assembly name="Microsoft.CodeAnalysis.CSharp, Version=2.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <attributes>
+        <attribute>AssemblyCompany("Microsoft Corporation")</attribute>
+        <attribute>AssemblyCopyright("© Microsoft Corporation. All rights reserved.")</attribute>
+        <attribute>AssemblyFileVersion("2.3.0.61908")</attribute>
+        <attribute>AssemblyInformationalVersion("2.3.0-beta4-61908-01. Commit Hash: 281ac90b8b5dd9fd923a353afd4af74f3246ca5c")</attribute>
+        <attribute>AssemblyMetadata("Serviceable", "True")</attribute>
+        <attribute>CommitHash("281ac90b8b5dd9fd923a353afd4af74f3246ca5c")</attribute>
+        <attribute>RuntimeCompatibility(WrapNonExceptionThrows = true)</attribute>
+        <attribute>TargetFramework(".NETStandard,Version=v1.3", FrameworkDisplayName = "")</attribute>
+      </attributes>
+    </assembly>
+    <assembly name="Microsoft.CodeAnalysis.CSharp.Workspaces, Version=2.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <attributes>
+        <attribute>AssemblyCompany("Microsoft Corporation")</attribute>
+        <attribute>AssemblyCopyright("© Microsoft Corporation. All rights reserved.")</attribute>
+        <attribute>AssemblyFileVersion("2.3.0.61908")</attribute>
+        <attribute>AssemblyInformationalVersion("2.3.0-beta4-61908-01. Commit Hash: 281ac90b8b5dd9fd923a353afd4af74f3246ca5c")</attribute>
+        <attribute>AssemblyMetadata("Serviceable", "True")</attribute>
+        <attribute>RuntimeCompatibility(WrapNonExceptionThrows = true)</attribute>
+        <attribute>TargetFramework(".NETStandard,Version=v1.3", FrameworkDisplayName = "")</attribute>
+      </attributes>
+    </assembly>
+    <assembly name="Microsoft.CodeAnalysis.Workspaces, Version=2.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <attributes>
+        <attribute>AssemblyCompany("Microsoft Corporation")</attribute>
+        <attribute>AssemblyCopyright("© Microsoft Corporation. All rights reserved.")</attribute>
+        <attribute>AssemblyFileVersion("2.3.0.61908")</attribute>
+        <attribute>AssemblyInformationalVersion("2.3.0-beta4-61908-01. Commit Hash: 281ac90b8b5dd9fd923a353afd4af74f3246ca5c")</attribute>
+        <attribute>AssemblyMetadata("Serviceable", "True")</attribute>
+        <attribute>RuntimeCompatibility(WrapNonExceptionThrows = true)</attribute>
+        <attribute>TargetFramework(".NETStandard,Version=v1.3", FrameworkDisplayName = "")</attribute>
+      </attributes>
+    </assembly>
+    <assembly name="Roslynator.Core, Version=1.0.0.10, Culture=neutral, PublicKeyToken=3aeedfaf14b2cebf">
+      <attributes>
+        <attribute>AssemblyCompany("Josef Pihrt")</attribute>
+        <attribute>AssemblyConfiguration("Debug")</attribute>
+        <attribute>AssemblyCopyright("Copyright (c) 2017-2018 Josef Pihrt")</attribute>
+        <attribute>AssemblyDescription("This library extends functionality of package Microsoft.CodeAnalysis.Common.")</attribute>
+        <attribute>AssemblyFileVersion("1.0.0.10")</attribute>
+        <attribute>AssemblyInformationalVersion("1.0.0.10")</attribute>
+        <attribute>AssemblyProduct("Roslynator.Core")</attribute>
+        <attribute>AssemblyTitle("Roslynator.Core")</attribute>
+        <attribute>AssemblyVersion("1.0.0.10")</attribute>
+        <attribute>TargetFramework(".NETStandard,Version=v1.3", FrameworkDisplayName = "")</attribute>
+      </attributes>
+    </assembly>
+    <assembly name="Roslynator.CSharp, Version=1.0.0.10, Culture=neutral, PublicKeyToken=390be46f77b79f52">
+      <attributes>
+        <attribute>AssemblyCompany("Josef Pihrt")</attribute>
+        <attribute>AssemblyConfiguration("Debug")</attribute>
+        <attribute>AssemblyCopyright("Copyright (c) 2017-2018 Josef Pihrt")</attribute>
+        <attribute>AssemblyDescription("This library extends functionality of package Microsoft.CodeAnalysis.CSharp\n\nCommonly Used Types:\nRoslynator.CSharp.CSharpFactory\nRoslynator.CSharp.CSharpFacts\nRoslynator.CSharp.SyntaxInfo\nRoslynator.NameGenerator")</attribute>
+        <attribute>AssemblyFileVersion("1.0.0.10")</attribute>
+        <attribute>AssemblyInformationalVersion("1.0.0.10")</attribute>
+        <attribute>AssemblyProduct("Roslynator.CSharp")</attribute>
+        <attribute>AssemblyTitle("Roslynator.CSharp")</attribute>
+        <attribute>AssemblyVersion("1.0.0.10")</attribute>
+        <attribute>TargetFramework(".NETStandard,Version=v1.3", FrameworkDisplayName = "")</attribute>
+      </attributes>
+    </assembly>
+    <assembly name="Roslynator.CSharp.Workspaces, Version=1.0.0.10, Culture=neutral, PublicKeyToken=ec3f0c29a7973f23">
+      <attributes>
+        <attribute>AssemblyCompany("Josef Pihrt")</attribute>
+        <attribute>AssemblyConfiguration("Debug")</attribute>
+        <attribute>AssemblyCopyright("Copyright (c) 2017-2018 Josef Pihrt")</attribute>
+        <attribute>AssemblyDescription("This library extends functionality of package Microsoft.CodeAnalysis.CSharp.Workspaces\n\nCommonly Used Types:\nRoslynator.CSharp.CSharpFactory\nRoslynator.CSharp.CSharpFacts\nRoslynator.CSharp.SyntaxInfo\nRoslynator.NameGenerator")</attribute>
+        <attribute>AssemblyFileVersion("1.0.0.10")</attribute>
+        <attribute>AssemblyInformationalVersion("1.0.0.10")</attribute>
+        <attribute>AssemblyProduct("Roslynator.CSharp.Workspaces")</attribute>
+        <attribute>AssemblyTitle("Roslynator.CSharp.Workspaces")</attribute>
+        <attribute>AssemblyVersion("1.0.0.10")</attribute>
+        <attribute>TargetFramework(".NETStandard,Version=v1.3", FrameworkDisplayName = "")</attribute>
+      </attributes>
+    </assembly>
+    <assembly name="Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, PublicKeyToken=be1ec334fe31b7bb">
+      <attributes>
+        <attribute>AssemblyCompany("Josef Pihrt")</attribute>
+        <attribute>AssemblyConfiguration("Debug")</attribute>
+        <attribute>AssemblyCopyright("Copyright (c) 2017-2018 Josef Pihrt")</attribute>
+        <attribute>AssemblyDescription("This library extends functionality of package Microsoft.CodeAnalysis.Workspaces.Common.")</attribute>
+        <attribute>AssemblyFileVersion("1.0.0.10")</attribute>
+        <attribute>AssemblyInformationalVersion("1.0.0.10")</attribute>
+        <attribute>AssemblyProduct("Roslynator.Workspaces.Core")</attribute>
+        <attribute>AssemblyTitle("Roslynator.Workspaces.Core")</attribute>
+        <attribute>AssemblyVersion("1.0.0.10")</attribute>
+        <attribute>TargetFramework(".NETStandard,Version=v1.3", FrameworkDisplayName = "")</attribute>
+      </attributes>
+    </assembly>
+  </assemblies>
+  <types>
+    <type def="public class System.Object">
+      <type def="public abstract class System.Attribute">
+        <type def="public class System.Composition.ExportAttribute : Attribute">
+          <type def="public sealed class Microsoft.CodeAnalysis.CodeFixes.ExportCodeFixProviderAttribute : ExportAttribute" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CodeRefactorings.ExportCodeRefactoringProviderAttribute : ExportAttribute" />
+          <type def="public class Microsoft.CodeAnalysis.Host.Mef.ExportLanguageServiceAttribute : ExportAttribute" />
+          <type def="public class Microsoft.CodeAnalysis.Host.Mef.ExportLanguageServiceFactoryAttribute : ExportAttribute" />
+          <type def="public class Microsoft.CodeAnalysis.Host.Mef.ExportWorkspaceServiceAttribute : ExportAttribute" />
+          <type def="public class Microsoft.CodeAnalysis.Host.Mef.ExportWorkspaceServiceFactoryAttribute : ExportAttribute" />
+        </type>
+        <type def="public sealed class Microsoft.CodeAnalysis.ExtensionOrderAttribute : Attribute" />
+        <type def="public sealed class Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzerAttribute : Attribute" />
+      </type>
+      <type def="public abstract class System.Delegate">
+        <type def="public abstract class System.MulticastDelegate : Delegate">
+          <type def="public delegate System.Threading.Tasks.Task Microsoft.CodeAnalysis.Editing.SymbolEditor.AsyncDeclarationEditAction(Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.SyntaxNode declaration, System.Threading.CancellationToken cancellationToken)" />
+          <type def="public delegate void Microsoft.CodeAnalysis.Editing.SymbolEditor.DeclarationEditAction(Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.SyntaxNode declaration)" />
+          <type def="public delegate System.Boolean Microsoft.CodeAnalysis.Host.HostWorkspaceServices.MetadataFilter(System.Collections.Generic.IReadOnlyDictionary&lt;System.String, System.Object&gt; metadata)" />
+        </type>
+      </type>
+      <type def="public class System.EventArgs">
+        <type def="public sealed class Microsoft.CodeAnalysis.DocumentActiveContextChangedEventArgs : EventArgs" />
+        <type def="public class Microsoft.CodeAnalysis.DocumentEventArgs : EventArgs" />
+        <type def="public class Microsoft.CodeAnalysis.WorkspaceChangeEventArgs : EventArgs" />
+        <type def="public class Microsoft.CodeAnalysis.WorkspaceDiagnosticEventArgs : EventArgs" />
+        <type def="public sealed class Microsoft.CodeAnalysis.Diagnostics.AnalyzerLoadFailureEventArgs : EventArgs" />
+        <type def="public class Microsoft.CodeAnalysis.Text.TextChangeEventArgs : EventArgs" />
+      </type>
+      <type def="public abstract class System.ValueType">
+        <type def="public abstract class System.Enum : ValueType, IComparable, IConvertible, IFormattable">
+          <type def="public enum Microsoft.CodeAnalysis.Accessibility" />
+          <type def="public enum Microsoft.CodeAnalysis.ApplyChangesKind" />
+          <type def="public enum Microsoft.CodeAnalysis.AssemblyIdentityComparer.ComparisonResult" />
+          <type def="public enum Microsoft.CodeAnalysis.AssemblyIdentityParts" />
+          <type def="public enum Microsoft.CodeAnalysis.CandidateReason" />
+          <type def="public enum Microsoft.CodeAnalysis.DiagnosticSeverity" />
+          <type def="public enum Microsoft.CodeAnalysis.DocumentationMode" />
+          <type def="public enum Microsoft.CodeAnalysis.LineVisibility" />
+          <type def="public enum Microsoft.CodeAnalysis.LocationKind" />
+          <type def="public enum Microsoft.CodeAnalysis.MetadataImageKind" />
+          <type def="public enum Microsoft.CodeAnalysis.MethodKind" />
+          <type def="public enum Microsoft.CodeAnalysis.NamespaceKind" />
+          <type def="public enum Microsoft.CodeAnalysis.OperationKind" />
+          <type def="public enum Microsoft.CodeAnalysis.OptimizationLevel" />
+          <type def="public enum Microsoft.CodeAnalysis.OutputKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Platform" />
+          <type def="public enum Microsoft.CodeAnalysis.PreservationMode" />
+          <type def="public enum Microsoft.CodeAnalysis.RefKind" />
+          <type def="public enum Microsoft.CodeAnalysis.ReportDiagnostic" />
+          <type def="public enum Microsoft.CodeAnalysis.SourceCodeKind" />
+          <type def="public enum Microsoft.CodeAnalysis.SpecialType" />
+          <type def="public enum Microsoft.CodeAnalysis.SpeculativeBindingOption" />
+          <type def="public enum Microsoft.CodeAnalysis.SymbolDisplayDelegateStyle" />
+          <type def="public enum Microsoft.CodeAnalysis.SymbolDisplayExtensionMethodStyle" />
+          <type def="public enum Microsoft.CodeAnalysis.SymbolDisplayGenericsOptions" />
+          <type def="public enum Microsoft.CodeAnalysis.SymbolDisplayGlobalNamespaceStyle" />
+          <type def="public enum Microsoft.CodeAnalysis.SymbolDisplayKindOptions" />
+          <type def="public enum Microsoft.CodeAnalysis.SymbolDisplayLocalOptions" />
+          <type def="public enum Microsoft.CodeAnalysis.SymbolDisplayMemberOptions" />
+          <type def="public enum Microsoft.CodeAnalysis.SymbolDisplayMiscellaneousOptions" />
+          <type def="public enum Microsoft.CodeAnalysis.SymbolDisplayParameterOptions" />
+          <type def="public enum Microsoft.CodeAnalysis.SymbolDisplayPartKind" />
+          <type def="public enum Microsoft.CodeAnalysis.SymbolDisplayPropertyStyle" />
+          <type def="public enum Microsoft.CodeAnalysis.SymbolDisplayTypeQualificationStyle" />
+          <type def="public enum Microsoft.CodeAnalysis.SymbolFilter" />
+          <type def="public enum Microsoft.CodeAnalysis.SymbolKind" />
+          <type def="public enum Microsoft.CodeAnalysis.SyntaxRemoveOptions" />
+          <type def="public enum Microsoft.CodeAnalysis.SyntaxWalkerDepth" />
+          <type def="public enum Microsoft.CodeAnalysis.TypeKind" />
+          <type def="public enum Microsoft.CodeAnalysis.TypeParameterKind" />
+          <type def="public enum Microsoft.CodeAnalysis.TypedConstantKind" />
+          <type def="public enum Microsoft.CodeAnalysis.VarianceKind" />
+          <type def="public enum Microsoft.CodeAnalysis.WorkspaceChangeKind" />
+          <type def="public enum Microsoft.CodeAnalysis.WorkspaceDiagnosticKind" />
+          <type def="public enum Microsoft.CodeAnalysis.CSharp.LanguageVersion" />
+          <type def="public enum Microsoft.CodeAnalysis.CSharp.SyntaxKind" />
+          <type def="public enum Microsoft.CodeAnalysis.CSharp.Formatting.BinaryOperatorSpacingOptions" />
+          <type def="public enum Microsoft.CodeAnalysis.CSharp.Formatting.LabelPositionOptions" />
+          <type def="public enum Microsoft.CodeAnalysis.CSharp.Syntax.XmlNameAttributeElementKind" />
+          <type def="public enum Microsoft.CodeAnalysis.CodeFixes.FixAllScope" />
+          <type def="public enum Microsoft.CodeAnalysis.Diagnostics.AnalyzerLoadFailureEventArgs.FailureErrorCode" />
+          <type def="public enum Microsoft.CodeAnalysis.Diagnostics.GeneratedCodeAnalysisFlags" />
+          <type def="public enum Microsoft.CodeAnalysis.Differencing.EditKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Editing.DeclarationKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Editing.OperatorKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Editing.SpecialTypeConstraintKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Emit.DebugInformationFormat" />
+          <type def="public enum Microsoft.CodeAnalysis.Emit.InstrumentationKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Emit.SemanticEditKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Formatting.FormattingOptions.IndentStyle" />
+          <type def="public enum Microsoft.CodeAnalysis.Rename.RenameEntityKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Semantics.ArgumentKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Semantics.BinaryOperandsKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Semantics.BinaryOperationKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Semantics.BranchKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Semantics.CaseKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Semantics.ConversionKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Semantics.InstanceReferenceKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Semantics.LoopKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Semantics.SimpleBinaryOperationKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Semantics.SimpleUnaryOperationKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Semantics.SyntheticLocalKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Semantics.UnaryOperandKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Semantics.UnaryOperationKind" />
+          <type def="public enum Microsoft.CodeAnalysis.Text.SourceHashAlgorithm" />
+          <type def="public enum Roslynator.Visibility" />
+          <type def="public enum Roslynator.CSharp.CommentKinds" />
+          <type def="public enum Roslynator.CSharp.ModifierKinds" />
+          <type def="public enum Roslynator.CSharp.NullCheckStyles" />
+          <type def="public enum Roslynator.CSharp.PreprocessorDirectiveKinds" />
+        </type>
+        <type def="public struct Microsoft.CodeAnalysis.ChildSyntaxList : IEnumerable&lt;SyntaxNodeOrToken&gt;, IEquatable&lt;ChildSyntaxList&gt;, IReadOnlyCollection&lt;SyntaxNodeOrToken&gt;, IReadOnlyList&lt;SyntaxNodeOrToken&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.ChildSyntaxList.Enumerator" />
+        <type def="public struct Microsoft.CodeAnalysis.ChildSyntaxList.Reversed : IEnumerable&lt;SyntaxNodeOrToken&gt;, IEquatable&lt;ChildSyntaxList.Reversed&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.ChildSyntaxList.Reversed.Enumerator" />
+        <type def="public struct Microsoft.CodeAnalysis.CommandLineAnalyzerReference : IEquatable&lt;CommandLineAnalyzerReference&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.CommandLineReference : IEquatable&lt;CommandLineReference&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.CommandLineSourceFile" />
+        <type def="public struct Microsoft.CodeAnalysis.FileLinePositionSpan : IEquatable&lt;FileLinePositionSpan&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.MetadataReferenceProperties : IEquatable&lt;MetadataReferenceProperties&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.Optional&lt;T&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.PreprocessingSymbolInfo : IEquatable&lt;PreprocessingSymbolInfo&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.ProjectChanges" />
+        <type def="public struct Microsoft.CodeAnalysis.SeparatedSyntaxList&lt;TNode&gt; : IEnumerable&lt;TNode&gt;, IEquatable&lt;SeparatedSyntaxList&lt;TNode&gt;&gt;, IReadOnlyCollection&lt;TNode&gt;, IReadOnlyList&lt;TNode&gt; where TNode : Microsoft.CodeAnalysis.SyntaxNode" />
+        <type def="public struct Microsoft.CodeAnalysis.SeparatedSyntaxList&lt;TNode&gt;.Enumerator" />
+        <type def="public struct Microsoft.CodeAnalysis.SolutionChanges" />
+        <type def="public struct Microsoft.CodeAnalysis.SubsystemVersion : IEquatable&lt;SubsystemVersion&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.SymbolDisplayPart" />
+        <type def="public struct Microsoft.CodeAnalysis.SymbolInfo : IEquatable&lt;SymbolInfo&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.SyntaxList&lt;TNode&gt; : IEnumerable&lt;TNode&gt;, IEquatable&lt;SyntaxList&lt;TNode&gt;&gt;, IReadOnlyCollection&lt;TNode&gt;, IReadOnlyList&lt;TNode&gt; where TNode : Microsoft.CodeAnalysis.SyntaxNode" />
+        <type def="public struct Microsoft.CodeAnalysis.SyntaxList&lt;TNode&gt;.Enumerator" />
+        <type def="public struct Microsoft.CodeAnalysis.SyntaxNodeOrToken : IEquatable&lt;SyntaxNodeOrToken&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.SyntaxNodeOrTokenList : IEnumerable&lt;SyntaxNodeOrToken&gt;, IEquatable&lt;SyntaxNodeOrTokenList&gt;, IReadOnlyCollection&lt;SyntaxNodeOrToken&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.SyntaxNodeOrTokenList.Enumerator : IDisposable, IEnumerator, IEnumerator&lt;SyntaxNodeOrToken&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.SyntaxToken : IEquatable&lt;SyntaxToken&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.SyntaxTokenList : IEnumerable&lt;SyntaxToken&gt;, IEquatable&lt;SyntaxTokenList&gt;, IReadOnlyCollection&lt;SyntaxToken&gt;, IReadOnlyList&lt;SyntaxToken&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.SyntaxTokenList.Enumerator" />
+        <type def="public struct Microsoft.CodeAnalysis.SyntaxTokenList.Reversed : IEnumerable&lt;SyntaxToken&gt;, IEquatable&lt;SyntaxTokenList.Reversed&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.SyntaxTokenList.Reversed.Enumerator" />
+        <type def="public struct Microsoft.CodeAnalysis.SyntaxTrivia : IEquatable&lt;SyntaxTrivia&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.SyntaxTriviaList : IEnumerable&lt;SyntaxTrivia&gt;, IEquatable&lt;SyntaxTriviaList&gt;, IReadOnlyCollection&lt;SyntaxTrivia&gt;, IReadOnlyList&lt;SyntaxTrivia&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.SyntaxTriviaList.Enumerator" />
+        <type def="public struct Microsoft.CodeAnalysis.SyntaxTriviaList.Reversed : IEnumerable&lt;SyntaxTrivia&gt;, IEquatable&lt;SyntaxTriviaList.Reversed&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.SyntaxTriviaList.Reversed.Enumerator" />
+        <type def="public struct Microsoft.CodeAnalysis.TypeInfo : IEquatable&lt;TypeInfo&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.TypedConstant : IEquatable&lt;TypedConstant&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.VersionStamp : IEquatable&lt;VersionStamp&gt;, IObjectWritable" />
+        <type def="public struct Microsoft.CodeAnalysis.CSharp.AwaitExpressionInfo : IEquatable&lt;AwaitExpressionInfo&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.CSharp.Conversion : IEquatable&lt;Conversion&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.CSharp.ForEachStatementInfo : IEquatable&lt;ForEachStatementInfo&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.CSharp.QueryClauseInfo : IEquatable&lt;QueryClauseInfo&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.Classification.ClassifiedSpan : IEquatable&lt;ClassifiedSpan&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.CodeFixes.CodeFixContext" />
+        <type def="public struct Microsoft.CodeAnalysis.CodeRefactorings.CodeRefactoringContext" />
+        <type def="public struct Microsoft.CodeAnalysis.Diagnostics.CodeBlockAnalysisContext" />
+        <type def="public struct Microsoft.CodeAnalysis.Diagnostics.CompilationAnalysisContext" />
+        <type def="public struct Microsoft.CodeAnalysis.Diagnostics.OperationAnalysisContext" />
+        <type def="public struct Microsoft.CodeAnalysis.Diagnostics.OperationBlockAnalysisContext" />
+        <type def="public struct Microsoft.CodeAnalysis.Diagnostics.SemanticModelAnalysisContext" />
+        <type def="public struct Microsoft.CodeAnalysis.Diagnostics.SymbolAnalysisContext" />
+        <type def="public struct Microsoft.CodeAnalysis.Diagnostics.SyntaxNodeAnalysisContext" />
+        <type def="public struct Microsoft.CodeAnalysis.Diagnostics.SyntaxTreeAnalysisContext" />
+        <type def="public struct Microsoft.CodeAnalysis.Differencing.Edit&lt;TNode&gt; : IEquatable&lt;Edit&lt;TNode&gt;&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.Editing.DeclarationModifiers : IEquatable&lt;DeclarationModifiers&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.Emit.EditAndContinueMethodDebugInformation" />
+        <type def="public struct Microsoft.CodeAnalysis.Emit.SemanticEdit : IEquatable&lt;SemanticEdit&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.FindSymbols.ReferenceLocation : IComparable&lt;ReferenceLocation&gt;, IEquatable&lt;ReferenceLocation&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.FindSymbols.SymbolCallerInfo" />
+        <type def="public struct Microsoft.CodeAnalysis.Options.OptionKey : IEquatable&lt;OptionKey&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.Text.LinePosition : IComparable&lt;LinePosition&gt;, IEquatable&lt;LinePosition&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.Text.LinePositionSpan : IEquatable&lt;LinePositionSpan&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.Text.TextChange : IEquatable&lt;TextChange&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.Text.TextChangeRange : IEquatable&lt;TextChangeRange&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.Text.TextLine : IEquatable&lt;TextLine&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.Text.TextLineCollection.Enumerator : IDisposable, IEnumerator, IEnumerator&lt;TextLine&gt;" />
+        <type def="public struct Microsoft.CodeAnalysis.Text.TextSpan : IComparable&lt;TextSpan&gt;, IEquatable&lt;TextSpan&gt;" />
+        <type def="public readonly struct Roslynator.ExtensionMethodSymbolInfo : IEquatable&lt;ExtensionMethodSymbolInfo&gt;" />
+        <type def="public readonly struct Roslynator.MetadataName : IEquatable&lt;MetadataName&gt;" />
+        <type def="public struct Roslynator.SeparatedSyntaxListSelection&lt;TNode&gt;.Enumerator" />
+        <type def="public struct Roslynator.SyntaxListSelection&lt;TNode&gt;.Enumerator" />
+        <type def="public readonly struct Roslynator.CSharp.ExpressionChain : IEnumerable&lt;ExpressionSyntax&gt;, IEquatable&lt;ExpressionChain&gt;" />
+        <type def="public struct Roslynator.CSharp.ExpressionChain.Enumerator" />
+        <type def="public readonly struct Roslynator.CSharp.ExpressionChain.Reversed : IEnumerable&lt;ExpressionSyntax&gt;, IEquatable&lt;ExpressionChain.Reversed&gt;" />
+        <type def="public struct Roslynator.CSharp.ExpressionChain.Reversed.Enumerator" />
+        <type def="public readonly struct Roslynator.CSharp.IfStatementCascade : IEnumerable&lt;IfStatementOrElseClause&gt;, IEquatable&lt;IfStatementCascade&gt;" />
+        <type def="public struct Roslynator.CSharp.IfStatementCascade.Enumerator" />
+        <type def="public readonly struct Roslynator.CSharp.IfStatementCascadeInfo : IEquatable&lt;IfStatementCascadeInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.IfStatementOrElseClause : IEquatable&lt;IfStatementOrElseClause&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.AsExpressionInfo : IEquatable&lt;AsExpressionInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.AssignmentExpressionInfo : IEquatable&lt;AssignmentExpressionInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.BinaryExpressionInfo : IEquatable&lt;BinaryExpressionInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.ConditionalExpressionInfo : IEquatable&lt;ConditionalExpressionInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.GenericInfo : IEquatable&lt;GenericInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.IsExpressionInfo : IEquatable&lt;IsExpressionInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.LocalDeclarationStatementInfo : IEquatable&lt;LocalDeclarationStatementInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.MemberDeclarationListInfo : IEquatable&lt;MemberDeclarationListInfo&gt;, IReadOnlyList&lt;MemberDeclarationSyntax&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.ModifierListInfo : IEquatable&lt;ModifierListInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.NullCheckExpressionInfo : IEquatable&lt;NullCheckExpressionInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.RegionInfo : IEquatable&lt;RegionInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.SimpleAssignmentExpressionInfo : IEquatable&lt;SimpleAssignmentExpressionInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.SimpleAssignmentStatementInfo : IEquatable&lt;SimpleAssignmentStatementInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.SimpleIfElseInfo : IEquatable&lt;SimpleIfElseInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.SimpleIfStatementInfo : IEquatable&lt;SimpleIfStatementInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.SimpleMemberInvocationExpressionInfo : IEquatable&lt;SimpleMemberInvocationExpressionInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.SimpleMemberInvocationStatementInfo : IEquatable&lt;SimpleMemberInvocationStatementInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.SingleLocalDeclarationStatementInfo : IEquatable&lt;SingleLocalDeclarationStatementInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.SingleParameterLambdaExpressionInfo : IEquatable&lt;SingleParameterLambdaExpressionInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.StatementListInfo : IEquatable&lt;StatementListInfo&gt;, IReadOnlyList&lt;StatementSyntax&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.StringConcatenationExpressionInfo : IEquatable&lt;StringConcatenationExpressionInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.StringLiteralExpressionInfo : IEquatable&lt;StringLiteralExpressionInfo&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.UsingDirectiveListInfo : IEquatable&lt;UsingDirectiveListInfo&gt;, IReadOnlyList&lt;UsingDirectiveSyntax&gt;" />
+        <type def="public readonly struct Roslynator.CSharp.Syntax.XmlElementInfo : IEquatable&lt;XmlElementInfo&gt;" />
+        <type def="public struct Roslynator.Text.TextLineCollectionSelection.Enumerator" />
+      </type>
+      <type def="public abstract class System.Collections.Generic.EqualityComparer&lt;T&gt; : IEqualityComparer, IEqualityComparer&lt;T&gt;">
+        <type def="public sealed class Roslynator.MetadataNameEqualityComparer&lt;TSymbol&gt; : EqualityComparer&lt;TSymbol&gt; where TSymbol : Microsoft.CodeAnalysis.ISymbol" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.AdditionalText" />
+      <type def="public sealed class Microsoft.CodeAnalysis.AssemblyIdentity : IEquatable&lt;AssemblyIdentity&gt;" />
+      <type def="public class Microsoft.CodeAnalysis.AssemblyIdentityComparer">
+        <type def="public sealed class Microsoft.CodeAnalysis.DesktopAssemblyIdentityComparer : AssemblyIdentityComparer" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.AttributeData" />
+      <type def="public abstract class Microsoft.CodeAnalysis.CommandLineArguments">
+        <type def="public sealed class Microsoft.CodeAnalysis.CSharp.CSharpCommandLineArguments : CommandLineArguments" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.CommandLineParser">
+        <type def="public class Microsoft.CodeAnalysis.CSharp.CSharpCommandLineParser : CommandLineParser" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.Compilation">
+        <type def="public sealed class Microsoft.CodeAnalysis.CSharp.CSharpCompilation : Compilation" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.CompilationOptions">
+        <type def="public sealed class Microsoft.CodeAnalysis.CSharp.CSharpCompilationOptions : CompilationOptions, IEquatable&lt;CSharpCompilationOptions&gt;" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.ControlFlowAnalysis" />
+      <type def="public abstract class Microsoft.CodeAnalysis.CustomModifier : ICustomModifier" />
+      <type def="public abstract class Microsoft.CodeAnalysis.DataFlowAnalysis" />
+      <type def="public abstract class Microsoft.CodeAnalysis.Diagnostic : IEquatable&lt;Diagnostic&gt;, IFormattable" />
+      <type def="public sealed class Microsoft.CodeAnalysis.DiagnosticDescriptor : IEquatable&lt;DiagnosticDescriptor&gt;" />
+      <type def="public class Microsoft.CodeAnalysis.DiagnosticFormatter">
+        <type def="public class Microsoft.CodeAnalysis.CSharp.CSharpDiagnosticFormatter : DiagnosticFormatter" />
+      </type>
+      <type def="public sealed class Microsoft.CodeAnalysis.DllImportData : IPlatformInvokeInformation" />
+      <type def="public sealed class Microsoft.CodeAnalysis.DocumentId : IEquatable&lt;DocumentId&gt;, IObjectWritable" />
+      <type def="public sealed class Microsoft.CodeAnalysis.DocumentInfo" />
+      <type def="public abstract class Microsoft.CodeAnalysis.DocumentationProvider">
+        <type def="public abstract class Microsoft.CodeAnalysis.XmlDocumentationProvider : DocumentationProvider" />
+      </type>
+      <type def="public sealed class Microsoft.CodeAnalysis.EmbeddedText" />
+      <type def="public abstract class Microsoft.CodeAnalysis.LocalizableString : IEquatable&lt;LocalizableString&gt;, IFormattable">
+        <type def="public sealed class Microsoft.CodeAnalysis.LocalizableResourceString : LocalizableString, IObjectWritable" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.Location" />
+      <type def="public abstract class Microsoft.CodeAnalysis.Metadata : IDisposable">
+        <type def="public sealed class Microsoft.CodeAnalysis.AssemblyMetadata : Metadata" />
+        <type def="public sealed class Microsoft.CodeAnalysis.ModuleMetadata : Metadata" />
+      </type>
+      <type def="public sealed class Microsoft.CodeAnalysis.MetadataId" />
+      <type def="public abstract class Microsoft.CodeAnalysis.MetadataReference">
+        <type def="public abstract class Microsoft.CodeAnalysis.CompilationReference : MetadataReference, IEquatable&lt;CompilationReference&gt;" />
+        <type def="public abstract class Microsoft.CodeAnalysis.PortableExecutableReference : MetadataReference" />
+        <type def="public sealed class Microsoft.CodeAnalysis.UnresolvedMetadataReference : MetadataReference" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.MetadataReferenceResolver" />
+      <type def="public abstract class Microsoft.CodeAnalysis.ParseOptions">
+        <type def="public sealed class Microsoft.CodeAnalysis.CSharp.CSharpParseOptions : ParseOptions, IEquatable&lt;CSharpParseOptions&gt;" />
+      </type>
+      <type def="public class Microsoft.CodeAnalysis.Project" />
+      <type def="public class Microsoft.CodeAnalysis.ProjectDependencyGraph" />
+      <type def="public sealed class Microsoft.CodeAnalysis.ProjectId : IEquatable&lt;ProjectId&gt;, IObjectWritable" />
+      <type def="public sealed class Microsoft.CodeAnalysis.ProjectInfo" />
+      <type def="public sealed class Microsoft.CodeAnalysis.ProjectReference : IEquatable&lt;ProjectReference&gt;" />
+      <type def="public sealed class Microsoft.CodeAnalysis.ResourceDescription : IFileReference" />
+      <type def="public class Microsoft.CodeAnalysis.RuleSet" />
+      <type def="public class Microsoft.CodeAnalysis.RuleSetInclude" />
+      <type def="public abstract class Microsoft.CodeAnalysis.ScriptCompilationInfo">
+        <type def="public sealed class Microsoft.CodeAnalysis.CSharp.CSharpScriptCompilationInfo : ScriptCompilationInfo" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.SemanticModel" />
+      <type def="public class Microsoft.CodeAnalysis.Solution" />
+      <type def="public sealed class Microsoft.CodeAnalysis.SolutionId : IEquatable&lt;SolutionId&gt;, IObjectWritable" />
+      <type def="public sealed class Microsoft.CodeAnalysis.SolutionInfo" />
+      <type def="public abstract class Microsoft.CodeAnalysis.SourceReferenceResolver">
+        <type def="public class Microsoft.CodeAnalysis.SourceFileResolver : SourceReferenceResolver, IEquatable&lt;SourceFileResolver&gt;" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.StrongNameProvider">
+        <type def="public class Microsoft.CodeAnalysis.DesktopStrongNameProvider : StrongNameProvider" />
+      </type>
+      <type def="public class Microsoft.CodeAnalysis.SymbolDisplayFormat" />
+      <type def="public abstract class Microsoft.CodeAnalysis.SymbolVisitor" />
+      <type def="public abstract class Microsoft.CodeAnalysis.SymbolVisitor&lt;TResult&gt;" />
+      <type def="public sealed class Microsoft.CodeAnalysis.SyntaxAnnotation : IEquatable&lt;SyntaxAnnotation&gt;, IObjectWritable" />
+      <type def="public abstract class Microsoft.CodeAnalysis.SyntaxNode">
+        <type def="public abstract class Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode : SyntaxNode, IMessageSerializable">
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.AccessorDeclarationSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.AccessorListSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.AnonymousObjectMemberDeclaratorSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ArgumentSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ArrayRankSpecifierSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.AttributeArgumentListSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.AttributeArgumentSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.AttributeTargetSpecifierSyntax : CSharpSyntaxNode" />
+          <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.BaseArgumentListSyntax : CSharpSyntaxNode">
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ArgumentListSyntax : BaseArgumentListSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.BracketedArgumentListSyntax : BaseArgumentListSyntax" />
+          </type>
+          <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.BaseCrefParameterListSyntax : CSharpSyntaxNode">
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.CrefBracketedParameterListSyntax : BaseCrefParameterListSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.CrefParameterListSyntax : BaseCrefParameterListSyntax" />
+          </type>
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.BaseListSyntax : CSharpSyntaxNode" />
+          <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.BaseParameterListSyntax : CSharpSyntaxNode">
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.BracketedParameterListSyntax : BaseParameterListSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax : BaseParameterListSyntax" />
+          </type>
+          <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeSyntax : CSharpSyntaxNode">
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.SimpleBaseTypeSyntax : BaseTypeSyntax" />
+          </type>
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.CatchClauseSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.CatchDeclarationSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.CatchFilterClauseSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax : CSharpSyntaxNode, ICompilationUnitSyntax" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorInitializerSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.CrefParameterSyntax : CSharpSyntaxNode" />
+          <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.CrefSyntax : CSharpSyntaxNode">
+            <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.MemberCrefSyntax : CrefSyntax">
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorMemberCrefSyntax : MemberCrefSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.IndexerMemberCrefSyntax : MemberCrefSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.NameMemberCrefSyntax : MemberCrefSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.OperatorMemberCrefSyntax : MemberCrefSyntax" />
+            </type>
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.QualifiedCrefSyntax : CrefSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.TypeCrefSyntax : CrefSyntax" />
+          </type>
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ElseClauseSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.EqualsValueClauseSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax : CSharpSyntaxNode" />
+          <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax : CSharpSyntaxNode">
+            <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.AnonymousFunctionExpressionSyntax : ExpressionSyntax">
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.AnonymousMethodExpressionSyntax : AnonymousFunctionExpressionSyntax" />
+              <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.LambdaExpressionSyntax : AnonymousFunctionExpressionSyntax">
+                <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ParenthesizedLambdaExpressionSyntax : LambdaExpressionSyntax" />
+                <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.SimpleLambdaExpressionSyntax : LambdaExpressionSyntax" />
+              </type>
+            </type>
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.AnonymousObjectCreationExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ArrayCreationExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.AssignmentExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.AwaitExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.BinaryExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.CastExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.CheckedExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ConditionalAccessExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ConditionalExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.DeclarationExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.DefaultExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ElementAccessExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ElementBindingExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ImplicitArrayCreationExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ImplicitElementAccessSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.InitializerExpressionSyntax : ExpressionSyntax" />
+            <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.InstanceExpressionSyntax : ExpressionSyntax">
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.BaseExpressionSyntax : InstanceExpressionSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ThisExpressionSyntax : InstanceExpressionSyntax" />
+            </type>
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.InterpolatedStringExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.InvocationExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.IsPatternExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.LiteralExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.MakeRefExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.MemberAccessExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.MemberBindingExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ObjectCreationExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.OmittedArraySizeExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ParenthesizedExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.PostfixUnaryExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.PrefixUnaryExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.QueryExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.RefExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.RefTypeExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.RefValueExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.SizeOfExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.StackAllocArrayCreationExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ThrowExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.TupleExpressionSyntax : ExpressionSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.TypeOfExpressionSyntax : ExpressionSyntax" />
+            <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax : ExpressionSyntax">
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ArrayTypeSyntax : TypeSyntax" />
+              <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.NameSyntax : TypeSyntax">
+                <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.AliasQualifiedNameSyntax : NameSyntax" />
+                <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.QualifiedNameSyntax : NameSyntax" />
+                <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.SimpleNameSyntax : NameSyntax">
+                  <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.GenericNameSyntax : SimpleNameSyntax" />
+                  <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax : SimpleNameSyntax" />
+                </type>
+              </type>
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.NullableTypeSyntax : TypeSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.OmittedTypeArgumentSyntax : TypeSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.PointerTypeSyntax : TypeSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.PredefinedTypeSyntax : TypeSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.RefTypeSyntax : TypeSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.TupleTypeSyntax : TypeSyntax" />
+            </type>
+          </type>
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ExternAliasDirectiveSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.FinallyClauseSyntax : CSharpSyntaxNode" />
+          <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.InterpolatedStringContentSyntax : CSharpSyntaxNode">
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.InterpolatedStringTextSyntax : InterpolatedStringContentSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.InterpolationSyntax : InterpolatedStringContentSyntax" />
+          </type>
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.InterpolationAlignmentClauseSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.InterpolationFormatClauseSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.JoinIntoClauseSyntax : CSharpSyntaxNode" />
+          <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax : CSharpSyntaxNode">
+            <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax : MemberDeclarationSyntax">
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.EventFieldDeclarationSyntax : BaseFieldDeclarationSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax : BaseFieldDeclarationSyntax" />
+            </type>
+            <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax : MemberDeclarationSyntax">
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax : BaseMethodDeclarationSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax : BaseMethodDeclarationSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.DestructorDeclarationSyntax : BaseMethodDeclarationSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax : BaseMethodDeclarationSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax : BaseMethodDeclarationSyntax" />
+            </type>
+            <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax : MemberDeclarationSyntax">
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax : BasePropertyDeclarationSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax : BasePropertyDeclarationSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax : BasePropertyDeclarationSyntax" />
+            </type>
+            <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax : MemberDeclarationSyntax">
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax : BaseTypeDeclarationSyntax" />
+              <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax : BaseTypeDeclarationSyntax">
+                <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax : TypeDeclarationSyntax" />
+                <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax : TypeDeclarationSyntax" />
+                <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax : TypeDeclarationSyntax" />
+              </type>
+            </type>
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax : MemberDeclarationSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax : MemberDeclarationSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.GlobalStatementSyntax : MemberDeclarationSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.IncompleteMemberSyntax : MemberDeclarationSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.NamespaceDeclarationSyntax : MemberDeclarationSyntax" />
+          </type>
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.NameColonSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.NameEqualsSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.OrderingSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ParameterSyntax : CSharpSyntaxNode" />
+          <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.PatternSyntax : CSharpSyntaxNode">
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ConstantPatternSyntax : PatternSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.DeclarationPatternSyntax : PatternSyntax" />
+          </type>
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.QueryBodySyntax : CSharpSyntaxNode" />
+          <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.QueryClauseSyntax : CSharpSyntaxNode">
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.FromClauseSyntax : QueryClauseSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.JoinClauseSyntax : QueryClauseSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.LetClauseSyntax : QueryClauseSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.OrderByClauseSyntax : QueryClauseSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.WhereClauseSyntax : QueryClauseSyntax" />
+          </type>
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.QueryContinuationSyntax : CSharpSyntaxNode" />
+          <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.SelectOrGroupClauseSyntax : CSharpSyntaxNode">
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.GroupClauseSyntax : SelectOrGroupClauseSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.SelectClauseSyntax : SelectOrGroupClauseSyntax" />
+          </type>
+          <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax : CSharpSyntaxNode">
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.BreakStatementSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.CheckedStatementSyntax : StatementSyntax" />
+            <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.CommonForEachStatementSyntax : StatementSyntax">
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ForEachStatementSyntax : CommonForEachStatementSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ForEachVariableStatementSyntax : CommonForEachStatementSyntax" />
+            </type>
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ContinueStatementSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.DoStatementSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.EmptyStatementSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionStatementSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.FixedStatementSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ForStatementSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.GotoStatementSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.IfStatementSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.LabeledStatementSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.LocalDeclarationStatementSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.LocalFunctionStatementSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.LockStatementSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ReturnStatementSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.SwitchStatementSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ThrowStatementSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.TryStatementSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.UnsafeStatementSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.UsingStatementSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.WhileStatementSyntax : StatementSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.YieldStatementSyntax : StatementSyntax" />
+          </type>
+          <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.StructuredTriviaSyntax : CSharpSyntaxNode, IStructuredTriviaSyntax">
+            <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.DirectiveTriviaSyntax : StructuredTriviaSyntax">
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.BadDirectiveTriviaSyntax : DirectiveTriviaSyntax" />
+              <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.BranchingDirectiveTriviaSyntax : DirectiveTriviaSyntax">
+                <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.ConditionalDirectiveTriviaSyntax : BranchingDirectiveTriviaSyntax">
+                  <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ElifDirectiveTriviaSyntax : ConditionalDirectiveTriviaSyntax" />
+                  <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.IfDirectiveTriviaSyntax : ConditionalDirectiveTriviaSyntax" />
+                </type>
+                <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ElseDirectiveTriviaSyntax : BranchingDirectiveTriviaSyntax" />
+              </type>
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.DefineDirectiveTriviaSyntax : DirectiveTriviaSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.EndIfDirectiveTriviaSyntax : DirectiveTriviaSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.EndRegionDirectiveTriviaSyntax : DirectiveTriviaSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ErrorDirectiveTriviaSyntax : DirectiveTriviaSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.LineDirectiveTriviaSyntax : DirectiveTriviaSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.LoadDirectiveTriviaSyntax : DirectiveTriviaSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.PragmaChecksumDirectiveTriviaSyntax : DirectiveTriviaSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.PragmaWarningDirectiveTriviaSyntax : DirectiveTriviaSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ReferenceDirectiveTriviaSyntax : DirectiveTriviaSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.RegionDirectiveTriviaSyntax : DirectiveTriviaSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ShebangDirectiveTriviaSyntax : DirectiveTriviaSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.UndefDirectiveTriviaSyntax : DirectiveTriviaSyntax" />
+              <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.WarningDirectiveTriviaSyntax : DirectiveTriviaSyntax" />
+            </type>
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.DocumentationCommentTriviaSyntax : StructuredTriviaSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.SkippedTokensTriviaSyntax : StructuredTriviaSyntax, ISkippedTokensTriviaSyntax" />
+          </type>
+          <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.SwitchLabelSyntax : CSharpSyntaxNode">
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.CasePatternSwitchLabelSyntax : SwitchLabelSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.CaseSwitchLabelSyntax : SwitchLabelSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.DefaultSwitchLabelSyntax : SwitchLabelSyntax" />
+          </type>
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.SwitchSectionSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.TupleElementSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.TypeArgumentListSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax : CSharpSyntaxNode" />
+          <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintSyntax : CSharpSyntaxNode">
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ClassOrStructConstraintSyntax : TypeParameterConstraintSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorConstraintSyntax : TypeParameterConstraintSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.TypeConstraintSyntax : TypeParameterConstraintSyntax" />
+          </type>
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclarationSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclaratorSyntax : CSharpSyntaxNode" />
+          <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.VariableDesignationSyntax : CSharpSyntaxNode">
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.DiscardDesignationSyntax : VariableDesignationSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ParenthesizedVariableDesignationSyntax : VariableDesignationSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.SingleVariableDesignationSyntax : VariableDesignationSyntax" />
+          </type>
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.WhenClauseSyntax : CSharpSyntaxNode" />
+          <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.XmlAttributeSyntax : CSharpSyntaxNode">
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.XmlCrefAttributeSyntax : XmlAttributeSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.XmlNameAttributeSyntax : XmlAttributeSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.XmlTextAttributeSyntax : XmlAttributeSyntax" />
+          </type>
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementEndTagSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementStartTagSyntax : CSharpSyntaxNode" />
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.XmlNameSyntax : CSharpSyntaxNode" />
+          <type def="public abstract class Microsoft.CodeAnalysis.CSharp.Syntax.XmlNodeSyntax : CSharpSyntaxNode">
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.XmlCDataSectionSyntax : XmlNodeSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.XmlCommentSyntax : XmlNodeSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax : XmlNodeSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.XmlEmptyElementSyntax : XmlNodeSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.XmlProcessingInstructionSyntax : XmlNodeSyntax" />
+            <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.XmlTextSyntax : XmlNodeSyntax" />
+          </type>
+          <type def="public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.XmlPrefixSyntax : CSharpSyntaxNode" />
+        </type>
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.SyntaxReference" />
+      <type def="public abstract class Microsoft.CodeAnalysis.SyntaxTree">
+        <type def="public abstract class Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTree : SyntaxTree" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.SyntaxWalker" />
+      <type def="public sealed class Microsoft.CodeAnalysis.TextAndVersion" />
+      <type def="public class Microsoft.CodeAnalysis.TextDocument">
+        <type def="public class Microsoft.CodeAnalysis.Document : TextDocument" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.TextLoader" />
+      <type def="public abstract class Microsoft.CodeAnalysis.Workspace : IDisposable">
+        <type def="public sealed class Microsoft.CodeAnalysis.AdhocWorkspace : Workspace" />
+      </type>
+      <type def="public class Microsoft.CodeAnalysis.WorkspaceDiagnostic">
+        <type def="public class Microsoft.CodeAnalysis.DocumentDiagnostic : WorkspaceDiagnostic" />
+        <type def="public class Microsoft.CodeAnalysis.ProjectDiagnostic : WorkspaceDiagnostic" />
+      </type>
+      <type def="public sealed class Microsoft.CodeAnalysis.WorkspaceRegistration" />
+      <type def="public abstract class Microsoft.CodeAnalysis.XmlReferenceResolver">
+        <type def="public class Microsoft.CodeAnalysis.XmlFileResolver : XmlReferenceResolver" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.CSharp.CSharpSyntaxVisitor">
+        <type def="public abstract class Microsoft.CodeAnalysis.CSharp.CSharpSyntaxWalker : CSharpSyntaxVisitor" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.CSharp.CSharpSyntaxVisitor&lt;TResult&gt;">
+        <type def="public abstract class Microsoft.CodeAnalysis.CSharp.CSharpSyntaxRewriter : CSharpSyntaxVisitor&lt;SyntaxNode&gt;" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.CodeActions.CodeAction">
+        <type def="public abstract class Microsoft.CodeAnalysis.CodeActions.CodeActionWithOptions : CodeAction" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.CodeActions.CodeActionOperation">
+        <type def="public sealed class Microsoft.CodeAnalysis.CodeActions.ApplyChangesOperation : CodeActionOperation" />
+        <type def="public sealed class Microsoft.CodeAnalysis.CodeActions.OpenDocumentOperation : CodeActionOperation" />
+        <type def="public abstract class Microsoft.CodeAnalysis.CodeActions.PreviewOperation : CodeActionOperation" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.CodeFixes.CodeFixProvider" />
+      <type def="public class Microsoft.CodeAnalysis.CodeFixes.FixAllContext" />
+      <type def="public abstract class Microsoft.CodeAnalysis.CodeFixes.FixAllContext.DiagnosticProvider" />
+      <type def="public abstract class Microsoft.CodeAnalysis.CodeFixes.FixAllProvider" />
+      <type def="public abstract class Microsoft.CodeAnalysis.CodeRefactorings.CodeRefactoringProvider" />
+      <type def="public class Microsoft.CodeAnalysis.CodeStyle.CodeStyleOption&lt;T&gt; : ICodeStyleOption, IEquatable&lt;CodeStyleOption&lt;T&gt;&gt;" />
+      <type def="public class Microsoft.CodeAnalysis.CodeStyle.CodeStyleOptions" />
+      <type def="public class Microsoft.CodeAnalysis.CodeStyle.NotificationOption" />
+      <type def="public abstract class Microsoft.CodeAnalysis.Diagnostics.AnalysisContext" />
+      <type def="public class Microsoft.CodeAnalysis.Diagnostics.AnalysisResult" />
+      <type def="public class Microsoft.CodeAnalysis.Diagnostics.AnalyzerOptions" />
+      <type def="public abstract class Microsoft.CodeAnalysis.Diagnostics.AnalyzerReference">
+        <type def="public sealed class Microsoft.CodeAnalysis.Diagnostics.AnalyzerFileReference : AnalyzerReference, IEquatable&lt;AnalyzerReference&gt;" />
+        <type def="public sealed class Microsoft.CodeAnalysis.Diagnostics.AnalyzerImageReference : AnalyzerReference" />
+        <type def="public sealed class Microsoft.CodeAnalysis.Diagnostics.UnresolvedAnalyzerReference : AnalyzerReference" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.Diagnostics.CodeBlockStartAnalysisContext&lt;TLanguageKindEnum&gt; where TLanguageKindEnum : struct" />
+      <type def="public abstract class Microsoft.CodeAnalysis.Diagnostics.CompilationStartAnalysisContext" />
+      <type def="public class Microsoft.CodeAnalysis.Diagnostics.CompilationWithAnalyzers" />
+      <type def="public sealed class Microsoft.CodeAnalysis.Diagnostics.CompilationWithAnalyzersOptions" />
+      <type def="public abstract class Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer" />
+      <type def="public abstract class Microsoft.CodeAnalysis.Diagnostics.OperationBlockStartAnalysisContext" />
+      <type def="public sealed class Microsoft.CodeAnalysis.Diagnostics.SourceTextValueProvider&lt;TValue&gt;" />
+      <type def="public sealed class Microsoft.CodeAnalysis.Diagnostics.SuppressionInfo" />
+      <type def="public sealed class Microsoft.CodeAnalysis.Diagnostics.SyntaxTreeValueProvider&lt;TValue&gt;" />
+      <type def="public sealed class Microsoft.CodeAnalysis.Diagnostics.Telemetry.AnalyzerTelemetryInfo" />
+      <type def="public sealed class Microsoft.CodeAnalysis.Differencing.EditScript&lt;TNode&gt;" />
+      <type def="public sealed class Microsoft.CodeAnalysis.Differencing.Match&lt;TNode&gt;" />
+      <type def="public abstract class Microsoft.CodeAnalysis.Differencing.TreeComparer&lt;TNode&gt;" />
+      <type def="public class Microsoft.CodeAnalysis.Editing.SolutionEditor" />
+      <type def="public sealed class Microsoft.CodeAnalysis.Editing.SymbolEditor" />
+      <type def="public class Microsoft.CodeAnalysis.Editing.SyntaxEditor">
+        <type def="public class Microsoft.CodeAnalysis.Editing.DocumentEditor : SyntaxEditor" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.Editing.SyntaxGenerator : ILanguageService" />
+      <type def="public sealed class Microsoft.CodeAnalysis.Emit.EmitBaseline" />
+      <type def="public sealed class Microsoft.CodeAnalysis.Emit.EmitOptions : IEquatable&lt;EmitOptions&gt;" />
+      <type def="public class Microsoft.CodeAnalysis.Emit.EmitResult">
+        <type def="public sealed class Microsoft.CodeAnalysis.Emit.EmitDifferenceResult : EmitResult" />
+      </type>
+      <type def="public class Microsoft.CodeAnalysis.FindSymbols.ReferencedSymbol" />
+      <type def="public abstract class Microsoft.CodeAnalysis.Host.HostLanguageServices" />
+      <type def="public abstract class Microsoft.CodeAnalysis.Host.HostServices">
+        <type def="public class Microsoft.CodeAnalysis.Host.Mef.MefHostServices : HostServices, IMefHostExportProvider" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.Host.HostWorkspaceServices" />
+      <type def="public class Microsoft.CodeAnalysis.Options.Option&lt;T&gt; : IOption" />
+      <type def="public abstract class Microsoft.CodeAnalysis.Options.OptionSet">
+        <type def="public sealed class Microsoft.CodeAnalysis.Options.DocumentOptionSet : OptionSet" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.Options.OptionStorageLocation" />
+      <type def="public class Microsoft.CodeAnalysis.Options.PerLanguageOption&lt;T&gt; : IOption" />
+      <type def="public abstract class Microsoft.CodeAnalysis.Semantics.OperationVisitor">
+        <type def="public abstract class Microsoft.CodeAnalysis.Semantics.OperationWalker : OperationVisitor" />
+      </type>
+      <type def="public abstract class Microsoft.CodeAnalysis.Semantics.OperationVisitor&lt;TArgument, TResult&gt;" />
+      <type def="public abstract class Microsoft.CodeAnalysis.Text.SourceText" />
+      <type def="public abstract class Microsoft.CodeAnalysis.Text.SourceTextContainer" />
+      <type def="public abstract class Microsoft.CodeAnalysis.Text.TextLineCollection : IEnumerable&lt;TextLine&gt;, IReadOnlyCollection&lt;TextLine&gt;, IReadOnlyList&lt;TextLine&gt;" />
+      <type def="public abstract class Roslynator.NameGenerator" />
+      <type def="public class Roslynator.SeparatedSyntaxListSelection&lt;TNode&gt; : ISelection&lt;TNode&gt; where TNode : Microsoft.CodeAnalysis.SyntaxNode" />
+      <type def="public class Roslynator.SyntaxListSelection&lt;TNode&gt; : ISelection&lt;TNode&gt; where TNode : Microsoft.CodeAnalysis.SyntaxNode">
+        <type def="public sealed class Roslynator.CSharp.MemberDeclarationListSelection : SyntaxListSelection&lt;MemberDeclarationSyntax&gt;" />
+        <type def="public sealed class Roslynator.CSharp.StatementListSelection : SyntaxListSelection&lt;StatementSyntax&gt;" />
+      </type>
+      <type def="public abstract class Roslynator.CSharp.ModifierList&lt;TNode&gt; where TNode : Microsoft.CodeAnalysis.SyntaxNode" />
+      <type def="public class Roslynator.Text.TextLineCollectionSelection : ISelection&lt;TextLine&gt;" />
+      <type def="public static class Microsoft.CodeAnalysis.AnnotationExtensions" />
+      <type def="public static class Microsoft.CodeAnalysis.CSharpExtensions" />
+      <type def="public static class Microsoft.CodeAnalysis.CaseInsensitiveComparison" />
+      <type def="public static class Microsoft.CodeAnalysis.DocumentationCommentId" />
+      <type def="public static class Microsoft.CodeAnalysis.FileSystemExtensions" />
+      <type def="public static class Microsoft.CodeAnalysis.ISymbolExtensions" />
+      <type def="public static class Microsoft.CodeAnalysis.LanguageNames" />
+      <type def="public static class Microsoft.CodeAnalysis.ModelExtensions" />
+      <type def="public static class Microsoft.CodeAnalysis.SymbolDisplayExtensions" />
+      <type def="public static class Microsoft.CodeAnalysis.SyntaxNodeExtensions" />
+      <type def="public static class Microsoft.CodeAnalysis.WellKnownDiagnosticTags" />
+      <type def="public static class Microsoft.CodeAnalysis.WellKnownMemberNames" />
+      <type def="public static class Microsoft.CodeAnalysis.WorkspaceKind" />
+      <type def="public static class Microsoft.CodeAnalysis.CSharp.CSharpExtensions" />
+      <type def="public static class Microsoft.CodeAnalysis.CSharp.CSharpFileSystemExtensions" />
+      <type def="public static class Microsoft.CodeAnalysis.CSharp.LanguageVersionFacts" />
+      <type def="public static class Microsoft.CodeAnalysis.CSharp.SymbolDisplay" />
+      <type def="public static class Microsoft.CodeAnalysis.CSharp.SyntaxExtensions" />
+      <type def="public static class Microsoft.CodeAnalysis.CSharp.SyntaxFactory" />
+      <type def="public static class Microsoft.CodeAnalysis.CSharp.SyntaxFacts" />
+      <type def="public static class Microsoft.CodeAnalysis.CSharp.TypedConstantExtensions" />
+      <type def="public static class Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions" />
+      <type def="public static class Microsoft.CodeAnalysis.Classification.ClassificationTypeNames" />
+      <type def="public static class Microsoft.CodeAnalysis.Classification.Classifier" />
+      <type def="public static class Microsoft.CodeAnalysis.CodeActions.ConflictAnnotation" />
+      <type def="public static class Microsoft.CodeAnalysis.CodeActions.RenameAnnotation" />
+      <type def="public static class Microsoft.CodeAnalysis.CodeActions.WarningAnnotation" />
+      <type def="public static class Microsoft.CodeAnalysis.CodeFixes.WellKnownFixAllProviders" />
+      <type def="public static class Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzerExtensions" />
+      <type def="public static class Microsoft.CodeAnalysis.Editing.ImportAdder" />
+      <type def="public static class Microsoft.CodeAnalysis.Editing.SymbolEditorExtensions" />
+      <type def="public static class Microsoft.CodeAnalysis.Editing.SyntaxEditorExtensions" />
+      <type def="public static class Microsoft.CodeAnalysis.FindSymbols.SymbolFinder" />
+      <type def="public static class Microsoft.CodeAnalysis.Formatting.Formatter" />
+      <type def="public static class Microsoft.CodeAnalysis.Formatting.FormattingOptions" />
+      <type def="public static class Microsoft.CodeAnalysis.Host.Mef.ServiceLayer" />
+      <type def="public static class Microsoft.CodeAnalysis.Recommendations.RecommendationOptions" />
+      <type def="public static class Microsoft.CodeAnalysis.Recommendations.Recommender" />
+      <type def="public static class Microsoft.CodeAnalysis.Rename.RenameOptions" />
+      <type def="public static class Microsoft.CodeAnalysis.Rename.Renamer" />
+      <type def="public static class Microsoft.CodeAnalysis.Semantics.OperationExtensions" />
+      <type def="public static class Microsoft.CodeAnalysis.Semantics.UnaryAndBinaryOperationExtensions" />
+      <type def="public static class Microsoft.CodeAnalysis.Simplification.SimplificationOptions" />
+      <type def="public static class Microsoft.CodeAnalysis.Simplification.Simplifier" />
+      <type def="public static class Microsoft.CodeAnalysis.Tags.WellKnownTags" />
+      <type def="public static class Roslynator.DiagnosticsExtensions" />
+      <type def="public static class Roslynator.EnumExtensions" />
+      <type def="public static class Roslynator.FileLinePositionSpanExtensions" />
+      <type def="public static class Roslynator.SemanticModelExtensions" />
+      <type def="public static class Roslynator.SymbolExtensions" />
+      <type def="public static class Roslynator.SyntaxExtensions" />
+      <type def="public static class Roslynator.SyntaxTreeExtensions" />
+      <type def="public static class Roslynator.WorkspaceExtensions" />
+      <type def="public static class Roslynator.CSharp.CSharpExtensions" />
+      <type def="public static class Roslynator.CSharp.CSharpFactory" />
+      <type def="public static class Roslynator.CSharp.CSharpFacts" />
+      <type def="public static class Roslynator.CSharp.EnumExtensions" />
+      <type def="public static class Roslynator.CSharp.ModifierList" />
+      <type def="public static class Roslynator.CSharp.Modifiers" />
+      <type def="public static class Roslynator.CSharp.SymbolExtensions" />
+      <type def="public static class Roslynator.CSharp.SyntaxAccessibility" />
+      <type def="public static class Roslynator.CSharp.SyntaxExtensions" />
+      <type def="public static class Roslynator.CSharp.SyntaxInfo" />
+      <type def="public static class Roslynator.CSharp.SyntaxInverter" />
+      <type def="public static class Roslynator.CSharp.WorkspaceExtensions" />
+      <type def="public static class Roslynator.CSharp.WorkspaceSyntaxExtensions" />
+    </type>
+    <type def="">
+      <type def="public interface Microsoft.CodeAnalysis.IAliasSymbol : IEquatable&lt;ISymbol&gt;, ISymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.IAnalyzerAssemblyLoader" />
+      <type def="public interface Microsoft.CodeAnalysis.IArrayTypeSymbol : IEquatable&lt;ISymbol&gt;, INamespaceOrTypeSymbol, ISymbol, ITypeSymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.IAssemblySymbol : IEquatable&lt;ISymbol&gt;, ISymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.ICompilationUnitSyntax" />
+      <type def="public interface Microsoft.CodeAnalysis.IDiscardSymbol : IEquatable&lt;ISymbol&gt;, ISymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.IDynamicTypeSymbol : IEquatable&lt;ISymbol&gt;, INamespaceOrTypeSymbol, ISymbol, ITypeSymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.IErrorTypeSymbol : IEquatable&lt;ISymbol&gt;, INamedTypeSymbol, INamespaceOrTypeSymbol, ISymbol, ITypeSymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.IEventSymbol : IEquatable&lt;ISymbol&gt;, ISymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.IFieldSymbol : IEquatable&lt;ISymbol&gt;, ISymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.ILabelSymbol : IEquatable&lt;ISymbol&gt;, ISymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.ILocalSymbol : IEquatable&lt;ISymbol&gt;, ISymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.IMethodSymbol : IEquatable&lt;ISymbol&gt;, ISymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.IModuleSymbol : IEquatable&lt;ISymbol&gt;, ISymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.INamedTypeSymbol : IEquatable&lt;ISymbol&gt;, INamespaceOrTypeSymbol, ISymbol, ITypeSymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.INamespaceOrTypeSymbol : IEquatable&lt;ISymbol&gt;, ISymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.INamespaceSymbol : IEquatable&lt;ISymbol&gt;, INamespaceOrTypeSymbol, ISymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.IParameterSymbol : IEquatable&lt;ISymbol&gt;, ISymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.IPointerTypeSymbol : IEquatable&lt;ISymbol&gt;, INamespaceOrTypeSymbol, ISymbol, ITypeSymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.IPreprocessingSymbol : IEquatable&lt;ISymbol&gt;, ISymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.IPropertySymbol : IEquatable&lt;ISymbol&gt;, ISymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.IRangeVariableSymbol : IEquatable&lt;ISymbol&gt;, ISymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.ISkippedTokensTriviaSyntax" />
+      <type def="public interface Microsoft.CodeAnalysis.ISourceAssemblySymbol : IAssemblySymbol, IEquatable&lt;ISymbol&gt;, ISymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.IStructuredTriviaSyntax" />
+      <type def="public interface Microsoft.CodeAnalysis.ISymbol : IEquatable&lt;ISymbol&gt;" />
+      <type def="public interface Microsoft.CodeAnalysis.ITypeParameterSymbol : IEquatable&lt;ISymbol&gt;, INamespaceOrTypeSymbol, ISymbol, ITypeSymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.ITypeSymbol : IEquatable&lt;ISymbol&gt;, INamespaceOrTypeSymbol, ISymbol" />
+      <type def="public interface Microsoft.CodeAnalysis.FindSymbols.IFindReferencesProgress" />
+      <type def="public interface Microsoft.CodeAnalysis.Host.IAnalyzerService : IWorkspaceService" />
+      <type def="public interface Microsoft.CodeAnalysis.Host.ILanguageService" />
+      <type def="public interface Microsoft.CodeAnalysis.Host.IPersistentStorage : IDisposable" />
+      <type def="public interface Microsoft.CodeAnalysis.Host.IPersistentStorageService : IWorkspaceService" />
+      <type def="public interface Microsoft.CodeAnalysis.Host.ITemporaryStorageService : IWorkspaceService" />
+      <type def="public interface Microsoft.CodeAnalysis.Host.ITemporaryStreamStorage : IDisposable" />
+      <type def="public interface Microsoft.CodeAnalysis.Host.ITemporaryTextStorage : IDisposable" />
+      <type def="public interface Microsoft.CodeAnalysis.Host.IWorkspaceService" />
+      <type def="public interface Microsoft.CodeAnalysis.Host.Mef.ILanguageServiceFactory" />
+      <type def="public interface Microsoft.CodeAnalysis.Host.Mef.IWorkspaceServiceFactory" />
+      <type def="public interface Microsoft.CodeAnalysis.Options.IOption" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IAddressOfExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IArgument : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IArrayCreationExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IArrayElementReferenceExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IArrayInitializer : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IAssignmentExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IAwaitExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IBinaryOperatorExpression : IHasOperatorMethodExpression, IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IBlockStatement : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IBranchStatement : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.ICaseClause : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.ICatchClause : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.ICompoundAssignmentExpression : IAssignmentExpression, IHasOperatorMethodExpression, IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IConditionalAccessExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IConditionalAccessInstanceExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IConditionalChoiceExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IConversionExpression : IHasOperatorMethodExpression, IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IDefaultValueExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IEmptyStatement : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IEndStatement : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IEventAssignmentExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IEventReferenceExpression : IMemberReferenceExpression, IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IExpressionStatement : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IFieldInitializer : IOperation, ISymbolInitializer" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IFieldReferenceExpression : IMemberReferenceExpression, IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IFixedStatement : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IForEachLoopStatement : ILoopStatement, IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IForLoopStatement : IForWhileUntilLoopStatement, ILoopStatement, IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IForWhileUntilLoopStatement : ILoopStatement, IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IHasArgumentsExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IHasOperatorMethodExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IIfStatement : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IIncrementExpression : IAssignmentExpression, ICompoundAssignmentExpression, IHasOperatorMethodExpression, IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IIndexedPropertyReferenceExpression : IHasArgumentsExpression, IMemberReferenceExpression, IOperation, IPropertyReferenceExpression" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IInstanceReferenceExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IInvalidExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IInvalidStatement : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IInvocationExpression : IHasArgumentsExpression, IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IIsTypeExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.ILabelStatement : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.ILambdaExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.ILateBoundMemberReferenceExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.ILiteralExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.ILocalReferenceExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.ILockStatement : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.ILoopStatement : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IMemberReferenceExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IMethodBindingExpression : IMemberReferenceExpression, IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.INullCoalescingExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IObjectCreationExpression : IHasArgumentsExpression, IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IOmittedArgumentExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IParameterInitializer : IOperation, ISymbolInitializer" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IParameterReferenceExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IParenthesizedExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IPlaceholderExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IPointerIndirectionReferenceExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IPropertyInitializer : IOperation, ISymbolInitializer" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IPropertyReferenceExpression : IMemberReferenceExpression, IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IRangeCaseClause : ICaseClause, IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IRelationalCaseClause : ICaseClause, IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IReturnStatement : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.ISingleValueCaseClause : ICaseClause, IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.ISizeOfExpression : IOperation, ITypeOperationExpression" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IStopStatement : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.ISwitchCase : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.ISwitchStatement : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.ISymbolInitializer : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.ISyntheticLocalReferenceExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IThrowStatement : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.ITryStatement : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.ITypeOfExpression : IOperation, ITypeOperationExpression" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.ITypeOperationExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.ITypeParameterObjectCreationExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IUnaryOperatorExpression : IHasOperatorMethodExpression, IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IUnboundLambdaExpression : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IUsingStatement : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IVariableDeclaration : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IVariableDeclarationStatement : IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IWhileUntilLoopStatement : IForWhileUntilLoopStatement, ILoopStatement, IOperation" />
+      <type def="public interface Microsoft.CodeAnalysis.Semantics.IWithStatement : IOperation" />
+      <type def="public interface Roslynator.ISelection&lt;T&gt; : IReadOnlyList&lt;T&gt;" />
+    </type>
+  </types>
+</root>

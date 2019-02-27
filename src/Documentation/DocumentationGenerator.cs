@@ -286,7 +286,7 @@ namespace Roslynator.Documentation
                             {
                                 if (typeSymbols.Any(f => !f.IsStatic && f.TypeKind == TypeKind.Class))
                                 {
-                                    INamedTypeSymbol objectType = DocumentationModel.Compilation.ObjectType;
+                                    INamedTypeSymbol objectType = DocumentationModel.Compilations[0].ObjectType;
 
                                     IEnumerable<INamedTypeSymbol> instanceClasses = typeSymbols.Where(f => !f.IsStatic && f.TypeKind == TypeKind.Class);
 
@@ -710,8 +710,8 @@ namespace Roslynator.Documentation
             if (EnabledAndSortedTypeParts.Contains(TypeDocumentationParts.Derived))
             {
                 derivedTypes = (Options.IncludeAllDerivedTypes)
-                    ? typeModel.GetAllDerivedTypes().ToImmutableArray()
-                    : typeModel.GetDerivedTypes().ToImmutableArray();
+                    ? DocumentationModel.GetAllDerivedTypes(typeSymbol).ToImmutableArray()
+                    : DocumentationModel.GetDerivedTypes(typeSymbol).ToImmutableArray();
             }
 
             bool includeInherited = typeModel.TypeKind != TypeKind.Interface || Options.IncludeInheritedInterfaceMembers;
@@ -880,7 +880,7 @@ namespace Roslynator.Documentation
                             }
                         case TypeDocumentationParts.ExtensionMethods:
                             {
-                                writer.WriteExtensionMethods(typeModel.GetExtensionMethods());
+                                writer.WriteExtensionMethods(DocumentationModel.GetExtensionMethods(typeSymbol));
                                 break;
                             }
                         case TypeDocumentationParts.Classes:
@@ -1019,7 +1019,7 @@ namespace Roslynator.Documentation
                         }
                     case TypeDocumentationParts.ExtensionMethods:
                         {
-                            return typeModel.GetExtensionMethods().Any();
+                            return DocumentationModel.GetExtensionMethods(typeSymbol).Any();
                         }
                     case TypeDocumentationParts.Classes:
                         {
