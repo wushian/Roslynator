@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.CodeAnalysis;
-using Roslynator.FilterSymbols;
+using Roslynator.FindSymbols;
 
 namespace Roslynator.Documentation
 {

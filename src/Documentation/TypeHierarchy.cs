@@ -6,13 +6,15 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using Microsoft.CodeAnalysis;
-using Roslynator.FilterSymbols;
+using Roslynator.FindSymbols;
 
 namespace Roslynator.Documentation
 {
     internal sealed class TypeHierarchy
     {
+        private TypeHierarchyItem _enumRoot;
         private TypeHierarchyItem _interfaceRoot;
+        private TypeHierarchyItem _valueTypeRoot;
 
         private TypeHierarchy(TypeHierarchyItem root, ImmutableArray<TypeHierarchyItem> interfaces)
         {
@@ -29,12 +31,71 @@ namespace Roslynator.Documentation
             get
             {
                 if (_interfaceRoot == null)
-                {
                     Interlocked.CompareExchange(ref _interfaceRoot, LoadInterfaceHierarchy(), null);
-                }
 
                 return _interfaceRoot;
             }
+        }
+
+        internal TypeHierarchyItem EnumRoot
+        {
+            get
+            {
+                if (_enumRoot == null)
+                    Interlocked.CompareExchange(ref _enumRoot, GetEnumRoot(), null);
+
+                return _enumRoot;
+
+                TypeHierarchyItem GetEnumRoot()
+                {
+                    TypeHierarchyItem valueType = ValueTypeRoot;
+
+                    foreach (TypeHierarchyItem item in valueType.Children())
+                    {
+                        if (item.Symbol.HasMetadataName(MetadataNames.System_Enum))
+                            return item;
+                    }
+
+                    return new TypeHierarchyItem(null);
+                }
+            }
+        }
+
+        internal TypeHierarchyItem ValueTypeRoot
+        {
+            get
+            {
+                if (_valueTypeRoot == null)
+                    Interlocked.CompareExchange(ref _valueTypeRoot, GetValueTypeRoot(), null);
+
+                return _valueTypeRoot;
+
+                TypeHierarchyItem GetValueTypeRoot()
+                {
+                    foreach (TypeHierarchyItem item in Root.Children())
+                    {
+                        if (item.Symbol.HasMetadataName(MetadataNames.System_ValueType))
+                            return item;
+                    }
+
+                    return new TypeHierarchyItem(null);
+                }
+            }
+        }
+
+        public IEnumerable<TypeHierarchyItem> GetStructs()
+        {
+            foreach (TypeHierarchyItem item in _valueTypeRoot.Children())
+            {
+                if (item.Symbol.TypeKind == TypeKind.Struct)
+                    yield return item;
+            }
+        }
+
+        public IEnumerable<TypeHierarchyItem> GetEnums()
+        {
+            foreach (TypeHierarchyItem item in _enumRoot.Children())
+                yield return item;
         }
 
         public TypeHierarchyItem LoadInterfaceHierarchy()

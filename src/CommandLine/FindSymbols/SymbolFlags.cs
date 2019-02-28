@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Roslynator.FilterSymbols
+namespace Roslynator.FindSymbols
 {
     [Flags]
     internal enum SymbolFlags

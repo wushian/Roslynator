@@ -2,7 +2,7 @@
 
 using System.Diagnostics;
 
-namespace Roslynator.FilterSymbols
+namespace Roslynator.FindSymbols
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     internal abstract class FilterRule<T>

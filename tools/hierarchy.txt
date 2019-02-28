@@ -109,11 +109,11 @@ public class System.Object
 
     public abstract class System.MulticastDelegate : Delegate
 
-      public delegate System.Threading.Tasks.Task Microsoft.CodeAnalysis.Editing.SymbolEditor.AsyncDeclarationEditAction(Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.SyntaxNode declaration, System.Threading.CancellationToken cancellationToken)
+      public delegate System.Threading.Tasks.Task Microsoft.CodeAnalysis.Editing.SymbolEditor.AsyncDeclarationEditAction(Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.SyntaxNode declaration, System.Threading.CancellationToken cancellationToken);
 
-      public delegate void Microsoft.CodeAnalysis.Editing.SymbolEditor.DeclarationEditAction(Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.SyntaxNode declaration)
+      public delegate void Microsoft.CodeAnalysis.Editing.SymbolEditor.DeclarationEditAction(Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.SyntaxNode declaration);
 
-      public delegate System.Boolean Microsoft.CodeAnalysis.Host.HostWorkspaceServices.MetadataFilter(System.Collections.Generic.IReadOnlyDictionary<System.String, System.Object> metadata)
+      public delegate System.Boolean Microsoft.CodeAnalysis.Host.HostWorkspaceServices.MetadataFilter(System.Collections.Generic.IReadOnlyDictionary<System.String, System.Object> metadata);
 
   public class System.EventArgs
 

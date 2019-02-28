@@ -16,7 +16,6 @@ using Roslynator.CodeFixes;
 using Roslynator.CSharp;
 using Roslynator.Diagnostics;
 using Roslynator.Documentation;
-using Roslynator.FilterSymbols;
 using Roslynator.FindSymbols;
 using static Roslynator.CommandLine.ParseHelpers;
 using static Roslynator.Logger;

@@ -12,10 +12,12 @@ using System.Threading.Tasks;
 using System.Xml;
 using DotMarkdown;
 using Microsoft.CodeAnalysis;
+using Newtonsoft.Json;
 using Roslynator.Documentation;
+using Roslynator.Documentation.Json;
 using Roslynator.Documentation.Markdown;
 using Roslynator.Documentation.Xml;
-using Roslynator.FilterSymbols;
+using Roslynator.FindSymbols;
 using static Roslynator.Logger;
 
 namespace Roslynator.CommandLine
@@ -142,6 +144,30 @@ namespace Roslynator.CommandLine
                         writer.WriteDocument(assemblies, cancellationToken);
                     }
                 }
+                else if (string.Equals(extension, ".json", StringComparison.OrdinalIgnoreCase))
+                {
+                    using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read))
+                    using (var streamWriter = new StreamWriter(fileStream, Encodings.UTF8NoBom))
+                    using (var jsonWriter = new JsonTextWriter(streamWriter))
+                    {
+                        string indentChars = format.IndentChars;
+
+                        if (indentChars.Length > 0)
+                        {
+                            jsonWriter.Formatting = Newtonsoft.Json.Formatting.Indented;
+                            jsonWriter.Indentation = indentChars.Length;
+                            jsonWriter.IndentChar = indentChars[0];
+                        }
+                        else
+                        {
+                            jsonWriter.Formatting = Newtonsoft.Json.Formatting.None;
+                        }
+
+                        SymbolDefinitionWriter writer = new SymbolDefinitionJsonWriter(jsonWriter, SymbolFilterOptions, format, documentationProvider);
+
+                        writer.WriteDocument(assemblies, cancellationToken);
+                    }
+                }
                 else
                 {
                     File.WriteAllText(path, text, Encoding.UTF8);
@@ -257,6 +283,26 @@ namespace Roslynator.CommandLine
                 format: format);
 
             textWriter.WriteDocument(assemblies, cancellationToken);
+
+            using (var jsonWriter = new JsonTextWriter(ConsoleOut))
+            {
+                string indentChars = format.IndentChars;
+
+                if (indentChars.Length > 0)
+                {
+                    jsonWriter.Formatting = Newtonsoft.Json.Formatting.Indented;
+                    jsonWriter.Indentation = indentChars.Length;
+                    jsonWriter.IndentChar = indentChars[0];
+                }
+                else
+                {
+                    jsonWriter.Formatting = Newtonsoft.Json.Formatting.None;
+                }
+
+                SymbolDefinitionWriter writer = new SymbolDefinitionJsonWriter(jsonWriter, SymbolFilterOptions, format, null);
+
+                writer.WriteDocument(assemblies, cancellationToken);
+            }
 
             WriteLine();
 

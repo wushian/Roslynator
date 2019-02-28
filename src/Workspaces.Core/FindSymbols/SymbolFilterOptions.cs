@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
-namespace Roslynator.FilterSymbols
+namespace Roslynator.FindSymbols
 {
     internal class SymbolFilterOptions
     {

@@ -88,9 +88,9 @@
 * &emsp; \| &emsp; public sealed class Microsoft\.CodeAnalysis\.Diagnostics\.DiagnosticAnalyzerAttribute : Attribute
 * &emsp; public abstract class System\.Delegate
 * &emsp; \| &emsp; public abstract class System\.MulticastDelegate : Delegate
-* &emsp; \| &emsp; \| &emsp; public delegate System\.Threading\.Tasks\.Task Microsoft\.CodeAnalysis\.Editing\.SymbolEditor\.AsyncDeclarationEditAction\(Microsoft\.CodeAnalysis\.Editing\.DocumentEditor editor, Microsoft\.CodeAnalysis\.SyntaxNode declaration, System\.Threading\.CancellationToken cancellationToken\)
-* &emsp; \| &emsp; \| &emsp; public delegate void Microsoft\.CodeAnalysis\.Editing\.SymbolEditor\.DeclarationEditAction\(Microsoft\.CodeAnalysis\.Editing\.DocumentEditor editor, Microsoft\.CodeAnalysis\.SyntaxNode declaration\)
-* &emsp; \| &emsp; \| &emsp; public delegate System\.Boolean Microsoft\.CodeAnalysis\.Host\.HostWorkspaceServices\.MetadataFilter\(System\.Collections\.Generic\.IReadOnlyDictionary\<System\.String, System\.Object> metadata\)
+* &emsp; \| &emsp; \| &emsp; public delegate System\.Threading\.Tasks\.Task Microsoft\.CodeAnalysis\.Editing\.SymbolEditor\.AsyncDeclarationEditAction\(Microsoft\.CodeAnalysis\.Editing\.DocumentEditor editor, Microsoft\.CodeAnalysis\.SyntaxNode declaration, System\.Threading\.CancellationToken cancellationToken\);
+* &emsp; \| &emsp; \| &emsp; public delegate void Microsoft\.CodeAnalysis\.Editing\.SymbolEditor\.DeclarationEditAction\(Microsoft\.CodeAnalysis\.Editing\.DocumentEditor editor, Microsoft\.CodeAnalysis\.SyntaxNode declaration\);
+* &emsp; \| &emsp; \| &emsp; public delegate System\.Boolean Microsoft\.CodeAnalysis\.Host\.HostWorkspaceServices\.MetadataFilter\(System\.Collections\.Generic\.IReadOnlyDictionary\<System\.String, System\.Object> metadata\);
 * &emsp; public class System\.EventArgs
 * &emsp; \| &emsp; public sealed class Microsoft\.CodeAnalysis\.DocumentActiveContextChangedEventArgs : EventArgs
 * &emsp; \| &emsp; public class Microsoft\.CodeAnalysis\.DocumentEventArgs : EventArgs

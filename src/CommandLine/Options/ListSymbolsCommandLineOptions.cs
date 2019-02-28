@@ -59,7 +59,7 @@ namespace Roslynator.CommandLine
         public string Layout { get; set; }
 
         [Option(shortName: 'o', longName: "output",
-            HelpText = "Defines path to file(s) that will store a list of symbol definitions. Possible output formats are XML ('xml' extension), Markdown ('md' extension) or plain text format.",
+            HelpText = "Defines path to file(s) that will store a list of symbol definitions. Available data formats are XML ('xml' extension), JSON ('json' extension), Markdown ('md' extension) or plain text format.",
             MetaValue = "<OUTPUT_FILE>")]
         public IEnumerable<string> Output { get; set; }
 

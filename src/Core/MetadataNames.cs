@@ -48,5 +48,6 @@ namespace Roslynator
         public static readonly MetadataName System_Threading_Tasks_Task_T = MetadataName.Parse("System.Threading.Tasks.Task`1");
         public static readonly MetadataName System_Threading_Tasks_ValueTask_T = MetadataName.Parse("System.Threading.Tasks.ValueTask`1");
         public static readonly MetadataName System_TimeSpan = MetadataName.Parse("System.TimeSpan");
+        public static readonly MetadataName System_ValueType = MetadataName.Parse("System.ValueType");
     }
 }

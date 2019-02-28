@@ -8,10 +8,11 @@ using System.Linq;
 using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Roslynator.FilterSymbols;
+using Roslynator.FindSymbols;
 
 namespace Roslynator.Documentation
 {
+    //TODO: IDisposable
     internal abstract class SymbolDefinitionWriter
     {
         private SymbolDisplayFormat _namespaceFormat;
@@ -799,7 +800,7 @@ namespace Roslynator.Documentation
             }
         }
 
-        public void WriteAttribute(AttributeData attribute)
+        public virtual void WriteAttribute(AttributeData attribute)
         {
             SymbolDisplayFormat format = (!Format.Includes(SymbolDefinitionPartFilter.ContainingNamespace))
                 ? SymbolDefinitionDisplayFormats.TypeNameAndContainingTypesAndTypeParameters
@@ -831,15 +832,15 @@ namespace Roslynator.Documentation
             bool hasConstructorArgument = false;
             bool hasNamedArgument = false;
 
-            AppendConstructorArguments();
-            AppendNamedArguments();
+            WriteConstructorArguments();
+            WriteNamedArguments();
 
             if (hasConstructorArgument || hasNamedArgument)
             {
                 Write(")");
             }
 
-            void AppendConstructorArguments()
+            void WriteConstructorArguments()
             {
                 ImmutableArray<TypedConstant>.Enumerator en = attribute.ConstructorArguments.GetEnumerator();
 
@@ -864,7 +865,7 @@ namespace Roslynator.Documentation
                 }
             }
 
-            void AppendNamedArguments()
+            void WriteNamedArguments()
             {
                 ImmutableArray<KeyValuePair<string, TypedConstant>>.Enumerator en = attribute.NamedArguments.GetEnumerator();
 

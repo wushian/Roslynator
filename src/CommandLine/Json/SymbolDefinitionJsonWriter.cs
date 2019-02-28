@@ -4,18 +4,21 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Xml;
+using System.Text;
 using Microsoft.CodeAnalysis;
+using Newtonsoft.Json;
 using Roslynator.FindSymbols;
 
-namespace Roslynator.Documentation.Xml
+namespace Roslynator.Documentation.Json
 {
-    internal class SymbolDefinitionXmlWriter : SymbolDefinitionWriter
+    internal class SymbolDefinitionJsonWriter : SymbolDefinitionWriter
     {
-        private readonly XmlWriter _writer;
+        private readonly JsonWriter _writer;
+        private StringBuilder _attributeStringBuilder;
+        private SymbolDefinitionWriter _attributeWriter;
 
-        public SymbolDefinitionXmlWriter(
-            XmlWriter writer,
+        public SymbolDefinitionJsonWriter(
+            JsonWriter writer,
             SymbolFilterOptions filter = null,
             DefinitionListFormat format = null,
             SymbolDocumentationProvider documentationProvider = null) : base(filter, format, documentationProvider)
@@ -39,41 +42,37 @@ namespace Roslynator.Documentation.Xml
 
         public override void WriteStartDocument()
         {
-            _writer.WriteStartDocument();
-            WriteStartElement("root");
+            WriteStartObject();
         }
 
         public override void WriteEndDocument()
         {
-            WriteEndElement();
-            _writer.WriteEndDocument();
+            WriteEndObject();
         }
 
         public override void WriteStartAssemblies()
         {
-            WriteStartElement("assemblies");
+            WriteStartObject("assemblies");
         }
 
         public override void WriteEndAssemblies()
         {
-            WriteEndElement();
+            WriteEndObject();
         }
 
         public override void WriteStartAssembly(IAssemblySymbol assemblySymbol)
         {
-            WriteStartElement("assembly");
+            WriteStartObject("assembly");
         }
 
         public override void WriteAssembly(IAssemblySymbol assemblySymbol)
         {
-            WriteStartAttribute("name");
-            Write(assemblySymbol.Identity.ToString());
-            WriteEndAttribute();
+            WriteProperty("name", assemblySymbol.Identity.ToString());
         }
 
         public override void WriteEndAssembly(IAssemblySymbol assemblySymbol)
         {
-            WriteEndElement();
+            WriteEndObject();
         }
 
         public override void WriteAssemblySeparator()
@@ -82,33 +81,32 @@ namespace Roslynator.Documentation.Xml
 
         public override void WriteStartNamespaces()
         {
-            WriteStartElement("namespaces");
+            WriteStartObject("namespaces");
         }
 
         public override void WriteEndNamespaces()
         {
-            WriteEndElement();
+            WriteEndObject();
         }
 
         public override void WriteStartNamespace(INamespaceSymbol namespaceSymbol)
         {
-            WriteStartElement("namespace");
+            WriteStartObject("namespace");
         }
 
         public override void WriteNamespace(INamespaceSymbol namespaceSymbol, SymbolDisplayFormat format = null)
         {
-            WriteStartAttribute("name");
+            WritePropertyName("name");
 
             if (!namespaceSymbol.IsGlobalNamespace)
                 Write(namespaceSymbol, format ?? NamespaceFormat);
 
-            WriteEndAttribute();
             WriteDocumentationComment(namespaceSymbol);
         }
 
         public override void WriteEndNamespace(INamespaceSymbol namespaceSymbol)
         {
-            WriteEndElement();
+            WriteEndObject();
         }
 
         public override void WriteNamespaceSeparator()
@@ -117,26 +115,25 @@ namespace Roslynator.Documentation.Xml
 
         public override void WriteStartTypes()
         {
-            WriteStartElement("types");
+            WriteStartObject("types");
         }
 
         public override void WriteEndTypes()
         {
-            WriteEndElement();
+            WriteEndObject();
         }
 
         public override void WriteStartType(INamedTypeSymbol typeSymbol)
         {
-            WriteStartElement("type");
+            WriteStartObject("type");
         }
 
         public override void WriteType(INamedTypeSymbol typeSymbol, SymbolDisplayFormat format = null, SymbolDisplayTypeDeclarationOptions? typeDeclarationOptions = null)
         {
             if (typeSymbol != null)
             {
-                WriteStartAttribute("def");
+                WritePropertyName("def");
                 Write(typeSymbol, format ?? TypeFormat, typeDeclarationOptions);
-                WriteEndAttribute();
                 WriteDocumentationComment(typeSymbol);
 
                 if (Format.Includes(SymbolDefinitionPartFilter.Attributes))
@@ -144,13 +141,13 @@ namespace Roslynator.Documentation.Xml
             }
             else
             {
-                WriteAttributeString("def", "");
+                WriteProperty("def", "");
             }
         }
 
         public override void WriteEndType(INamedTypeSymbol typeSymbol)
         {
-            WriteEndElement();
+            WriteEndObject();
         }
 
         public override void WriteTypeSeparator()
@@ -159,17 +156,17 @@ namespace Roslynator.Documentation.Xml
 
         public override void WriteStartMembers()
         {
-            WriteStartElement("members");
+            WriteStartObject("members");
         }
 
         public override void WriteEndMembers()
         {
-            WriteEndElement();
+            WriteEndObject();
         }
 
         public override void WriteStartMember(ISymbol symbol)
         {
-            WriteStartElement("member");
+            WriteStartObject("member");
         }
 
         public override void WriteMember(ISymbol symbol, SymbolDisplayFormat format = null)
@@ -181,9 +178,8 @@ namespace Roslynator.Documentation.Xml
                     : MemberFormat;
             }
 
-            WriteStartAttribute("def");
+            WritePropertyName("def");
             Write(symbol, format);
-            WriteEndAttribute();
             WriteDocumentationComment(symbol);
 
             if (Format.Includes(SymbolDefinitionPartFilter.Attributes))
@@ -246,7 +242,7 @@ namespace Roslynator.Documentation.Xml
 
         public override void WriteEndMember(ISymbol symbol)
         {
-            WriteEndElement();
+            WriteEndObject();
         }
 
         public override void WriteMemberSeparator()
@@ -255,24 +251,23 @@ namespace Roslynator.Documentation.Xml
 
         public override void WriteStartEnumMembers()
         {
-            WriteStartElement("members");
+            WriteStartObject("members");
         }
 
         public override void WriteEndEnumMembers()
         {
-            WriteEndElement();
+            WriteEndObject();
         }
 
         public override void WriteStartEnumMember(ISymbol symbol)
         {
-            WriteStartElement("member");
+            WriteStartObject("member");
         }
 
         public override void WriteEnumMember(ISymbol symbol, SymbolDisplayFormat format = null)
         {
-            WriteStartAttribute("def");
+            WritePropertyName("def");
             Write(symbol, format ?? EnumMemberFormat);
-            WriteEndAttribute();
             WriteDocumentationComment(symbol);
 
             if (Format.Includes(SymbolDefinitionPartFilter.Attributes))
@@ -281,7 +276,7 @@ namespace Roslynator.Documentation.Xml
 
         public override void WriteEndEnumMember(ISymbol symbol)
         {
-            WriteEndElement();
+            WriteEndObject();
         }
 
         public override void WriteEnumMemberSeparator()
@@ -300,10 +295,8 @@ namespace Roslynator.Documentation.Xml
 
                         if (accessorName != null)
                         {
-                            WriteStartElement("accessor");
-                            WriteAttributeString("name", accessorName);
-                            WriteStartElement("attributes");
-                            return;
+                            WriteStartObject("accessor");
+                            WriteProperty("name", accessorName);
                         }
 
                         break;
@@ -312,14 +305,14 @@ namespace Roslynator.Documentation.Xml
                     {
                         var parameterSymbol = (IParameterSymbol)symbol;
 
-                        WriteStartElement("parameter");
-                        WriteAttributeString("name", parameterSymbol.Name);
-                        WriteStartElement("attributes");
-                        return;
+                        WritePropertyName("parameter");
+                        WriteProperty("name", parameterSymbol.Name);
+                        break;
                     }
             }
 
-            WriteStartElement("attributes");
+            WritePropertyName("attributes");
+            WriteStartArray();
 
             string GetAccessorName(IMethodSymbol methodSymbol)
             {
@@ -341,13 +334,13 @@ namespace Roslynator.Documentation.Xml
 
         public override void WriteEndAttributes(ISymbol symbol)
         {
-            WriteEndElement();
+            WriteEndArray();
 
             switch (symbol.Kind)
             {
                 case SymbolKind.Parameter:
                     {
-                        WriteEndElement();
+                        WriteEndObject();
                         break;
                     }
                 case SymbolKind.Method:
@@ -360,7 +353,7 @@ namespace Roslynator.Documentation.Xml
                             MethodKind.EventAdd,
                             MethodKind.EventRemove))
                         {
-                            WriteEndElement();
+                            WriteEndObject();
                         }
 
                         break;
@@ -370,16 +363,54 @@ namespace Roslynator.Documentation.Xml
 
         public override void WriteStartAttribute(AttributeData attribute, ISymbol symbol)
         {
-            WriteStartElement("attribute");
+        }
+
+        public override void WriteAttribute(AttributeData attribute)
+        {
+            if (_attributeWriter == null)
+            {
+                _attributeStringBuilder = new StringBuilder();
+                var stringWriter = new StringWriter(_attributeStringBuilder);
+                _attributeWriter = new SymbolDefinitionTextWriter(stringWriter, Filter, Format, DocumentationProvider);
+            }
+
+            _attributeWriter.WriteAttribute(attribute);
+
+            WriteValue(_attributeStringBuilder.ToString());
+
+            _attributeStringBuilder.Clear();
         }
 
         public override void WriteEndAttribute(AttributeData attribute, ISymbol symbol)
         {
-            WriteEndElement();
         }
 
         public override void WriteAttributeSeparator(ISymbol symbol)
         {
+        }
+
+        public override void Write(IEnumerable<SymbolDisplayPart> parts)
+        {
+            if (_attributeWriter == null)
+            {
+                _attributeStringBuilder = new StringBuilder();
+                var stringWriter = new StringWriter(_attributeStringBuilder);
+                _attributeWriter = new SymbolDefinitionTextWriter(stringWriter, Filter, Format, DocumentationProvider);
+            }
+
+            _attributeWriter.Write(parts);
+
+            WriteValue(_attributeStringBuilder.ToString());
+
+            _attributeStringBuilder.Clear();
+        }
+
+        public void WriteValue(string value)
+        {
+            Debug.Assert(value?.Contains("\n") != true, @"\n");
+            Debug.Assert(value?.Contains("\r") != true, @"\r");
+
+            _writer.WriteValue(value);
         }
 
         public override void Write(string value)
@@ -387,7 +418,7 @@ namespace Roslynator.Documentation.Xml
             Debug.Assert(value?.Contains("\n") != true, @"\n");
             Debug.Assert(value?.Contains("\r") != true, @"\r");
 
-            _writer.WriteString(value);
+            _writer.WriteRawValue(value);
         }
 
         public override void WriteLine()
@@ -400,76 +431,49 @@ namespace Roslynator.Documentation.Xml
             throw new InvalidOperationException();
         }
 
-        private void WriteStartElement(string localName)
+        private void WriteStartObject()
         {
-            _writer.WriteStartElement(localName);
+            _writer.WriteStartObject();
             IncreaseDepth();
         }
 
-        private void WriteStartAttribute(string localName)
+        private void WriteStartObject(string name)
         {
-            _writer.WriteStartAttribute(localName);
+            _writer.WritePropertyName(name);
+            WriteStartObject();
         }
 
-        private void WriteEndElement()
+        private void WriteEndObject()
         {
-            _writer.WriteEndElement();
+            _writer.WriteEndObject();
             DecreaseDepth();
         }
 
-        private void WriteEndAttribute()
+        private void WriteStartArray()
         {
-            _writer.WriteEndAttribute();
+            _writer.WriteStartArray();
+            IncreaseDepth();
         }
 
-        private void WriteAttributeString(string name, string value)
+        private void WriteEndArray()
         {
-            _writer.WriteAttributeString(name, value);
+            _writer.WriteEndArray();
+            DecreaseDepth();
+        }
+
+        private void WritePropertyName(string name)
+        {
+            _writer.WritePropertyName(name);
+        }
+
+        private void WriteProperty(string name, string value)
+        {
+            WritePropertyName(name);
+            Write(value);
         }
 
         public override void WriteDocumentationComment(ISymbol symbol)
         {
-            IEnumerable<string> elements = DocumentationProvider?.GetXmlDocumentation(symbol)?.GetElementsAsText(skipEmptyElement: true, makeSingleLine: true);
-
-            if (elements == null)
-                return;
-
-            using (IEnumerator<string> en = elements.GetEnumerator())
-            {
-                if (en.MoveNext())
-                {
-                    WriteStartElement("doc");
-                    do
-                    {
-                        WriteDocumentation(en.Current);
-                    }
-                    while (en.MoveNext());
-
-                    _writer.WriteWhitespace(_writer.Settings.NewLineChars);
-
-                    for (int i = 1; i < Depth; i++)
-                        _writer.WriteWhitespace(_writer.Settings.IndentChars);
-
-                    WriteEndElement();
-                }
-            }
-
-            void WriteDocumentation(string element)
-            {
-                using (var sr = new StringReader(element))
-                {
-                    string line = null;
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        _writer.WriteWhitespace(_writer.Settings.NewLineChars);
-
-                        for (int i = 0; i < Depth; i++)
-                            _writer.WriteWhitespace(_writer.Settings.IndentChars);
-
-                        _writer.WriteRaw(line);
-                    }
-                }
-            }
         }
     }
 }

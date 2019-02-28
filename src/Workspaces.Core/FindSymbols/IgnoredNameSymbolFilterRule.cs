@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 
-namespace Roslynator.FilterSymbols
+namespace Roslynator.FindSymbols
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     internal class IgnoredNameSymbolFilterRule : SymbolFilterRule

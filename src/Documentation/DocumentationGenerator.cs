@@ -257,10 +257,6 @@ namespace Roslynator.Documentation
 
             IEnumerable<INamedTypeSymbol> typeSymbols = DocumentationModel.Types.Where(f => !Options.ShouldBeIgnored(f));
 
-            IEnumerable<INamespaceSymbol> namespaceSymbols = typeSymbols
-                .Select(f => f.ContainingNamespace)
-                .Distinct(MetadataNameEqualityComparer<INamespaceSymbol>.Instance);
-
             foreach (RootDocumentationParts part in EnabledAndSortedRootParts)
             {
                 switch (part)
@@ -277,6 +273,10 @@ namespace Roslynator.Documentation
                         }
                     case RootDocumentationParts.Namespaces:
                         {
+                            IEnumerable<INamespaceSymbol> namespaceSymbols = typeSymbols
+                                .Select(f => f.ContainingNamespace)
+                                .Distinct(MetadataNameEqualityComparer<INamespaceSymbol>.Instance);
+
                             writer.WriteList(namespaceSymbols, Resources.NamespacesTitle, 2, SymbolDisplayFormats.TypeNameAndContainingTypesAndNamespaces);
                             break;
                         }

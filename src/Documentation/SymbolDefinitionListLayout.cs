@@ -2,10 +2,11 @@
 
 namespace Roslynator.Documentation
 {
+    //TODO: ClassHierarchy
     internal enum SymbolDefinitionListLayout
     {
         NamespaceList = 0,
         NamespaceHierarchy = 1,
-        TypeHierarchy = 2
+        TypeHierarchy = 2,
     }
 }

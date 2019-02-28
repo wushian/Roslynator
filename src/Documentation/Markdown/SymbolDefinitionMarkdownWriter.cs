@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using DotMarkdown;
 using Microsoft.CodeAnalysis;
-using Roslynator.FilterSymbols;
+using Roslynator.FindSymbols;
 
 namespace Roslynator.Documentation.Markdown
 {
