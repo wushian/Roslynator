@@ -34,7 +34,7 @@ namespace Roslynator.FindSymbols
 
         public ImmutableArray<AttributeFilterRule> AttributeRules { get; }
 
-        public bool IncludesSymbolGroup(SymbolGroupFilter symbolGroupFilter)
+        public bool Includes(SymbolGroupFilter symbolGroupFilter)
         {
             return (SymbolGroups & symbolGroupFilter) == symbolGroupFilter;
         }
@@ -110,7 +110,7 @@ namespace Roslynator.FindSymbols
             if (typeSymbol.IsImplicitlyDeclared)
                 return SymbolFilterReason.ImplicitlyDeclared;
 
-            if (!IncludesSymbolGroup(typeSymbol.TypeKind.ToSymbolGroupFilter()))
+            if (!Includes(typeSymbol.TypeKind.ToSymbolGroupFilter()))
                 return SymbolFilterReason.SymbolGroup;
 
             if (!typeSymbol.IsVisible(Visibility))
@@ -124,7 +124,7 @@ namespace Roslynator.FindSymbols
             if (symbol.IsImplicitlyDeclared)
                 return SymbolFilterReason.ImplicitlyDeclared;
 
-            if (!IncludesSymbolGroup(SymbolGroupFilter.Event))
+            if (!Includes(SymbolGroupFilter.Event))
                 return SymbolFilterReason.SymbolGroup;
 
             if (!symbol.IsVisible(Visibility))
@@ -149,7 +149,7 @@ namespace Roslynator.FindSymbols
                 group = SymbolGroupFilter.Field;
             }
 
-            if (!IncludesSymbolGroup(group))
+            if (!Includes(group))
                 return SymbolFilterReason.SymbolGroup;
 
             if (!symbol.IsVisible(Visibility))
@@ -163,7 +163,7 @@ namespace Roslynator.FindSymbols
             if (symbol.IsImplicitlyDeclared)
                 return SymbolFilterReason.ImplicitlyDeclared;
 
-            if (!IncludesSymbolGroup((symbol.IsIndexer) ? SymbolGroupFilter.Indexer : SymbolGroupFilter.Property))
+            if (!Includes((symbol.IsIndexer) ? SymbolGroupFilter.Indexer : SymbolGroupFilter.Property))
                 return SymbolFilterReason.SymbolGroup;
 
             if (!symbol.IsVisible(Visibility))
@@ -176,7 +176,7 @@ namespace Roslynator.FindSymbols
         {
             bool canBeImplicitlyDeclared = false;
 
-            if (!IncludesSymbolGroup(SymbolGroupFilter.Method))
+            if (!Includes(SymbolGroupFilter.Method))
                 return SymbolFilterReason.SymbolGroup;
 
             switch (symbol.MethodKind)

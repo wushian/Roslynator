@@ -9,7 +9,7 @@ namespace Roslynator.Documentation
 {
     internal class SymbolDefinitionTextWriter : AbstractSymbolDefinitionTextWriter
     {
-        private readonly TextWriter _writer;
+        private TextWriter _writer;
         private bool _pendingIndentation;
 
         public SymbolDefinitionTextWriter(
@@ -20,6 +20,8 @@ namespace Roslynator.Documentation
         {
             _writer = writer;
         }
+
+        public override bool SupportsDocumentationComments => true;
 
         public override void WriteStartNamespaces()
         {
@@ -109,6 +111,28 @@ namespace Roslynator.Documentation
                     {
                         WriteLine(line);
                         WriteIndentation();
+                    }
+                }
+            }
+        }
+
+        public override void Close()
+        {
+            if (_writer != null)
+            {
+                try
+                {
+                    _writer.Flush();
+                }
+                finally
+                {
+                    try
+                    {
+                        _writer.Dispose();
+                    }
+                    finally
+                    {
+                        _writer = null;
                     }
                 }
             }

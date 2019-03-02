@@ -37,11 +37,14 @@ namespace Roslynator.Documentation
             WriteIndentation();
         }
 
-        public override void WriteAssembly(IAssemblySymbol assemblySymbol)
+        public override void WriteAssemblyDefinition(IAssemblySymbol assemblySymbol)
         {
             Write("assembly ");
             WriteLine(assemblySymbol.Identity.ToString());
             IncreaseDepth();
+
+            if (Format.Includes(SymbolDefinitionPartFilter.AssemblyAttributes))
+                WriteAttributes(assemblySymbol);
         }
 
         public override void WriteEndAssembly(IAssemblySymbol assemblySymbol)
@@ -64,7 +67,7 @@ namespace Roslynator.Documentation
             WriteIndentation();
         }
 
-        public override void WriteNamespace(INamespaceSymbol namespaceSymbol, SymbolDisplayFormat format = null)
+        public override void WriteNamespaceDefinition(INamespaceSymbol namespaceSymbol, SymbolDisplayFormat format = null)
         {
             if (namespaceSymbol.IsGlobalNamespace)
                 return;
@@ -92,7 +95,7 @@ namespace Roslynator.Documentation
             WriteIndentation();
         }
 
-        public override void WriteType(INamedTypeSymbol typeSymbol, SymbolDisplayFormat format = null, SymbolDisplayTypeDeclarationOptions? typeDeclarationOptions = null)
+        public override void WriteTypeDefinition(INamedTypeSymbol typeSymbol, SymbolDisplayFormat format = null, SymbolDisplayTypeDeclarationOptions? typeDeclarationOptions = null)
         {
             if (typeSymbol != null)
             {
@@ -119,7 +122,7 @@ namespace Roslynator.Documentation
             WriteIndentation();
         }
 
-        public override void WriteMember(ISymbol symbol, SymbolDisplayFormat format = null)
+        public override void WriteMemberDefinition(ISymbol symbol, SymbolDisplayFormat format = null)
         {
             if (format == null)
             {
@@ -148,7 +151,7 @@ namespace Roslynator.Documentation
             WriteIndentation();
         }
 
-        public override void WriteEnumMember(ISymbol symbol, SymbolDisplayFormat format = null)
+        public override void WriteEnumMemberDefinition(ISymbol symbol, SymbolDisplayFormat format = null)
         {
             WriteDocumentationComment(symbol);
             Write(symbol, format ?? EnumMemberFormat);

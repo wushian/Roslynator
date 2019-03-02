@@ -10,7 +10,7 @@ namespace Roslynator.Documentation.Markdown
 {
     internal class SymbolDefinitionMarkdownWriter : AbstractSymbolDefinitionTextWriter
     {
-        private readonly MarkdownWriter _writer;
+        private MarkdownWriter _writer;
 
         public SymbolDefinitionMarkdownWriter(
             MarkdownWriter writer,
@@ -27,16 +27,24 @@ namespace Roslynator.Documentation.Markdown
 
         public override bool SupportsMultilineDefinitions => false;
 
+        public override bool SupportsDocumentationComments => false;
+
         public override void WriteStartAssembly(IAssemblySymbol assemblySymbol)
         {
             WriteStartBulletItem();
             base.WriteStartAssembly(assemblySymbol);
         }
 
-        public override void WriteAssembly(IAssemblySymbol assemblySymbol)
+        public override void WriteAssemblyDefinition(IAssemblySymbol assemblySymbol)
         {
-            base.WriteAssembly(assemblySymbol);
+            Write("assembly ");
+            WriteLine(assemblySymbol.Identity.ToString());
             WriteEndBulletItem();
+
+            IncreaseDepth();
+
+            if (Format.Includes(SymbolDefinitionPartFilter.AssemblyAttributes))
+                WriteAttributes(assemblySymbol);
         }
 
         public override void WriteAssemblySeparator()
@@ -53,9 +61,9 @@ namespace Roslynator.Documentation.Markdown
             base.WriteStartNamespace(namespaceSymbol);
         }
 
-        public override void WriteNamespace(INamespaceSymbol namespaceSymbol, SymbolDisplayFormat format = null)
+        public override void WriteNamespaceDefinition(INamespaceSymbol namespaceSymbol, SymbolDisplayFormat format = null)
         {
-            base.WriteNamespace(namespaceSymbol, format);
+            base.WriteNamespaceDefinition(namespaceSymbol, format);
             WriteEndBulletItem();
         }
 
@@ -73,9 +81,9 @@ namespace Roslynator.Documentation.Markdown
             base.WriteStartType(typeSymbol);
         }
 
-        public override void WriteType(INamedTypeSymbol typeSymbol, SymbolDisplayFormat format = null, SymbolDisplayTypeDeclarationOptions? typeDeclarationOptions = null)
+        public override void WriteTypeDefinition(INamedTypeSymbol typeSymbol, SymbolDisplayFormat format = null, SymbolDisplayTypeDeclarationOptions? typeDeclarationOptions = null)
         {
-            base.WriteType(typeSymbol, format, typeDeclarationOptions);
+            base.WriteTypeDefinition(typeSymbol, format, typeDeclarationOptions);
             WriteEndBulletItem();
         }
 
@@ -93,9 +101,9 @@ namespace Roslynator.Documentation.Markdown
             base.WriteStartMember(symbol);
         }
 
-        public override void WriteMember(ISymbol symbol, SymbolDisplayFormat format = null)
+        public override void WriteMemberDefinition(ISymbol symbol, SymbolDisplayFormat format = null)
         {
-            base.WriteMember(symbol, format);
+            base.WriteMemberDefinition(symbol, format);
             WriteEndBulletItem();
         }
 
@@ -113,9 +121,9 @@ namespace Roslynator.Documentation.Markdown
             base.WriteStartEnumMember(symbol);
         }
 
-        public override void WriteEnumMember(ISymbol symbol, SymbolDisplayFormat format = null)
+        public override void WriteEnumMemberDefinition(ISymbol symbol, SymbolDisplayFormat format = null)
         {
-            base.WriteEnumMember(symbol, format);
+            base.WriteEnumMemberDefinition(symbol, format);
             WriteEndBulletItem();
         }
 
@@ -232,6 +240,28 @@ namespace Roslynator.Documentation.Markdown
 
         public override void WriteDocumentationComment(ISymbol symbol)
         {
+        }
+
+        public override void Close()
+        {
+            if (_writer != null)
+            {
+                try
+                {
+                    _writer.Flush();
+                }
+                finally
+                {
+                    try
+                    {
+                        _writer.Dispose();
+                    }
+                    finally
+                    {
+                        _writer = null;
+                    }
+                }
+            }
         }
     }
 }

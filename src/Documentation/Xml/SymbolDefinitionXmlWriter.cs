@@ -2,17 +2,20 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using Microsoft.CodeAnalysis;
 using Roslynator.FindSymbols;
+using static Roslynator.Documentation.SymbolDefinitionWriterHelpers;
 
 namespace Roslynator.Documentation.Xml
 {
     internal class SymbolDefinitionXmlWriter : SymbolDefinitionWriter
     {
-        private readonly XmlWriter _writer;
+        private XmlWriter _writer;
 
         public SymbolDefinitionXmlWriter(
             XmlWriter writer,
@@ -24,6 +27,8 @@ namespace Roslynator.Documentation.Xml
         }
 
         public override bool SupportsMultilineDefinitions => false;
+
+        public override bool SupportsDocumentationComments => true;
 
         protected override SymbolDisplayFormat CreateNamespaceFormat(SymbolDisplayFormat format)
         {
@@ -64,11 +69,12 @@ namespace Roslynator.Documentation.Xml
             WriteStartElement("assembly");
         }
 
-        public override void WriteAssembly(IAssemblySymbol assemblySymbol)
+        public override void WriteAssemblyDefinition(IAssemblySymbol assemblySymbol)
         {
-            WriteStartAttribute("name");
-            Write(assemblySymbol.Identity.ToString());
-            WriteEndAttribute();
+            WriteAttributeString("name", assemblySymbol.Identity.ToString());
+
+            if (Format.Includes(SymbolDefinitionPartFilter.AssemblyAttributes))
+                WriteAttributes(assemblySymbol);
         }
 
         public override void WriteEndAssembly(IAssemblySymbol assemblySymbol)
@@ -95,7 +101,7 @@ namespace Roslynator.Documentation.Xml
             WriteStartElement("namespace");
         }
 
-        public override void WriteNamespace(INamespaceSymbol namespaceSymbol, SymbolDisplayFormat format = null)
+        public override void WriteNamespaceDefinition(INamespaceSymbol namespaceSymbol, SymbolDisplayFormat format = null)
         {
             WriteStartAttribute("name");
 
@@ -130,7 +136,7 @@ namespace Roslynator.Documentation.Xml
             WriteStartElement("type");
         }
 
-        public override void WriteType(INamedTypeSymbol typeSymbol, SymbolDisplayFormat format = null, SymbolDisplayTypeDeclarationOptions? typeDeclarationOptions = null)
+        public override void WriteTypeDefinition(INamedTypeSymbol typeSymbol, SymbolDisplayFormat format = null, SymbolDisplayTypeDeclarationOptions? typeDeclarationOptions = null)
         {
             if (typeSymbol != null)
             {
@@ -140,7 +146,10 @@ namespace Roslynator.Documentation.Xml
                 WriteDocumentationComment(typeSymbol);
 
                 if (Format.Includes(SymbolDefinitionPartFilter.Attributes))
+                {
                     WriteAttributes(typeSymbol);
+                    WriteParameters(GetParameters(typeSymbol));
+                }
             }
             else
             {
@@ -172,7 +181,7 @@ namespace Roslynator.Documentation.Xml
             WriteStartElement("member");
         }
 
-        public override void WriteMember(ISymbol symbol, SymbolDisplayFormat format = null)
+        public override void WriteMemberDefinition(ISymbol symbol, SymbolDisplayFormat format = null)
         {
             if (format == null)
             {
@@ -189,58 +198,10 @@ namespace Roslynator.Documentation.Xml
             if (Format.Includes(SymbolDefinitionPartFilter.Attributes))
             {
                 WriteAttributes(symbol);
+                WriteParameters(GetParameters(symbol));
 
-                switch (symbol.Kind)
-                {
-                    case SymbolKind.NamedType:
-                        {
-                            var typeSymbol = (INamedTypeSymbol)symbol;
-
-                            if (typeSymbol.TypeKind == TypeKind.Delegate)
-                            {
-                                foreach (IParameterSymbol parameterSymbol in typeSymbol.DelegateInvokeMethod.Parameters)
-                                    WriteAttributes(parameterSymbol);
-                            }
-
-                            break;
-                        }
-                    case SymbolKind.Event:
-                        {
-                            var eventSymbol = (IEventSymbol)symbol;
-
-                            if (eventSymbol.AddMethod != null)
-                                WriteAttributes(eventSymbol.AddMethod);
-
-                            if (eventSymbol.RemoveMethod != null)
-                                WriteAttributes(eventSymbol.RemoveMethod);
-
-                            break;
-                        }
-                    case SymbolKind.Method:
-                        {
-                            var methodSymbol = (IMethodSymbol)symbol;
-
-                            foreach (IParameterSymbol parameterSymbol in methodSymbol.Parameters)
-                                WriteAttributes(parameterSymbol);
-
-                            break;
-                        }
-                    case SymbolKind.Property:
-                        {
-                            var propertySymbol = (IPropertySymbol)symbol;
-
-                            foreach (IParameterSymbol parameterSymbol in propertySymbol.Parameters)
-                                WriteAttributes(parameterSymbol);
-
-                            if (propertySymbol.GetMethod != null)
-                                WriteAttributes(propertySymbol.GetMethod);
-
-                            if (propertySymbol.SetMethod != null)
-                                WriteAttributes(propertySymbol.SetMethod);
-
-                            break;
-                        }
-                }
+                (IMethodSymbol accessor1, IMethodSymbol accessor2) = GetAccessors(symbol);
+                WriteAccessors(accessor1, accessor2);
             }
         }
 
@@ -268,7 +229,7 @@ namespace Roslynator.Documentation.Xml
             WriteStartElement("member");
         }
 
-        public override void WriteEnumMember(ISymbol symbol, SymbolDisplayFormat format = null)
+        public override void WriteEnumMemberDefinition(ISymbol symbol, SymbolDisplayFormat format = null)
         {
             WriteStartAttribute("def");
             Write(symbol, format ?? EnumMemberFormat);
@@ -290,82 +251,12 @@ namespace Roslynator.Documentation.Xml
 
         public override void WriteStartAttributes(ISymbol symbol)
         {
-            switch (symbol.Kind)
-            {
-                case SymbolKind.Method:
-                    {
-                        var methodSymbol = (IMethodSymbol)symbol;
-
-                        string accessorName = GetAccessorName(methodSymbol);
-
-                        if (accessorName != null)
-                        {
-                            WriteStartElement("accessor");
-                            WriteAttributeString("name", accessorName);
-                            WriteStartElement("attributes");
-                            return;
-                        }
-
-                        break;
-                    }
-                case SymbolKind.Parameter:
-                    {
-                        var parameterSymbol = (IParameterSymbol)symbol;
-
-                        WriteStartElement("parameter");
-                        WriteAttributeString("name", parameterSymbol.Name);
-                        WriteStartElement("attributes");
-                        return;
-                    }
-            }
-
             WriteStartElement("attributes");
-
-            string GetAccessorName(IMethodSymbol methodSymbol)
-            {
-                switch (methodSymbol.MethodKind)
-                {
-                    case MethodKind.EventAdd:
-                        return "add";
-                    case MethodKind.EventRemove:
-                        return "remove";
-                    case MethodKind.PropertyGet:
-                        return "get";
-                    case MethodKind.PropertySet:
-                        return "set";
-                    default:
-                        return null;
-                }
-            }
         }
 
         public override void WriteEndAttributes(ISymbol symbol)
         {
             WriteEndElement();
-
-            switch (symbol.Kind)
-            {
-                case SymbolKind.Parameter:
-                    {
-                        WriteEndElement();
-                        break;
-                    }
-                case SymbolKind.Method:
-                    {
-                        var methodSymbol = (IMethodSymbol)symbol;
-
-                        if (methodSymbol.MethodKind.Is(
-                            MethodKind.PropertyGet,
-                            MethodKind.PropertySet,
-                            MethodKind.EventAdd,
-                            MethodKind.EventRemove))
-                        {
-                            WriteEndElement();
-                        }
-
-                        break;
-                    }
-            }
         }
 
         public override void WriteStartAttribute(AttributeData attribute, ISymbol symbol)
@@ -380,6 +271,74 @@ namespace Roslynator.Documentation.Xml
 
         public override void WriteAttributeSeparator(ISymbol symbol)
         {
+        }
+
+        private void WriteParameters(ImmutableArray<IParameterSymbol> parameters)
+        {
+            bool isOpen = false;
+
+            foreach (IParameterSymbol parameter in parameters)
+            {
+                if (parameter.GetAttributes().Any(f => Filter.IsMatch(parameter, f)))
+                {
+                    if (!isOpen)
+                    {
+                        WriteStartElement("parameters");
+                        isOpen = true;
+                    }
+
+                    WriteStartElement("parameter");
+                    WriteAttributeString("name", parameter.Name);
+                    WriteAttributes(parameter);
+                    WriteEndElement();
+                }
+            }
+
+            if (isOpen)
+                WriteEndElement();
+        }
+
+        private void WriteAccessors(IMethodSymbol accessor1, IMethodSymbol accessor2)
+        {
+            bool isOpen = false;
+
+            if (ShouldWriteAccessor(accessor1))
+            {
+                if (!isOpen)
+                {
+                    WriteStartElement("accessors");
+                    isOpen = true;
+                }
+
+                WriteAccessor(accessor1);
+            }
+
+            if (ShouldWriteAccessor(accessor2))
+            {
+                if (!isOpen)
+                {
+                    WriteStartElement("accessors");
+                    isOpen = true;
+                }
+
+                WriteAccessor(accessor2);
+            }
+
+            if (isOpen)
+                WriteEndElement();
+
+            bool ShouldWriteAccessor(IMethodSymbol accessor)
+            {
+                return accessor?.GetAttributes().Any(f => Filter.IsMatch(accessor, f)) == true;
+            }
+
+            void WriteAccessor(IMethodSymbol accessor)
+            {
+                WriteStartElement("accessor");
+                WriteAttributeString("name", GetAccessorName(accessor));
+                WriteAttributes(accessor);
+                WriteEndElement();
+            }
         }
 
         public override void Write(string value)
@@ -467,6 +426,28 @@ namespace Roslynator.Documentation.Xml
                             _writer.WriteWhitespace(_writer.Settings.IndentChars);
 
                         _writer.WriteRaw(line);
+                    }
+                }
+            }
+        }
+
+        public override void Close()
+        {
+            if (_writer != null)
+            {
+                try
+                {
+                    _writer.Flush();
+                }
+                finally
+                {
+                    try
+                    {
+                        _writer.Dispose();
+                    }
+                    finally
+                    {
+                        _writer = null;
                     }
                 }
             }
