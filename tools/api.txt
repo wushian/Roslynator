@@ -52,7 +52,6 @@ namespace Roslynator
   public static class DiagnosticsExtensions
 
     <summary>Report a <see cref="T:Microsoft.CodeAnalysis.Diagnostic" /> about a <see cref="T:Microsoft.CodeAnalysis.ISymbol" />.</summary>
-    <param name="descriptor">A <see cref="T:Microsoft.CodeAnalysis.DiagnosticDescriptor" /> describing the diagnostic.</param>
     public static void ReportDiagnostic(this SymbolAnalysisContext context, DiagnosticDescriptor descriptor, Location location, params object[] messageArgs);
     <summary>Report a <see cref="T:Microsoft.CodeAnalysis.Diagnostic" /> about a <see cref="T:Microsoft.CodeAnalysis.SyntaxNode" />.</summary>
     public static void ReportDiagnostic(this SyntaxNodeAnalysisContext context, DiagnosticDescriptor descriptor, Location location, params object[] messageArgs);
@@ -155,13 +154,13 @@ namespace Roslynator
     public static MetadataNameEqualityComparer<TSymbol> Instance { get; }
 
     <summary>When overridden in a derived class, determines whether two objects of type <typeparamref name="TSymbol" /> are equal.</summary>
-    <returns>true if the specified objects are equal; otherwise, false.</returns>
     <param name="x">The first object to compare.</param>
     <param name="y">The second object to compare.</param>
+    <returns>true if the specified objects are equal; otherwise, false.</returns>
     public override bool Equals(TSymbol x, TSymbol y);
     <summary>Serves as a hash function for the specified symbol.</summary>
-    <returns>A hash code for the specified symbol.</returns>
     <param name="obj">The symbol for which to get a hash code.</param>
+    <returns>A hash code for the specified symbol.</returns>
     <exception cref="T:System.ArgumentNullException"><paramref name="obj" /> is <c>null</c>.</exception>
     public override int GetHashCode(TSymbol obj);
 

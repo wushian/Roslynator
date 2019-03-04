@@ -1,11 +1,7 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using System.IO;
-using System.Text;
 using DotMarkdown;
 using Microsoft.CodeAnalysis;
 using Roslynator.FindSymbols;
@@ -15,8 +11,6 @@ namespace Roslynator.Documentation.Markdown
     internal class SymbolDefinitionMarkdownWriter : AbstractSymbolDefinitionTextWriter
     {
         private MarkdownWriter _writer;
-        private StringBuilder _attributeStringBuilder;
-        private SymbolDefinitionWriter _attributeWriter;
 
         public SymbolDefinitionMarkdownWriter(
             MarkdownWriter writer,
@@ -147,22 +141,6 @@ namespace Roslynator.Documentation.Markdown
             }
         }
 
-        public override void WriteAttribute(AttributeData attribute)
-        {
-            if (_attributeWriter == null)
-            {
-                _attributeStringBuilder = new StringBuilder();
-                var stringWriter = new StringWriter(_attributeStringBuilder);
-                _attributeWriter = new SymbolDefinitionTextWriter(stringWriter, Filter, Format, DocumentationProvider);
-            }
-
-            _attributeWriter.WriteAttribute(attribute);
-
-            _writer.WriteInlineCode(_attributeStringBuilder.ToString());
-
-            _attributeStringBuilder.Clear();
-        }
-
         public override void WriteEndAttributes(ISymbol symbol)
         {
             if (symbol.Kind == SymbolKind.Assembly)
@@ -223,22 +201,6 @@ namespace Roslynator.Documentation.Markdown
             }
         }
 
-        public override void Write(IEnumerable<SymbolDisplayPart> parts)
-        {
-            if (_attributeWriter == null)
-            {
-                _attributeStringBuilder = new StringBuilder();
-                var stringWriter = new StringWriter(_attributeStringBuilder);
-                _attributeWriter = new SymbolDefinitionTextWriter(stringWriter, Filter, Format, DocumentationProvider);
-            }
-
-            _attributeWriter.Write(parts);
-
-            _writer.WriteInlineCode(_attributeStringBuilder.ToString());
-
-            _attributeStringBuilder.Clear();
-        }
-
         public override void Write(SymbolDisplayPart part)
         {
             base.Write(part);
@@ -293,12 +255,10 @@ namespace Roslynator.Documentation.Markdown
                     try
                     {
                         _writer.Dispose();
-                        _attributeWriter.Dispose();
                     }
                     finally
                     {
                         _writer = null;
-                        _attributeWriter = null;
                     }
                 }
             }

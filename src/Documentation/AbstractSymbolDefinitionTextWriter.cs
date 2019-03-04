@@ -157,8 +157,9 @@ namespace Roslynator.Documentation
             Write(symbol, format ?? EnumMemberFormat);
 
             if (Format.Includes(SymbolDefinitionPartFilter.TrailingComma))
-                WriteLine(",");
+                Write(",");
 
+            WriteLine();
             IncreaseDepth();
         }
 

@@ -999,14 +999,23 @@ namespace Roslynator.Documentation
 
         public virtual void Write(ISymbol symbol, SymbolDisplayFormat format, SymbolDisplayTypeDeclarationOptions? typeDeclarationOptions = null, SymbolDisplayAdditionalOptions? additionalOptions = null)
         {
-            ImmutableArray<SymbolDisplayPart> parts = SymbolDefinitionDisplay.GetDisplayParts(
+            ImmutableArray<SymbolDisplayPart> parts = GetDisplayParts(symbol, format, typeDeclarationOptions, additionalOptions);
+
+            Write(parts);
+        }
+
+        private protected ImmutableArray<SymbolDisplayPart> GetDisplayParts(
+            ISymbol symbol,
+            SymbolDisplayFormat format,
+            SymbolDisplayTypeDeclarationOptions? typeDeclarationOptions,
+            SymbolDisplayAdditionalOptions? additionalOptions)
+        {
+            return SymbolDefinitionDisplay.GetDisplayParts(
                 symbol,
                 format,
                 typeDeclarationOptions: typeDeclarationOptions ?? GetTypeDeclarationOptions(),
                 additionalOptions: additionalOptions ?? GetAdditionalOptions(),
                 shouldDisplayAttribute: (s, a) => Filter.IsMatch(s, a));
-
-            Write(parts);
         }
 
         public virtual void Write(IEnumerable<SymbolDisplayPart> parts)

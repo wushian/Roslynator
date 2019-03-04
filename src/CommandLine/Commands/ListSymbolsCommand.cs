@@ -14,6 +14,7 @@ using DotMarkdown;
 using Microsoft.CodeAnalysis;
 using Newtonsoft.Json;
 using Roslynator.Documentation;
+using Roslynator.Documentation.Html;
 using Roslynator.Documentation.Json;
 using Roslynator.Documentation.Markdown;
 using Roslynator.Documentation.Xml;
@@ -125,9 +126,18 @@ namespace Roslynator.CommandLine
                     var xmlWriterSettings = new XmlWriterSettings() { Indent = true, IndentChars = Options.IndentChars };
 
                     using (XmlWriter xmlWriter = XmlWriter.Create(path, xmlWriterSettings))
+                    using (SymbolDefinitionWriter writer = new SymbolDefinitionXmlWriter(xmlWriter, SymbolFilterOptions, format, documentationProvider))
                     {
-                        SymbolDefinitionWriter writer = new SymbolDefinitionXmlWriter(xmlWriter, SymbolFilterOptions, format, documentationProvider);
+                        writer.WriteDocument(assemblies, cancellationToken);
+                    }
+                }
+                else if (string.Equals(extension, ".html", StringComparison.OrdinalIgnoreCase))
+                {
+                    var xmlWriterSettings = new XmlWriterSettings() { OmitXmlDeclaration = true, Indent = true, IndentChars = "" };
 
+                    using (XmlWriter xmlWriter = XmlWriter.Create(path, xmlWriterSettings))
+                    using (SymbolDefinitionWriter writer = new SymbolDefinitionHtmlWriter(xmlWriter, SymbolFilterOptions, format, documentationProvider))
+                    {
                         writer.WriteDocument(assemblies, cancellationToken);
                     }
                 }
@@ -138,9 +148,8 @@ namespace Roslynator.CommandLine
                     using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read))
                     using (var streamWriter = new StreamWriter(fileStream, Encodings.UTF8NoBom))
                     using (MarkdownWriter markdownWriter = MarkdownWriter.Create(streamWriter, markdownWriterSettings))
+                    using (SymbolDefinitionWriter writer = new SymbolDefinitionMarkdownWriter(markdownWriter, SymbolFilterOptions, format, rootDirectoryUrl: RootDirectoryUrl))
                     {
-                        SymbolDefinitionWriter writer = new SymbolDefinitionMarkdownWriter(markdownWriter, SymbolFilterOptions, format, rootDirectoryUrl: RootDirectoryUrl);
-
                         writer.WriteDocument(assemblies, cancellationToken);
                     }
                 }
@@ -163,9 +172,10 @@ namespace Roslynator.CommandLine
                             jsonWriter.Formatting = Newtonsoft.Json.Formatting.None;
                         }
 
-                        SymbolDefinitionWriter writer = new SymbolDefinitionJsonWriter(jsonWriter, SymbolFilterOptions, format, documentationProvider);
-
-                        writer.WriteDocument(assemblies, cancellationToken);
+                        using (SymbolDefinitionWriter writer = new SymbolDefinitionJsonWriter(jsonWriter, SymbolFilterOptions, format, documentationProvider))
+                        {
+                            writer.WriteDocument(assemblies, cancellationToken);
+                        }
                     }
                 }
                 else
@@ -277,12 +287,13 @@ namespace Roslynator.CommandLine
             DefinitionListFormat format,
             CancellationToken cancellationToken)
         {
-            SymbolDefinitionWriter textWriter = new SymbolDefinitionTextWriter(
+            using (SymbolDefinitionWriter textWriter = new SymbolDefinitionTextWriter(
                 ConsoleOut,
                 filter: SymbolFilterOptions,
-                format: format);
-
-            textWriter.WriteDocument(assemblies, cancellationToken);
+                format: format))
+            {
+                textWriter.WriteDocument(assemblies, cancellationToken);
+            }
 
             using (var jsonWriter = new JsonTextWriter(ConsoleOut))
             {
@@ -299,26 +310,31 @@ namespace Roslynator.CommandLine
                     jsonWriter.Formatting = Newtonsoft.Json.Formatting.None;
                 }
 
-                SymbolDefinitionWriter writer = new SymbolDefinitionJsonWriter(jsonWriter, SymbolFilterOptions, format, null);
-
-                writer.WriteDocument(assemblies, cancellationToken);
+                using (SymbolDefinitionWriter writer = new SymbolDefinitionJsonWriter(jsonWriter, SymbolFilterOptions, format, null))
+                {
+                    writer.WriteDocument(assemblies, cancellationToken);
+                }
             }
 
             WriteLine();
 
             using (XmlWriter xmlWriter = XmlWriter.Create(ConsoleOut, new XmlWriterSettings() { Indent = true, IndentChars = Options.IndentChars }))
+            using (SymbolDefinitionWriter writer = new SymbolDefinitionXmlWriter(xmlWriter, SymbolFilterOptions, format, new SymbolDocumentationProvider(compilations)))
             {
-                SymbolDefinitionWriter writer = new SymbolDefinitionXmlWriter(xmlWriter, SymbolFilterOptions, format, new SymbolDocumentationProvider(compilations));
-
                 writer.WriteDocument(assemblies, cancellationToken);
             }
 
             WriteLine();
 
-            using (MarkdownWriter markdownWriter = MarkdownWriter.Create(ConsoleOut))
-            {
-                SymbolDefinitionWriter writer = new SymbolDefinitionMarkdownWriter(markdownWriter, SymbolFilterOptions, format, null, RootDirectoryUrl);
+            using (XmlWriter xmlWriter = XmlWriter.Create(ConsoleOut, new XmlWriterSettings() { OmitXmlDeclaration = true, Indent = true, IndentChars = "" }))
+            using (SymbolDefinitionWriter writer = new SymbolDefinitionHtmlWriter(xmlWriter, SymbolFilterOptions, format))
+                writer.WriteDocument(assemblies, cancellationToken);
 
+            WriteLine();
+
+            using (MarkdownWriter markdownWriter = MarkdownWriter.Create(ConsoleOut))
+            using (SymbolDefinitionWriter writer = new SymbolDefinitionMarkdownWriter(markdownWriter, SymbolFilterOptions, format, null, RootDirectoryUrl))
+            {
                 writer.WriteDocument(assemblies, cancellationToken);
             }
 

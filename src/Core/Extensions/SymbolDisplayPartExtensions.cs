@@ -36,8 +36,23 @@ namespace Roslynator
                 case SymbolDisplayPartKind.DelegateName:
                 case SymbolDisplayPartKind.EnumName:
                 case SymbolDisplayPartKind.InterfaceName:
-                case SymbolDisplayPartKind.PropertyName:
                 case SymbolDisplayPartKind.StructName:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        internal static bool IsTypeOrNamespaceName(this SymbolDisplayPart part)
+        {
+            switch (part.Kind)
+            {
+                case SymbolDisplayPartKind.ClassName:
+                case SymbolDisplayPartKind.DelegateName:
+                case SymbolDisplayPartKind.EnumName:
+                case SymbolDisplayPartKind.InterfaceName:
+                case SymbolDisplayPartKind.StructName:
+                case SymbolDisplayPartKind.NamespaceName:
                     return true;
                 default:
                     return false;
