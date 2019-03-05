@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Xml;
+using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Roslynator.FindSymbols;
 
@@ -17,8 +19,13 @@ namespace Roslynator.Documentation.Html
         private bool _pendingIndentation;
         private ImmutableHashSet<IAssemblySymbol> _assemblies = ImmutableHashSet<IAssemblySymbol>.Empty;
 
-        private readonly SymbolDisplayFormat _namespaceFormat;
-        private readonly SymbolDisplayFormat _typeFormat;
+        private static readonly SymbolDisplayFormat _nameAndContainingTypes = new SymbolDisplayFormat(
+            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypes,
+            miscellaneousOptions: SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
+
+        private static readonly SymbolDisplayFormat _nameAndContainingTypesAndNamespaces = new SymbolDisplayFormat(
+            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
+            miscellaneousOptions: SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
 
         public SymbolDefinitionHtmlWriter(
             XmlWriter writer,
@@ -27,16 +34,6 @@ namespace Roslynator.Documentation.Html
             SymbolDocumentationProvider documentationProvider = null) : base(filter, format, documentationProvider)
         {
             _writer = writer;
-
-            _namespaceFormat = new SymbolDisplayFormat(
-                typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
-                miscellaneousOptions: SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
-
-            _typeFormat = new SymbolDisplayFormat(
-                typeQualificationStyle: (Format.Includes(SymbolDefinitionPartFilter.ContainingNamespace))
-                    ? SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces
-                    : SymbolDisplayTypeQualificationStyle.NameAndContainingTypes,
-                miscellaneousOptions: SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
         }
 
         public override bool SupportsMultilineDefinitions => true;
@@ -45,33 +42,33 @@ namespace Roslynator.Documentation.Html
 
         protected override SymbolDisplayFormat CreateNamespaceFormat(SymbolDisplayFormat format)
         {
-            return format.Update(
-                globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Included,
-                typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces);
+            return UpdateFormat(format);
         }
 
         protected override SymbolDisplayFormat CreateTypeFormat(SymbolDisplayFormat format)
         {
-            return format.Update(
-                globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Included,
-                typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
-                miscellaneousOptions: format.MiscellaneousOptions & ~SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
+            return UpdateFormat(format);
         }
 
         protected override SymbolDisplayFormat CreateMemberFormat(SymbolDisplayFormat format)
         {
+            return UpdateFormat(format);
+        }
+
+        private static SymbolDisplayFormat UpdateFormat(SymbolDisplayFormat format)
+        {
             return format.Update(
                 globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Included,
                 typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
                 miscellaneousOptions: format.MiscellaneousOptions & ~SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
         }
 
-        public override void WriteAssemblies(IEnumerable<IAssemblySymbol> assemblies, CancellationToken cancellationToken = default(CancellationToken))
+        public override void WriteDocument(IEnumerable<IAssemblySymbol> assemblies, CancellationToken cancellationToken = default(CancellationToken))
         {
             try
             {
                 _assemblies = assemblies.ToImmutableHashSet();
-                base.WriteAssemblies(assemblies, cancellationToken);
+                base.WriteDocument(assemblies, cancellationToken);
             }
             finally
             {
@@ -83,17 +80,11 @@ namespace Roslynator.Documentation.Html
         {
             _writer.WriteRaw(@"<!DOCTYPE html>
 ");
-
             WriteStartElement("html");
             WriteStartElement("head");
             WriteStartElement("meta");
             WriteAttributeString("charset", "utf-8");
             WriteEndElement();
-#if DEBUG
-            _writer.WriteRaw(@"<link href=""Styles/highlightjs/VisualStudio.css"" rel=""stylesheet"" type=""text/css"" />
-<script src=""Scripts/highlight.pack.js""></script>
-");
-#endif
             WriteEndElement();
             WriteStartElement("body");
             WriteStartElement("pre");
@@ -102,10 +93,6 @@ namespace Roslynator.Documentation.Html
         public override void WriteEndDocument()
         {
             WriteEndElement();
-#if DEBUG
-            _writer.WriteRaw(@"<script>hljs.initHighlightingOnLoad();</script>
-");
-#endif
             WriteEndElement();
             WriteEndElement();
             _writer.WriteEndDocument();
@@ -155,11 +142,10 @@ namespace Roslynator.Documentation.Html
 
         public override void WriteStartNamespace(INamespaceSymbol namespaceSymbol)
         {
-            WriteStartElement("a");
-            WriteStartAttribute("name");
-            WriteLocalLink(namespaceSymbol);
-            WriteEndAttribute();
-            WriteEndElement();
+            if (namespaceSymbol.IsGlobalNamespace)
+                return;
+
+            WriteLocalRef(namespaceSymbol);
             WriteStartCodeElement();
         }
 
@@ -201,11 +187,7 @@ namespace Roslynator.Documentation.Html
         {
             if (typeSymbol != null)
             {
-                WriteStartElement("a");
-                WriteStartAttribute("name");
-                WriteLocalLink(typeSymbol);
-                WriteEndAttribute();
-                WriteEndElement();
+                WriteLocalRef(typeSymbol);
                 WriteStartCodeElement();
             }
         }
@@ -370,6 +352,7 @@ namespace Roslynator.Documentation.Html
                 typeDeclarationOptions,
                 GetAdditionalOptions() & ~SymbolDisplayAdditionalOptions.OmitContainingNamespace);
 
+            bool canCreateLink = !symbol.IsKind(SymbolKind.Namespace, SymbolKind.NamedType);
             int i = 0;
             int j = 0;
 
@@ -394,24 +377,12 @@ namespace Roslynator.Documentation.Html
 
                         ISymbol symbol2 = parts[j].Symbol.OriginalDefinition;
 
-                        SymbolDisplayFormat format2 = (symbol2.IsKind(SymbolKind.Namespace))
-                            ? _namespaceFormat
-                            : _typeFormat;
+                        WriteSymbol(symbol2, canCreateLink: canCreateLink);
 
-                        if (symbol == symbol2)
+                        if (!canCreateLink
+                            && symbol == symbol2)
                         {
-                            Write(symbol2.ToDisplayParts(format2));
-                        }
-                        else
-                        {
-                            WriteStartElement("a");
-                            WriteStartAttribute("href");
-                            Write("#");
-                            WriteLocalLink(symbol2);
-                            WriteEndAttribute();
-
-                            Write(symbol2.ToDisplayParts(format2));
-                            WriteEndElement();
+                            canCreateLink = true;
                         }
 
                         i = j + 1;
@@ -433,6 +404,64 @@ namespace Roslynator.Documentation.Html
 
                 return default;
             }
+        }
+
+        private void WriteSymbol(ISymbol symbol, bool canCreateLink = true)
+        {
+            if (!canCreateLink)
+            {
+                SymbolDisplayFormat format = (symbol.IsKind(SymbolKind.Namespace) || Format.Includes(SymbolDefinitionPartFilter.ContainingNamespace))
+                    ? _nameAndContainingTypesAndNamespaces
+                    : _nameAndContainingTypes;
+
+                WriteSymbol(format);
+            }
+            else if (_assemblies.Contains(symbol.ContainingAssembly))
+            {
+                WriteStartElement("a");
+                WriteStartAttribute("href");
+                Write("#");
+                WriteLocalLink(symbol);
+                WriteEndAttribute();
+                WriteSymbol((symbol.IsKind(SymbolKind.Namespace)) ? _nameAndContainingTypesAndNamespaces : _nameAndContainingTypes);
+                WriteEndElement();
+            }
+            else
+            {
+                string url = WellKnownExternalUrlProviders.MicrosoftDocs.CreateUrl(symbol).Url;
+
+                if (url != null)
+                {
+                    WriteStartElement("a");
+                    WriteAttributeString("href", url);
+                    WriteSymbol((symbol.IsKind(SymbolKind.Namespace)) ? _nameAndContainingTypesAndNamespaces : _nameAndContainingTypes);
+                    WriteEndElement();
+                }
+                else
+                {
+                    SymbolDisplayFormat format = (symbol.IsKind(SymbolKind.Namespace) || Format.Includes(SymbolDefinitionPartFilter.ContainingNamespace))
+                        ? _nameAndContainingTypesAndNamespaces
+                        : _nameAndContainingTypes;
+
+                    WriteSymbol(format);
+                }
+            }
+
+            void WriteSymbol(SymbolDisplayFormat format)
+            {
+                ImmutableArray<SymbolDisplayPart> parts = symbol.ToDisplayParts(format);
+
+                base.Write(parts);
+            }
+        }
+
+        private void WriteLocalRef(ISymbol symbol)
+        {
+            WriteStartElement("a");
+            WriteStartAttribute("name");
+            WriteLocalLink(symbol);
+            WriteEndAttribute();
+            WriteEndElement();
         }
 
         private void WriteLocalLink(ISymbol symbol)
@@ -584,24 +613,116 @@ namespace Roslynator.Documentation.Html
 
         public override void WriteDocumentationComment(ISymbol symbol)
         {
-            IEnumerable<string> elements = DocumentationProvider?.GetXmlDocumentation(symbol)?.GetElementsAsText(skipEmptyElement: true, makeSingleLine: true);
+            IEnumerable<string> elementsText = DocumentationProvider?.GetXmlDocumentation(symbol)?.GetElementsAsText(skipEmptyElement: true, makeSingleLine: true);
 
-            if (elements == null)
+            if (elementsText == null)
                 return;
 
-            foreach (string element in elements)
-                WriteDocumentation(element);
-
-            void WriteDocumentation(string element)
+            foreach (string elementText in elementsText)
             {
-                using (var sr = new StringReader(element))
+                XElement element = XElement.Parse(elementText, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
+
+                Dictionary<int, List<XElement>> elementsByLine = null;
+
+                foreach (XElement e in element.Descendants())
                 {
+                    switch (XmlTagMapper.GetTagOrDefault(e.Name.LocalName))
+                    {
+                        case XmlTag.See:
+                        case XmlTag.ParamRef:
+                        case XmlTag.TypeParamRef:
+                            {
+                                int lineNumber = ((IXmlLineInfo)e).LineNumber;
+
+                                if (elementsByLine == null)
+                                    elementsByLine = new Dictionary<int, List<XElement>>();
+
+                                if (elementsByLine.ContainsKey(lineNumber))
+                                {
+                                    elementsByLine[lineNumber].Add(e);
+                                }
+                                else
+                                {
+                                    elementsByLine.Add(lineNumber, new List<XElement>() { e });
+                                }
+
+                                break;
+                            }
+                    }
+                }
+
+                using (var sr = new StringReader(elementText))
+                {
+                    int lineNumber = 1;
+
                     string line = null;
 
                     while ((line = sr.ReadLine()) != null)
                     {
-                        WriteLine(line);
+                        Write("/// ");
+
+                        if (elementsByLine != null
+                            && elementsByLine.TryGetValue(lineNumber, out List<XElement> elements))
+                        {
+                            int lastPos = 0;
+
+                            foreach (XElement e in elements.OrderBy(e => ((IXmlLineInfo)e).LinePosition))
+                            {
+                                int linePos = ((IXmlLineInfo)e).LinePosition - 2;
+
+                                switch (XmlTagMapper.GetTagOrDefault(e.Name.LocalName))
+                                {
+                                    case XmlTag.ParamRef:
+                                    case XmlTag.TypeParamRef:
+                                        {
+                                            string name = e.Attribute("name")?.Value;
+
+                                            if (name != null)
+                                            {
+                                                Write(line.Substring(lastPos, linePos - lastPos));
+                                                _writer.WriteElementString("b", name);
+                                            }
+
+                                            lastPos = linePos + e.ToString().Length;
+                                            break;
+                                        }
+                                    case XmlTag.See:
+                                        {
+                                            string commentId = e.Attribute("cref")?.Value;
+
+                                            if (commentId != null)
+                                            {
+                                                Write(line.Substring(lastPos, linePos - lastPos));
+
+                                                ISymbol s = DocumentationProvider.GetFirstSymbolForDeclarationId(commentId)?.OriginalDefinition;
+
+                                                if (s != null)
+                                                {
+                                                    WriteSymbol(s);
+                                                }
+                                                else
+                                                {
+                                                    Debug.Fail(commentId);
+                                                    _writer.WriteElementString("b", TextUtility.RemovePrefixFromDocumentationCommentId(commentId));
+                                                }
+                                            }
+
+                                            lastPos = linePos + e.ToString().Length;
+                                            break;
+                                        }
+                                }
+                            }
+
+                            WriteLine(line.Substring(lastPos));
+                        }
+                        else
+                        {
+                            WriteLine(line);
+                        }
+
                         WriteIndentation();
+
+                        lineNumber++;
                     }
                 }
             }

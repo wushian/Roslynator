@@ -1,0 +1,277 @@
+﻿assembly Roslynator.Core, Version=1.0.0.10, Culture=neutral, PublicKeyToken=3aeedfaf14b2cebf
+  [AssemblyCompany("Josef Pihrt")]
+  [AssemblyConfiguration("Debug")]
+  [AssemblyCopyright("Copyright (c) 2017-2018 Josef Pihrt")]
+  [AssemblyDescription("This library extends functionality of package Microsoft.CodeAnalysis.Common.")]
+  [AssemblyFileVersion("1.0.0.10")]
+  [AssemblyInformationalVersion("1.0.0.10")]
+  [AssemblyProduct("Roslynator.Core")]
+  [AssemblyTitle("Roslynator.Core")]
+  [AssemblyVersion("1.0.0.10")]
+  [TargetFramework(".NETStandard,Version=v1.3", FrameworkDisplayName = "")]
+
+assembly Roslynator.CSharp, Version=1.0.0.10, Culture=neutral, PublicKeyToken=390be46f77b79f52
+  [AssemblyCompany("Josef Pihrt")]
+  [AssemblyConfiguration("Debug")]
+  [AssemblyCopyright("Copyright (c) 2017-2018 Josef Pihrt")]
+  [AssemblyDescription("This library extends functionality of package Microsoft.CodeAnalysis.CSharp\n\nCommonly Used Types:\nRoslynator.CSharp.CSharpFactory\nRoslynator.CSharp.CSharpFacts\nRoslynator.CSharp.SyntaxInfo\nRoslynator.NameGenerator")]
+  [AssemblyFileVersion("1.0.0.10")]
+  [AssemblyInformationalVersion("1.0.0.10")]
+  [AssemblyProduct("Roslynator.CSharp")]
+  [AssemblyTitle("Roslynator.CSharp")]
+  [AssemblyVersion("1.0.0.10")]
+  [TargetFramework(".NETStandard,Version=v1.3", FrameworkDisplayName = "")]
+
+assembly Roslynator.CSharp.Workspaces, Version=1.0.0.10, Culture=neutral, PublicKeyToken=ec3f0c29a7973f23
+  [AssemblyCompany("Josef Pihrt")]
+  [AssemblyConfiguration("Debug")]
+  [AssemblyCopyright("Copyright (c) 2017-2018 Josef Pihrt")]
+  [AssemblyDescription("This library extends functionality of package Microsoft.CodeAnalysis.CSharp.Workspaces\n\nCommonly Used Types:\nRoslynator.CSharp.CSharpFactory\nRoslynator.CSharp.CSharpFacts\nRoslynator.CSharp.SyntaxInfo\nRoslynator.NameGenerator")]
+  [AssemblyFileVersion("1.0.0.10")]
+  [AssemblyInformationalVersion("1.0.0.10")]
+  [AssemblyProduct("Roslynator.CSharp.Workspaces")]
+  [AssemblyTitle("Roslynator.CSharp.Workspaces")]
+  [AssemblyVersion("1.0.0.10")]
+  [TargetFramework(".NETStandard,Version=v1.3", FrameworkDisplayName = "")]
+
+assembly Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, PublicKeyToken=be1ec334fe31b7bb
+  [AssemblyCompany("Josef Pihrt")]
+  [AssemblyConfiguration("Debug")]
+  [AssemblyCopyright("Copyright (c) 2017-2018 Josef Pihrt")]
+  [AssemblyDescription("This library extends functionality of package Microsoft.CodeAnalysis.Workspaces.Common.")]
+  [AssemblyFileVersion("1.0.0.10")]
+  [AssemblyInformationalVersion("1.0.0.10")]
+  [AssemblyProduct("Roslynator.Workspaces.Core")]
+  [AssemblyTitle("Roslynator.Workspaces.Core")]
+  [AssemblyVersion("1.0.0.10")]
+  [TargetFramework(".NETStandard,Version=v1.3", FrameworkDisplayName = "")]
+
+namespace Roslynator
+
+  <summary>A set of extension methods for <see cref="T:Microsoft.CodeAnalysis.Diagnostics.SymbolAnalysisContext" />, <see cref="T:Microsoft.CodeAnalysis.Diagnostics.SyntaxNodeAnalysisContext" /> and <see cref="T:Microsoft.CodeAnalysis.Diagnostics.SyntaxTreeAnalysisContext" />.</summary>
+  public static class DiagnosticsExtensions
+
+  <summary>A set of extension methods for enumerations.</summary>
+  public static class EnumExtensions
+
+  <summary>A set of extension methods for <see cref="T:Microsoft.CodeAnalysis.FileLinePositionSpan" />.</summary>
+  public static class FileLinePositionSpanExtensions
+
+  <summary>
+  Provides equality comparison for <typeparamref name="TSymbol" /> by comparing <see cref="P:Microsoft.CodeAnalysis.ISymbol.MetadataName" />,
+  metadata name of <see cref="P:Microsoft.CodeAnalysis.ISymbol.ContainingType" />(s) and metadata name of <see cref="P:Microsoft.CodeAnalysis.ISymbol.ContainingNamespace" />(s).
+  </summary>
+  public sealed class MetadataNameEqualityComparer<TSymbol> : EqualityComparer<TSymbol> where TSymbol : ISymbol
+
+  <summary>Provides methods to obtain an unique identifier.</summary>
+  public abstract class NameGenerator
+
+  <summary>A set of extension methods for a <see cref="T:Microsoft.CodeAnalysis.SemanticModel" />.</summary>
+  public static class SemanticModelExtensions
+
+  <summary>Represents selected nodes in a <see cref="T:Microsoft.CodeAnalysis.SeparatedSyntaxList`1" />.</summary>
+  public class SeparatedSyntaxListSelection<TNode> : ISelection<TNode> where TNode : SyntaxNode
+
+    public struct Enumerator
+
+  <summary>A set of extension methods for <see cref="T:Microsoft.CodeAnalysis.ISymbol" /> and its derived types.</summary>
+  public static class SymbolExtensions
+
+  <summary>A set of extension method for a syntax.</summary>
+  public static class SyntaxExtensions
+
+  <summary>Represents selected nodes in a <see cref="T:Microsoft.CodeAnalysis.SyntaxList`1" />.</summary>
+  public class SyntaxListSelection<TNode> : ISelection<TNode> where TNode : SyntaxNode
+
+    public struct Enumerator
+
+  <summary>A set of extension methods for <see cref="T:Microsoft.CodeAnalysis.SyntaxTree" />.</summary>
+  public static class SyntaxTreeExtensions
+
+  <summary>A set of extension methods for the workspace layer.</summary>
+  public static class WorkspaceExtensions
+
+  <summary>Represents an extension method symbol.</summary>
+  public readonly struct ExtensionMethodSymbolInfo : IEquatable<ExtensionMethodSymbolInfo>
+
+  <summary>Represents fully qualified metadata name of a symbol.</summary>
+  public readonly struct MetadataName : IEquatable<MetadataName>
+
+  <summary>Represents consecutive sequence of selected items in a collection.</summary>
+  public interface ISelection<T> : IReadOnlyList<T>
+
+  <summary>Specifies visibility of a symbol.</summary>
+  public enum Visibility
+
+namespace Roslynator.CSharp
+
+  <summary>A set of extension methods for a <see cref="T:Microsoft.CodeAnalysis.SemanticModel" />.</summary>
+  public static class CSharpExtensions
+
+  <summary>A factory for syntax nodes, tokens and trivia. This class is built on top of <see cref="T:Microsoft.CodeAnalysis.CSharp.SyntaxFactory" /> members.</summary>
+  public static class CSharpFactory
+
+  public static class CSharpFacts
+
+  <summary>A set of extension methods for enumerations.</summary>
+  public static class EnumExtensions
+
+  <summary>Represents selected member declarations in a <see cref="T:Microsoft.CodeAnalysis.SyntaxList`1" />.</summary>
+  public sealed class MemberDeclarationListSelection : SyntaxListSelection<MemberDeclarationSyntax>
+
+  <summary>A set of static methods that allows manipulation with modifiers.</summary>
+  public static class ModifierList
+
+  <summary>Represents a list of modifiers.</summary>
+  public abstract class ModifierList<TNode> where TNode : SyntaxNode
+
+  <summary>Serves as a factory for a modifier list.</summary>
+  public static class Modifiers
+
+  <summary>Represents selected statements in a <see cref="T:Microsoft.CodeAnalysis.SyntaxList`1" />.</summary>
+  public sealed class StatementListSelection : SyntaxListSelection<StatementSyntax>
+
+  <summary>A set of static methods for <see cref="T:Microsoft.CodeAnalysis.ISymbol" /> and derived types.</summary>
+  public static class SymbolExtensions
+
+  <summary>A set of static methods that are related to C# accessibility.</summary>
+  public static class SyntaxAccessibility
+
+  <summary>A set of extension methods for syntax (types derived from <see cref="T:Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode" />).</summary>
+  public static class SyntaxExtensions
+
+  <summary>Serves as a factory for types in Roslynator.CSharp.Syntax namespace.</summary>
+  public static class SyntaxInfo
+
+  <summary>Provides static methods for syntax inversion.</summary>
+  public static class SyntaxInverter
+
+  <summary>A set of extension methods for the workspace layer.</summary>
+  public static class WorkspaceExtensions
+
+  <summary>A set of extension methods for syntax. These methods are dependent on the workspace layer.</summary>
+  public static class WorkspaceSyntaxExtensions
+
+  <summary>Enables to enumerate expressions of a binary expression and expressions of nested binary expressions of the same kind as parent binary expression.</summary>
+  public readonly struct ExpressionChain : IEnumerable<ExpressionSyntax>, IEquatable<ExpressionChain>
+
+    public struct Enumerator
+
+    <summary>Enables to enumerate expressions of <see cref="T:Roslynator.CSharp.ExpressionChain" /> in a reversed order.</summary>
+    public readonly struct Reversed : IEnumerable<ExpressionSyntax>, IEquatable<ExpressionChain.Reversed>
+
+      public struct Enumerator
+
+  <summary>Enables to enumerate if statement cascade.</summary>
+  public readonly struct IfStatementCascade : IEnumerable<IfStatementOrElseClause>, IEquatable<IfStatementCascade>
+
+    public struct Enumerator
+
+  <summary>Summarizes information about <see cref="T:Roslynator.CSharp.IfStatementCascade" />.</summary>
+  public readonly struct IfStatementCascadeInfo : IEquatable<IfStatementCascadeInfo>
+
+  <summary>A wrapper for either an <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.IfStatementSyntax" /> or an <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.ElseClauseSyntax" />.</summary>
+  public readonly struct IfStatementOrElseClause : IEquatable<IfStatementOrElseClause>
+
+  <summary>Specifies C# comments.</summary>
+  [Flags]
+  public enum CommentKinds
+
+  <summary>Specifies C# modifier.</summary>
+  [Flags]
+  public enum ModifierKinds
+
+  <summary>Specifies a null check.</summary>
+  [Flags]
+  public enum NullCheckStyles
+
+  <summary>Specifies C# preprocessor directives.</summary>
+  [Flags]
+  public enum PreprocessorDirectiveKinds
+
+namespace Roslynator.CSharp.Syntax
+
+  <summary>Provides information about "as" expression.</summary>
+  public readonly struct AsExpressionInfo : IEquatable<AsExpressionInfo>
+
+  <summary>Provides information about simple assignment expression.</summary>
+  public readonly struct AssignmentExpressionInfo : IEquatable<AssignmentExpressionInfo>
+
+  <summary>Provides information about binary expression.</summary>
+  public readonly struct BinaryExpressionInfo : IEquatable<BinaryExpressionInfo>
+
+  <summary>Provides information about conditional expression.</summary>
+  public readonly struct ConditionalExpressionInfo : IEquatable<ConditionalExpressionInfo>
+
+  <summary>Provides information about generic syntax (class, struct, interface, delegate, method or local function).</summary>
+  public readonly struct GenericInfo : IEquatable<GenericInfo>
+
+  <summary>Provides information about "is" expression.</summary>
+  public readonly struct IsExpressionInfo : IEquatable<IsExpressionInfo>
+
+  <summary>Provides information about local declaration statement.</summary>
+  public readonly struct LocalDeclarationStatementInfo : IEquatable<LocalDeclarationStatementInfo>
+
+  <summary>Provides information about a list of member declaration list.</summary>
+  public readonly struct MemberDeclarationListInfo : IEquatable<MemberDeclarationListInfo>, IReadOnlyList<MemberDeclarationSyntax>
+
+  <summary>Provides information about modifier list.</summary>
+  public readonly struct ModifierListInfo : IEquatable<ModifierListInfo>
+
+  <summary>Provides information about a null check expression.</summary>
+  public readonly struct NullCheckExpressionInfo : IEquatable<NullCheckExpressionInfo>
+
+  <summary>Provides information about a region.</summary>
+  public readonly struct RegionInfo : IEquatable<RegionInfo>
+
+  <summary>Provides information about simple assignment expression.</summary>
+  public readonly struct SimpleAssignmentExpressionInfo : IEquatable<SimpleAssignmentExpressionInfo>
+
+  <summary>Provides information about a simple assignment expression in an expression statement.</summary>
+  public readonly struct SimpleAssignmentStatementInfo : IEquatable<SimpleAssignmentStatementInfo>
+
+  <summary>
+  Provides information about a simple if-else.
+  Simple if-else is defined as follows: it is not a child of an else clause and it has an else clause and the else clause does not continue with another if statement.
+  </summary>
+  public readonly struct SimpleIfElseInfo : IEquatable<SimpleIfElseInfo>
+
+  <summary>
+  Provides information about a simple if statement.
+  Simple if statement is defined as follows: it is not a child of an else clause and it has no else clause.
+  </summary>
+  public readonly struct SimpleIfStatementInfo : IEquatable<SimpleIfStatementInfo>
+
+  <summary>Provides information about invocation expression.</summary>
+  public readonly struct SimpleMemberInvocationExpressionInfo : IEquatable<SimpleMemberInvocationExpressionInfo>
+
+  <summary>Provides information about invocation expression in an expression statement.</summary>
+  public readonly struct SimpleMemberInvocationStatementInfo : IEquatable<SimpleMemberInvocationStatementInfo>
+
+  <summary>Provides information about a local declaration statement with a single variable.</summary>
+  public readonly struct SingleLocalDeclarationStatementInfo : IEquatable<SingleLocalDeclarationStatementInfo>
+
+  <summary>Provides information about a lambda expression with a single parameter.</summary>
+  public readonly struct SingleParameterLambdaExpressionInfo : IEquatable<SingleParameterLambdaExpressionInfo>
+
+  <summary>Provides information about a list of statements.</summary>
+  public readonly struct StatementListInfo : IEquatable<StatementListInfo>, IReadOnlyList<StatementSyntax>
+
+  <summary>Provides information about string concatenation, i.e. a binary expression that binds to string '+' operator.</summary>
+  public readonly struct StringConcatenationExpressionInfo : IEquatable<StringConcatenationExpressionInfo>
+
+  <summary>Provides information about string literal expression.</summary>
+  public readonly struct StringLiteralExpressionInfo : IEquatable<StringLiteralExpressionInfo>
+
+  <summary>Provides information about a list of using directives.</summary>
+  public readonly struct UsingDirectiveListInfo : IEquatable<UsingDirectiveListInfo>, IReadOnlyList<UsingDirectiveSyntax>
+
+  <summary>Provides information about a <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax" /> or <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.XmlEmptyElementSyntax" />.</summary>
+  public readonly struct XmlElementInfo : IEquatable<XmlElementInfo>
+
+namespace Roslynator.Text
+
+  <summary>Represents selected lines in a <see cref="T:Microsoft.CodeAnalysis.Text.TextLineCollection" />.</summary>
+  public class TextLineCollectionSelection : ISelection<TextLine>
+
+    public struct Enumerator

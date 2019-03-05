@@ -1,0 +1,202 @@
+{
+  "assemblies": [
+    {
+      "assembly": "Roslynator.Core, Version=1.0.0.10, Culture=neutral, PublicKeyToken=3aeedfaf14b2cebf",
+      "attributes": [
+        "AssemblyCompany(\"Josef Pihrt\")",
+        "AssemblyConfiguration(\"Debug\")",
+        "AssemblyCopyright(\"Copyright (c) 2017-2018 Josef Pihrt\")",
+        "AssemblyDescription(\"This library extends functionality of package Microsoft.CodeAnalysis.Common.\")",
+        "AssemblyFileVersion(\"1.0.0.10\")",
+        "AssemblyInformationalVersion(\"1.0.0.10\")",
+        "AssemblyProduct(\"Roslynator.Core\")",
+        "AssemblyTitle(\"Roslynator.Core\")",
+        "AssemblyVersion(\"1.0.0.10\")",
+        "TargetFramework(\".NETStandard,Version=v1.3\", FrameworkDisplayName = \"\")"
+      ]
+    },
+    {
+      "assembly": "Roslynator.CSharp, Version=1.0.0.10, Culture=neutral, PublicKeyToken=390be46f77b79f52",
+      "attributes": [
+        "AssemblyCompany(\"Josef Pihrt\")",
+        "AssemblyConfiguration(\"Debug\")",
+        "AssemblyCopyright(\"Copyright (c) 2017-2018 Josef Pihrt\")",
+        "AssemblyDescription(\"This library extends functionality of package Microsoft.CodeAnalysis.CSharp\\n\\nCommonly Used Types:\\nRoslynator.CSharp.CSharpFactory\\nRoslynator.CSharp.CSharpFacts\\nRoslynator.CSharp.SyntaxInfo\\nRoslynator.NameGenerator\")",
+        "AssemblyFileVersion(\"1.0.0.10\")",
+        "AssemblyInformationalVersion(\"1.0.0.10\")",
+        "AssemblyProduct(\"Roslynator.CSharp\")",
+        "AssemblyTitle(\"Roslynator.CSharp\")",
+        "AssemblyVersion(\"1.0.0.10\")",
+        "TargetFramework(\".NETStandard,Version=v1.3\", FrameworkDisplayName = \"\")"
+      ]
+    },
+    {
+      "assembly": "Roslynator.CSharp.Workspaces, Version=1.0.0.10, Culture=neutral, PublicKeyToken=ec3f0c29a7973f23",
+      "attributes": [
+        "AssemblyCompany(\"Josef Pihrt\")",
+        "AssemblyConfiguration(\"Debug\")",
+        "AssemblyCopyright(\"Copyright (c) 2017-2018 Josef Pihrt\")",
+        "AssemblyDescription(\"This library extends functionality of package Microsoft.CodeAnalysis.CSharp.Workspaces\\n\\nCommonly Used Types:\\nRoslynator.CSharp.CSharpFactory\\nRoslynator.CSharp.CSharpFacts\\nRoslynator.CSharp.SyntaxInfo\\nRoslynator.NameGenerator\")",
+        "AssemblyFileVersion(\"1.0.0.10\")",
+        "AssemblyInformationalVersion(\"1.0.0.10\")",
+        "AssemblyProduct(\"Roslynator.CSharp.Workspaces\")",
+        "AssemblyTitle(\"Roslynator.CSharp.Workspaces\")",
+        "AssemblyVersion(\"1.0.0.10\")",
+        "TargetFramework(\".NETStandard,Version=v1.3\", FrameworkDisplayName = \"\")"
+      ]
+    },
+    {
+      "assembly": "Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, PublicKeyToken=be1ec334fe31b7bb",
+      "attributes": [
+        "AssemblyCompany(\"Josef Pihrt\")",
+        "AssemblyConfiguration(\"Debug\")",
+        "AssemblyCopyright(\"Copyright (c) 2017-2018 Josef Pihrt\")",
+        "AssemblyDescription(\"This library extends functionality of package Microsoft.CodeAnalysis.Workspaces.Common.\")",
+        "AssemblyFileVersion(\"1.0.0.10\")",
+        "AssemblyInformationalVersion(\"1.0.0.10\")",
+        "AssemblyProduct(\"Roslynator.Workspaces.Core\")",
+        "AssemblyTitle(\"Roslynator.Workspaces.Core\")",
+        "AssemblyVersion(\"1.0.0.10\")",
+        "TargetFramework(\".NETStandard,Version=v1.3\", FrameworkDisplayName = \"\")"
+      ]
+    }
+  ],
+  "namespaces": [
+    {
+      "namespace": "Roslynator",
+      "types": [
+        "public static class DiagnosticsExtensions",
+        "public static class EnumExtensions",
+        "public static class FileLinePositionSpanExtensions",
+        "public sealed class MetadataNameEqualityComparer<TSymbol> : EqualityComparer<TSymbol> where TSymbol : ISymbol",
+        "public abstract class NameGenerator",
+        "public static class SemanticModelExtensions",
+        {
+          "type": "public class SeparatedSyntaxListSelection<TNode> : ISelection<TNode> where TNode : SyntaxNode",
+          "types": [
+            "public struct Enumerator"
+          ]
+        },
+        "public static class SymbolExtensions",
+        "public static class SyntaxExtensions",
+        {
+          "type": "public class SyntaxListSelection<TNode> : ISelection<TNode> where TNode : SyntaxNode",
+          "types": [
+            "public struct Enumerator"
+          ]
+        },
+        "public static class SyntaxTreeExtensions",
+        "public static class WorkspaceExtensions",
+        "public readonly struct ExtensionMethodSymbolInfo : IEquatable<ExtensionMethodSymbolInfo>",
+        "public readonly struct MetadataName : IEquatable<MetadataName>",
+        "public interface ISelection<T> : IReadOnlyList<T>",
+        "public enum Visibility"
+      ]
+    },
+    {
+      "namespace": "Roslynator.CSharp",
+      "types": [
+        "public static class CSharpExtensions",
+        "public static class CSharpFactory",
+        "public static class CSharpFacts",
+        "public static class EnumExtensions",
+        "public sealed class MemberDeclarationListSelection : SyntaxListSelection<MemberDeclarationSyntax>",
+        "public static class ModifierList",
+        "public abstract class ModifierList<TNode> where TNode : SyntaxNode",
+        "public static class Modifiers",
+        "public sealed class StatementListSelection : SyntaxListSelection<StatementSyntax>",
+        "public static class SymbolExtensions",
+        "public static class SyntaxAccessibility",
+        "public static class SyntaxExtensions",
+        "public static class SyntaxInfo",
+        "public static class SyntaxInverter",
+        "public static class WorkspaceExtensions",
+        "public static class WorkspaceSyntaxExtensions",
+        {
+          "type": "public readonly struct ExpressionChain : IEnumerable<ExpressionSyntax>, IEquatable<ExpressionChain>",
+          "types": [
+            "public struct Enumerator",
+            {
+              "type": "public readonly struct Reversed : IEnumerable<ExpressionSyntax>, IEquatable<ExpressionChain.Reversed>",
+              "types": [
+                "public struct Enumerator"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "public readonly struct IfStatementCascade : IEnumerable<IfStatementOrElseClause>, IEquatable<IfStatementCascade>",
+          "types": [
+            "public struct Enumerator"
+          ]
+        },
+        "public readonly struct IfStatementCascadeInfo : IEquatable<IfStatementCascadeInfo>",
+        "public readonly struct IfStatementOrElseClause : IEquatable<IfStatementOrElseClause>",
+        {
+          "type": "public enum CommentKinds",
+          "attributes": [
+            "Flags"
+          ]
+        },
+        {
+          "type": "public enum ModifierKinds",
+          "attributes": [
+            "Flags"
+          ]
+        },
+        {
+          "type": "public enum NullCheckStyles",
+          "attributes": [
+            "Flags"
+          ]
+        },
+        {
+          "type": "public enum PreprocessorDirectiveKinds",
+          "attributes": [
+            "Flags"
+          ]
+        }
+      ]
+    },
+    {
+      "namespace": "Roslynator.CSharp.Syntax",
+      "types": [
+        "public readonly struct AsExpressionInfo : IEquatable<AsExpressionInfo>",
+        "public readonly struct AssignmentExpressionInfo : IEquatable<AssignmentExpressionInfo>",
+        "public readonly struct BinaryExpressionInfo : IEquatable<BinaryExpressionInfo>",
+        "public readonly struct ConditionalExpressionInfo : IEquatable<ConditionalExpressionInfo>",
+        "public readonly struct GenericInfo : IEquatable<GenericInfo>",
+        "public readonly struct IsExpressionInfo : IEquatable<IsExpressionInfo>",
+        "public readonly struct LocalDeclarationStatementInfo : IEquatable<LocalDeclarationStatementInfo>",
+        "public readonly struct MemberDeclarationListInfo : IEquatable<MemberDeclarationListInfo>, IReadOnlyList<MemberDeclarationSyntax>",
+        "public readonly struct ModifierListInfo : IEquatable<ModifierListInfo>",
+        "public readonly struct NullCheckExpressionInfo : IEquatable<NullCheckExpressionInfo>",
+        "public readonly struct RegionInfo : IEquatable<RegionInfo>",
+        "public readonly struct SimpleAssignmentExpressionInfo : IEquatable<SimpleAssignmentExpressionInfo>",
+        "public readonly struct SimpleAssignmentStatementInfo : IEquatable<SimpleAssignmentStatementInfo>",
+        "public readonly struct SimpleIfElseInfo : IEquatable<SimpleIfElseInfo>",
+        "public readonly struct SimpleIfStatementInfo : IEquatable<SimpleIfStatementInfo>",
+        "public readonly struct SimpleMemberInvocationExpressionInfo : IEquatable<SimpleMemberInvocationExpressionInfo>",
+        "public readonly struct SimpleMemberInvocationStatementInfo : IEquatable<SimpleMemberInvocationStatementInfo>",
+        "public readonly struct SingleLocalDeclarationStatementInfo : IEquatable<SingleLocalDeclarationStatementInfo>",
+        "public readonly struct SingleParameterLambdaExpressionInfo : IEquatable<SingleParameterLambdaExpressionInfo>",
+        "public readonly struct StatementListInfo : IEquatable<StatementListInfo>, IReadOnlyList<StatementSyntax>",
+        "public readonly struct StringConcatenationExpressionInfo : IEquatable<StringConcatenationExpressionInfo>",
+        "public readonly struct StringLiteralExpressionInfo : IEquatable<StringLiteralExpressionInfo>",
+        "public readonly struct UsingDirectiveListInfo : IEquatable<UsingDirectiveListInfo>, IReadOnlyList<UsingDirectiveSyntax>",
+        "public readonly struct XmlElementInfo : IEquatable<XmlElementInfo>"
+      ]
+    },
+    {
+      "namespace": "Roslynator.Text",
+      "types": [
+        {
+          "type": "public class TextLineCollectionSelection : ISelection<TextLine>",
+          "types": [
+            "public struct Enumerator"
+          ]
+        }
+      ]
+    }
+  ]
+}

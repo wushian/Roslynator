@@ -327,7 +327,7 @@ namespace Roslynator.CommandLine
             WriteLine();
 
             using (XmlWriter xmlWriter = XmlWriter.Create(ConsoleOut, new XmlWriterSettings() { OmitXmlDeclaration = true, Indent = true, IndentChars = "" }))
-            using (SymbolDefinitionWriter writer = new SymbolDefinitionHtmlWriter(xmlWriter, SymbolFilterOptions, format))
+            using (SymbolDefinitionWriter writer = new SymbolDefinitionHtmlWriter(xmlWriter, SymbolFilterOptions, format, new SymbolDocumentationProvider(compilations)))
                 writer.WriteDocument(assemblies, cancellationToken);
 
             WriteLine();

@@ -1,0 +1,286 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+<pre>assembly Roslynator.Core, Version=1.0.0.10, Culture=neutral, PublicKeyToken=3aeedfaf14b2cebf
+  [AssemblyCompany("Josef Pihrt")]
+  [AssemblyConfiguration("Debug")]
+  [AssemblyCopyright("Copyright (c) 2017-2018 Josef Pihrt")]
+  [AssemblyDescription("This library extends functionality of package Microsoft.CodeAnalysis.Common.")]
+  [AssemblyFileVersion("1.0.0.10")]
+  [AssemblyInformationalVersion("1.0.0.10")]
+  [AssemblyProduct("Roslynator.Core")]
+  [AssemblyTitle("Roslynator.Core")]
+  [AssemblyVersion("1.0.0.10")]
+  [TargetFramework(".NETStandard,Version=v1.3", FrameworkDisplayName = "")]
+
+assembly Roslynator.CSharp, Version=1.0.0.10, Culture=neutral, PublicKeyToken=390be46f77b79f52
+  [AssemblyCompany("Josef Pihrt")]
+  [AssemblyConfiguration("Debug")]
+  [AssemblyCopyright("Copyright (c) 2017-2018 Josef Pihrt")]
+  [AssemblyDescription("This library extends functionality of package Microsoft.CodeAnalysis.CSharp\n\nCommonly Used Types:\nRoslynator.CSharp.CSharpFactory\nRoslynator.CSharp.CSharpFacts\nRoslynator.CSharp.SyntaxInfo\nRoslynator.NameGenerator")]
+  [AssemblyFileVersion("1.0.0.10")]
+  [AssemblyInformationalVersion("1.0.0.10")]
+  [AssemblyProduct("Roslynator.CSharp")]
+  [AssemblyTitle("Roslynator.CSharp")]
+  [AssemblyVersion("1.0.0.10")]
+  [TargetFramework(".NETStandard,Version=v1.3", FrameworkDisplayName = "")]
+
+assembly Roslynator.CSharp.Workspaces, Version=1.0.0.10, Culture=neutral, PublicKeyToken=ec3f0c29a7973f23
+  [AssemblyCompany("Josef Pihrt")]
+  [AssemblyConfiguration("Debug")]
+  [AssemblyCopyright("Copyright (c) 2017-2018 Josef Pihrt")]
+  [AssemblyDescription("This library extends functionality of package Microsoft.CodeAnalysis.CSharp.Workspaces\n\nCommonly Used Types:\nRoslynator.CSharp.CSharpFactory\nRoslynator.CSharp.CSharpFacts\nRoslynator.CSharp.SyntaxInfo\nRoslynator.NameGenerator")]
+  [AssemblyFileVersion("1.0.0.10")]
+  [AssemblyInformationalVersion("1.0.0.10")]
+  [AssemblyProduct("Roslynator.CSharp.Workspaces")]
+  [AssemblyTitle("Roslynator.CSharp.Workspaces")]
+  [AssemblyVersion("1.0.0.10")]
+  [TargetFramework(".NETStandard,Version=v1.3", FrameworkDisplayName = "")]
+
+assembly Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, PublicKeyToken=be1ec334fe31b7bb
+  [AssemblyCompany("Josef Pihrt")]
+  [AssemblyConfiguration("Debug")]
+  [AssemblyCopyright("Copyright (c) 2017-2018 Josef Pihrt")]
+  [AssemblyDescription("This library extends functionality of package Microsoft.CodeAnalysis.Workspaces.Common.")]
+  [AssemblyFileVersion("1.0.0.10")]
+  [AssemblyInformationalVersion("1.0.0.10")]
+  [AssemblyProduct("Roslynator.Workspaces.Core")]
+  [AssemblyTitle("Roslynator.Workspaces.Core")]
+  [AssemblyVersion("1.0.0.10")]
+  [TargetFramework(".NETStandard,Version=v1.3", FrameworkDisplayName = "")]
+
+<a name="Roslynator" /><code class="csharp">namespace Roslynator</code>
+
+<a name="Roslynator_DiagnosticsExtensions" /><code class="csharp">  /// &lt;summary&gt;A set of extension methods for <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.diagnostics.symbolanalysiscontext">SymbolAnalysisContext</a>, <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.diagnostics.syntaxnodeanalysiscontext">SyntaxNodeAnalysisContext</a> and <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.diagnostics.syntaxtreeanalysiscontext">SyntaxTreeAnalysisContext</a>.&lt;/summary&gt;
+  public static class DiagnosticsExtensions</code>
+
+<a name="Roslynator_EnumExtensions" /><code class="csharp">  /// &lt;summary&gt;A set of extension methods for enumerations.&lt;/summary&gt;
+  public static class EnumExtensions</code>
+
+<a name="Roslynator_FileLinePositionSpanExtensions" /><code class="csharp">  /// &lt;summary&gt;A set of extension methods for <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.filelinepositionspan">FileLinePositionSpan</a>.&lt;/summary&gt;
+  public static class FileLinePositionSpanExtensions</code>
+
+<a name="Roslynator_MetadataNameEqualityComparer_1" /><code class="csharp">  /// &lt;summary&gt;
+  /// Provides equality comparison for <b>TSymbol</b> by comparing <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.isymbol.metadataname">MetadataName</a>,
+  /// metadata name of <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.isymbol.containingtype">ContainingType</a>(s) and metadata name of <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.isymbol.containingnamespace">ContainingNamespace</a>(s).
+  /// &lt;/summary&gt;
+  public sealed class MetadataNameEqualityComparer&lt;TSymbol&gt; : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.equalitycomparer-1">EqualityComparer</a>&lt;TSymbol&gt; where TSymbol : <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.isymbol">ISymbol</a></code>
+
+<a name="Roslynator_NameGenerator" /><code class="csharp">  /// &lt;summary&gt;Provides methods to obtain an unique identifier.&lt;/summary&gt;
+  public abstract class NameGenerator</code>
+
+<a name="Roslynator_SemanticModelExtensions" /><code class="csharp">  /// &lt;summary&gt;A set of extension methods for a <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.semanticmodel">SemanticModel</a>.&lt;/summary&gt;
+  public static class SemanticModelExtensions</code>
+
+<a name="Roslynator_SeparatedSyntaxListSelection_1" /><code class="csharp">  /// &lt;summary&gt;Represents selected nodes in a <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.separatedsyntaxlist-1">SeparatedSyntaxList</a>.&lt;/summary&gt;
+  public class SeparatedSyntaxListSelection&lt;TNode&gt; : <a href="#Roslynator_ISelection_1">ISelection</a>&lt;TNode&gt; where TNode : <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxnode">SyntaxNode</a></code>
+
+<a name="Roslynator_SeparatedSyntaxListSelection_1_Enumerator" /><code class="csharp">    public struct SeparatedSyntaxListSelection&lt;TNode&gt;.Enumerator</code>
+
+<a name="Roslynator_SymbolExtensions" /><code class="csharp">  /// &lt;summary&gt;A set of extension methods for <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.isymbol">ISymbol</a> and its derived types.&lt;/summary&gt;
+  public static class SymbolExtensions</code>
+
+<a name="Roslynator_SyntaxExtensions" /><code class="csharp">  /// &lt;summary&gt;A set of extension method for a syntax.&lt;/summary&gt;
+  public static class SyntaxExtensions</code>
+
+<a name="Roslynator_SyntaxListSelection_1" /><code class="csharp">  /// &lt;summary&gt;Represents selected nodes in a <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxlist-1">SyntaxList</a>.&lt;/summary&gt;
+  public class SyntaxListSelection&lt;TNode&gt; : <a href="#Roslynator_ISelection_1">ISelection</a>&lt;TNode&gt; where TNode : <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxnode">SyntaxNode</a></code>
+
+<a name="Roslynator_SyntaxListSelection_1_Enumerator" /><code class="csharp">    public struct SyntaxListSelection&lt;TNode&gt;.Enumerator</code>
+
+<a name="Roslynator_SyntaxTreeExtensions" /><code class="csharp">  /// &lt;summary&gt;A set of extension methods for <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxtree">SyntaxTree</a>.&lt;/summary&gt;
+  public static class SyntaxTreeExtensions</code>
+
+<a name="Roslynator_WorkspaceExtensions" /><code class="csharp">  /// &lt;summary&gt;A set of extension methods for the workspace layer.&lt;/summary&gt;
+  public static class WorkspaceExtensions</code>
+
+<a name="Roslynator_ExtensionMethodSymbolInfo" /><code class="csharp">  /// &lt;summary&gt;Represents an extension method symbol.&lt;/summary&gt;
+  public readonly struct ExtensionMethodSymbolInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_ExtensionMethodSymbolInfo">ExtensionMethodSymbolInfo</a>&gt;</code>
+
+<a name="Roslynator_MetadataName" /><code class="csharp">  /// &lt;summary&gt;Represents fully qualified metadata name of a symbol.&lt;/summary&gt;
+  public readonly struct MetadataName : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_MetadataName">MetadataName</a>&gt;</code>
+
+<a name="Roslynator_ISelection_1" /><code class="csharp">  /// &lt;summary&gt;Represents consecutive sequence of selected items in a collection.&lt;/summary&gt;
+  public interface ISelection&lt;T&gt; : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;T&gt;</code>
+
+<a name="Roslynator_Visibility" /><code class="csharp">  /// &lt;summary&gt;Specifies visibility of a symbol.&lt;/summary&gt;
+  public enum Visibility</code>
+
+<a name="Roslynator_CSharp" /><code class="csharp">namespace Roslynator.CSharp</code>
+
+<a name="Roslynator_CSharp_CSharpExtensions" /><code class="csharp">  /// &lt;summary&gt;A set of extension methods for a <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.semanticmodel">SemanticModel</a>.&lt;/summary&gt;
+  public static class CSharpExtensions</code>
+
+<a name="Roslynator_CSharp_CSharpFactory" /><code class="csharp">  /// &lt;summary&gt;A factory for syntax nodes, tokens and trivia. This class is built on top of <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxfactory">SyntaxFactory</a> members.&lt;/summary&gt;
+  public static class CSharpFactory</code>
+
+<a name="Roslynator_CSharp_CSharpFacts" /><code class="csharp">  public static class CSharpFacts</code>
+
+<a name="Roslynator_CSharp_EnumExtensions" /><code class="csharp">  /// &lt;summary&gt;A set of extension methods for enumerations.&lt;/summary&gt;
+  public static class EnumExtensions</code>
+
+<a name="Roslynator_CSharp_MemberDeclarationListSelection" /><code class="csharp">  /// &lt;summary&gt;Represents selected member declarations in a <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxlist-1">SyntaxList</a>.&lt;/summary&gt;
+  public sealed class MemberDeclarationListSelection : <a href="#Roslynator_SyntaxListSelection_1">SyntaxListSelection</a>&lt;<a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.memberdeclarationsyntax">MemberDeclarationSyntax</a>&gt;</code>
+
+<a name="Roslynator_CSharp_ModifierList" /><code class="csharp">  /// &lt;summary&gt;A set of static methods that allows manipulation with modifiers.&lt;/summary&gt;
+  public static class ModifierList</code>
+
+<a name="Roslynator_CSharp_ModifierList_1" /><code class="csharp">  /// &lt;summary&gt;Represents a list of modifiers.&lt;/summary&gt;
+  public abstract class ModifierList&lt;TNode&gt; where TNode : <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxnode">SyntaxNode</a></code>
+
+<a name="Roslynator_CSharp_Modifiers" /><code class="csharp">  /// &lt;summary&gt;Serves as a factory for a modifier list.&lt;/summary&gt;
+  public static class Modifiers</code>
+
+<a name="Roslynator_CSharp_StatementListSelection" /><code class="csharp">  /// &lt;summary&gt;Represents selected statements in a <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxlist-1">SyntaxList</a>.&lt;/summary&gt;
+  public sealed class StatementListSelection : <a href="#Roslynator_SyntaxListSelection_1">SyntaxListSelection</a>&lt;<a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.statementsyntax">StatementSyntax</a>&gt;</code>
+
+<a name="Roslynator_CSharp_SymbolExtensions" /><code class="csharp">  /// &lt;summary&gt;A set of static methods for <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.isymbol">ISymbol</a> and derived types.&lt;/summary&gt;
+  public static class SymbolExtensions</code>
+
+<a name="Roslynator_CSharp_SyntaxAccessibility" /><code class="csharp">  /// &lt;summary&gt;A set of static methods that are related to C# accessibility.&lt;/summary&gt;
+  public static class SyntaxAccessibility</code>
+
+<a name="Roslynator_CSharp_SyntaxExtensions" /><code class="csharp">  /// &lt;summary&gt;A set of extension methods for syntax (types derived from <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.csharpsyntaxnode">CSharpSyntaxNode</a>).&lt;/summary&gt;
+  public static class SyntaxExtensions</code>
+
+<a name="Roslynator_CSharp_SyntaxInfo" /><code class="csharp">  /// &lt;summary&gt;Serves as a factory for types in Roslynator.CSharp.Syntax namespace.&lt;/summary&gt;
+  public static class SyntaxInfo</code>
+
+<a name="Roslynator_CSharp_SyntaxInverter" /><code class="csharp">  /// &lt;summary&gt;Provides static methods for syntax inversion.&lt;/summary&gt;
+  public static class SyntaxInverter</code>
+
+<a name="Roslynator_CSharp_WorkspaceExtensions" /><code class="csharp">  /// &lt;summary&gt;A set of extension methods for the workspace layer.&lt;/summary&gt;
+  public static class WorkspaceExtensions</code>
+
+<a name="Roslynator_CSharp_WorkspaceSyntaxExtensions" /><code class="csharp">  /// &lt;summary&gt;A set of extension methods for syntax. These methods are dependent on the workspace layer.&lt;/summary&gt;
+  public static class WorkspaceSyntaxExtensions</code>
+
+<a name="Roslynator_CSharp_ExpressionChain" /><code class="csharp">  /// &lt;summary&gt;Enables to enumerate expressions of a binary expression and expressions of nested binary expressions of the same kind as parent binary expression.&lt;/summary&gt;
+  public readonly struct ExpressionChain : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_ExpressionChain">ExpressionChain</a>&gt;, <a href="https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.expressionsyntax">ExpressionSyntax</a>&gt;</code>
+
+<a name="Roslynator_CSharp_ExpressionChain_Enumerator" /><code class="csharp">    public struct ExpressionChain.Enumerator</code>
+
+<a name="Roslynator_CSharp_ExpressionChain_Reversed" /><code class="csharp">    /// &lt;summary&gt;Enables to enumerate expressions of <a href="#Roslynator_CSharp_ExpressionChain">ExpressionChain</a> in a reversed order.&lt;/summary&gt;
+    public readonly struct ExpressionChain.Reversed : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_ExpressionChain_Reversed">ExpressionChain.Reversed</a>&gt;, <a href="https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.expressionsyntax">ExpressionSyntax</a>&gt;</code>
+
+<a name="Roslynator_CSharp_ExpressionChain_Reversed_Enumerator" /><code class="csharp">      public struct ExpressionChain.Reversed.Enumerator</code>
+
+<a name="Roslynator_CSharp_IfStatementCascade" /><code class="csharp">  /// &lt;summary&gt;Enables to enumerate if statement cascade.&lt;/summary&gt;
+  public readonly struct IfStatementCascade : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_IfStatementCascade">IfStatementCascade</a>&gt;, <a href="https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a href="#Roslynator_CSharp_IfStatementOrElseClause">IfStatementOrElseClause</a>&gt;</code>
+
+<a name="Roslynator_CSharp_IfStatementCascade_Enumerator" /><code class="csharp">    public struct IfStatementCascade.Enumerator</code>
+
+<a name="Roslynator_CSharp_IfStatementCascadeInfo" /><code class="csharp">  /// &lt;summary&gt;Summarizes information about <a href="#Roslynator_CSharp_IfStatementCascade">IfStatementCascade</a>.&lt;/summary&gt;
+  public readonly struct IfStatementCascadeInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_IfStatementCascadeInfo">IfStatementCascadeInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_IfStatementOrElseClause" /><code class="csharp">  /// &lt;summary&gt;A wrapper for either an <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.ifstatementsyntax">IfStatementSyntax</a> or an <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.elseclausesyntax">ElseClauseSyntax</a>.&lt;/summary&gt;
+  public readonly struct IfStatementOrElseClause : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_IfStatementOrElseClause">IfStatementOrElseClause</a>&gt;</code>
+
+<a name="Roslynator_CSharp_CommentKinds" /><code class="csharp">  /// &lt;summary&gt;Specifies C# comments.&lt;/summary&gt;
+  [Flags]
+  public enum CommentKinds</code>
+
+<a name="Roslynator_CSharp_ModifierKinds" /><code class="csharp">  /// &lt;summary&gt;Specifies C# modifier.&lt;/summary&gt;
+  [Flags]
+  public enum ModifierKinds</code>
+
+<a name="Roslynator_CSharp_NullCheckStyles" /><code class="csharp">  /// &lt;summary&gt;Specifies a null check.&lt;/summary&gt;
+  [Flags]
+  public enum NullCheckStyles</code>
+
+<a name="Roslynator_CSharp_PreprocessorDirectiveKinds" /><code class="csharp">  /// &lt;summary&gt;Specifies C# preprocessor directives.&lt;/summary&gt;
+  [Flags]
+  public enum PreprocessorDirectiveKinds</code>
+
+<a name="Roslynator_CSharp_Syntax" /><code class="csharp">namespace Roslynator.CSharp.Syntax</code>
+
+<a name="Roslynator_CSharp_Syntax_AsExpressionInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about "as" expression.&lt;/summary&gt;
+  public readonly struct AsExpressionInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_AsExpressionInfo">AsExpressionInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_AssignmentExpressionInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about simple assignment expression.&lt;/summary&gt;
+  public readonly struct AssignmentExpressionInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_AssignmentExpressionInfo">AssignmentExpressionInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_BinaryExpressionInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about binary expression.&lt;/summary&gt;
+  public readonly struct BinaryExpressionInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_BinaryExpressionInfo">BinaryExpressionInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_ConditionalExpressionInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about conditional expression.&lt;/summary&gt;
+  public readonly struct ConditionalExpressionInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_ConditionalExpressionInfo">ConditionalExpressionInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_GenericInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about generic syntax (class, struct, interface, delegate, method or local function).&lt;/summary&gt;
+  public readonly struct GenericInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_GenericInfo">GenericInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_IsExpressionInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about "is" expression.&lt;/summary&gt;
+  public readonly struct IsExpressionInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_IsExpressionInfo">IsExpressionInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_LocalDeclarationStatementInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about local declaration statement.&lt;/summary&gt;
+  public readonly struct LocalDeclarationStatementInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_LocalDeclarationStatementInfo">LocalDeclarationStatementInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_MemberDeclarationListInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about a list of member declaration list.&lt;/summary&gt;
+  public readonly struct MemberDeclarationListInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_MemberDeclarationListInfo">MemberDeclarationListInfo</a>&gt;, <a href="https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.memberdeclarationsyntax">MemberDeclarationSyntax</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_ModifierListInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about modifier list.&lt;/summary&gt;
+  public readonly struct ModifierListInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_ModifierListInfo">ModifierListInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_NullCheckExpressionInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about a null check expression.&lt;/summary&gt;
+  public readonly struct NullCheckExpressionInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_NullCheckExpressionInfo">NullCheckExpressionInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_RegionInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about a region.&lt;/summary&gt;
+  public readonly struct RegionInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_RegionInfo">RegionInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_SimpleAssignmentExpressionInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about simple assignment expression.&lt;/summary&gt;
+  public readonly struct SimpleAssignmentExpressionInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_SimpleAssignmentExpressionInfo">SimpleAssignmentExpressionInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_SimpleAssignmentStatementInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about a simple assignment expression in an expression statement.&lt;/summary&gt;
+  public readonly struct SimpleAssignmentStatementInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_SimpleAssignmentStatementInfo">SimpleAssignmentStatementInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_SimpleIfElseInfo" /><code class="csharp">  /// &lt;summary&gt;
+  /// Provides information about a simple if-else.
+  /// Simple if-else is defined as follows: it is not a child of an else clause and it has an else clause and the else clause does not continue with another if statement.
+  /// &lt;/summary&gt;
+  public readonly struct SimpleIfElseInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_SimpleIfElseInfo">SimpleIfElseInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_SimpleIfStatementInfo" /><code class="csharp">  /// &lt;summary&gt;
+  /// Provides information about a simple if statement.
+  /// Simple if statement is defined as follows: it is not a child of an else clause and it has no else clause.
+  /// &lt;/summary&gt;
+  public readonly struct SimpleIfStatementInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_SimpleIfStatementInfo">SimpleIfStatementInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_SimpleMemberInvocationExpressionInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about invocation expression.&lt;/summary&gt;
+  public readonly struct SimpleMemberInvocationExpressionInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_SimpleMemberInvocationExpressionInfo">SimpleMemberInvocationExpressionInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_SimpleMemberInvocationStatementInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about invocation expression in an expression statement.&lt;/summary&gt;
+  public readonly struct SimpleMemberInvocationStatementInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_SimpleMemberInvocationStatementInfo">SimpleMemberInvocationStatementInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_SingleLocalDeclarationStatementInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about a local declaration statement with a single variable.&lt;/summary&gt;
+  public readonly struct SingleLocalDeclarationStatementInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_SingleLocalDeclarationStatementInfo">SingleLocalDeclarationStatementInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_SingleParameterLambdaExpressionInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about a lambda expression with a single parameter.&lt;/summary&gt;
+  public readonly struct SingleParameterLambdaExpressionInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_SingleParameterLambdaExpressionInfo">SingleParameterLambdaExpressionInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_StatementListInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about a list of statements.&lt;/summary&gt;
+  public readonly struct StatementListInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_StatementListInfo">StatementListInfo</a>&gt;, <a href="https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.statementsyntax">StatementSyntax</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_StringConcatenationExpressionInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about string concatenation, i.e. a binary expression that binds to string '+' operator.&lt;/summary&gt;
+  public readonly struct StringConcatenationExpressionInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_StringConcatenationExpressionInfo">StringConcatenationExpressionInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_StringLiteralExpressionInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about string literal expression.&lt;/summary&gt;
+  public readonly struct StringLiteralExpressionInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_StringLiteralExpressionInfo">StringLiteralExpressionInfo</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_UsingDirectiveListInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about a list of using directives.&lt;/summary&gt;
+  public readonly struct UsingDirectiveListInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_UsingDirectiveListInfo">UsingDirectiveListInfo</a>&gt;, <a href="https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.usingdirectivesyntax">UsingDirectiveSyntax</a>&gt;</code>
+
+<a name="Roslynator_CSharp_Syntax_XmlElementInfo" /><code class="csharp">  /// &lt;summary&gt;Provides information about a <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.xmlelementsyntax">XmlElementSyntax</a> or <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.xmlemptyelementsyntax">XmlEmptyElementSyntax</a>.&lt;/summary&gt;
+  public readonly struct XmlElementInfo : <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a href="#Roslynator_CSharp_Syntax_XmlElementInfo">XmlElementInfo</a>&gt;</code>
+
+<a name="Roslynator_Text" /><code class="csharp">namespace Roslynator.Text</code>
+
+<a name="Roslynator_Text_TextLineCollectionSelection" /><code class="csharp">  /// &lt;summary&gt;Represents selected lines in a <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.text.textlinecollection">TextLineCollection</a>.&lt;/summary&gt;
+  public class TextLineCollectionSelection : <a href="#Roslynator_ISelection_1">ISelection</a>&lt;<a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.text.textline">TextLine</a>&gt;</code>
+
+<a name="Roslynator_Text_TextLineCollectionSelection_Enumerator" /><code class="csharp">    public struct TextLineCollectionSelection.Enumerator</code>
+</pre>
+</body>
+</html>

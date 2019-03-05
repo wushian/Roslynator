@@ -2,6 +2,7 @@
 
 using System.Collections.Immutable;
 using System.Diagnostics;
+using Microsoft.CodeAnalysis;
 
 namespace Roslynator.Documentation
 {
@@ -12,6 +13,8 @@ namespace Roslynator.Documentation
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string DebuggerDisplay => Name;
+
+        public abstract DocumentationUrlInfo CreateUrl(ISymbol symbol);
 
         public abstract DocumentationUrlInfo CreateUrl(ImmutableArray<string> folders);
     }

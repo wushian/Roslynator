@@ -319,7 +319,7 @@ namespace Roslynator.Documentation
             return format;
         }
 
-        public void WriteDocument(IEnumerable<IAssemblySymbol> assemblies, CancellationToken cancellationToken = default)
+        public virtual void WriteDocument(IEnumerable<IAssemblySymbol> assemblies, CancellationToken cancellationToken = default)
         {
             WriteStartDocument();
             WriteAssemblies(assemblies, cancellationToken);
