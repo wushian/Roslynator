@@ -56,7 +56,7 @@ namespace Roslynator.Documentation
              kindOptions: SymbolDisplayKindOptions.IncludeNamespaceKeyword);
 
         public static SymbolDisplayFormat FullDeclaration { get; } = Default.Update(
-             typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypes,
+             typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
              genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters
                 | SymbolDisplayGenericsOptions.IncludeTypeConstraints
                 | SymbolDisplayGenericsOptions.IncludeVariance,

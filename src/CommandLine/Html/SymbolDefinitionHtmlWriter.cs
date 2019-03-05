@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Xml;
 using Microsoft.CodeAnalysis;
 using Roslynator.FindSymbols;
@@ -14,6 +15,7 @@ namespace Roslynator.Documentation.Html
     {
         private XmlWriter _writer;
         private bool _pendingIndentation;
+        private ImmutableHashSet<IAssemblySymbol> _assemblies = ImmutableHashSet<IAssemblySymbol>.Empty;
 
         private readonly SymbolDisplayFormat _namespaceFormat;
         private readonly SymbolDisplayFormat _typeFormat;
@@ -53,7 +55,7 @@ namespace Roslynator.Documentation.Html
             return format.Update(
                 globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Included,
                 typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
-                miscellaneousOptions: format.MiscellaneousOptions & ~ SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
+                miscellaneousOptions: format.MiscellaneousOptions & ~SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
         }
 
         protected override SymbolDisplayFormat CreateMemberFormat(SymbolDisplayFormat format)
@@ -64,12 +66,35 @@ namespace Roslynator.Documentation.Html
                 miscellaneousOptions: format.MiscellaneousOptions & ~SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
         }
 
+        public override void WriteAssemblies(IEnumerable<IAssemblySymbol> assemblies, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            try
+            {
+                _assemblies = assemblies.ToImmutableHashSet();
+                base.WriteAssemblies(assemblies, cancellationToken);
+            }
+            finally
+            {
+                _assemblies = ImmutableHashSet<IAssemblySymbol>.Empty;
+            }
+        }
+
         public override void WriteStartDocument()
         {
-            _writer.WriteRaw("<!DOCTYPE html>");
-            WriteLine();
+            _writer.WriteRaw(@"<!DOCTYPE html>
+");
 
             WriteStartElement("html");
+            WriteStartElement("head");
+            WriteStartElement("meta");
+            WriteAttributeString("charset", "utf-8");
+            WriteEndElement();
+#if DEBUG
+            _writer.WriteRaw(@"<link href=""Styles/highlightjs/VisualStudio.css"" rel=""stylesheet"" type=""text/css"" />
+<script src=""Scripts/highlight.pack.js""></script>
+");
+#endif
+            WriteEndElement();
             WriteStartElement("body");
             WriteStartElement("pre");
         }
@@ -77,14 +102,12 @@ namespace Roslynator.Documentation.Html
         public override void WriteEndDocument()
         {
             WriteEndElement();
-            WriteLine();
+#if DEBUG
+            _writer.WriteRaw(@"<script>hljs.initHighlightingOnLoad();</script>
+");
+#endif
             WriteEndElement();
-            WriteLine();
             WriteEndElement();
-            WriteLine();
-
-            Debug.Assert(Depth == 0, "Depth should be equal to 0.");
-
             _writer.WriteEndDocument();
         }
 
@@ -193,9 +216,9 @@ namespace Roslynator.Documentation.Html
             {
                 WriteDocumentationComment(typeSymbol);
                 Write(typeSymbol, format ?? TypeFormat, typeDeclarationOptions);
+                WriteEndElement();
             }
 
-            WriteEndElement();
             WriteLine();
             IncreaseDepth();
         }
@@ -345,7 +368,7 @@ namespace Roslynator.Documentation.Html
                 symbol,
                 format,
                 typeDeclarationOptions,
-                additionalOptions);
+                GetAdditionalOptions() & ~SymbolDisplayAdditionalOptions.OmitContainingNamespace);
 
             int i = 0;
             int j = 0;

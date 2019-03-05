@@ -443,8 +443,7 @@ namespace Roslynator.Documentation
         //XTODO: WriteDeclaration > WriteDefinition
         public virtual void WriteDeclaration(ISymbol symbol)
         {
-            SymbolDisplayAdditionalOptions additionalOptions = SymbolDisplayAdditionalOptions.IncludeAttributes
-                | SymbolDisplayAdditionalOptions.FormatAttributes
+            SymbolDisplayAdditionalOptions additionalOptions = SymbolDisplayAdditionalOptions.FormatAttributes
                 | SymbolDisplayAdditionalOptions.PreferDefaultLiteral;
 
             if (Options.IncludeAttributeArguments)
@@ -459,6 +458,13 @@ namespace Roslynator.Documentation
             if (Options.OmitIEnumerable)
                 additionalOptions |= SymbolDisplayAdditionalOptions.OmitIEnumerable;
 
+            ImmutableArray<SymbolDisplayPart> attributesParts = SymbolDefinitionDisplay.GetAttributesParts(
+                symbol,
+                SymbolDisplayFormats.FullDeclaration,
+                additionalOptions: additionalOptions,
+                shouldDisplayAttribute: (s, a) => DocumentationModel.Filter.IsMatch(s, a),
+                includeTrailingNewLine: true);
+
             ImmutableArray<SymbolDisplayPart> parts = SymbolDefinitionDisplay.GetDisplayParts(
                 symbol,
                 (symbol.GetFirstExplicitInterfaceImplementation() != null)
@@ -470,7 +476,62 @@ namespace Roslynator.Documentation
                 additionalOptions: additionalOptions,
                 shouldDisplayAttribute: (s, a) => DocumentationModel.Filter.IsMatch(s, a));
 
-            WriteCodeBlock(parts.ToDisplayString(), symbol.Language);
+            if (symbol.IsKind(SymbolKind.NamedType))
+                RemoveContainingNamespace();
+
+            string text = attributesParts.ToDisplayString() + parts.ToDisplayString();
+
+            WriteCodeBlock(text, LanguageNames.CSharp);
+
+            void RemoveContainingNamespace()
+            {
+                int i = 0;
+                int j = 0;
+
+                while (i < parts.Length)
+                {
+                    if (parts[i].IsTypeName())
+                        break;
+
+                    if (parts[i].Kind == SymbolDisplayPartKind.NamespaceName)
+                    {
+                        j = i;
+
+                        if (Peek().IsPunctuation("."))
+                        {
+                            j++;
+
+                            while (Peek().Kind == SymbolDisplayPartKind.NamespaceName
+                                && Peek(2).IsPunctuation())
+                            {
+                                j += 2;
+                            }
+
+                            Debug.Assert(Peek().IsTypeName(), Peek().Kind.ToString());
+
+                            if (Peek().IsTypeName())
+                            {
+                                parts = parts.RemoveRange(i, j - i + 1);
+                                return;
+                            }
+                        }
+
+                        break;
+                    }
+
+                    i++;
+                }
+
+                SymbolDisplayPart Peek(int offset = 1)
+                {
+                    if (j < parts.Length - offset)
+                    {
+                        return parts[j + offset];
+                    }
+
+                    return default;
+                }
+            }
         }
 
         public virtual void WriteTypeParameters(ImmutableArray<ITypeParameterSymbol> typeParameters)
