@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Roslynator.FindSymbols;
@@ -9,6 +11,27 @@ namespace Roslynator.Documentation
 {
     internal static class SymbolDefinitionWriterHelpers
     {
+        public static ImmutableArray<SymbolDisplayPart> RemoveAttributeSuffix(ImmutableArray<SymbolDisplayPart> parts)
+        {
+            SymbolDisplayPart part = parts.FirstOrDefault(f => f.Kind == SymbolDisplayPartKind.ClassName);
+
+            Debug.Assert(part.Kind == SymbolDisplayPartKind.ClassName, part.Kind.ToString());
+
+            if (part.Kind == SymbolDisplayPartKind.ClassName)
+            {
+                const string attributeSuffix = "Attribute";
+
+                string text = part.ToString();
+
+                if (text.EndsWith(attributeSuffix, StringComparison.Ordinal))
+                {
+                    parts = parts.Replace(part, part.WithText(text.Remove(text.Length - attributeSuffix.Length)));
+                }
+            }
+
+            return parts;
+        }
+
         public static string GetAccessorName(IMethodSymbol accessorSymbol)
         {
             switch (accessorSymbol.MethodKind)
@@ -152,6 +175,201 @@ namespace Roslynator.Documentation
             }
 
             return default;
+        }
+
+        public static (int start, int end, ISymbol symbol) FindDefinitionName(
+            ISymbol symbol,
+            ImmutableArray<SymbolDisplayPart> parts)
+        {
+            ISymbol s = null;
+            int j = 0;
+
+            for (int i = 0; i < parts.Length; i++)
+            {
+                if (!IsGlobalPrefix(i))
+                    continue;
+
+                j = i + 1;
+
+                if (!ReadNamespaces())
+                    continue;
+
+                if (symbol.IsKind(SymbolKind.Namespace))
+                    return (i, j, parts[j].Symbol);
+
+                if (!ReadTypeNames())
+                    continue;
+
+                if (symbol.IsKind(SymbolKind.NamedType))
+                {
+                    if (s == symbol)
+                    {
+                        if (((INamedTypeSymbol)s).TypeKind != TypeKind.Delegate
+                            || Peek(j).IsPunctuation("("))
+                        {
+                            return (i, j, s);
+                        }
+                    }
+                }
+                else
+                {
+                    if (Peek(j).IsPunctuation("~"))
+                        j++;
+
+                    if (Peek(j).IsMemberName())
+                    {
+                        j++;
+
+                        s = parts[j].Symbol;
+
+                        if (ReadTypeParameterList())
+                            return (i, j, s);
+                    }
+                    else if (Peek(j).Kind == SymbolDisplayPartKind.Keyword)
+                    {
+                        switch (Peek(j).ToString())
+                        {
+                            case "operator":
+                                {
+                                    if (Peek(j + 1).IsSpace()
+                                        && Peek(j + 2).Kind == SymbolDisplayPartKind.MethodName)
+                                    {
+                                        j += 3;
+                                        return (i, j, parts[j].Symbol);
+                                    }
+
+                                    break;
+                                }
+                            case "this":
+                                {
+                                    j++;
+                                    return (i, j, symbol);
+                                }
+                            case "implicit":
+                            case "explicit":
+                                {
+                                    if (Peek(j + 1).IsSpace()
+                                        && Peek(j + 2).IsKeyword("operator")
+                                        && Peek(j + 3).IsSpace())
+                                    {
+                                        j += 4;
+
+                                        if (IsGlobalPrefix(j + 1))
+                                        {
+                                            j += 2;
+
+                                            if (ReadNamespaces()
+                                                && ReadTypeNames())
+                                            {
+                                                return (i, j, symbol);
+                                            }
+                                        }
+                                    }
+
+                                    break;
+                                }
+                        }
+                    }
+                }
+            }
+
+            Debug.Fail(parts.ToDisplayString());
+
+            return (-1, -1, null);
+
+            bool IsGlobalPrefix(int i)
+            {
+                return parts[i].IsGlobalNamespace()
+                    && Peek(i).IsPunctuation("::");
+            }
+
+            SymbolDisplayPart Peek(int i)
+            {
+                if (i + 1 < parts.Length)
+                    return parts[i + 1];
+
+                return default;
+            }
+
+            bool ReadNamespaces()
+            {
+                if (Peek(j).Kind != SymbolDisplayPartKind.NamespaceName)
+                    return false;
+
+                j++;
+
+                while (Peek(j).IsPunctuation("."))
+                {
+                    j++;
+
+                    if (Peek(j).Kind != SymbolDisplayPartKind.NamespaceName)
+                        break;
+
+                    j++;
+                }
+
+                return true;
+            }
+
+            bool ReadTypeNames()
+            {
+                if (!Peek(j).IsTypeName())
+                    return false;
+
+                j++;
+
+                s = parts[j].Symbol;
+
+                if (!ReadTypeParameterList())
+                    return false;
+
+                while (Peek(j).IsPunctuation("."))
+                {
+                    j++;
+
+                    if (!Peek(j).IsTypeName())
+                        break;
+
+                    j++;
+
+                    s = parts[j].Symbol;
+
+                    if (!ReadTypeParameterList())
+                        return false;
+                }
+
+                return true;
+            }
+
+            bool ReadTypeParameterList()
+            {
+                if (Peek(j).IsPunctuation("<"))
+                {
+                    j++;
+
+                    if (Peek(j).Kind == SymbolDisplayPartKind.TypeParameterName)
+                    {
+                        j++;
+
+                        while (Peek(j).IsPunctuation(",")
+                            && Peek(j + 1).IsSpace()
+                            && Peek(j + 2).Kind == SymbolDisplayPartKind.TypeParameterName)
+                        {
+                            j += 3;
+                        }
+
+                        if (Peek(j).IsPunctuation(">"))
+                        {
+                            j++;
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+
+                return true;
+            }
         }
     }
 }

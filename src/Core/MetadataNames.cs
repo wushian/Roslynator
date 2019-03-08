@@ -6,6 +6,7 @@ namespace Roslynator
     {
         public static readonly MetadataName System_ArgumentException = MetadataName.Parse("System.ArgumentException");
         public static readonly MetadataName System_ArgumentNullException = MetadataName.Parse("System.ArgumentNullException");
+        public static readonly MetadataName System_Attribute = MetadataName.Parse("System.Attribute");
         public static readonly MetadataName System_AttributeUsageAttribute = MetadataName.Parse("System.AttributeUsageAttribute");
         public static readonly MetadataName System_Collections_Generic = MetadataName.Parse("System.Collections.Generic");
         public static readonly MetadataName System_Collections_Generic_IEnumerable_T = MetadataName.Parse("System.Collections.Generic.IEnumerable`1");

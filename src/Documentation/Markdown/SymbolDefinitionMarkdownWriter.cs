@@ -127,6 +127,10 @@ namespace Roslynator.Documentation.Markdown
             WriteEndBulletItem();
         }
 
+        public override void WriteEnumMemberSeparator()
+        {
+        }
+
         public override void WriteStartAttributes(ISymbol symbol)
         {
             if (symbol.Kind == SymbolKind.Assembly)

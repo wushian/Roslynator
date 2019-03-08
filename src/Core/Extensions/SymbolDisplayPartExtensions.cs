@@ -43,16 +43,50 @@ namespace Roslynator
             }
         }
 
-        internal static bool IsTypeOrNamespaceName(this SymbolDisplayPart part)
+        internal static bool IsNamespaceOrTypeName(this SymbolDisplayPart part)
         {
             switch (part.Kind)
             {
+                case SymbolDisplayPartKind.NamespaceName:
                 case SymbolDisplayPartKind.ClassName:
                 case SymbolDisplayPartKind.DelegateName:
                 case SymbolDisplayPartKind.EnumName:
                 case SymbolDisplayPartKind.InterfaceName:
                 case SymbolDisplayPartKind.StructName:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        internal static bool IsNamespaceOrTypeOrMemberName(this SymbolDisplayPart part)
+        {
+            switch (part.Kind)
+            {
                 case SymbolDisplayPartKind.NamespaceName:
+                case SymbolDisplayPartKind.ClassName:
+                case SymbolDisplayPartKind.DelegateName:
+                case SymbolDisplayPartKind.EnumName:
+                case SymbolDisplayPartKind.InterfaceName:
+                case SymbolDisplayPartKind.StructName:
+                case SymbolDisplayPartKind.EventName:
+                case SymbolDisplayPartKind.FieldName:
+                case SymbolDisplayPartKind.MethodName:
+                case SymbolDisplayPartKind.PropertyName:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        internal static bool IsMemberName(this SymbolDisplayPart part)
+        {
+            switch (part.Kind)
+            {
+                case SymbolDisplayPartKind.EventName:
+                case SymbolDisplayPartKind.FieldName:
+                case SymbolDisplayPartKind.MethodName:
+                case SymbolDisplayPartKind.PropertyName:
                     return true;
                 default:
                     return false;
@@ -86,6 +120,13 @@ namespace Roslynator
                 default:
                     return false;
             }
+        }
+
+        public static bool IsGlobalNamespace(this SymbolDisplayPart part)
+        {
+            return part.IsKeyword("global")
+                && part.Symbol.IsKind(SymbolKind.Namespace)
+                && ((INamespaceSymbol)part.Symbol).IsGlobalNamespace;
         }
 
         public static SymbolDisplayPart WithText(this SymbolDisplayPart part, string text)

@@ -168,10 +168,6 @@ namespace Roslynator.Documentation
             DecreaseDepth();
         }
 
-        public override void WriteEnumMemberSeparator()
-        {
-        }
-
         public override void WriteStartAttributes(ISymbol symbol)
         {
             Write("[");

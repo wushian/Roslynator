@@ -507,7 +507,7 @@ namespace Roslynator.Documentation.Json
             WriteEndTypes();
         }
 
-        public override void Write(IEnumerable<SymbolDisplayPart> parts)
+        public override void Write(ImmutableArray<SymbolDisplayPart> parts)
         {
             if (_attributeWriter == null)
             {

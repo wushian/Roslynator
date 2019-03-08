@@ -58,6 +58,12 @@ namespace Roslynator.Documentation
             WriteLine();
         }
 
+        public override void WriteEnumMemberSeparator()
+        {
+            if (Format.EmptyLineBetweenMembers)
+                WriteLine();
+        }
+
         public override void Write(SymbolDisplayPart part)
         {
             base.Write(part);
