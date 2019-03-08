@@ -73,7 +73,7 @@ namespace Roslynator.Documentation
                 return;
 
             WriteDocumentationComment(namespaceSymbol);
-            Write(namespaceSymbol, format ?? NamespaceFormat);
+            WriteDefinition(namespaceSymbol, format ?? NamespaceFormat);
             WriteLine();
             IncreaseDepth();
         }
@@ -100,7 +100,7 @@ namespace Roslynator.Documentation
             if (typeSymbol != null)
             {
                 WriteDocumentationComment(typeSymbol);
-                Write(typeSymbol, format ?? TypeFormat, typeDeclarationOptions);
+                WriteDefinition(typeSymbol, format ?? TypeFormat, typeDeclarationOptions);
             }
 
             WriteLine();
@@ -132,7 +132,7 @@ namespace Roslynator.Documentation
             }
 
             WriteDocumentationComment(symbol);
-            Write(symbol, format);
+            WriteDefinition(symbol, format);
             WriteLine();
             IncreaseDepth();
         }
@@ -154,7 +154,7 @@ namespace Roslynator.Documentation
         public override void WriteEnumMemberDefinition(ISymbol symbol, SymbolDisplayFormat format = null)
         {
             WriteDocumentationComment(symbol);
-            Write(symbol, format ?? EnumMemberFormat);
+            WriteDefinition(symbol, format ?? EnumMemberFormat);
 
             if (Format.Includes(SymbolDefinitionPartFilter.TrailingComma))
                 Write(",");
@@ -210,12 +210,12 @@ namespace Roslynator.Documentation
             }
         }
 
-        public override void Write(ISymbol symbol, SymbolDisplayFormat format, SymbolDisplayTypeDeclarationOptions? typeDeclarationOptions = null, SymbolDisplayAdditionalOptions? additionalOptions = null)
+        public override void WriteDefinition(ISymbol symbol, SymbolDisplayFormat format, SymbolDisplayTypeDeclarationOptions? typeDeclarationOptions = null, SymbolDisplayAdditionalOptions? additionalOptions = null)
         {
             if (Format.Includes(SymbolDefinitionPartFilter.Attributes))
                 WriteAttributes(symbol);
 
-            base.Write(symbol, format, typeDeclarationOptions, additionalOptions);
+            base.WriteDefinition(symbol, format, typeDeclarationOptions, additionalOptions);
         }
     }
 }

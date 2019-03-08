@@ -19,7 +19,8 @@ namespace Roslynator.Documentation.Json
     {
         private JsonWriter _writer;
         private StringBuilder _attributeStringBuilder;
-        private SymbolDefinitionWriter _attributeWriter;
+
+        private SymbolDefinitionWriter _definitionWriter;
 
         public SymbolDefinitionJsonWriter(
             JsonWriter writer,
@@ -122,7 +123,7 @@ namespace Roslynator.Documentation.Json
             WritePropertyName("namespace");
 
             if (!namespaceSymbol.IsGlobalNamespace)
-                Write(namespaceSymbol, format ?? NamespaceFormat);
+                WriteDefinition(namespaceSymbol, format ?? NamespaceFormat);
         }
 
         public override void WriteEndNamespace(INamespaceSymbol namespaceSymbol)
@@ -160,7 +161,7 @@ namespace Roslynator.Documentation.Json
                 if (typeSymbol != null)
                 {
                     WritePropertyName("type");
-                    Write(typeSymbol, format, typeDeclarationOptions);
+                    WriteDefinition(typeSymbol, format, typeDeclarationOptions);
 
                     if (Format.Includes(SymbolDefinitionPartFilter.Attributes))
                     {
@@ -175,7 +176,7 @@ namespace Roslynator.Documentation.Json
             }
             else if (typeSymbol != null)
             {
-                Write(typeSymbol, format, typeDeclarationOptions);
+                WriteDefinition(typeSymbol, format, typeDeclarationOptions);
             }
             else
             {
@@ -225,7 +226,7 @@ namespace Roslynator.Documentation.Json
                 && HasAttributes(symbol, Filter))
             {
                 WritePropertyName("member");
-                Write(symbol, format);
+                WriteDefinition(symbol, format);
                 WriteAttributes(symbol);
                 WriteParameters(GetParameters(symbol));
 
@@ -234,7 +235,7 @@ namespace Roslynator.Documentation.Json
             }
             else
             {
-                Write(symbol, format);
+                WriteDefinition(symbol, format);
             }
         }
 
@@ -275,12 +276,12 @@ namespace Roslynator.Documentation.Json
                 && HasAttributes(symbol, Filter))
             {
                 WritePropertyName("member");
-                Write(symbol, format);
+                WriteDefinition(symbol, format);
                 WriteAttributes(symbol);
             }
             else
             {
-                Write(symbol, format);
+                WriteDefinition(symbol, format);
             }
         }
 
@@ -309,14 +310,14 @@ namespace Roslynator.Documentation.Json
 
         public override void WriteAttribute(AttributeData attribute)
         {
-            if (_attributeWriter == null)
+            if (_definitionWriter == null)
             {
                 _attributeStringBuilder = new StringBuilder();
                 var stringWriter = new StringWriter(_attributeStringBuilder);
-                _attributeWriter = new SymbolDefinitionTextWriter(stringWriter, Filter, Format, DocumentationProvider);
+                _definitionWriter = new SymbolDefinitionTextWriter(stringWriter, Filter, Format, DocumentationProvider);
             }
 
-            _attributeWriter.WriteAttribute(attribute);
+            _definitionWriter.WriteAttribute(attribute);
 
             WriteValue(_attributeStringBuilder.ToString());
 
@@ -408,7 +409,7 @@ namespace Roslynator.Documentation.Json
                 WriteStartObject();
 
                 WritePropertyName("type");
-                Write(typeSymbol, TypeFormat);
+                WriteDefinition(typeSymbol, TypeFormat);
 
                 if (Format.Includes(SymbolDefinitionPartFilter.Attributes))
                 {
@@ -436,7 +437,7 @@ namespace Roslynator.Documentation.Json
             }
             else if (typeSymbol != null)
             {
-                Write(typeSymbol, TypeFormat);
+                WriteDefinition(typeSymbol, TypeFormat);
             }
             else
             {
@@ -507,16 +508,16 @@ namespace Roslynator.Documentation.Json
             WriteEndTypes();
         }
 
-        public override void Write(ImmutableArray<SymbolDisplayPart> parts)
+        public override void WriteDefinition(ISymbol symbol, ImmutableArray<SymbolDisplayPart> parts)
         {
-            if (_attributeWriter == null)
+            if (_definitionWriter == null)
             {
                 _attributeStringBuilder = new StringBuilder();
                 var stringWriter = new StringWriter(_attributeStringBuilder);
-                _attributeWriter = new SymbolDefinitionTextWriter(stringWriter, Filter, Format, DocumentationProvider);
+                _definitionWriter = new SymbolDefinitionTextWriter(stringWriter, Filter, Format, DocumentationProvider);
             }
 
-            _attributeWriter.Write(parts);
+            _definitionWriter.WriteDefinition(symbol, parts);
 
             WriteValue(_attributeStringBuilder.ToString());
 
@@ -607,12 +608,12 @@ namespace Roslynator.Documentation.Json
                     try
                     {
                         ((IDisposable)_writer).Dispose();
-                        _attributeWriter.Dispose();
+                        _definitionWriter.Dispose();
                     }
                     finally
                     {
                         _writer = null;
-                        _attributeWriter = null;
+                        _definitionWriter = null;
                     }
                 }
             }

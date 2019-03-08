@@ -153,17 +153,17 @@ namespace Roslynator.CSharp
   public static class WorkspaceSyntaxExtensions
 
   <summary>Enables to enumerate expressions of a binary expression and expressions of nested binary expressions of the same kind as parent binary expression.</summary>
-  public readonly struct ExpressionChain : IEnumerable<ExpressionSyntax>, IEquatable<ExpressionChain>
+  public readonly struct ExpressionChain : IEquatable<ExpressionChain>, IEnumerable<ExpressionSyntax>
 
     public struct Enumerator
 
     <summary>Enables to enumerate expressions of <see cref="T:Roslynator.CSharp.ExpressionChain" /> in a reversed order.</summary>
-    public readonly struct Reversed : IEnumerable<ExpressionSyntax>, IEquatable<ExpressionChain.Reversed>
+    public readonly struct Reversed : IEquatable<ExpressionChain.Reversed>, IEnumerable<ExpressionSyntax>
 
       public struct Enumerator
 
   <summary>Enables to enumerate if statement cascade.</summary>
-  public readonly struct IfStatementCascade : IEnumerable<IfStatementOrElseClause>, IEquatable<IfStatementCascade>
+  public readonly struct IfStatementCascade : IEquatable<IfStatementCascade>, IEnumerable<IfStatementOrElseClause>
 
     public struct Enumerator
 

@@ -31,7 +31,6 @@ namespace Roslynator.CommandLine
             SymbolDefinitionFormatOptions formatOptions,
             SymbolDefinitionListLayout layout,
             SymbolDefinitionPartFilter ignoredParts,
-            string rootDirectoryUrl,
             in ProjectFilter projectFilter) : base(projectFilter)
         {
             Options = options;
@@ -39,7 +38,6 @@ namespace Roslynator.CommandLine
             FormatOptions = formatOptions;
             Layout = layout;
             IgnoredParts = ignoredParts;
-            RootDirectoryUrl = rootDirectoryUrl;
         }
 
         public ListSymbolsCommandLineOptions Options { get; }
@@ -51,8 +49,6 @@ namespace Roslynator.CommandLine
         public SymbolDefinitionListLayout Layout { get; }
 
         public SymbolDefinitionPartFilter IgnoredParts { get; }
-
-        public string RootDirectoryUrl { get; }
 
         public override async Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default)
         {
@@ -148,7 +144,7 @@ namespace Roslynator.CommandLine
                     using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read))
                     using (var streamWriter = new StreamWriter(fileStream, Encodings.UTF8NoBom))
                     using (MarkdownWriter markdownWriter = MarkdownWriter.Create(streamWriter, markdownWriterSettings))
-                    using (SymbolDefinitionWriter writer = new SymbolDefinitionMarkdownWriter(markdownWriter, SymbolFilterOptions, format, rootDirectoryUrl: RootDirectoryUrl))
+                    using (SymbolDefinitionWriter writer = new SymbolDefinitionMarkdownWriter(markdownWriter, SymbolFilterOptions, format))
                     {
                         writer.WriteDocument(assemblies, cancellationToken);
                     }
@@ -333,7 +329,7 @@ namespace Roslynator.CommandLine
             WriteLine();
 
             using (MarkdownWriter markdownWriter = MarkdownWriter.Create(ConsoleOut))
-            using (SymbolDefinitionWriter writer = new SymbolDefinitionMarkdownWriter(markdownWriter, SymbolFilterOptions, format, null, RootDirectoryUrl))
+            using (SymbolDefinitionWriter writer = new SymbolDefinitionMarkdownWriter(markdownWriter, SymbolFilterOptions, format, null))
             {
                 writer.WriteDocument(assemblies, cancellationToken);
             }

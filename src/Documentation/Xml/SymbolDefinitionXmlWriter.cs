@@ -106,7 +106,7 @@ namespace Roslynator.Documentation.Xml
             WriteStartAttribute("name");
 
             if (!namespaceSymbol.IsGlobalNamespace)
-                Write(namespaceSymbol, format ?? NamespaceFormat);
+                WriteDefinition(namespaceSymbol, format ?? NamespaceFormat);
 
             WriteEndAttribute();
             WriteDocumentationComment(namespaceSymbol);
@@ -141,7 +141,7 @@ namespace Roslynator.Documentation.Xml
             if (typeSymbol != null)
             {
                 WriteStartAttribute("def");
-                Write(typeSymbol, format ?? TypeFormat, typeDeclarationOptions);
+                WriteDefinition(typeSymbol, format ?? TypeFormat, typeDeclarationOptions);
                 WriteEndAttribute();
                 WriteDocumentationComment(typeSymbol);
 
@@ -191,7 +191,7 @@ namespace Roslynator.Documentation.Xml
             }
 
             WriteStartAttribute("def");
-            Write(symbol, format);
+            WriteDefinition(symbol, format);
             WriteEndAttribute();
             WriteDocumentationComment(symbol);
 
@@ -232,7 +232,7 @@ namespace Roslynator.Documentation.Xml
         public override void WriteEnumMemberDefinition(ISymbol symbol, SymbolDisplayFormat format = null)
         {
             WriteStartAttribute("def");
-            Write(symbol, format ?? EnumMemberFormat);
+            WriteDefinition(symbol, format ?? EnumMemberFormat);
             WriteEndAttribute();
             WriteDocumentationComment(symbol);
 

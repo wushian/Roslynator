@@ -191,7 +191,7 @@ public class System.Object
       public bool MoveNext();
       public void Reset();
 
-    public readonly struct Roslynator.CSharp.ExpressionChain : IEnumerable<ExpressionSyntax>, IEquatable<ExpressionChain>
+    public readonly struct Roslynator.CSharp.ExpressionChain : IEquatable<ExpressionChain>, IEnumerable<ExpressionSyntax>
 
       public BinaryExpressionSyntax BinaryExpression { get; }
       public TextSpan? Span { get; }
@@ -215,7 +215,7 @@ public class System.Object
       public bool MoveNext();
       public void Reset();
 
-    public readonly struct Roslynator.CSharp.ExpressionChain.Reversed : IEnumerable<ExpressionSyntax>, IEquatable<ExpressionChain.Reversed>
+    public readonly struct Roslynator.CSharp.ExpressionChain.Reversed : IEquatable<ExpressionChain.Reversed>, IEnumerable<ExpressionSyntax>
 
       public Reversed(in ExpressionChain chain);
 
@@ -237,7 +237,7 @@ public class System.Object
       public bool MoveNext();
       public void Reset();
 
-    public readonly struct Roslynator.CSharp.IfStatementCascade : IEnumerable<IfStatementOrElseClause>, IEquatable<IfStatementCascade>
+    public readonly struct Roslynator.CSharp.IfStatementCascade : IEquatable<IfStatementCascade>, IEnumerable<IfStatementOrElseClause>
 
       public IfStatementSyntax IfStatement { get; }
 
@@ -838,7 +838,7 @@ public class System.Object
 
   public abstract class System.Collections.Generic.EqualityComparer<T> : IEqualityComparer, IEqualityComparer<T>
 
-    public sealed class Roslynator.MetadataNameEqualityComparer<TSymbol> : EqualityComparer<TSymbol> where TSymbol : Microsoft.CodeAnalysis.ISymbol
+    public sealed class Roslynator.MetadataNameEqualityComparer<TSymbol> : EqualityComparer<TSymbol> where TSymbol : ISymbol
 
       public static MetadataNameEqualityComparer<TSymbol> Instance { get; }
 
@@ -862,7 +862,7 @@ public class System.Object
     public static bool IsUniqueName(string name, IEnumerable<string> reservedNames, bool isCaseSensitive = true);
     public static bool IsUniqueName(string name, ImmutableArray<ISymbol> symbols, bool isCaseSensitive = true);
 
-  public class Roslynator.SeparatedSyntaxListSelection<TNode> : ISelection<TNode> where TNode : Microsoft.CodeAnalysis.SyntaxNode
+  public class Roslynator.SeparatedSyntaxListSelection<TNode> : ISelection<TNode> where TNode : SyntaxNode
 
     protected SeparatedSyntaxListSelection(SeparatedSyntaxList<TNode> list, TextSpan span, int firstIndex, int lastIndex);
 
@@ -880,7 +880,7 @@ public class System.Object
     public TNode Last();
     public static bool TryCreate(SeparatedSyntaxList<TNode> list, TextSpan span, out SeparatedSyntaxListSelection<TNode> selection);
 
-  public class Roslynator.SyntaxListSelection<TNode> : ISelection<TNode> where TNode : Microsoft.CodeAnalysis.SyntaxNode
+  public class Roslynator.SyntaxListSelection<TNode> : ISelection<TNode> where TNode : SyntaxNode
 
     protected SyntaxListSelection(SyntaxList<TNode> list, TextSpan span, int firstIndex, int lastIndex);
 
@@ -916,7 +916,7 @@ public class System.Object
       public static bool TryCreate(BlockSyntax block, TextSpan span, out StatementListSelection selectedStatements);
       public static bool TryCreate(SwitchSectionSyntax switchSection, TextSpan span, out StatementListSelection selectedStatements);
 
-  public abstract class Roslynator.CSharp.ModifierList<TNode> where TNode : Microsoft.CodeAnalysis.SyntaxNode
+  public abstract class Roslynator.CSharp.ModifierList<TNode> where TNode : SyntaxNode
 
     public static ModifierList<TNode> Instance { get; }
 

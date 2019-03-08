@@ -1201,7 +1201,7 @@
           ]
         },
         {
-          "type": "public readonly struct ExpressionChain : IEnumerable<ExpressionSyntax>, IEquatable<ExpressionChain>",
+          "type": "public readonly struct ExpressionChain : IEquatable<ExpressionChain>, IEnumerable<ExpressionSyntax>",
           "members": [
             "public BinaryExpressionSyntax BinaryExpression { get; }",
             "public TextSpan? Span { get; }",
@@ -1226,7 +1226,7 @@
               ]
             },
             {
-              "type": "public readonly struct Reversed : IEnumerable<ExpressionSyntax>, IEquatable<ExpressionChain.Reversed>",
+              "type": "public readonly struct Reversed : IEquatable<ExpressionChain.Reversed>, IEnumerable<ExpressionSyntax>",
               "members": [
                 "public Reversed(in ExpressionChain chain)",
                 "public override bool Equals(object obj)",
@@ -1253,7 +1253,7 @@
           ]
         },
         {
-          "type": "public readonly struct IfStatementCascade : IEnumerable<IfStatementOrElseClause>, IEquatable<IfStatementCascade>",
+          "type": "public readonly struct IfStatementCascade : IEquatable<IfStatementCascade>, IEnumerable<IfStatementOrElseClause>",
           "members": [
             "public IfStatementSyntax IfStatement { get; }",
             "public override bool Equals(object obj)",

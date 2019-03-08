@@ -68,13 +68,6 @@ namespace Roslynator.CommandLine
                 MetaValue = "<ASSEMBLY_FILE>")]
         public IEnumerable<string> References { get; set; }
 
-#if DEBUG
-        [Option(longName: ParameterNames.RootDirectoryUrl,
-            HelpText = "Defines a relative url to the documentation root directory. This option is relevant only for markdown output.",
-            MetaValue = "<ROOT_DIRECTORY_URL>")]
-        public string RootDirectoryUrl { get; set; }
-#endif
-
         [Option(longName: ParameterNames.Visibility,
             Default = nameof(Roslynator.Visibility.Private),
             HelpText = "Defines one or more visibility of a type or a member. Allowed values are public, internal or private.",

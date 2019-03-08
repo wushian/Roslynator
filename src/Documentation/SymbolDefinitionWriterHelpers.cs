@@ -11,6 +11,18 @@ namespace Roslynator.Documentation
 {
     internal static class SymbolDefinitionWriterHelpers
     {
+        public static ImmutableArray<SymbolDisplayPart> RemoveAttributeSuffix(ISymbol symbol, ImmutableArray<SymbolDisplayPart> parts)
+        {
+            if (symbol.Name.EndsWith("Attribute", StringComparison.Ordinal)
+                && symbol.IsKind(SymbolKind.NamedType)
+                && ((INamedTypeSymbol)symbol).InheritsFrom(MetadataNames.System_Attribute))
+            {
+                return RemoveAttributeSuffix(parts);
+            }
+
+            return parts;
+        }
+
         public static ImmutableArray<SymbolDisplayPart> RemoveAttributeSuffix(ImmutableArray<SymbolDisplayPart> parts)
         {
             SymbolDisplayPart part = parts.FirstOrDefault(f => f.Kind == SymbolDisplayPartKind.ClassName);

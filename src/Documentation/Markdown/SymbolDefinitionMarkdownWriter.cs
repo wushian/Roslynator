@@ -16,14 +16,10 @@ namespace Roslynator.Documentation.Markdown
             MarkdownWriter writer,
             SymbolFilterOptions filter = null,
             DefinitionListFormat format = null,
-            SymbolDocumentationProvider documentationProvider = null,
-            string rootDirectoryUrl = null) : base(filter, format, documentationProvider)
+            SymbolDocumentationProvider documentationProvider = null) : base(filter, format, documentationProvider)
         {
             _writer = writer;
-            RootDirectoryUrl = rootDirectoryUrl;
         }
-
-        public string RootDirectoryUrl { get; }
 
         public override bool SupportsMultilineDefinitions => false;
 
@@ -182,27 +178,6 @@ namespace Roslynator.Documentation.Markdown
         private void WriteEndBulletItem()
         {
             _writer.WriteEndBulletItem();
-        }
-
-        public override void Write(ISymbol symbol, SymbolDisplayFormat format, SymbolDisplayTypeDeclarationOptions? typeDeclarationOptions = null, SymbolDisplayAdditionalOptions? additionalOptions = null)
-        {
-            if (RootDirectoryUrl != null)
-                _writer.WriteStartLink();
-
-            base.Write(symbol, format, typeDeclarationOptions, additionalOptions);
-
-            if (RootDirectoryUrl != null)
-            {
-                DocumentationUrlProvider urlProvider = WellKnownUrlProviders.GitHub;
-
-                ImmutableArray<string> folders = urlProvider.GetFolders(symbol);
-
-                string url = urlProvider.GetLocalUrl(folders).Url;
-
-                url = RootDirectoryUrl + url;
-
-                _writer.WriteEndLink(url: url);
-            }
         }
 
         public override void Write(SymbolDisplayPart part)

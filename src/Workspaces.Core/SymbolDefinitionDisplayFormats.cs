@@ -6,7 +6,7 @@ namespace Roslynator
 {
     internal static class SymbolDefinitionDisplayFormats
     {
-        private static SymbolDisplayFormat Default { get; } = new SymbolDisplayFormat(
+        public static SymbolDisplayFormat Default { get; } = new SymbolDisplayFormat(
             globalNamespaceStyle: DefaultGlobalNamespaceStyle,
             typeQualificationStyle: DefaultTypeQualificationStyle,
             genericsOptions: DefaultGenericsOptions | SymbolDisplayGenericsOptions.IncludeTypeParameters,
@@ -70,9 +70,6 @@ namespace Roslynator
 
         public static SymbolDisplayFormat FullDefinition_NameAndContainingTypesAndNamespaces { get; } = FullDefinition_NameOnly.Update(
             typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces);
-
-        public static SymbolDisplayFormat HierarchyType { get; } = FullDefinition_NameAndContainingTypesAndNamespaces.Update(
-            miscellaneousOptions: SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers);
 
         internal const SymbolDisplayGlobalNamespaceStyle DefaultGlobalNamespaceStyle
             = SymbolDisplayGlobalNamespaceStyle.Omitted;

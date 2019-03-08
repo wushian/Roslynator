@@ -270,7 +270,6 @@ namespace Roslynator.CommandLine
                 formatOptions: formatOptions,
                 layout: layout,
                 ignoredParts: ignoredParts,
-                rootDirectoryUrl: options.RootDirectoryUrl,
                 projectFilter: projectFilter);
 
             CommandResult result = await command.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);

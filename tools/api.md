@@ -1009,7 +1009,7 @@
 * &emsp; \| &emsp; public static SyntaxToken WithRenameAnnotation\(this SyntaxToken token\);
 * &emsp; \| &emsp; public static SyntaxToken WithSimplifierAnnotation\(this SyntaxToken token\);
 * &emsp; \| &emsp; public static TNode WithSimplifierAnnotation\<TNode>\(this TNode node\) where TNode : SyntaxNode;
-* &emsp; public readonly struct ExpressionChain : IEnumerable\<ExpressionSyntax>, IEquatable\<ExpressionChain>
+* &emsp; public readonly struct ExpressionChain : IEquatable\<ExpressionChain>, IEnumerable\<ExpressionSyntax>
 * &emsp; \| &emsp; public BinaryExpressionSyntax BinaryExpression \{ get; \}
 * &emsp; \| &emsp; public TextSpan? Span \{ get; \}
 * &emsp; \| &emsp; public override bool Equals\(object obj\);
@@ -1026,7 +1026,7 @@
 * &emsp; \| &emsp; \| &emsp; public override int GetHashCode\(\);
 * &emsp; \| &emsp; \| &emsp; public bool MoveNext\(\);
 * &emsp; \| &emsp; \| &emsp; public void Reset\(\);
-* &emsp; \| &emsp; public readonly struct Reversed : IEnumerable\<ExpressionSyntax>, IEquatable\<ExpressionChain\.Reversed>
+* &emsp; \| &emsp; public readonly struct Reversed : IEquatable\<ExpressionChain\.Reversed>, IEnumerable\<ExpressionSyntax>
 * &emsp; \| &emsp; \| &emsp; public Reversed\(in ExpressionChain chain\);
 * &emsp; \| &emsp; \| &emsp; public override bool Equals\(object obj\);
 * &emsp; \| &emsp; \| &emsp; public bool Equals\(ExpressionChain\.Reversed other\);
@@ -1041,7 +1041,7 @@
 * &emsp; \| &emsp; \| &emsp; \| &emsp; public override int GetHashCode\(\);
 * &emsp; \| &emsp; \| &emsp; \| &emsp; public bool MoveNext\(\);
 * &emsp; \| &emsp; \| &emsp; \| &emsp; public void Reset\(\);
-* &emsp; public readonly struct IfStatementCascade : IEnumerable\<IfStatementOrElseClause>, IEquatable\<IfStatementCascade>
+* &emsp; public readonly struct IfStatementCascade : IEquatable\<IfStatementCascade>, IEnumerable\<IfStatementOrElseClause>
 * &emsp; \| &emsp; public IfStatementSyntax IfStatement \{ get; \}
 * &emsp; \| &emsp; public override bool Equals\(object obj\);
 * &emsp; \| &emsp; public bool Equals\(IfStatementCascade other\);

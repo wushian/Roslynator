@@ -1897,7 +1897,7 @@ namespace Roslynator.CSharp
     public static TNode WithSimplifierAnnotation<TNode>(this TNode node) where TNode : SyntaxNode;
 
   <summary>Enables to enumerate expressions of a binary expression and expressions of nested binary expressions of the same kind as parent binary expression.</summary>
-  public readonly struct ExpressionChain : IEnumerable<ExpressionSyntax>, IEquatable<ExpressionChain>
+  public readonly struct ExpressionChain : IEquatable<ExpressionChain>, IEnumerable<ExpressionSyntax>
 
     <summary>The binary expression.</summary>
     public BinaryExpressionSyntax BinaryExpression { get; }
@@ -1935,7 +1935,7 @@ namespace Roslynator.CSharp
       public void Reset();
 
     <summary>Enables to enumerate expressions of <see cref="T:Roslynator.CSharp.ExpressionChain" /> in a reversed order.</summary>
-    public readonly struct Reversed : IEnumerable<ExpressionSyntax>, IEquatable<ExpressionChain.Reversed>
+    public readonly struct Reversed : IEquatable<ExpressionChain.Reversed>, IEnumerable<ExpressionSyntax>
 
       public Reversed(in ExpressionChain chain);
 
@@ -1958,7 +1958,7 @@ namespace Roslynator.CSharp
         public void Reset();
 
   <summary>Enables to enumerate if statement cascade.</summary>
-  public readonly struct IfStatementCascade : IEnumerable<IfStatementOrElseClause>, IEquatable<IfStatementCascade>
+  public readonly struct IfStatementCascade : IEquatable<IfStatementCascade>, IEnumerable<IfStatementOrElseClause>
 
     <summary>The if statement.</summary>
     public IfStatementSyntax IfStatement { get; }

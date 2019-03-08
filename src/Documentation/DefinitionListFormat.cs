@@ -60,33 +60,26 @@ namespace Roslynator.Documentation
 
         internal SymbolDisplayFormat Update(SymbolDisplayFormat format)
         {
-            SymbolDisplayGenericsOptions genericsOptions = SymbolDisplayGenericsOptions.IncludeTypeParameters
-                | SymbolDisplayGenericsOptions.IncludeVariance;
+            SymbolDisplayGenericsOptions genericsOptions = format.GenericsOptions;
 
-            if (Includes(SymbolDefinitionPartFilter.Constraints))
-                genericsOptions |= SymbolDisplayGenericsOptions.IncludeTypeConstraints;
+            if (!Includes(SymbolDefinitionPartFilter.Constraints))
+                genericsOptions &= ~SymbolDisplayGenericsOptions.IncludeTypeConstraints;
 
-            SymbolDisplayMemberOptions memberOptions = SymbolDisplayMemberOptions.IncludeType
-                | SymbolDisplayMemberOptions.IncludeExplicitInterface
-                | SymbolDisplayMemberOptions.IncludeParameters
-                | SymbolDisplayMemberOptions.IncludeConstantValue
-                | SymbolDisplayMemberOptions.IncludeRef;
+            SymbolDisplayMemberOptions memberOptions = format.MemberOptions;
 
-            if (Includes(SymbolDefinitionPartFilter.Modifiers))
-                memberOptions |= SymbolDisplayMemberOptions.IncludeModifiers;
+            if (!Includes(SymbolDefinitionPartFilter.Modifiers))
+                memberOptions &= ~SymbolDisplayMemberOptions.IncludeModifiers;
 
-            if (Includes(SymbolDefinitionPartFilter.Accessibility))
-                memberOptions |= SymbolDisplayMemberOptions.IncludeAccessibility;
+            if (!Includes(SymbolDefinitionPartFilter.Accessibility))
+                memberOptions &= ~SymbolDisplayMemberOptions.IncludeAccessibility;
 
-            SymbolDisplayParameterOptions parameterOptions = SymbolDisplayParameterOptions.IncludeExtensionThis
-                | SymbolDisplayParameterOptions.IncludeParamsRefOut
-                | SymbolDisplayParameterOptions.IncludeType;
+            SymbolDisplayParameterOptions parameterOptions = format.ParameterOptions;
 
-            if (Includes(SymbolDefinitionPartFilter.ParameterName))
-                parameterOptions |= SymbolDisplayParameterOptions.IncludeName;
+            if (!Includes(SymbolDefinitionPartFilter.ParameterName))
+                parameterOptions &= ~SymbolDisplayParameterOptions.IncludeName;
 
-            if (Includes(SymbolDefinitionPartFilter.ParameterDefaultValue))
-                parameterOptions |= SymbolDisplayParameterOptions.IncludeDefaultValue;
+            if (!Includes(SymbolDefinitionPartFilter.ParameterDefaultValue))
+                parameterOptions &= ~SymbolDisplayParameterOptions.IncludeDefaultValue;
 
             return format.Update(
                 genericsOptions: genericsOptions,

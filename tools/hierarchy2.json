@@ -224,7 +224,7 @@
               ]
             },
             {
-              "type": "public readonly struct Roslynator.CSharp.ExpressionChain : IEnumerable<ExpressionSyntax>, IEquatable<ExpressionChain>",
+              "type": "public readonly struct Roslynator.CSharp.ExpressionChain : IEquatable<ExpressionChain>, IEnumerable<ExpressionSyntax>",
               "members": [
                 "public BinaryExpressionSyntax BinaryExpression { get; }",
                 "public TextSpan? Span { get; }",
@@ -249,7 +249,7 @@
               ]
             },
             {
-              "type": "public readonly struct Roslynator.CSharp.ExpressionChain.Reversed : IEnumerable<ExpressionSyntax>, IEquatable<ExpressionChain.Reversed>",
+              "type": "public readonly struct Roslynator.CSharp.ExpressionChain.Reversed : IEquatable<ExpressionChain.Reversed>, IEnumerable<ExpressionSyntax>",
               "members": [
                 "public Reversed(in ExpressionChain chain)",
                 "public override bool Equals(object obj)",
@@ -272,7 +272,7 @@
               ]
             },
             {
-              "type": "public readonly struct Roslynator.CSharp.IfStatementCascade : IEnumerable<IfStatementOrElseClause>, IEquatable<IfStatementCascade>",
+              "type": "public readonly struct Roslynator.CSharp.IfStatementCascade : IEquatable<IfStatementCascade>, IEnumerable<IfStatementOrElseClause>",
               "members": [
                 "public IfStatementSyntax IfStatement { get; }",
                 "public override bool Equals(object obj)",
@@ -872,7 +872,7 @@
           "type": "public abstract class System.Collections.Generic.EqualityComparer<T> : IEqualityComparer, IEqualityComparer<T>",
           "types": [
             {
-              "type": "public sealed class Roslynator.MetadataNameEqualityComparer<TSymbol> : EqualityComparer<TSymbol> where TSymbol : Microsoft.CodeAnalysis.ISymbol",
+              "type": "public sealed class Roslynator.MetadataNameEqualityComparer<TSymbol> : EqualityComparer<TSymbol> where TSymbol : ISymbol",
               "members": [
                 "public static MetadataNameEqualityComparer<TSymbol> Instance { get; }",
                 "public override bool Equals(TSymbol x, TSymbol y)",
@@ -899,7 +899,7 @@
           ]
         },
         {
-          "type": "public class Roslynator.SeparatedSyntaxListSelection<TNode> : ISelection<TNode> where TNode : Microsoft.CodeAnalysis.SyntaxNode",
+          "type": "public class Roslynator.SeparatedSyntaxListSelection<TNode> : ISelection<TNode> where TNode : SyntaxNode",
           "members": [
             "protected SeparatedSyntaxListSelection(SeparatedSyntaxList<TNode> list, TextSpan span, int firstIndex, int lastIndex)",
             "public int Count { get; }",
@@ -916,7 +916,7 @@
           ]
         },
         {
-          "type": "public class Roslynator.SyntaxListSelection<TNode> : ISelection<TNode> where TNode : Microsoft.CodeAnalysis.SyntaxNode",
+          "type": "public class Roslynator.SyntaxListSelection<TNode> : ISelection<TNode> where TNode : SyntaxNode",
           "members": [
             "protected SyntaxListSelection(SyntaxList<TNode> list, TextSpan span, int firstIndex, int lastIndex)",
             "public int Count { get; }",
@@ -956,7 +956,7 @@
           ]
         },
         {
-          "type": "public abstract class Roslynator.CSharp.ModifierList<TNode> where TNode : Microsoft.CodeAnalysis.SyntaxNode",
+          "type": "public abstract class Roslynator.CSharp.ModifierList<TNode> where TNode : SyntaxNode",
           "members": [
             "public static ModifierList<TNode> Instance { get; }",
             "public TNode Insert(TNode node, SyntaxKind kind, IComparer<SyntaxKind> comparer = null)",

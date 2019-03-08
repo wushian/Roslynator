@@ -2171,7 +2171,7 @@ assembly Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, PublicKe
 <code class="csharp">    /// &lt;summary&gt;Returns true if the list of either empty or contains only whitespace.&lt;/summary&gt;
     public static <a href="https://docs.microsoft.com/en-us/dotnet/api/system.boolean">bool</a> <b>IsEmptyOrWhitespace</b>(this <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxtrivialist">SyntaxTriviaList</a> triviaList);</code>
 
-<code class="csharp">    /// &lt;summary&gt;Returns true if the trivia is <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind.endoflinetrivia">SyntaxKind.EndOfLineTrivia</a>.&lt;/summary&gt;
+<code class="csharp">    /// &lt;summary&gt;Returns true if the trivia is <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind">SyntaxKind</a>.EndOfLineTrivia.&lt;/summary&gt;
     public static <a href="https://docs.microsoft.com/en-us/dotnet/api/system.boolean">bool</a> <b>IsEndOfLineTrivia</b>(this <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxtrivia">SyntaxTrivia</a> trivia);</code>
 
 <code class="csharp">    /// &lt;summary&gt;Returns true if the specified literal expression is a hexadecimal numeric literal expression.&lt;/summary&gt;
@@ -2280,10 +2280,10 @@ assembly Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, PublicKe
 <code class="csharp">    /// &lt;summary&gt;Returns true if the type is <a href="https://docs.microsoft.com/en-us/dotnet/api/system.void">void</a>.&lt;/summary&gt;
     public static <a href="https://docs.microsoft.com/en-us/dotnet/api/system.boolean">bool</a> <b>IsVoid</b>(this <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.typesyntax">TypeSyntax</a> type);</code>
 
-<code class="csharp">    /// &lt;summary&gt;Returns true if the trivia is either <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind.whitespacetrivia">SyntaxKind.WhitespaceTrivia</a> or <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind.endoflinetrivia">SyntaxKind.EndOfLineTrivia</a>.&lt;/summary&gt;
+<code class="csharp">    /// &lt;summary&gt;Returns true if the trivia is either <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind">SyntaxKind</a>.WhitespaceTrivia or <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind">SyntaxKind</a>.EndOfLineTrivia.&lt;/summary&gt;
     public static <a href="https://docs.microsoft.com/en-us/dotnet/api/system.boolean">bool</a> <b>IsWhitespaceOrEndOfLineTrivia</b>(this <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxtrivia">SyntaxTrivia</a> trivia);</code>
 
-<code class="csharp">    /// &lt;summary&gt;Returns true if the trivia is <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind.whitespacetrivia">SyntaxKind.WhitespaceTrivia</a>.&lt;/summary&gt;
+<code class="csharp">    /// &lt;summary&gt;Returns true if the trivia is <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind">SyntaxKind</a>.WhitespaceTrivia.&lt;/summary&gt;
     public static <a href="https://docs.microsoft.com/en-us/dotnet/api/system.boolean">bool</a> <b>IsWhitespaceTrivia</b>(this <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxtrivia">SyntaxTrivia</a> trivia);</code>
 
 <code class="csharp">    /// &lt;summary&gt;Returns true if the specified statement is a yield break statement.&lt;/summary&gt;
@@ -2395,42 +2395,42 @@ assembly Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, PublicKe
 
 <code class="csharp">    /// &lt;summary&gt;
     /// Removes all leading whitespace from the leading trivia and returns a new token with the new leading trivia.
-    /// <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind.whitespacetrivia">SyntaxKind.WhitespaceTrivia</a> and <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind.endoflinetrivia">SyntaxKind.EndOfLineTrivia</a> is considered to be a whitespace.
+    /// <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind">SyntaxKind</a>.WhitespaceTrivia and <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind">SyntaxKind</a>.EndOfLineTrivia is considered to be a whitespace.
     /// Returns the same token if there is nothing to trim.
     /// &lt;/summary&gt;
     public static <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxtoken">SyntaxToken</a> <b>TrimLeadingTrivia</b>(this <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxtoken">SyntaxToken</a> token);</code>
 
 <code class="csharp">    /// &lt;summary&gt;
     /// Removes all leading whitespace from the leading trivia and returns a new node with the new leading trivia.
-    /// <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind.whitespacetrivia">SyntaxKind.WhitespaceTrivia</a> and <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind.endoflinetrivia">SyntaxKind.EndOfLineTrivia</a> is considered to be a whitespace.
+    /// <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind">SyntaxKind</a>.WhitespaceTrivia and <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind">SyntaxKind</a>.EndOfLineTrivia is considered to be a whitespace.
     /// Returns the same node if there is nothing to trim.
     /// &lt;/summary&gt;
     public static TNode <b>TrimLeadingTrivia&lt;TNode&gt;</b>(this TNode node) where TNode : <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxnode">SyntaxNode</a>;</code>
 
 <code class="csharp">    /// &lt;summary&gt;
     /// Removes all trailing whitespace from the trailing trivia and returns a new token with the new trailing trivia.
-    /// <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind.whitespacetrivia">SyntaxKind.WhitespaceTrivia</a> and <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind.endoflinetrivia">SyntaxKind.EndOfLineTrivia</a> is considered to be a whitespace.
+    /// <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind">SyntaxKind</a>.WhitespaceTrivia and <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind">SyntaxKind</a>.EndOfLineTrivia is considered to be a whitespace.
     /// Returns the same token if there is nothing to trim.
     /// &lt;/summary&gt;
     public static <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxtoken">SyntaxToken</a> <b>TrimTrailingTrivia</b>(this <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxtoken">SyntaxToken</a> token);</code>
 
 <code class="csharp">    /// &lt;summary&gt;
     /// Removes all trailing whitespace from the trailing trivia and returns a new node with the new trailing trivia.
-    /// <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind.whitespacetrivia">SyntaxKind.WhitespaceTrivia</a> and <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind.endoflinetrivia">SyntaxKind.EndOfLineTrivia</a> is considered to be a whitespace.
+    /// <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind">SyntaxKind</a>.WhitespaceTrivia and <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind">SyntaxKind</a>.EndOfLineTrivia is considered to be a whitespace.
     /// Returns the same node if there is nothing to trim.
     /// &lt;/summary&gt;
     public static TNode <b>TrimTrailingTrivia&lt;TNode&gt;</b>(this TNode node) where TNode : <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxnode">SyntaxNode</a>;</code>
 
 <code class="csharp">    /// &lt;summary&gt;
     /// Removes all leading whitespace from the leading trivia and all trailing whitespace from the trailing trivia and returns a new token with the new trivia.
-    /// <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind.whitespacetrivia">SyntaxKind.WhitespaceTrivia</a> and <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind.endoflinetrivia">SyntaxKind.EndOfLineTrivia</a> is considered to be a whitespace.
+    /// <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind">SyntaxKind</a>.WhitespaceTrivia and <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind">SyntaxKind</a>.EndOfLineTrivia is considered to be a whitespace.
     /// Returns the same token if there is nothing to trim.
     /// &lt;/summary&gt;
     public static <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxtoken">SyntaxToken</a> <b>TrimTrivia</b>(this <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxtoken">SyntaxToken</a> token);</code>
 
 <code class="csharp">    /// &lt;summary&gt;
     /// Removes all leading whitespace from the leading trivia and all trailing whitespace from the trailing trivia and returns a new node with the new trivia.
-    /// <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind.whitespacetrivia">SyntaxKind.WhitespaceTrivia</a> and <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind.endoflinetrivia">SyntaxKind.EndOfLineTrivia</a> is considered to be a whitespace.
+    /// <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind">SyntaxKind</a>.WhitespaceTrivia and <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind">SyntaxKind</a>.EndOfLineTrivia is considered to be a whitespace.
     /// Returns the same node if there is nothing to trim.
     /// &lt;/summary&gt;
     public static TNode <b>TrimTrivia&lt;TNode&gt;</b>(this TNode node) where TNode : <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxnode">SyntaxNode</a>;</code>
@@ -2629,10 +2629,10 @@ assembly Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, PublicKe
     public static <a href="#Roslynator_CSharp_Syntax_ModifierListInfo">ModifierListInfo</a> <b>ModifierListInfo</b>(<a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.structdeclarationsyntax">StructDeclarationSyntax</a> structDeclaration);</code>
 
 <code class="csharp">    /// &lt;summary&gt;Creates a new <a href="#Roslynator_CSharp_Syntax_NullCheckExpressionInfo">NullCheckExpressionInfo</a> from the specified node.&lt;/summary&gt;
-    public static <a href="#Roslynator_CSharp_Syntax_NullCheckExpressionInfo">NullCheckExpressionInfo</a> <b>NullCheckExpressionInfo</b>(<a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxnode">SyntaxNode</a> node, <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a> allowedStyles = <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a>.ComparisonToNull | <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a>.IsPattern, <a href="https://docs.microsoft.com/en-us/dotnet/api/system.boolean">bool</a> walkDownParentheses = true, <a href="https://docs.microsoft.com/en-us/dotnet/api/system.boolean">bool</a> allowMissing = false);</code>
+    public static <a href="#Roslynator_CSharp_Syntax_NullCheckExpressionInfo">NullCheckExpressionInfo</a> <b>NullCheckExpressionInfo</b>(<a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxnode">SyntaxNode</a> node, <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a> allowedStyles = ComparisonToNull | IsPattern, <a href="https://docs.microsoft.com/en-us/dotnet/api/system.boolean">bool</a> walkDownParentheses = true, <a href="https://docs.microsoft.com/en-us/dotnet/api/system.boolean">bool</a> allowMissing = false);</code>
 
 <code class="csharp">    /// &lt;summary&gt;Creates a new <a href="#Roslynator_CSharp_Syntax_NullCheckExpressionInfo">NullCheckExpressionInfo</a> from the specified node.&lt;/summary&gt;
-    public static <a href="#Roslynator_CSharp_Syntax_NullCheckExpressionInfo">NullCheckExpressionInfo</a> <b>NullCheckExpressionInfo</b>(<a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxnode">SyntaxNode</a> node, <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.semanticmodel">SemanticModel</a> semanticModel, <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a> allowedStyles = <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a>.All, <a href="https://docs.microsoft.com/en-us/dotnet/api/system.boolean">bool</a> walkDownParentheses = true, <a href="https://docs.microsoft.com/en-us/dotnet/api/system.boolean">bool</a> allowMissing = false, <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken">CancellationToken</a> cancellationToken = default);</code>
+    public static <a href="#Roslynator_CSharp_Syntax_NullCheckExpressionInfo">NullCheckExpressionInfo</a> <b>NullCheckExpressionInfo</b>(<a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxnode">SyntaxNode</a> node, <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.semanticmodel">SemanticModel</a> semanticModel, <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a> allowedStyles = All, <a href="https://docs.microsoft.com/en-us/dotnet/api/system.boolean">bool</a> walkDownParentheses = true, <a href="https://docs.microsoft.com/en-us/dotnet/api/system.boolean">bool</a> allowMissing = false, <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken">CancellationToken</a> cancellationToken = default);</code>
 
 <code class="csharp">    /// &lt;summary&gt;Creates a new <a href="#Roslynator_CSharp_Syntax_RegionInfo">RegionInfo</a> from the specified endregion directive.&lt;/summary&gt;
     public static <a href="#Roslynator_CSharp_Syntax_RegionInfo">RegionInfo</a> <b>RegionInfo</b>(<a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.endregiondirectivetriviasyntax">EndRegionDirectiveTriviaSyntax</a> endRegionDirective);</code>
@@ -3029,7 +3029,7 @@ assembly Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, PublicKe
     <b>MultiLine</b> = 2,</code>
 
 <code class="csharp">    /// &lt;summary&gt;Non-documentation comment (single-line or multi-line).&lt;/summary&gt;
-    <b>NonDocumentation</b> = <a href="#Roslynator_CSharp_CommentKinds">CommentKinds</a>.SingleLine | <a href="#Roslynator_CSharp_CommentKinds">CommentKinds</a>.MultiLine,</code>
+    <b>NonDocumentation</b> = SingleLine | MultiLine,</code>
 
 <code class="csharp">    /// &lt;summary&gt;Single-line documentation comment.&lt;/summary&gt;
     <b>SingleLineDocumentation</b> = 4,</code>
@@ -3038,10 +3038,10 @@ assembly Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, PublicKe
     <b>MultiLineDocumentation</b> = 8,</code>
 
 <code class="csharp">    /// &lt;summary&gt;Documentation comment (single-line or multi-line).&lt;/summary&gt;
-    <b>Documentation</b> = <a href="#Roslynator_CSharp_CommentKinds">CommentKinds</a>.SingleLineDocumentation | <a href="#Roslynator_CSharp_CommentKinds">CommentKinds</a>.MultiLineDocumentation,</code>
+    <b>Documentation</b> = SingleLineDocumentation | MultiLineDocumentation,</code>
 
 <code class="csharp">    /// &lt;summary&gt;Documentation or non-documentation comment.&lt;/summary&gt;
-    <b>All</b> = <a href="#Roslynator_CSharp_CommentKinds">CommentKinds</a>.NonDocumentation | <a href="#Roslynator_CSharp_CommentKinds">CommentKinds</a>.Documentation,</code>
+    <b>All</b> = NonDocumentation | Documentation,</code>
 
 <a name="Roslynator_CSharp_ModifierKinds" /><code class="csharp">  /// &lt;summary&gt;Specifies C# modifier.&lt;/summary&gt;
   [<a href="https://docs.microsoft.com/en-us/dotnet/api/system.flagsattribute">Flags</a>]
@@ -3066,7 +3066,7 @@ assembly Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, PublicKe
     <b>Internal</b> = 16,</code>
 
 <code class="csharp">    /// &lt;summary&gt;An accessibility modifier.&lt;/summary&gt;
-    <b>Accessibility</b> = <a href="#Roslynator_CSharp_ModifierKinds">ModifierKinds</a>.Public | <a href="#Roslynator_CSharp_ModifierKinds">ModifierKinds</a>.Private | <a href="#Roslynator_CSharp_ModifierKinds">ModifierKinds</a>.Protected | <a href="#Roslynator_CSharp_ModifierKinds">ModifierKinds</a>.Internal,</code>
+    <b>Accessibility</b> = Public | Private | Protected | Internal,</code>
 
 <code class="csharp">    /// &lt;summary&gt;A "const" modifier.&lt;/summary&gt;
     <b>Const</b> = 32,</code>
@@ -3087,7 +3087,7 @@ assembly Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, PublicKe
     <b>Abstract</b> = 1024,</code>
 
 <code class="csharp">    /// &lt;summary&gt;"abstract", "virtual" or "override" modifier.&lt;/summary&gt;
-    <b>AbstractVirtualOverride</b> = <a href="#Roslynator_CSharp_ModifierKinds">ModifierKinds</a>.Virtual | <a href="#Roslynator_CSharp_ModifierKinds">ModifierKinds</a>.Override | <a href="#Roslynator_CSharp_ModifierKinds">ModifierKinds</a>.Abstract,</code>
+    <b>AbstractVirtualOverride</b> = Virtual | Override | Abstract,</code>
 
 <code class="csharp">    /// &lt;summary&gt;A "readonly" modifier.&lt;/summary&gt;
     <b>ReadOnly</b> = 2048,</code>
@@ -3136,7 +3136,7 @@ assembly Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, PublicKe
     <b>NotEqualsToNull</b> = 2,</code>
 
 <code class="csharp">    /// &lt;summary&gt;Expression that uses equality/inequality operator.&lt;/summary&gt;
-    <b>ComparisonToNull</b> = <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a>.EqualsToNull | <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a>.NotEqualsToNull,</code>
+    <b>ComparisonToNull</b> = EqualsToNull | NotEqualsToNull,</code>
 
 <code class="csharp">    /// &lt;summary&gt;&lt;c&gt;x is null&lt;/c&gt;&lt;/summary&gt;
     <b>IsNull</b> = 4,</code>
@@ -3145,25 +3145,25 @@ assembly Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, PublicKe
     <b>NotIsNull</b> = 8,</code>
 
 <code class="csharp">    /// &lt;summary&gt;Expression that uses pattern syntax.&lt;/summary&gt;
-    <b>IsPattern</b> = <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a>.IsNull | <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a>.NotIsNull,</code>
+    <b>IsPattern</b> = IsNull | NotIsNull,</code>
 
 <code class="csharp">    /// &lt;summary&gt;&lt;c&gt;!x.HasValue&lt;/c&gt;&lt;/summary&gt;
     <b>NotHasValue</b> = 16,</code>
 
 <code class="csharp">    /// &lt;summary&gt;Expression that checks whether an expression is null.&lt;/summary&gt;
-    <b>CheckingNull</b> = <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a>.EqualsToNull | <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a>.IsNull | <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a>.NotHasValue,</code>
+    <b>CheckingNull</b> = EqualsToNull | IsNull | NotHasValue,</code>
 
 <code class="csharp">    /// &lt;summary&gt;&lt;c&gt;x.HasValue&lt;/c&gt;&lt;/summary&gt;
     <b>HasValue</b> = 32,</code>
 
 <code class="csharp">    /// &lt;summary&gt;Expression that checks whether an expression is not null.&lt;/summary&gt;
-    <b>CheckingNotNull</b> = <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a>.NotEqualsToNull | <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a>.NotIsNull | <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a>.HasValue,</code>
+    <b>CheckingNotNull</b> = NotEqualsToNull | NotIsNull | HasValue,</code>
 
 <code class="csharp">    /// &lt;summary&gt;Expression that uses <a href="https://docs.microsoft.com/en-us/dotnet/api/system.nullable-1.hasvalue">Nullable.HasValue</a> property.&lt;/summary&gt;
-    <b>HasValueProperty</b> = <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a>.NotHasValue | <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a>.HasValue,</code>
+    <b>HasValueProperty</b> = NotHasValue | HasValue,</code>
 
 <code class="csharp">    /// &lt;summary&gt;All null check styles.&lt;/summary&gt;
-    <b>All</b> = <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a>.ComparisonToNull | <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a>.IsPattern | <a href="#Roslynator_CSharp_NullCheckStyles">NullCheckStyles</a>.HasValueProperty,</code>
+    <b>All</b> = ComparisonToNull | IsPattern | HasValueProperty,</code>
 
 <a name="Roslynator_CSharp_PreprocessorDirectiveKinds" /><code class="csharp">  /// &lt;summary&gt;Specifies C# preprocessor directives.&lt;/summary&gt;
   [<a href="https://docs.microsoft.com/en-us/dotnet/api/system.flagsattribute">Flags</a>]
@@ -3212,7 +3212,7 @@ assembly Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, PublicKe
     <b>PragmaChecksum</b> = 4096,</code>
 
 <code class="csharp">    /// &lt;summary&gt;#pragma preprocessor directive.&lt;/summary&gt;
-    <b>Pragma</b> = <a href="#Roslynator_CSharp_PreprocessorDirectiveKinds">PreprocessorDirectiveKinds</a>.PragmaWarning | <a href="#Roslynator_CSharp_PreprocessorDirectiveKinds">PreprocessorDirectiveKinds</a>.PragmaChecksum,</code>
+    <b>Pragma</b> = PragmaWarning | PragmaChecksum,</code>
 
 <code class="csharp">    /// &lt;summary&gt;#r preprocessor directive.&lt;/summary&gt;
     <b>Reference</b> = 8192,</code>
@@ -3227,7 +3227,7 @@ assembly Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, PublicKe
     <b>Shebang</b> = 65536,</code>
 
 <code class="csharp">    /// &lt;summary&gt;All preprocessor directives.&lt;/summary&gt;
-    <b>All</b> = <a href="#Roslynator_CSharp_PreprocessorDirectiveKinds">PreprocessorDirectiveKinds</a>.If | <a href="#Roslynator_CSharp_PreprocessorDirectiveKinds">PreprocessorDirectiveKinds</a>.Elif | <a href="#Roslynator_CSharp_PreprocessorDirectiveKinds">PreprocessorDirectiveKinds</a>.Else | <a href="#Roslynator_CSharp_PreprocessorDirectiveKinds">PreprocessorDirectiveKinds</a>.EndIf | <a href="#Roslynator_CSharp_PreprocessorDirectiveKinds">PreprocessorDirectiveKinds</a>.Region | <a href="#Roslynator_CSharp_PreprocessorDirectiveKinds">PreprocessorDirectiveKinds</a>.EndRegion | <a href="#Roslynator_CSharp_PreprocessorDirectiveKinds">PreprocessorDirectiveKinds</a>.Define | <a href="#Roslynator_CSharp_PreprocessorDirectiveKinds">PreprocessorDirectiveKinds</a>.Undef | <a href="#Roslynator_CSharp_PreprocessorDirectiveKinds">PreprocessorDirectiveKinds</a>.Error | <a href="#Roslynator_CSharp_PreprocessorDirectiveKinds">PreprocessorDirectiveKinds</a>.Warning | <a href="#Roslynator_CSharp_PreprocessorDirectiveKinds">PreprocessorDirectiveKinds</a>.Line | <a href="#Roslynator_CSharp_PreprocessorDirectiveKinds">PreprocessorDirectiveKinds</a>.Pragma | <a href="#Roslynator_CSharp_PreprocessorDirectiveKinds">PreprocessorDirectiveKinds</a>.Reference | <a href="#Roslynator_CSharp_PreprocessorDirectiveKinds">PreprocessorDirectiveKinds</a>.Load | <a href="#Roslynator_CSharp_PreprocessorDirectiveKinds">PreprocessorDirectiveKinds</a>.Bad | <a href="#Roslynator_CSharp_PreprocessorDirectiveKinds">PreprocessorDirectiveKinds</a>.Shebang,</code>
+    <b>All</b> = If | Elif | Else | EndIf | Region | EndRegion | Define | Undef | Error | Warning | Line | Pragma | Reference | Load | Bad | Shebang,</code>
 
 <a name="Roslynator_CSharp_Syntax" /><code class="csharp">namespace <b>Roslynator.CSharp.Syntax</b></code>
 
@@ -4549,7 +4549,7 @@ assembly Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, PublicKe
 <code class="csharp">    /// &lt;summary&gt;The xml element.&lt;/summary&gt;
     public <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.xmlnodesyntax">XmlNodeSyntax</a> <b>Element</b> { get; }</code>
 
-<code class="csharp">    /// &lt;summary&gt;Determines whether the element is <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind.xmlemptyelement">SyntaxKind.XmlEmptyElement</a>.&lt;/summary&gt;
+<code class="csharp">    /// &lt;summary&gt;Determines whether the element is <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind">SyntaxKind</a>.XmlEmptyElement.&lt;/summary&gt;
     public <a href="https://docs.microsoft.com/en-us/dotnet/api/system.boolean">bool</a> <b>IsEmptyElement</b> { get; }</code>
 
 <code class="csharp">    /// &lt;summary&gt;Element kind.&lt;/summary&gt;

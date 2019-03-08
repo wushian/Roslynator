@@ -109,11 +109,11 @@ public class System.Object
 
     public abstract class System.MulticastDelegate : Delegate
 
-      public delegate System.Threading.Tasks.Task Microsoft.CodeAnalysis.Editing.SymbolEditor.AsyncDeclarationEditAction(Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.SyntaxNode declaration, System.Threading.CancellationToken cancellationToken);
+      public delegate Task Microsoft.CodeAnalysis.Editing.SymbolEditor.AsyncDeclarationEditAction(DocumentEditor editor, SyntaxNode declaration, CancellationToken cancellationToken);
 
-      public delegate void Microsoft.CodeAnalysis.Editing.SymbolEditor.DeclarationEditAction(Microsoft.CodeAnalysis.Editing.DocumentEditor editor, Microsoft.CodeAnalysis.SyntaxNode declaration);
+      public delegate void Microsoft.CodeAnalysis.Editing.SymbolEditor.DeclarationEditAction(DocumentEditor editor, SyntaxNode declaration);
 
-      public delegate System.Boolean Microsoft.CodeAnalysis.Host.HostWorkspaceServices.MetadataFilter(System.Collections.Generic.IReadOnlyDictionary<System.String, System.Object> metadata);
+      public delegate bool Microsoft.CodeAnalysis.Host.HostWorkspaceServices.MetadataFilter(IReadOnlyDictionary<string, object> metadata);
 
   public class System.EventArgs
 
@@ -293,11 +293,11 @@ public class System.Object
 
       public enum Roslynator.CSharp.PreprocessorDirectiveKinds
 
-    public struct Microsoft.CodeAnalysis.ChildSyntaxList : IEnumerable<SyntaxNodeOrToken>, IEquatable<ChildSyntaxList>, IReadOnlyCollection<SyntaxNodeOrToken>, IReadOnlyList<SyntaxNodeOrToken>
+    public struct Microsoft.CodeAnalysis.ChildSyntaxList : IEquatable<ChildSyntaxList>, IEnumerable<SyntaxNodeOrToken>, IReadOnlyCollection<SyntaxNodeOrToken>, IReadOnlyList<SyntaxNodeOrToken>
 
     public struct Microsoft.CodeAnalysis.ChildSyntaxList.Enumerator
 
-    public struct Microsoft.CodeAnalysis.ChildSyntaxList.Reversed : IEnumerable<SyntaxNodeOrToken>, IEquatable<ChildSyntaxList.Reversed>
+    public struct Microsoft.CodeAnalysis.ChildSyntaxList.Reversed : IEquatable<ChildSyntaxList.Reversed>, IEnumerable<SyntaxNodeOrToken>
 
     public struct Microsoft.CodeAnalysis.ChildSyntaxList.Reversed.Enumerator
 
@@ -317,7 +317,7 @@ public class System.Object
 
     public struct Microsoft.CodeAnalysis.ProjectChanges
 
-    public struct Microsoft.CodeAnalysis.SeparatedSyntaxList<TNode> : IEnumerable<TNode>, IEquatable<SeparatedSyntaxList<TNode>>, IReadOnlyCollection<TNode>, IReadOnlyList<TNode> where TNode : Microsoft.CodeAnalysis.SyntaxNode
+    public struct Microsoft.CodeAnalysis.SeparatedSyntaxList<TNode> : IEquatable<SeparatedSyntaxList<TNode>>, IEnumerable<TNode>, IReadOnlyCollection<TNode>, IReadOnlyList<TNode> where TNode : SyntaxNode
 
     public struct Microsoft.CodeAnalysis.SeparatedSyntaxList<TNode>.Enumerator
 
@@ -329,33 +329,33 @@ public class System.Object
 
     public struct Microsoft.CodeAnalysis.SymbolInfo : IEquatable<SymbolInfo>
 
-    public struct Microsoft.CodeAnalysis.SyntaxList<TNode> : IEnumerable<TNode>, IEquatable<SyntaxList<TNode>>, IReadOnlyCollection<TNode>, IReadOnlyList<TNode> where TNode : Microsoft.CodeAnalysis.SyntaxNode
+    public struct Microsoft.CodeAnalysis.SyntaxList<TNode> : IEquatable<SyntaxList<TNode>>, IEnumerable<TNode>, IReadOnlyCollection<TNode>, IReadOnlyList<TNode> where TNode : SyntaxNode
 
     public struct Microsoft.CodeAnalysis.SyntaxList<TNode>.Enumerator
 
     public struct Microsoft.CodeAnalysis.SyntaxNodeOrToken : IEquatable<SyntaxNodeOrToken>
 
-    public struct Microsoft.CodeAnalysis.SyntaxNodeOrTokenList : IEnumerable<SyntaxNodeOrToken>, IEquatable<SyntaxNodeOrTokenList>, IReadOnlyCollection<SyntaxNodeOrToken>
+    public struct Microsoft.CodeAnalysis.SyntaxNodeOrTokenList : IEquatable<SyntaxNodeOrTokenList>, IEnumerable<SyntaxNodeOrToken>, IReadOnlyCollection<SyntaxNodeOrToken>
 
     public struct Microsoft.CodeAnalysis.SyntaxNodeOrTokenList.Enumerator : IDisposable, IEnumerator, IEnumerator<SyntaxNodeOrToken>
 
     public struct Microsoft.CodeAnalysis.SyntaxToken : IEquatable<SyntaxToken>
 
-    public struct Microsoft.CodeAnalysis.SyntaxTokenList : IEnumerable<SyntaxToken>, IEquatable<SyntaxTokenList>, IReadOnlyCollection<SyntaxToken>, IReadOnlyList<SyntaxToken>
+    public struct Microsoft.CodeAnalysis.SyntaxTokenList : IEquatable<SyntaxTokenList>, IEnumerable<SyntaxToken>, IReadOnlyCollection<SyntaxToken>, IReadOnlyList<SyntaxToken>
 
     public struct Microsoft.CodeAnalysis.SyntaxTokenList.Enumerator
 
-    public struct Microsoft.CodeAnalysis.SyntaxTokenList.Reversed : IEnumerable<SyntaxToken>, IEquatable<SyntaxTokenList.Reversed>
+    public struct Microsoft.CodeAnalysis.SyntaxTokenList.Reversed : IEquatable<SyntaxTokenList.Reversed>, IEnumerable<SyntaxToken>
 
     public struct Microsoft.CodeAnalysis.SyntaxTokenList.Reversed.Enumerator
 
     public struct Microsoft.CodeAnalysis.SyntaxTrivia : IEquatable<SyntaxTrivia>
 
-    public struct Microsoft.CodeAnalysis.SyntaxTriviaList : IEnumerable<SyntaxTrivia>, IEquatable<SyntaxTriviaList>, IReadOnlyCollection<SyntaxTrivia>, IReadOnlyList<SyntaxTrivia>
+    public struct Microsoft.CodeAnalysis.SyntaxTriviaList : IEquatable<SyntaxTriviaList>, IEnumerable<SyntaxTrivia>, IReadOnlyCollection<SyntaxTrivia>, IReadOnlyList<SyntaxTrivia>
 
     public struct Microsoft.CodeAnalysis.SyntaxTriviaList.Enumerator
 
-    public struct Microsoft.CodeAnalysis.SyntaxTriviaList.Reversed : IEnumerable<SyntaxTrivia>, IEquatable<SyntaxTriviaList.Reversed>
+    public struct Microsoft.CodeAnalysis.SyntaxTriviaList.Reversed : IEquatable<SyntaxTriviaList.Reversed>, IEnumerable<SyntaxTrivia>
 
     public struct Microsoft.CodeAnalysis.SyntaxTriviaList.Reversed.Enumerator
 
@@ -431,15 +431,15 @@ public class System.Object
 
     public struct Roslynator.SyntaxListSelection<TNode>.Enumerator
 
-    public readonly struct Roslynator.CSharp.ExpressionChain : IEnumerable<ExpressionSyntax>, IEquatable<ExpressionChain>
+    public readonly struct Roslynator.CSharp.ExpressionChain : IEquatable<ExpressionChain>, IEnumerable<ExpressionSyntax>
 
     public struct Roslynator.CSharp.ExpressionChain.Enumerator
 
-    public readonly struct Roslynator.CSharp.ExpressionChain.Reversed : IEnumerable<ExpressionSyntax>, IEquatable<ExpressionChain.Reversed>
+    public readonly struct Roslynator.CSharp.ExpressionChain.Reversed : IEquatable<ExpressionChain.Reversed>, IEnumerable<ExpressionSyntax>
 
     public struct Roslynator.CSharp.ExpressionChain.Reversed.Enumerator
 
-    public readonly struct Roslynator.CSharp.IfStatementCascade : IEnumerable<IfStatementOrElseClause>, IEquatable<IfStatementCascade>
+    public readonly struct Roslynator.CSharp.IfStatementCascade : IEquatable<IfStatementCascade>, IEnumerable<IfStatementOrElseClause>
 
     public struct Roslynator.CSharp.IfStatementCascade.Enumerator
 
@@ -499,7 +499,7 @@ public class System.Object
 
   public abstract class System.Collections.Generic.EqualityComparer<T> : IEqualityComparer, IEqualityComparer<T>
 
-    public sealed class Roslynator.MetadataNameEqualityComparer<TSymbol> : EqualityComparer<TSymbol> where TSymbol : Microsoft.CodeAnalysis.ISymbol
+    public sealed class Roslynator.MetadataNameEqualityComparer<TSymbol> : EqualityComparer<TSymbol> where TSymbol : ISymbol
 
   public abstract class Microsoft.CodeAnalysis.AdditionalText
 
@@ -1167,7 +1167,7 @@ public class System.Object
 
   public abstract class Microsoft.CodeAnalysis.CodeRefactorings.CodeRefactoringProvider
 
-  public class Microsoft.CodeAnalysis.CodeStyle.CodeStyleOption<T> : ICodeStyleOption, IEquatable<CodeStyleOption<T>>
+  public class Microsoft.CodeAnalysis.CodeStyle.CodeStyleOption<T> : IEquatable<CodeStyleOption<T>>, ICodeStyleOption
 
   public class Microsoft.CodeAnalysis.CodeStyle.CodeStyleOptions
 
@@ -1265,15 +1265,15 @@ public class System.Object
 
   public abstract class Roslynator.NameGenerator
 
-  public class Roslynator.SeparatedSyntaxListSelection<TNode> : ISelection<TNode> where TNode : Microsoft.CodeAnalysis.SyntaxNode
+  public class Roslynator.SeparatedSyntaxListSelection<TNode> : ISelection<TNode> where TNode : SyntaxNode
 
-  public class Roslynator.SyntaxListSelection<TNode> : ISelection<TNode> where TNode : Microsoft.CodeAnalysis.SyntaxNode
+  public class Roslynator.SyntaxListSelection<TNode> : ISelection<TNode> where TNode : SyntaxNode
 
     public sealed class Roslynator.CSharp.MemberDeclarationListSelection : SyntaxListSelection<MemberDeclarationSyntax>
 
     public sealed class Roslynator.CSharp.StatementListSelection : SyntaxListSelection<StatementSyntax>
 
-  public abstract class Roslynator.CSharp.ModifierList<TNode> where TNode : Microsoft.CodeAnalysis.SyntaxNode
+  public abstract class Roslynator.CSharp.ModifierList<TNode> where TNode : SyntaxNode
 
   public class Roslynator.Text.TextLineCollectionSelection : ISelection<TextLine>
 
@@ -1433,7 +1433,7 @@ public class System.Object
   public interface Microsoft.CodeAnalysis.IPropertySymbol : IEquatable<ISymbol>, ISymbol
   public interface Microsoft.CodeAnalysis.IRangeVariableSymbol : IEquatable<ISymbol>, ISymbol
   public interface Microsoft.CodeAnalysis.ISkippedTokensTriviaSyntax
-  public interface Microsoft.CodeAnalysis.ISourceAssemblySymbol : IAssemblySymbol, IEquatable<ISymbol>, ISymbol
+  public interface Microsoft.CodeAnalysis.ISourceAssemblySymbol : IEquatable<ISymbol>, IAssemblySymbol, ISymbol
   public interface Microsoft.CodeAnalysis.IStructuredTriviaSyntax
   public interface Microsoft.CodeAnalysis.ISymbol : IEquatable<ISymbol>
   public interface Microsoft.CodeAnalysis.ITypeParameterSymbol : IEquatable<ISymbol>, INamespaceOrTypeSymbol, ISymbol, ITypeSymbol
@@ -1457,37 +1457,37 @@ public class System.Object
   public interface Microsoft.CodeAnalysis.Semantics.IArrayInitializer : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.IAssignmentExpression : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.IAwaitExpression : IOperation
-  public interface Microsoft.CodeAnalysis.Semantics.IBinaryOperatorExpression : IHasOperatorMethodExpression, IOperation
+  public interface Microsoft.CodeAnalysis.Semantics.IBinaryOperatorExpression : IOperation, IHasOperatorMethodExpression
   public interface Microsoft.CodeAnalysis.Semantics.IBlockStatement : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.IBranchStatement : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.ICaseClause : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.ICatchClause : IOperation
-  public interface Microsoft.CodeAnalysis.Semantics.ICompoundAssignmentExpression : IAssignmentExpression, IHasOperatorMethodExpression, IOperation
+  public interface Microsoft.CodeAnalysis.Semantics.ICompoundAssignmentExpression : IOperation, IAssignmentExpression, IHasOperatorMethodExpression
   public interface Microsoft.CodeAnalysis.Semantics.IConditionalAccessExpression : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.IConditionalAccessInstanceExpression : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.IConditionalChoiceExpression : IOperation
-  public interface Microsoft.CodeAnalysis.Semantics.IConversionExpression : IHasOperatorMethodExpression, IOperation
+  public interface Microsoft.CodeAnalysis.Semantics.IConversionExpression : IOperation, IHasOperatorMethodExpression
   public interface Microsoft.CodeAnalysis.Semantics.IDefaultValueExpression : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.IEmptyStatement : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.IEndStatement : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.IEventAssignmentExpression : IOperation
-  public interface Microsoft.CodeAnalysis.Semantics.IEventReferenceExpression : IMemberReferenceExpression, IOperation
+  public interface Microsoft.CodeAnalysis.Semantics.IEventReferenceExpression : IOperation, IMemberReferenceExpression
   public interface Microsoft.CodeAnalysis.Semantics.IExpressionStatement : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.IFieldInitializer : IOperation, ISymbolInitializer
-  public interface Microsoft.CodeAnalysis.Semantics.IFieldReferenceExpression : IMemberReferenceExpression, IOperation
+  public interface Microsoft.CodeAnalysis.Semantics.IFieldReferenceExpression : IOperation, IMemberReferenceExpression
   public interface Microsoft.CodeAnalysis.Semantics.IFixedStatement : IOperation
-  public interface Microsoft.CodeAnalysis.Semantics.IForEachLoopStatement : ILoopStatement, IOperation
-  public interface Microsoft.CodeAnalysis.Semantics.IForLoopStatement : IForWhileUntilLoopStatement, ILoopStatement, IOperation
-  public interface Microsoft.CodeAnalysis.Semantics.IForWhileUntilLoopStatement : ILoopStatement, IOperation
+  public interface Microsoft.CodeAnalysis.Semantics.IForEachLoopStatement : IOperation, ILoopStatement
+  public interface Microsoft.CodeAnalysis.Semantics.IForLoopStatement : IOperation, IForWhileUntilLoopStatement, ILoopStatement
+  public interface Microsoft.CodeAnalysis.Semantics.IForWhileUntilLoopStatement : IOperation, ILoopStatement
   public interface Microsoft.CodeAnalysis.Semantics.IHasArgumentsExpression : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.IHasOperatorMethodExpression : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.IIfStatement : IOperation
-  public interface Microsoft.CodeAnalysis.Semantics.IIncrementExpression : IAssignmentExpression, ICompoundAssignmentExpression, IHasOperatorMethodExpression, IOperation
-  public interface Microsoft.CodeAnalysis.Semantics.IIndexedPropertyReferenceExpression : IHasArgumentsExpression, IMemberReferenceExpression, IOperation, IPropertyReferenceExpression
+  public interface Microsoft.CodeAnalysis.Semantics.IIncrementExpression : IOperation, IAssignmentExpression, ICompoundAssignmentExpression, IHasOperatorMethodExpression
+  public interface Microsoft.CodeAnalysis.Semantics.IIndexedPropertyReferenceExpression : IOperation, IHasArgumentsExpression, IMemberReferenceExpression, IPropertyReferenceExpression
   public interface Microsoft.CodeAnalysis.Semantics.IInstanceReferenceExpression : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.IInvalidExpression : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.IInvalidStatement : IOperation
-  public interface Microsoft.CodeAnalysis.Semantics.IInvocationExpression : IHasArgumentsExpression, IOperation
+  public interface Microsoft.CodeAnalysis.Semantics.IInvocationExpression : IOperation, IHasArgumentsExpression
   public interface Microsoft.CodeAnalysis.Semantics.IIsTypeExpression : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.ILabelStatement : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.ILambdaExpression : IOperation
@@ -1497,9 +1497,9 @@ public class System.Object
   public interface Microsoft.CodeAnalysis.Semantics.ILockStatement : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.ILoopStatement : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.IMemberReferenceExpression : IOperation
-  public interface Microsoft.CodeAnalysis.Semantics.IMethodBindingExpression : IMemberReferenceExpression, IOperation
+  public interface Microsoft.CodeAnalysis.Semantics.IMethodBindingExpression : IOperation, IMemberReferenceExpression
   public interface Microsoft.CodeAnalysis.Semantics.INullCoalescingExpression : IOperation
-  public interface Microsoft.CodeAnalysis.Semantics.IObjectCreationExpression : IHasArgumentsExpression, IOperation
+  public interface Microsoft.CodeAnalysis.Semantics.IObjectCreationExpression : IOperation, IHasArgumentsExpression
   public interface Microsoft.CodeAnalysis.Semantics.IOmittedArgumentExpression : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.IParameterInitializer : IOperation, ISymbolInitializer
   public interface Microsoft.CodeAnalysis.Semantics.IParameterReferenceExpression : IOperation
@@ -1507,11 +1507,11 @@ public class System.Object
   public interface Microsoft.CodeAnalysis.Semantics.IPlaceholderExpression : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.IPointerIndirectionReferenceExpression : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.IPropertyInitializer : IOperation, ISymbolInitializer
-  public interface Microsoft.CodeAnalysis.Semantics.IPropertyReferenceExpression : IMemberReferenceExpression, IOperation
-  public interface Microsoft.CodeAnalysis.Semantics.IRangeCaseClause : ICaseClause, IOperation
-  public interface Microsoft.CodeAnalysis.Semantics.IRelationalCaseClause : ICaseClause, IOperation
+  public interface Microsoft.CodeAnalysis.Semantics.IPropertyReferenceExpression : IOperation, IMemberReferenceExpression
+  public interface Microsoft.CodeAnalysis.Semantics.IRangeCaseClause : IOperation, ICaseClause
+  public interface Microsoft.CodeAnalysis.Semantics.IRelationalCaseClause : IOperation, ICaseClause
   public interface Microsoft.CodeAnalysis.Semantics.IReturnStatement : IOperation
-  public interface Microsoft.CodeAnalysis.Semantics.ISingleValueCaseClause : ICaseClause, IOperation
+  public interface Microsoft.CodeAnalysis.Semantics.ISingleValueCaseClause : IOperation, ICaseClause
   public interface Microsoft.CodeAnalysis.Semantics.ISizeOfExpression : IOperation, ITypeOperationExpression
   public interface Microsoft.CodeAnalysis.Semantics.IStopStatement : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.ISwitchCase : IOperation
@@ -1523,11 +1523,11 @@ public class System.Object
   public interface Microsoft.CodeAnalysis.Semantics.ITypeOfExpression : IOperation, ITypeOperationExpression
   public interface Microsoft.CodeAnalysis.Semantics.ITypeOperationExpression : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.ITypeParameterObjectCreationExpression : IOperation
-  public interface Microsoft.CodeAnalysis.Semantics.IUnaryOperatorExpression : IHasOperatorMethodExpression, IOperation
+  public interface Microsoft.CodeAnalysis.Semantics.IUnaryOperatorExpression : IOperation, IHasOperatorMethodExpression
   public interface Microsoft.CodeAnalysis.Semantics.IUnboundLambdaExpression : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.IUsingStatement : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.IVariableDeclaration : IOperation
   public interface Microsoft.CodeAnalysis.Semantics.IVariableDeclarationStatement : IOperation
-  public interface Microsoft.CodeAnalysis.Semantics.IWhileUntilLoopStatement : IForWhileUntilLoopStatement, ILoopStatement, IOperation
+  public interface Microsoft.CodeAnalysis.Semantics.IWhileUntilLoopStatement : IOperation, IForWhileUntilLoopStatement, ILoopStatement
   public interface Microsoft.CodeAnalysis.Semantics.IWithStatement : IOperation
   public interface Roslynator.ISelection<T> : IReadOnlyList<T>

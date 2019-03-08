@@ -159,7 +159,7 @@
 * &emsp; \| &emsp; \| &emsp; public override int GetHashCode\(\);
 * &emsp; \| &emsp; \| &emsp; public bool MoveNext\(\);
 * &emsp; \| &emsp; \| &emsp; public void Reset\(\);
-* &emsp; \| &emsp; public readonly struct Roslynator\.CSharp\.ExpressionChain : IEnumerable\<ExpressionSyntax>, IEquatable\<ExpressionChain>
+* &emsp; \| &emsp; public readonly struct Roslynator\.CSharp\.ExpressionChain : IEquatable\<ExpressionChain>, IEnumerable\<ExpressionSyntax>
 * &emsp; \| &emsp; \| &emsp; public BinaryExpressionSyntax BinaryExpression \{ get; \}
 * &emsp; \| &emsp; \| &emsp; public TextSpan? Span \{ get; \}
 * &emsp; \| &emsp; \| &emsp; public override bool Equals\(object obj\);
@@ -176,7 +176,7 @@
 * &emsp; \| &emsp; \| &emsp; public override int GetHashCode\(\);
 * &emsp; \| &emsp; \| &emsp; public bool MoveNext\(\);
 * &emsp; \| &emsp; \| &emsp; public void Reset\(\);
-* &emsp; \| &emsp; public readonly struct Roslynator\.CSharp\.ExpressionChain\.Reversed : IEnumerable\<ExpressionSyntax>, IEquatable\<ExpressionChain\.Reversed>
+* &emsp; \| &emsp; public readonly struct Roslynator\.CSharp\.ExpressionChain\.Reversed : IEquatable\<ExpressionChain\.Reversed>, IEnumerable\<ExpressionSyntax>
 * &emsp; \| &emsp; \| &emsp; public Reversed\(in ExpressionChain chain\);
 * &emsp; \| &emsp; \| &emsp; public override bool Equals\(object obj\);
 * &emsp; \| &emsp; \| &emsp; public bool Equals\(ExpressionChain\.Reversed other\);
@@ -191,7 +191,7 @@
 * &emsp; \| &emsp; \| &emsp; public override int GetHashCode\(\);
 * &emsp; \| &emsp; \| &emsp; public bool MoveNext\(\);
 * &emsp; \| &emsp; \| &emsp; public void Reset\(\);
-* &emsp; \| &emsp; public readonly struct Roslynator\.CSharp\.IfStatementCascade : IEnumerable\<IfStatementOrElseClause>, IEquatable\<IfStatementCascade>
+* &emsp; \| &emsp; public readonly struct Roslynator\.CSharp\.IfStatementCascade : IEquatable\<IfStatementCascade>, IEnumerable\<IfStatementOrElseClause>
 * &emsp; \| &emsp; \| &emsp; public IfStatementSyntax IfStatement \{ get; \}
 * &emsp; \| &emsp; \| &emsp; public override bool Equals\(object obj\);
 * &emsp; \| &emsp; \| &emsp; public bool Equals\(IfStatementCascade other\);
@@ -671,7 +671,7 @@
 * &emsp; \| &emsp; \| &emsp; public bool MoveNext\(\);
 * &emsp; \| &emsp; \| &emsp; public void Reset\(\);
 * &emsp; public abstract class System\.Collections\.Generic\.EqualityComparer\<T> : IEqualityComparer, IEqualityComparer\<T>
-* &emsp; \| &emsp; public sealed class Roslynator\.MetadataNameEqualityComparer\<TSymbol> : EqualityComparer\<TSymbol> where TSymbol : Microsoft\.CodeAnalysis\.ISymbol
+* &emsp; \| &emsp; public sealed class Roslynator\.MetadataNameEqualityComparer\<TSymbol> : EqualityComparer\<TSymbol> where TSymbol : ISymbol
 * &emsp; \| &emsp; \| &emsp; public static MetadataNameEqualityComparer\<TSymbol> Instance \{ get; \}
 * &emsp; \| &emsp; \| &emsp; public override bool Equals\(TSymbol x, TSymbol y\);
 * &emsp; \| &emsp; \| &emsp; public override int GetHashCode\(TSymbol obj\);
@@ -688,7 +688,7 @@
 * &emsp; \| &emsp; public string EnsureUniqueName\(string baseName, SemanticModel semanticModel, int position, bool isCaseSensitive = true\);
 * &emsp; \| &emsp; public static bool IsUniqueName\(string name, IEnumerable\<string> reservedNames, bool isCaseSensitive = true\);
 * &emsp; \| &emsp; public static bool IsUniqueName\(string name, ImmutableArray\<ISymbol> symbols, bool isCaseSensitive = true\);
-* &emsp; public class Roslynator\.SeparatedSyntaxListSelection\<TNode> : ISelection\<TNode> where TNode : Microsoft\.CodeAnalysis\.SyntaxNode
+* &emsp; public class Roslynator\.SeparatedSyntaxListSelection\<TNode> : ISelection\<TNode> where TNode : SyntaxNode
 * &emsp; \| &emsp; protected SeparatedSyntaxListSelection\(SeparatedSyntaxList\<TNode> list, TextSpan span, int firstIndex, int lastIndex\);
 * &emsp; \| &emsp; public int Count \{ get; \}
 * &emsp; \| &emsp; public int FirstIndex \{ get; \}
@@ -701,7 +701,7 @@
 * &emsp; \| &emsp; public SeparatedSyntaxListSelection\<TNode>\.Enumerator GetEnumerator\(\);
 * &emsp; \| &emsp; public TNode Last\(\);
 * &emsp; \| &emsp; public static bool TryCreate\(SeparatedSyntaxList\<TNode> list, TextSpan span, out SeparatedSyntaxListSelection\<TNode> selection\);
-* &emsp; public class Roslynator\.SyntaxListSelection\<TNode> : ISelection\<TNode> where TNode : Microsoft\.CodeAnalysis\.SyntaxNode
+* &emsp; public class Roslynator\.SyntaxListSelection\<TNode> : ISelection\<TNode> where TNode : SyntaxNode
 * &emsp; \| &emsp; protected SyntaxListSelection\(SyntaxList\<TNode> list, TextSpan span, int firstIndex, int lastIndex\);
 * &emsp; \| &emsp; public int Count \{ get; \}
 * &emsp; \| &emsp; public int FirstIndex \{ get; \}
@@ -727,7 +727,7 @@
 * &emsp; \| &emsp; \| &emsp; public static StatementListSelection Create\(in StatementListInfo statementsInfo, TextSpan span\);
 * &emsp; \| &emsp; \| &emsp; public static bool TryCreate\(BlockSyntax block, TextSpan span, out StatementListSelection selectedStatements\);
 * &emsp; \| &emsp; \| &emsp; public static bool TryCreate\(SwitchSectionSyntax switchSection, TextSpan span, out StatementListSelection selectedStatements\);
-* &emsp; public abstract class Roslynator\.CSharp\.ModifierList\<TNode> where TNode : Microsoft\.CodeAnalysis\.SyntaxNode
+* &emsp; public abstract class Roslynator\.CSharp\.ModifierList\<TNode> where TNode : SyntaxNode
 * &emsp; \| &emsp; public static ModifierList\<TNode> Instance \{ get; \}
 * &emsp; \| &emsp; public TNode Insert\(TNode node, SyntaxKind kind, IComparer\<SyntaxKind> comparer = null\);
 * &emsp; \| &emsp; public TNode Insert\(TNode node, SyntaxToken modifier, IComparer\<SyntaxToken> comparer = null\);

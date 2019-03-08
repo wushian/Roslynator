@@ -113,11 +113,11 @@
         "public static class WorkspaceExtensions",
         "public static class WorkspaceSyntaxExtensions",
         {
-          "type": "public readonly struct ExpressionChain : IEnumerable<ExpressionSyntax>, IEquatable<ExpressionChain>",
+          "type": "public readonly struct ExpressionChain : IEquatable<ExpressionChain>, IEnumerable<ExpressionSyntax>",
           "types": [
             "public struct Enumerator",
             {
-              "type": "public readonly struct Reversed : IEnumerable<ExpressionSyntax>, IEquatable<ExpressionChain.Reversed>",
+              "type": "public readonly struct Reversed : IEquatable<ExpressionChain.Reversed>, IEnumerable<ExpressionSyntax>",
               "types": [
                 "public struct Enumerator"
               ]
@@ -125,7 +125,7 @@
           ]
         },
         {
-          "type": "public readonly struct IfStatementCascade : IEnumerable<IfStatementOrElseClause>, IEquatable<IfStatementCascade>",
+          "type": "public readonly struct IfStatementCascade : IEquatable<IfStatementCascade>, IEnumerable<IfStatementOrElseClause>",
           "types": [
             "public struct Enumerator"
           ]

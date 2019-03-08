@@ -230,13 +230,13 @@
             <summary>A set of extension methods for syntax. These methods are dependent on the workspace layer.</summary>
           </doc>
         </type>
-        <type def="public readonly struct ExpressionChain : IEnumerable&lt;ExpressionSyntax&gt;, IEquatable&lt;ExpressionChain&gt;">
+        <type def="public readonly struct ExpressionChain : IEquatable&lt;ExpressionChain&gt;, IEnumerable&lt;ExpressionSyntax&gt;">
           <doc>
             <summary>Enables to enumerate expressions of a binary expression and expressions of nested binary expressions of the same kind as parent binary expression.</summary>
           </doc>
           <types>
             <type def="public struct Enumerator" />
-            <type def="public readonly struct Reversed : IEnumerable&lt;ExpressionSyntax&gt;, IEquatable&lt;ExpressionChain.Reversed&gt;">
+            <type def="public readonly struct Reversed : IEquatable&lt;ExpressionChain.Reversed&gt;, IEnumerable&lt;ExpressionSyntax&gt;">
               <doc>
                 <summary>Enables to enumerate expressions of <see cref="T:Roslynator.CSharp.ExpressionChain" /> in a reversed order.</summary>
               </doc>
@@ -246,7 +246,7 @@
             </type>
           </types>
         </type>
-        <type def="public readonly struct IfStatementCascade : IEnumerable&lt;IfStatementOrElseClause&gt;, IEquatable&lt;IfStatementCascade&gt;">
+        <type def="public readonly struct IfStatementCascade : IEquatable&lt;IfStatementCascade&gt;, IEnumerable&lt;IfStatementOrElseClause&gt;">
           <doc>
             <summary>Enables to enumerate if statement cascade.</summary>
           </doc>

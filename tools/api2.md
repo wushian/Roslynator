@@ -78,11 +78,11 @@
 * &emsp; public static class SyntaxInverter
 * &emsp; public static class WorkspaceExtensions
 * &emsp; public static class WorkspaceSyntaxExtensions
-* &emsp; public readonly struct ExpressionChain : IEnumerable\<ExpressionSyntax>, IEquatable\<ExpressionChain>
+* &emsp; public readonly struct ExpressionChain : IEquatable\<ExpressionChain>, IEnumerable\<ExpressionSyntax>
 * &emsp; \| &emsp; public struct Enumerator
-* &emsp; \| &emsp; public readonly struct Reversed : IEnumerable\<ExpressionSyntax>, IEquatable\<ExpressionChain\.Reversed>
+* &emsp; \| &emsp; public readonly struct Reversed : IEquatable\<ExpressionChain\.Reversed>, IEnumerable\<ExpressionSyntax>
 * &emsp; \| &emsp; \| &emsp; public struct Enumerator
-* &emsp; public readonly struct IfStatementCascade : IEnumerable\<IfStatementOrElseClause>, IEquatable\<IfStatementCascade>
+* &emsp; public readonly struct IfStatementCascade : IEquatable\<IfStatementCascade>, IEnumerable\<IfStatementOrElseClause>
 * &emsp; \| &emsp; public struct Enumerator
 * &emsp; public readonly struct IfStatementCascadeInfo : IEquatable\<IfStatementCascadeInfo>
 * &emsp; public readonly struct IfStatementOrElseClause : IEquatable\<IfStatementOrElseClause>
