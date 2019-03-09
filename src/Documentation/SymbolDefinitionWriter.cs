@@ -19,13 +19,36 @@ namespace Roslynator.Documentation
         private SymbolDisplayFormat _typeFormat;
         private SymbolDisplayFormat _memberFormat;
         private SymbolDisplayFormat _enumMemberFormat;
-        private SymbolDisplayFormat _explicitInterfaceImplementationFormat;
 
-        private static readonly SymbolDisplayFormat _definitionFormat = SymbolDefinitionDisplayFormats.FullDefinition_NameAndContainingTypesAndNamespaces.Update(
+        private static readonly SymbolDisplayFormat _definitionFormat = new SymbolDisplayFormat(
             globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Included,
             typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
-            memberOptions: SymbolDefinitionDisplayFormats.FullDefinition_NameOnly.MemberOptions | SymbolDisplayMemberOptions.IncludeContainingType,
-            miscellaneousOptions: SymbolDefinitionDisplayFormats.FullDefinition_NameOnly.MiscellaneousOptions & ~SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
+            genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters
+                | SymbolDisplayGenericsOptions.IncludeTypeConstraints
+                | SymbolDisplayGenericsOptions.IncludeVariance,
+            memberOptions: SymbolDisplayMemberOptions.IncludeType
+                | SymbolDisplayMemberOptions.IncludeModifiers
+                | SymbolDisplayMemberOptions.IncludeAccessibility
+                | SymbolDisplayMemberOptions.IncludeContainingType
+                | SymbolDisplayMemberOptions.IncludeParameters
+                | SymbolDisplayMemberOptions.IncludeConstantValue
+                | SymbolDisplayMemberOptions.IncludeRef,
+            delegateStyle: SymbolDisplayDelegateStyle.NameAndSignature,
+            parameterOptions: SymbolDisplayParameterOptions.IncludeExtensionThis
+                | SymbolDisplayParameterOptions.IncludeParamsRefOut
+                | SymbolDisplayParameterOptions.IncludeType
+                | SymbolDisplayParameterOptions.IncludeName
+                | SymbolDisplayParameterOptions.IncludeDefaultValue,
+            propertyStyle: SymbolDisplayPropertyStyle.ShowReadWriteDescriptor,
+            kindOptions: SymbolDisplayKindOptions.IncludeNamespaceKeyword
+                | SymbolDisplayKindOptions.IncludeTypeKeyword
+                | SymbolDisplayKindOptions.IncludeMemberKeyword,
+            miscellaneousOptions: SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers);
+
+        private static readonly SymbolDisplayFormat _fullTypeFormat = new SymbolDisplayFormat(
+            globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Included,
+            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
+            genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters);
 
         private readonly SymbolDisplayFormat _typeDefinitionNameFormat;
         private readonly SymbolDisplayFormat _memberDefinitionNameFormat;
@@ -39,15 +62,14 @@ namespace Roslynator.Documentation
             Format = format ?? DefinitionListFormat.Default;
             DocumentationProvider = documentationProvider;
 
-        _typeDefinitionNameFormat = new SymbolDisplayFormat(
-            typeQualificationStyle: (Layout == SymbolDefinitionListLayout.TypeHierarchy) ? SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces : SymbolDisplayTypeQualificationStyle.NameOnly,
-            genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters);
+            _typeDefinitionNameFormat = new SymbolDisplayFormat(
+                typeQualificationStyle: (Layout == SymbolDefinitionListLayout.TypeHierarchy) ? SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces : SymbolDisplayTypeQualificationStyle.NameOnly,
+                genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters);
 
-        _memberDefinitionNameFormat = new SymbolDisplayFormat(
-            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameOnly,
-            genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
-            memberOptions: SymbolDisplayMemberOptions.IncludeExplicitInterface,
-            miscellaneousOptions: SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
+            _memberDefinitionNameFormat = new SymbolDisplayFormat(
+                typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameOnly,
+                genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+                miscellaneousOptions: SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
         }
 
         public SymbolFilterOptions Filter { get; }
@@ -122,23 +144,6 @@ namespace Roslynator.Documentation
                 }
 
                 return _memberFormat;
-            }
-        }
-
-        public SymbolDisplayFormat ExplicitInterfaceImplementationFormat
-        {
-            get
-            {
-                if (_explicitInterfaceImplementationFormat == null)
-                {
-                    SymbolDisplayFormat format = _definitionFormat;
-
-                    format = Format.Update(format);
-
-                    Interlocked.CompareExchange(ref _explicitInterfaceImplementationFormat, format, null);
-                }
-
-                return _explicitInterfaceImplementationFormat;
             }
         }
 
@@ -1021,7 +1026,23 @@ namespace Roslynator.Documentation
             {
                 Debug.Assert(symbol == s, parts.ToDisplayString());
 
-                WriteParts(parts, 0, startIndex);
+                WriteParts(symbol, parts, 0, startIndex);
+
+                ISymbol explicitImplementation = symbol.GetFirstExplicitInterfaceImplementation();
+
+                if (explicitImplementation != null)
+                {
+                    INamedTypeSymbol containingType = explicitImplementation.ContainingType;
+
+                    if (containingType != null)
+                    {
+                        ImmutableArray<SymbolDisplayPart> parts2 = containingType.ToDisplayParts(_fullTypeFormat);
+
+                        WriteParts(containingType, parts2);
+
+                        Write(".");
+                    }
+                }
 
                 WriteDefinitionName(s);
 
@@ -1032,7 +1053,7 @@ namespace Roslynator.Documentation
                 startIndex = 0;
             }
 
-            WriteParts(parts, startIndex, parts.Length - startIndex);
+            WriteParts(symbol, parts, startIndex, parts.Length - startIndex);
         }
 
         protected virtual void WriteDefinitionName(ISymbol symbol)
@@ -1055,12 +1076,12 @@ namespace Roslynator.Documentation
             Write(symbol.ToDisplayParts(f));
         }
 
-        protected void WriteParts(ImmutableArray<SymbolDisplayPart> parts)
+        protected void WriteParts(ISymbol symbol, ImmutableArray<SymbolDisplayPart> parts)
         {
-            WriteParts(parts, 0, parts.Length);
+            WriteParts(symbol, parts, 0, parts.Length);
         }
 
-        protected void WriteParts(ImmutableArray<SymbolDisplayPart> parts, int startIndex, int length)
+        protected void WriteParts(ISymbol symbol, ImmutableArray<SymbolDisplayPart> parts, int startIndex, int length)
         {
             int max = startIndex + length;
 
@@ -1095,6 +1116,12 @@ namespace Roslynator.Documentation
                         i = j + 1;
                         continue;
                     }
+                }
+                else if (parts[i].Kind == SymbolDisplayPartKind.ParameterName)
+                {
+                    WriteParameterName(symbol, parts[i]);
+                    i++;
+                    continue;
                 }
 
                 Write(parts[i]);
@@ -1142,6 +1169,11 @@ namespace Roslynator.Documentation
 
                 return SymbolDefinitionDisplayFormats.TypeNameAndContainingTypes;
             }
+        }
+
+        protected virtual void WriteParameterName(ISymbol symbol, SymbolDisplayPart part)
+        {
+            Write(part);
         }
 
         private protected ImmutableArray<SymbolDisplayPart> GetDisplayParts(

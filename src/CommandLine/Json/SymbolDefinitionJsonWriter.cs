@@ -216,11 +216,7 @@ namespace Roslynator.Documentation.Json
         public override void WriteMemberDefinition(ISymbol symbol, SymbolDisplayFormat format = null)
         {
             if (format == null)
-            {
-                format = (symbol.GetFirstExplicitInterfaceImplementation() != null)
-                    ? ExplicitInterfaceImplementationFormat
-                    : MemberFormat;
-            }
+                format = MemberFormat;
 
             if (Format.Includes(SymbolDefinitionPartFilter.Attributes)
                 && HasAttributes(symbol, Filter))

@@ -1,6 +1,5 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -24,14 +23,18 @@ namespace Roslynator.Documentation.Html
             XmlWriter writer,
             SymbolFilterOptions filter = null,
             DefinitionListFormat format = null,
-            SymbolDocumentationProvider documentationProvider = null) : base(filter, format, documentationProvider)
+            SymbolDocumentationProvider documentationProvider = null,
+            DocumentationDisplayMode documentationDisplayMode = DocumentationDisplayMode.ToolTip) : base(filter, format, documentationProvider)
         {
             _writer = writer;
+            DocumentationDisplayMode = documentationDisplayMode;
         }
 
         public override bool SupportsMultilineDefinitions => true;
 
         public override bool SupportsDocumentationComments => true;
+
+        public DocumentationDisplayMode DocumentationDisplayMode { get; }
 
         public override void WriteDocument(IEnumerable<IAssemblySymbol> assemblies, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -90,7 +93,8 @@ namespace Roslynator.Documentation.Html
         public override void WriteAssemblyDefinition(IAssemblySymbol assemblySymbol)
         {
             Write("assembly ");
-            WriteLine(assemblySymbol.Identity.ToString());
+            _writer.WriteElementString("b", assemblySymbol.Identity.ToString());
+            WriteLine();
             IncreaseDepth();
 
             if (Format.Includes(SymbolDefinitionPartFilter.AssemblyAttributes))
@@ -131,7 +135,9 @@ namespace Roslynator.Documentation.Html
             if (namespaceSymbol.IsGlobalNamespace)
                 return;
 
-            WriteDocumentationComment(namespaceSymbol);
+            if (DocumentationDisplayMode == DocumentationDisplayMode.Xml)
+                WriteDocumentationComment(namespaceSymbol);
+
             WriteDefinition(namespaceSymbol, format ?? NamespaceFormat);
             WriteEndElement();
             WriteLine();
@@ -173,7 +179,9 @@ namespace Roslynator.Documentation.Html
         {
             if (typeSymbol != null)
             {
-                WriteDocumentationComment(typeSymbol);
+                if (DocumentationDisplayMode == DocumentationDisplayMode.Xml)
+                    WriteDocumentationComment(typeSymbol);
+
                 WriteDefinition(typeSymbol, format ?? TypeFormat, typeDeclarationOptions);
                 WriteEndElement();
             }
@@ -209,13 +217,11 @@ namespace Roslynator.Documentation.Html
         public override void WriteMemberDefinition(ISymbol symbol, SymbolDisplayFormat format = null)
         {
             if (format == null)
-            {
-                format = (symbol.GetFirstExplicitInterfaceImplementation() != null)
-                    ? ExplicitInterfaceImplementationFormat
-                    : MemberFormat;
-            }
+                format = MemberFormat;
 
-            WriteDocumentationComment(symbol);
+            if (DocumentationDisplayMode == DocumentationDisplayMode.Xml)
+                WriteDocumentationComment(symbol);
+
             WriteDefinition(symbol, format);
             WriteEndElement();
             WriteLine();
@@ -248,7 +254,8 @@ namespace Roslynator.Documentation.Html
 
         public override void WriteEnumMemberDefinition(ISymbol symbol, SymbolDisplayFormat format = null)
         {
-            WriteDocumentationComment(symbol);
+            if (DocumentationDisplayMode == DocumentationDisplayMode.Xml)
+                WriteDocumentationComment(symbol);
 
             WriteDefinition(symbol, format ?? EnumMemberFormat);
 
@@ -336,6 +343,9 @@ namespace Roslynator.Documentation.Html
             if (!isOperator)
                 WriteStartElement("b");
 
+            if (DocumentationDisplayMode == DocumentationDisplayMode.ToolTip)
+                WriteDocumentationCommentToolTip(symbol);
+
             base.WriteDefinitionName(symbol);
 
             if (!isOperator)
@@ -385,6 +395,30 @@ namespace Roslynator.Documentation.Html
                     format = SymbolDefinitionDisplayFormats.TypeNameAndContainingTypesAndNamespaces;
 
                 base.WriteSymbol(symbol, format, removeAttributeSuffix: removeAttributeSuffix);
+            }
+        }
+
+        protected override void WriteParameterName(ISymbol symbol, SymbolDisplayPart part)
+        {
+            if (DocumentationDisplayMode == DocumentationDisplayMode.ToolTip)
+            {
+                XElement element = DocumentationProvider?
+                    .GetXmlDocumentation(symbol)?
+                    .Element(WellKnownXmlTags.Param, "name", part.ToString());
+
+                if (element != null)
+                {
+                    WriteStartElement("span");
+                    WriteStartAttribute("title");
+                    WriteDocumentationCommentToolTip(element);
+                    WriteEndAttribute();
+                    base.WriteParameterName(symbol, part);
+                    WriteEndElement();
+                }
+            }
+            else
+            {
+                base.WriteParameterName(symbol, part);
             }
         }
 
@@ -546,6 +580,8 @@ namespace Roslynator.Documentation.Html
 
         public override void WriteDocumentationComment(ISymbol symbol)
         {
+            Debug.Assert(DocumentationDisplayMode == DocumentationDisplayMode.Xml, DocumentationDisplayMode.ToString());
+
             IEnumerable<string> elementsText = DocumentationProvider?.GetXmlDocumentation(symbol)?.GetElementsAsText(skipEmptyElement: true, makeSingleLine: true);
 
             if (elementsText == null)
@@ -677,6 +713,170 @@ namespace Roslynator.Documentation.Html
 
                         lineNumber++;
                     }
+                }
+            }
+        }
+
+        private void WriteDocumentationCommentToolTip(ISymbol symbol)
+        {
+            Debug.Assert(DocumentationDisplayMode == DocumentationDisplayMode.ToolTip, DocumentationDisplayMode.ToString());
+
+            SymbolXmlDocumentation xmlDocumentation = DocumentationProvider?.GetXmlDocumentation(symbol);
+
+            if (xmlDocumentation == null)
+                return;
+
+            XElement summaryElement = xmlDocumentation.Element(WellKnownXmlTags.Summary);
+
+            if (summaryElement != null)
+            {
+                WriteStartAttribute("title");
+                WriteDocumentationCommentToolTip(summaryElement);
+            }
+
+            bool hasExceptions = false;
+
+            using (IEnumerator<XElement> en = xmlDocumentation.Elements(WellKnownXmlTags.Exception).GetEnumerator())
+            {
+                if (en.MoveNext())
+                {
+                    hasExceptions = true;
+
+                    if (summaryElement != null)
+                    {
+                        WriteLine();
+                        WriteLine();
+                    }
+                    else
+                    {
+                        WriteStartAttribute("title");
+                    }
+
+                    Write("Exceptions:");
+
+                    do
+                    {
+                        WriteLine();
+                        Write(" ");
+
+                        string commentId = en.Current.Attribute("cref").Value;
+
+                        if (commentId != null)
+                        {
+                            ISymbol exceptionSymbol = DocumentationProvider.GetFirstSymbolForDeclarationId(commentId);
+
+                            if (exceptionSymbol != null)
+                            {
+                                base.WriteSymbol(exceptionSymbol);
+                            }
+                            else
+                            {
+                                Write(TextUtility.RemovePrefixFromDocumentationCommentId(commentId));
+                            }
+                        }
+                    }
+                    while (en.MoveNext());
+                }
+            }
+
+            if (summaryElement != null
+                || hasExceptions)
+            {
+                WriteEndAttribute();
+            }
+        }
+
+        private void WriteDocumentationCommentToolTip(XElement element)
+        {
+            using (IEnumerator<XNode> en = element.Nodes().GetEnumerator())
+            {
+                if (en.MoveNext())
+                {
+                    XNode node = null;
+
+                    bool isFirst = true;
+                    bool isLast = false;
+
+                    do
+                    {
+                        node = en.Current;
+
+                        isLast = !en.MoveNext();
+
+                        if (node is XText t)
+                        {
+                            string value = t.Value;
+                            value = TextUtility.RemoveLeadingTrailingNewLine(value, isFirst, isLast);
+                            Write(value);
+                        }
+                        else if (node is XElement e)
+                        {
+                            switch (XmlTagMapper.GetTagOrDefault(e.Name.LocalName))
+                            {
+                                case XmlTag.C:
+                                    {
+                                        string value = e.Value;
+                                        value = TextUtility.ToSingleLine(value);
+                                        Write(value);
+                                        break;
+                                    }
+                                case XmlTag.Para:
+                                    {
+                                        WriteLine();
+                                        WriteLine();
+                                        WriteDocumentationCommentToolTip(e);
+                                        WriteLine();
+                                        WriteLine();
+                                        break;
+                                    }
+                                case XmlTag.ParamRef:
+                                    {
+                                        string parameterName = e.Attribute("name")?.Value;
+
+                                        if (parameterName != null)
+                                            Write(parameterName);
+
+                                        break;
+                                    }
+                                case XmlTag.See:
+                                    {
+                                        string commentId = e.Attribute("cref")?.Value;
+
+                                        if (commentId != null)
+                                        {
+                                            ISymbol symbol = DocumentationProvider.GetFirstSymbolForDeclarationId(commentId);
+
+                                            if (symbol != null)
+                                            {
+                                                base.WriteSymbol(symbol);
+                                            }
+                                            else
+                                            {
+                                                Write(TextUtility.RemovePrefixFromDocumentationCommentId(commentId));
+                                            }
+                                        }
+
+                                        break;
+                                    }
+                                case XmlTag.TypeParamRef:
+                                    {
+                                        string typeParameterName = e.Attribute("name")?.Value;
+
+                                        if (typeParameterName != null)
+                                            Write(typeParameterName);
+
+                                        break;
+                                    }
+                            }
+                        }
+                        else
+                        {
+                            Debug.Fail(node.NodeType.ToString());
+                        }
+
+                        isFirst = false;
+                    }
+                    while (!isLast);
                 }
             }
         }
