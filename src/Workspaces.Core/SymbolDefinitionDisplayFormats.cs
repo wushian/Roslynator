@@ -39,6 +39,12 @@ namespace Roslynator
         public static SymbolDisplayFormat TypeNameAndContainingTypesAndNamespacesAndTypeParameters { get; } = TypeNameAndContainingTypesAndNamespaces.Update(
             genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters);
 
+        public static readonly SymbolDisplayFormat FullName = new SymbolDisplayFormat(
+            globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Included,
+            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
+            genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+            memberOptions: SymbolDisplayMemberOptions.IncludeContainingType);
+
         public static SymbolDisplayFormat FullDefinition_NameOnly { get; } = Default.Update(
             typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameOnly,
             genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters

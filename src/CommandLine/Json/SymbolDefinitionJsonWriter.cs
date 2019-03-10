@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
@@ -35,9 +34,9 @@ namespace Roslynator.Documentation.Json
 
         public override bool SupportsDocumentationComments => false;
 
-        protected override SymbolDisplayFormat CreateNamespaceFormat(SymbolDisplayFormat format)
+        protected override SymbolDisplayFormat CreateDefinitionFormat(SymbolDisplayFormat format)
         {
-            return format.Update(kindOptions: SymbolDisplayKindOptions.None);
+            return format.Update(kindOptions: format.KindOptions & ~SymbolDisplayKindOptions.IncludeNamespaceKeyword);
         }
 
         protected override SymbolDisplayAdditionalOptions GetAdditionalOptions()
@@ -123,7 +122,7 @@ namespace Roslynator.Documentation.Json
             WritePropertyName("namespace");
 
             if (!namespaceSymbol.IsGlobalNamespace)
-                WriteDefinition(namespaceSymbol, format ?? NamespaceFormat);
+                WriteDefinition(namespaceSymbol, format);
         }
 
         public override void WriteEndNamespace(INamespaceSymbol namespaceSymbol)
@@ -151,17 +150,14 @@ namespace Roslynator.Documentation.Json
                 WriteStartObject();
         }
 
-        public override void WriteTypeDefinition(INamedTypeSymbol typeSymbol, SymbolDisplayFormat format = null, SymbolDisplayTypeDeclarationOptions? typeDeclarationOptions = null)
+        public override void WriteTypeDefinition(INamedTypeSymbol typeSymbol, SymbolDisplayFormat format = null)
         {
-            if (format == null)
-                format = TypeFormat;
-
             if (HasContent(typeSymbol))
             {
                 if (typeSymbol != null)
                 {
                     WritePropertyName("type");
-                    WriteDefinition(typeSymbol, format, typeDeclarationOptions);
+                    WriteDefinition(typeSymbol, format);
 
                     if (Format.Includes(SymbolDefinitionPartFilter.Attributes))
                     {
@@ -176,7 +172,7 @@ namespace Roslynator.Documentation.Json
             }
             else if (typeSymbol != null)
             {
-                WriteDefinition(typeSymbol, format, typeDeclarationOptions);
+                WriteDefinition(typeSymbol, format);
             }
             else
             {
@@ -215,9 +211,6 @@ namespace Roslynator.Documentation.Json
 
         public override void WriteMemberDefinition(ISymbol symbol, SymbolDisplayFormat format = null)
         {
-            if (format == null)
-                format = MemberFormat;
-
             if (Format.Includes(SymbolDefinitionPartFilter.Attributes)
                 && HasAttributes(symbol, Filter))
             {
@@ -265,9 +258,6 @@ namespace Roslynator.Documentation.Json
 
         public override void WriteEnumMemberDefinition(ISymbol symbol, SymbolDisplayFormat format = null)
         {
-            if (format == null)
-                format = EnumMemberFormat;
-
             if (Format.Includes(SymbolDefinitionPartFilter.Attributes)
                 && HasAttributes(symbol, Filter))
             {
@@ -405,7 +395,7 @@ namespace Roslynator.Documentation.Json
                 WriteStartObject();
 
                 WritePropertyName("type");
-                WriteDefinition(typeSymbol, TypeFormat);
+                WriteDefinition(typeSymbol, DefinitionFormat);
 
                 if (Format.Includes(SymbolDefinitionPartFilter.Attributes))
                 {
@@ -433,7 +423,7 @@ namespace Roslynator.Documentation.Json
             }
             else if (typeSymbol != null)
             {
-                WriteDefinition(typeSymbol, TypeFormat);
+                WriteDefinition(typeSymbol, DefinitionFormat);
             }
             else
             {

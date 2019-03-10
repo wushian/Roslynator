@@ -30,9 +30,9 @@ namespace Roslynator.Documentation.Xml
 
         public override bool SupportsDocumentationComments => true;
 
-        protected override SymbolDisplayFormat CreateNamespaceFormat(SymbolDisplayFormat format)
+        protected override SymbolDisplayFormat CreateDefinitionFormat(SymbolDisplayFormat format)
         {
-            return format.Update(kindOptions: SymbolDisplayKindOptions.None);
+            return format.Update(kindOptions: format.KindOptions & ~SymbolDisplayKindOptions.IncludeNamespaceKeyword);
         }
 
         protected override SymbolDisplayAdditionalOptions GetAdditionalOptions()
@@ -106,7 +106,7 @@ namespace Roslynator.Documentation.Xml
             WriteStartAttribute("name");
 
             if (!namespaceSymbol.IsGlobalNamespace)
-                WriteDefinition(namespaceSymbol, format ?? NamespaceFormat);
+                WriteDefinition(namespaceSymbol, format);
 
             WriteEndAttribute();
             WriteDocumentationComment(namespaceSymbol);
@@ -136,12 +136,12 @@ namespace Roslynator.Documentation.Xml
             WriteStartElement("type");
         }
 
-        public override void WriteTypeDefinition(INamedTypeSymbol typeSymbol, SymbolDisplayFormat format = null, SymbolDisplayTypeDeclarationOptions? typeDeclarationOptions = null)
+        public override void WriteTypeDefinition(INamedTypeSymbol typeSymbol, SymbolDisplayFormat format = null)
         {
             if (typeSymbol != null)
             {
                 WriteStartAttribute("def");
-                WriteDefinition(typeSymbol, format ?? TypeFormat, typeDeclarationOptions);
+                WriteDefinition(typeSymbol, format);
                 WriteEndAttribute();
                 WriteDocumentationComment(typeSymbol);
 
@@ -183,9 +183,6 @@ namespace Roslynator.Documentation.Xml
 
         public override void WriteMemberDefinition(ISymbol symbol, SymbolDisplayFormat format = null)
         {
-            if (format == null)
-                format = MemberFormat;
-
             WriteStartAttribute("def");
             WriteDefinition(symbol, format);
             WriteEndAttribute();
@@ -228,7 +225,7 @@ namespace Roslynator.Documentation.Xml
         public override void WriteEnumMemberDefinition(ISymbol symbol, SymbolDisplayFormat format = null)
         {
             WriteStartAttribute("def");
-            WriteDefinition(symbol, format ?? EnumMemberFormat);
+            WriteDefinition(symbol, format);
             WriteEndAttribute();
             WriteDocumentationComment(symbol);
 

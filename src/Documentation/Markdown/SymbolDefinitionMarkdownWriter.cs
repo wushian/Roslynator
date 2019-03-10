@@ -77,9 +77,9 @@ namespace Roslynator.Documentation.Markdown
             base.WriteStartType(typeSymbol);
         }
 
-        public override void WriteTypeDefinition(INamedTypeSymbol typeSymbol, SymbolDisplayFormat format = null, SymbolDisplayTypeDeclarationOptions? typeDeclarationOptions = null)
+        public override void WriteTypeDefinition(INamedTypeSymbol typeSymbol, SymbolDisplayFormat format = null)
         {
-            base.WriteTypeDefinition(typeSymbol, format, typeDeclarationOptions);
+            base.WriteTypeDefinition(typeSymbol, format);
             WriteEndBulletItem();
         }
 

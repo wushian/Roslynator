@@ -73,7 +73,7 @@ namespace Roslynator.Documentation
                 return;
 
             WriteDocumentationComment(namespaceSymbol);
-            WriteDefinition(namespaceSymbol, format ?? NamespaceFormat);
+            WriteDefinition(namespaceSymbol, format);
             WriteLine();
             IncreaseDepth();
         }
@@ -95,12 +95,12 @@ namespace Roslynator.Documentation
             WriteIndentation();
         }
 
-        public override void WriteTypeDefinition(INamedTypeSymbol typeSymbol, SymbolDisplayFormat format = null, SymbolDisplayTypeDeclarationOptions? typeDeclarationOptions = null)
+        public override void WriteTypeDefinition(INamedTypeSymbol typeSymbol, SymbolDisplayFormat format = null)
         {
             if (typeSymbol != null)
             {
                 WriteDocumentationComment(typeSymbol);
-                WriteDefinition(typeSymbol, format ?? TypeFormat, typeDeclarationOptions);
+                WriteDefinition(typeSymbol, format);
             }
 
             WriteLine();
@@ -124,9 +124,6 @@ namespace Roslynator.Documentation
 
         public override void WriteMemberDefinition(ISymbol symbol, SymbolDisplayFormat format = null)
         {
-            if (format == null)
-                format = MemberFormat;
-
             WriteDocumentationComment(symbol);
             WriteDefinition(symbol, format);
             WriteLine();
@@ -150,7 +147,7 @@ namespace Roslynator.Documentation
         public override void WriteEnumMemberDefinition(ISymbol symbol, SymbolDisplayFormat format = null)
         {
             WriteDocumentationComment(symbol);
-            WriteDefinition(symbol, format ?? EnumMemberFormat);
+            WriteDefinition(symbol, format);
 
             if (Format.Includes(SymbolDefinitionPartFilter.TrailingComma))
                 Write(",");
@@ -206,12 +203,12 @@ namespace Roslynator.Documentation
             }
         }
 
-        public override void WriteDefinition(ISymbol symbol, SymbolDisplayFormat format, SymbolDisplayTypeDeclarationOptions? typeDeclarationOptions = null, SymbolDisplayAdditionalOptions? additionalOptions = null)
+        public override void WriteDefinition(ISymbol symbol, SymbolDisplayFormat format)
         {
             if (Format.Includes(SymbolDefinitionPartFilter.Attributes))
                 WriteAttributes(symbol);
 
-            base.WriteDefinition(symbol, format, typeDeclarationOptions, additionalOptions);
+            base.WriteDefinition(symbol, format);
         }
     }
 }

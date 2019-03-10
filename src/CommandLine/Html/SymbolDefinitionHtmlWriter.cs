@@ -138,7 +138,7 @@ namespace Roslynator.Documentation.Html
             if (DocumentationDisplayMode == DocumentationDisplayMode.Xml)
                 WriteDocumentationComment(namespaceSymbol);
 
-            WriteDefinition(namespaceSymbol, format ?? NamespaceFormat);
+            WriteDefinition(namespaceSymbol, format);
             WriteEndElement();
             WriteLine();
             IncreaseDepth();
@@ -175,14 +175,14 @@ namespace Roslynator.Documentation.Html
             }
         }
 
-        public override void WriteTypeDefinition(INamedTypeSymbol typeSymbol, SymbolDisplayFormat format = null, SymbolDisplayTypeDeclarationOptions? typeDeclarationOptions = null)
+        public override void WriteTypeDefinition(INamedTypeSymbol typeSymbol, SymbolDisplayFormat format = null)
         {
             if (typeSymbol != null)
             {
                 if (DocumentationDisplayMode == DocumentationDisplayMode.Xml)
                     WriteDocumentationComment(typeSymbol);
 
-                WriteDefinition(typeSymbol, format ?? TypeFormat, typeDeclarationOptions);
+                WriteDefinition(typeSymbol, format);
                 WriteEndElement();
             }
 
@@ -216,9 +216,6 @@ namespace Roslynator.Documentation.Html
 
         public override void WriteMemberDefinition(ISymbol symbol, SymbolDisplayFormat format = null)
         {
-            if (format == null)
-                format = MemberFormat;
-
             if (DocumentationDisplayMode == DocumentationDisplayMode.Xml)
                 WriteDocumentationComment(symbol);
 
@@ -257,7 +254,7 @@ namespace Roslynator.Documentation.Html
             if (DocumentationDisplayMode == DocumentationDisplayMode.Xml)
                 WriteDocumentationComment(symbol);
 
-            WriteDefinition(symbol, format ?? EnumMemberFormat);
+            WriteDefinition(symbol, format);
 
             if (Format.Includes(SymbolDefinitionPartFilter.TrailingComma))
                 Write(",");
@@ -327,12 +324,12 @@ namespace Roslynator.Documentation.Html
                 _pendingIndentation = true;
         }
 
-        public override void WriteDefinition(ISymbol symbol, SymbolDisplayFormat format, SymbolDisplayTypeDeclarationOptions? typeDeclarationOptions = null, SymbolDisplayAdditionalOptions? additionalOptions = null)
+        public override void WriteDefinition(ISymbol symbol, SymbolDisplayFormat format)
         {
             if (Format.Includes(SymbolDefinitionPartFilter.Attributes))
                 WriteAttributes(symbol);
 
-            base.WriteDefinition(symbol, format, typeDeclarationOptions, additionalOptions);
+            base.WriteDefinition(symbol, format);
         }
 
         protected override void WriteDefinitionName(ISymbol symbol)
@@ -360,7 +357,7 @@ namespace Roslynator.Documentation.Html
             if (symbol.Kind == SymbolKind.Field
                 && symbol.ContainingType.TypeKind == TypeKind.Enum)
             {
-                base.WriteSymbol(symbol, format, removeAttributeSuffix: removeAttributeSuffix);
+                base.WriteSymbol(symbol, format);
             }
             else if (_assemblies.Contains(symbol.ContainingAssembly))
             {
@@ -676,6 +673,7 @@ namespace Roslynator.Documentation.Html
                                                     }
                                                     else
                                                     {
+                                                        WriteParts(s, s.ToDisplayParts(SymbolDefinitionDisplayFormats.FullName));
                                                         WriteSymbol(s);
                                                     }
                                                 }
@@ -765,7 +763,7 @@ namespace Roslynator.Documentation.Html
 
                             if (exceptionSymbol != null)
                             {
-                                base.WriteSymbol(exceptionSymbol);
+                                Write(exceptionSymbol.ToDisplayParts(Format.GetFormat()));
                             }
                             else
                             {
@@ -846,7 +844,7 @@ namespace Roslynator.Documentation.Html
 
                                             if (symbol != null)
                                             {
-                                                base.WriteSymbol(symbol);
+                                                Write(symbol.ToDisplayParts(Format.GetFormat()));
                                             }
                                             else
                                             {

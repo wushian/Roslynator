@@ -87,6 +87,13 @@ namespace Roslynator.Documentation
                 parameterOptions: parameterOptions);
         }
 
+        internal SymbolDisplayFormat GetFormat()
+        {
+            return (Includes(SymbolDefinitionPartFilter.ContainingNamespace))
+                ? SymbolDefinitionDisplayFormats.TypeNameAndContainingTypesAndNamespacesAndTypeParameters
+                : SymbolDefinitionDisplayFormats.TypeNameAndContainingTypesAndTypeParameters;
+        }
+
         internal static class DefaultValues
         {
             public const SymbolDefinitionListLayout Layout = SymbolDefinitionListLayout.NamespaceList;
