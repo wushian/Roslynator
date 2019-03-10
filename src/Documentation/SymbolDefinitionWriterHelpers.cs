@@ -355,32 +355,45 @@ namespace Roslynator.Documentation
 
             bool ReadTypeParameterList()
             {
-                if (Peek(j).IsPunctuation("<"))
+                if (!Peek(j).IsPunctuation("<"))
+                    return true;
+
+                j++;
+
+                int depth = 1;
+
+                while (j < parts.Length)
                 {
-                    j++;
-
-                    if (Peek(j).Kind == SymbolDisplayPartKind.TypeParameterName)
+                    if (Peek(j).Kind == SymbolDisplayPartKind.Punctuation)
                     {
-                        j++;
-
-                        while (Peek(j).IsPunctuation(",")
-                            && Peek(j + 1).IsSpace()
-                            && Peek(j + 2).Kind == SymbolDisplayPartKind.TypeParameterName)
+                        switch (Peek(j).ToString())
                         {
-                            j += 3;
-                        }
+                            case "<":
+                                {
+                                    depth++;
+                                    break;
+                                }
+                            case ">":
+                                {
+                                    Debug.Assert(depth > 0);
 
-                        if (Peek(j).IsPunctuation(">"))
-                        {
-                            j++;
-                            return true;
+                                    depth--;
+
+                                    if (depth == 0)
+                                    {
+                                        j++;
+                                        return true;
+                                    }
+
+                                    break;
+                                }
                         }
                     }
 
-                    return false;
+                    j++;
                 }
 
-                return true;
+                return false;
             }
         }
     }

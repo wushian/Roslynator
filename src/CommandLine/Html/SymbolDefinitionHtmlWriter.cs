@@ -744,8 +744,7 @@ namespace Roslynator.Documentation.Html
 
                     if (summaryElement != null)
                     {
-                        WriteLine();
-                        WriteLine();
+                        Write("\n\n");
                     }
                     else
                     {
@@ -756,8 +755,7 @@ namespace Roslynator.Documentation.Html
 
                     do
                     {
-                        WriteLine();
-                        Write(" ");
+                        Write("\n  ");
 
                         string commentId = en.Current.Attribute("cref").Value;
 
