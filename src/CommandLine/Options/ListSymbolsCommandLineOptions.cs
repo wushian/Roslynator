@@ -7,9 +7,7 @@ using Roslynator.Documentation;
 namespace Roslynator.CommandLine
 {
     // OmitAssemblies, PreferredCulture
-#if DEBUG
-    [Verb("list-symbols", HelpText = "Lists symbols in the specified project or solution.")]
-#endif
+    [Verb("list-symbols", HelpText = "Lists symbols from the specified project or solution.")]
     public class ListSymbolsCommandLineOptions : MSBuildCommandLineOptions
     {
         [Option(longName: ParameterNames.Depth,
@@ -35,7 +33,7 @@ namespace Roslynator.CommandLine
         public IEnumerable<string> IgnoredAttributes { get; set; }
 
         [Option(longName: ParameterNames.IgnoredParts,
-            HelpText = "Defines parts of a symbol definition that should be excluded.",
+            HelpText = "Defines parts of a symbol definition that should be excluded. Allowed values are containing-namespace, attributes, assembly-attributes, attribute-arguments, accessibility, modifiers, parameter-name, parameter-default-value, base-type, base-interfaces, constraints, trailing-semicolon, trailing-comma.",
             MetaValue = "<IGNORED_PARTS>")]
         public IEnumerable<string> IgnoredParts { get; set; }
 
@@ -45,7 +43,7 @@ namespace Roslynator.CommandLine
         public IEnumerable<string> IgnoredSymbols { get; set; }
 
         [Option(longName: "documentation",
-            HelpText = "Indicates whether a documentation should be included. This option is available for XML and plain text.")]
+            HelpText = "Indicates whether a documentation should be included.")]
         public bool Documentation { get; set; }
 
         [Option(longName: "indent-chars",

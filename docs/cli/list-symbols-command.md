@@ -1,7 +1,7 @@
 
 # `list-symbols` Command
 
-List symbol definitions from the specified project or solution.
+List symbols from the specified project or solution.
 
 ## Synopsis
 
@@ -14,6 +14,7 @@ roslynator list-symbols <PROJECT|SOLUTION>
 [--format]
 [--group-by-assembly]
 [--ignored-attributes]
+[--ignored-parts]
 [--ignored-projects]
 [--ignored-symbols]
 [--documentation]
@@ -57,6 +58,10 @@ Indicates whether symbols should be grouped by assembly.
 
 Defines a list of attributes that should be ignored.
 
+**`--ignored-parts`** <PROJECT_NAME>
+
+Defines parts of a symbol definition that should be excluded. Allowed values are containing-namespace, attributes, assembly-attributes, attribute-arguments, accessibility, modifiers, parameter-name, parameter-default-value, base-type, base-interfaces, constraints, trailing-semicolon, trailing-comma.
+
 **`--ignored-projects`** <PROJECT_NAME>
 
 Defines projects that should be skipped.
@@ -67,7 +72,7 @@ Defines a list of symbols that should be ignored. Namespace of types can be spec
 
 **`[--documentation]`**
 
-Indicates whether a documentation should be included. This option is available for XML and plain text.
+Indicates whether a documentation should be included.
 
 **`[--indent-chars]`** `<INDENT_CHARS>`
 
