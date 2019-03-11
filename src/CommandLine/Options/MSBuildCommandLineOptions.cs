@@ -26,7 +26,7 @@ namespace Roslynator.CommandLine
         public string Language { get; set; }
 
         [Option(longName: ParameterNames.MSBuildPath,
-            HelpText = "Defines a path to MSBuild. First found instance of MSBuild will be used if the path to MSBuild is not specified.",
+            HelpText = "Defines a path to MSBuild. This option must be specified if there are multiple locations of MSBuild (usually multiple installations of Visual Studio).",
             MetaValue = "<MSBUILD_PATH>")]
         public string MSBuildPath { get; set; }
 
