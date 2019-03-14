@@ -125,7 +125,6 @@
     <Compile Include="GeneralOptionsPageControl.xaml.cs">
       <DependentUpon>GeneralOptionsPageControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\ConfigFileSettings.cs" />
     <Compile Include="Configuration\Settings.cs" />
     <Compile Include="Configuration\SettingsManager.cs" />
     <Compile Include="CodeFixesOptionsPage.cs">
@@ -142,7 +141,6 @@
     </Compile>
     <Compile Include="XElementExtensions.cs" />
     <Compile Include="TypeConverters\YesNoConverter.cs" />
-    <Compile Include="TypeConverters\EnabledDisabledConverter.cs" />
     <Compile Include="TypeConverters\TrueFalseConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RefactoringsOptionsPage.cs">

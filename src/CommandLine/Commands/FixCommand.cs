@@ -2,11 +2,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -17,15 +15,12 @@ namespace Roslynator.CommandLine
 {
     internal class FixCommand : MSBuildWorkspaceCommand
     {
-        private static ImmutableArray<string> _roslynatorAnalyzersAssemblies;
-        private static ImmutableArray<string> _roslynatorCodeFixesAssemblies;
-
         public FixCommand(
             FixCommandLineOptions options,
             DiagnosticSeverity severityLevel,
-            ImmutableDictionary<string, string> diagnosticFixMap,
-            ImmutableDictionary<string, string> diagnosticFixerMap,
-            string language) : base(language)
+            IEnumerable<KeyValuePair<string, string>> diagnosticFixMap,
+            IEnumerable<KeyValuePair<string, string>> diagnosticFixerMap,
+            in ProjectFilter projectFilter) : base(projectFilter)
         {
             Options = options;
             SeverityLevel = severityLevel;
@@ -33,46 +28,13 @@ namespace Roslynator.CommandLine
             DiagnosticFixerMap = diagnosticFixerMap;
         }
 
-        public static ImmutableArray<string> RoslynatorAnalyzersAssemblies
-        {
-            get
-            {
-                if (_roslynatorAnalyzersAssemblies.IsDefault)
-                {
-                    _roslynatorAnalyzersAssemblies = ImmutableArray.CreateRange(new string[]
-                    {
-                        Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Roslynator.CSharp.Analyzers.dll"),
-                        Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Roslynator.CSharp.Analyzers.CodeFixes.dll"),
-                    });
-                }
-
-                return _roslynatorAnalyzersAssemblies;
-            }
-        }
-
-        public static ImmutableArray<string> RoslynatorCodeFixesAssemblies
-        {
-            get
-            {
-                if (_roslynatorCodeFixesAssemblies.IsDefault)
-                {
-                    _roslynatorCodeFixesAssemblies = ImmutableArray.CreateRange(new string[]
-                    {
-                        Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Roslynator.CSharp.CodeFixes.dll"),
-                    });
-                }
-
-                return _roslynatorCodeFixesAssemblies;
-            }
-        }
-
         public FixCommandLineOptions Options { get; }
 
         public DiagnosticSeverity SeverityLevel { get; }
 
-        public ImmutableDictionary<string, string> DiagnosticFixMap { get; }
+        public IEnumerable<KeyValuePair<string, string>> DiagnosticFixMap { get; }
 
-        public ImmutableDictionary<string, string> DiagnosticFixerMap { get; }
+        public IEnumerable<KeyValuePair<string, string>> DiagnosticFixerMap { get; }
 
         public override async Task<CommandResult> ExecuteAsync(ProjectOrSolution projectOrSolution, CancellationToken cancellationToken = default)
         {
@@ -85,13 +47,10 @@ namespace Roslynator.CommandLine
                 supportedDiagnosticIds: Options.SupportedDiagnostics,
                 ignoredDiagnosticIds: Options.IgnoredDiagnostics,
                 ignoredCompilerDiagnosticIds: Options.IgnoredCompilerDiagnostics,
-                projectNames: Options.Projects,
-                ignoredProjectNames: Options.IgnoredProjects,
                 diagnosticIdsFixableOneByOne: Options.DiagnosticsFixableOneByOne,
                 diagnosticFixMap: DiagnosticFixMap,
                 diagnosticFixerMap: DiagnosticFixerMap,
                 fileBanner: Options.FileBanner,
-                language: Language,
                 maxIterations: Options.MaxIterations,
                 batchSize: Options.BatchSize,
                 format: Options.Format);
@@ -99,21 +58,18 @@ namespace Roslynator.CommandLine
             IEnumerable<AnalyzerAssembly> analyzerAssemblies = Options.AnalyzerAssemblies
                 .SelectMany(path => AnalyzerAssemblyLoader.LoadFrom(path).Select(info => info.AnalyzerAssembly));
 
-            if (Options.UseRoslynatorAnalyzers)
-                analyzerAssemblies = analyzerAssemblies.Concat(AnalyzerAssemblyLoader.LoadFiles(RoslynatorAnalyzersAssemblies));
-
-            if (Options.UseRoslynatorCodeFixes)
-                analyzerAssemblies = analyzerAssemblies.Concat(AnalyzerAssemblyLoader.LoadFiles(RoslynatorCodeFixesAssemblies));
-
             CultureInfo culture = (Options.Culture != null) ? CultureInfo.GetCultureInfo(Options.Culture) : null;
 
-            return await FixAsync(projectOrSolution, analyzerAssemblies, codeFixerOptions, culture, cancellationToken);
+            var projectFilter = new ProjectFilter(Options.Projects, Options.IgnoredProjects, Language);
+
+            return await FixAsync(projectOrSolution, analyzerAssemblies, codeFixerOptions, projectFilter, culture, cancellationToken);
         }
 
         internal static async Task<CommandResult> FixAsync(
             ProjectOrSolution projectOrSolution,
             IEnumerable<AnalyzerAssembly> analyzerAssemblies,
             CodeFixerOptions codeFixerOptions,
+            ProjectFilter projectFilter,
             IFormatProvider formatProvider = null,
             CancellationToken cancellationToken = default)
         {
@@ -127,7 +83,13 @@ namespace Roslynator.CommandLine
 
                 WriteLine($"Fix '{project.Name}'", ConsoleColor.Cyan, Verbosity.Minimal);
 
+                Stopwatch stopwatch = Stopwatch.StartNew();
+
                 await codeFixer.FixProjectAsync(project, cancellationToken);
+
+                stopwatch.Stop();
+
+                WriteLine($"Done fixing project '{project.FilePath}' in {stopwatch.Elapsed:mm\\:ss\\.ff}", Verbosity.Minimal);
             }
             else
             {
@@ -135,7 +97,7 @@ namespace Roslynator.CommandLine
 
                 CodeFixer codeFixer = GetCodeFixer(solution);
 
-                await codeFixer.FixSolutionAsync(cancellationToken);
+                await codeFixer.FixSolutionAsync(projectFilter.IsMatch, cancellationToken);
             }
 
             return CommandResult.Success;
