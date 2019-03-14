@@ -996,10 +996,10 @@
 * &emsp; \| &emsp; public static ExpressionSyntax LogicallyInvert\(ExpressionSyntax expression, CancellationToken cancellationToken = default\);
 * &emsp; \| &emsp; public static ExpressionSyntax LogicallyInvert\(ExpressionSyntax expression, SemanticModel semanticModel, CancellationToken cancellationToken = default\);
 * &emsp; public static class WorkspaceExtensions
-* &emsp; \| &emsp; public static Task\<Document> RemoveCommentsAsync\(this Document document, CommentKinds kinds, CancellationToken cancellationToken = default\);
-* &emsp; \| &emsp; public static Task\<Document> RemoveCommentsAsync\(this Document document, TextSpan span, CommentKinds kinds, CancellationToken cancellationToken = default\);
-* &emsp; \| &emsp; public static Task\<Document> RemovePreprocessorDirectivesAsync\(this Document document, PreprocessorDirectiveKinds directiveKinds, CancellationToken cancellationToken = default\);
-* &emsp; \| &emsp; public static Task\<Document> RemovePreprocessorDirectivesAsync\(this Document document, TextSpan span, PreprocessorDirectiveKinds directiveKinds, CancellationToken cancellationToken = default\);
+* &emsp; \| &emsp; public static Task\<Document> RemoveCommentsAsync\(this Document document, CommentFilter comments, CancellationToken cancellationToken = default\);
+* &emsp; \| &emsp; public static Task\<Document> RemoveCommentsAsync\(this Document document, TextSpan span, CommentFilter comments, CancellationToken cancellationToken = default\);
+* &emsp; \| &emsp; public static Task\<Document> RemovePreprocessorDirectivesAsync\(this Document document, PreprocessorDirectiveFilter directiveFilter, CancellationToken cancellationToken = default\);
+* &emsp; \| &emsp; public static Task\<Document> RemovePreprocessorDirectivesAsync\(this Document document, TextSpan span, PreprocessorDirectiveFilter directiveFilter, CancellationToken cancellationToken = default\);
 * &emsp; \| &emsp; public static Task\<Document> RemoveRegionAsync\(this Document document, RegionInfo region, CancellationToken cancellationToken = default\);
 * &emsp; \| &emsp; public static Task\<Document> RemoveTriviaAsync\(this Document document, TextSpan span, CancellationToken cancellationToken = default\);
 * &emsp; public static class WorkspaceSyntaxExtensions
@@ -1093,7 +1093,7 @@
 * &emsp; \| &emsp; public static implicit operator ElseClauseSyntax\(in IfStatementOrElseClause ifOrElse\);
 * &emsp; \| &emsp; public static bool operator ==\(in IfStatementOrElseClause left, in IfStatementOrElseClause right\);
 * &emsp; \| &emsp; public static bool operator \!=\(in IfStatementOrElseClause left, in IfStatementOrElseClause right\);
-* &emsp; \[Flags\] public enum CommentKinds
+* &emsp; \[Flags\] public enum CommentFilter
 * &emsp; \| &emsp; None = 0,
 * &emsp; \| &emsp; SingleLine = 1,
 * &emsp; \| &emsp; MultiLine = 2,
@@ -1102,7 +1102,7 @@
 * &emsp; \| &emsp; MultiLineDocumentation = 8,
 * &emsp; \| &emsp; Documentation = SingleLineDocumentation \| MultiLineDocumentation,
 * &emsp; \| &emsp; All = NonDocumentation \| Documentation,
-* &emsp; \[Flags\] public enum ModifierKinds
+* &emsp; \[Flags\] public enum ModifierFilter
 * &emsp; \| &emsp; None = 0,
 * &emsp; \| &emsp; New = 1,
 * &emsp; \| &emsp; Public = 2,
@@ -1142,7 +1142,7 @@
 * &emsp; \| &emsp; CheckingNotNull = NotEqualsToNull \| NotIsNull \| HasValue,
 * &emsp; \| &emsp; HasValueProperty = NotHasValue \| HasValue,
 * &emsp; \| &emsp; All = ComparisonToNull \| IsPattern \| HasValueProperty,
-* &emsp; \[Flags\] public enum PreprocessorDirectiveKinds
+* &emsp; \[Flags\] public enum PreprocessorDirectiveFilter
 * &emsp; \| &emsp; None = 0,
 * &emsp; \| &emsp; If = 1,
 * &emsp; \| &emsp; Elif = 2,
@@ -1323,8 +1323,8 @@
 * &emsp; \| &emsp; public bool Success \{ get; \}
 * &emsp; \| &emsp; public override bool Equals\(object obj\);
 * &emsp; \| &emsp; public bool Equals\(ModifierListInfo other\);
+* &emsp; \| &emsp; public ModifierFilter GetFilter\(\);
 * &emsp; \| &emsp; public override int GetHashCode\(\);
-* &emsp; \| &emsp; public ModifierKinds GetKinds\(\);
 * &emsp; \| &emsp; public override string ToString\(\);
 * &emsp; \| &emsp; public ModifierListInfo WithExplicitAccessibility\(Accessibility newAccessibility, IComparer\<SyntaxKind> comparer = null\);
 * &emsp; \| &emsp; public ModifierListInfo WithModifiers\(SyntaxTokenList modifiers\);

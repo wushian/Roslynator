@@ -3867,22 +3867,22 @@
             <summary>A set of extension methods for the workspace layer.</summary>
           </doc>
           <members>
-            <member def="public static Task&lt;Document&gt; RemoveCommentsAsync(this Document document, CommentKinds kinds, CancellationToken cancellationToken = default)">
+            <member def="public static Task&lt;Document&gt; RemoveCommentsAsync(this Document document, CommentFilter comments, CancellationToken cancellationToken = default)">
               <doc>
                 <summary>Creates a new document with comments of the specified kind removed.</summary>
               </doc>
             </member>
-            <member def="public static Task&lt;Document&gt; RemoveCommentsAsync(this Document document, TextSpan span, CommentKinds kinds, CancellationToken cancellationToken = default)">
+            <member def="public static Task&lt;Document&gt; RemoveCommentsAsync(this Document document, TextSpan span, CommentFilter comments, CancellationToken cancellationToken = default)">
               <doc>
                 <summary>Creates a new document with comments of the specified kind removed.</summary>
               </doc>
             </member>
-            <member def="public static Task&lt;Document&gt; RemovePreprocessorDirectivesAsync(this Document document, PreprocessorDirectiveKinds directiveKinds, CancellationToken cancellationToken = default)">
+            <member def="public static Task&lt;Document&gt; RemovePreprocessorDirectivesAsync(this Document document, PreprocessorDirectiveFilter directiveFilter, CancellationToken cancellationToken = default)">
               <doc>
                 <summary>Creates a new document with preprocessor directives of the specified kind removed.</summary>
               </doc>
             </member>
-            <member def="public static Task&lt;Document&gt; RemovePreprocessorDirectivesAsync(this Document document, TextSpan span, PreprocessorDirectiveKinds directiveKinds, CancellationToken cancellationToken = default)">
+            <member def="public static Task&lt;Document&gt; RemovePreprocessorDirectivesAsync(this Document document, TextSpan span, PreprocessorDirectiveFilter directiveFilter, CancellationToken cancellationToken = default)">
               <doc>
                 <summary>Creates a new document with preprocessor directives of the specified kind removed.</summary>
               </doc>
@@ -4249,7 +4249,7 @@
             <member def="public static bool operator !=(in IfStatementOrElseClause left, in IfStatementOrElseClause right)" />
           </members>
         </type>
-        <type def="public enum CommentKinds">
+        <type def="public enum CommentFilter">
           <doc>
             <summary>Specifies C# comments.</summary>
           </doc>
@@ -4299,7 +4299,7 @@
             </member>
           </members>
         </type>
-        <type def="public enum ModifierKinds">
+        <type def="public enum ModifierFilter">
           <doc>
             <summary>Specifies C# modifier.</summary>
           </doc>
@@ -4509,7 +4509,7 @@
             </member>
           </members>
         </type>
-        <type def="public enum PreprocessorDirectiveKinds">
+        <type def="public enum PreprocessorDirectiveFilter">
           <doc>
             <summary>Specifies C# preprocessor directives.</summary>
           </doc>
@@ -5420,15 +5420,15 @@
                 <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
               </doc>
             </member>
+            <member def="public ModifierFilter GetFilter()">
+              <doc>
+                <summary>Gets the modifier filter.</summary>
+              </doc>
+            </member>
             <member def="public override int GetHashCode()">
               <doc>
                 <summary>Returns the hash code for this instance.</summary>
                 <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
-              </doc>
-            </member>
-            <member def="public ModifierKinds GetKinds()">
-              <doc>
-                <summary>Gets the modifier kinds.</summary>
               </doc>
             </member>
             <member def="public override string ToString()">

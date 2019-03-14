@@ -264,7 +264,7 @@
             <summary>A wrapper for either an <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.IfStatementSyntax" /> or an <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.ElseClauseSyntax" />.</summary>
           </doc>
         </type>
-        <type def="public enum CommentKinds">
+        <type def="public enum CommentFilter">
           <doc>
             <summary>Specifies C# comments.</summary>
           </doc>
@@ -272,7 +272,7 @@
             <attribute>Flags</attribute>
           </attributes>
         </type>
-        <type def="public enum ModifierKinds">
+        <type def="public enum ModifierFilter">
           <doc>
             <summary>Specifies C# modifier.</summary>
           </doc>
@@ -288,7 +288,7 @@
             <attribute>Flags</attribute>
           </attributes>
         </type>
-        <type def="public enum PreprocessorDirectiveKinds">
+        <type def="public enum PreprocessorDirectiveFilter">
           <doc>
             <summary>Specifies C# preprocessor directives.</summary>
           </doc>

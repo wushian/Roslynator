@@ -86,10 +86,10 @@
 * &emsp; \| &emsp; public struct Enumerator
 * &emsp; public readonly struct IfStatementCascadeInfo : IEquatable\<IfStatementCascadeInfo>
 * &emsp; public readonly struct IfStatementOrElseClause : IEquatable\<IfStatementOrElseClause>
-* &emsp; \[Flags\] public enum CommentKinds
-* &emsp; \[Flags\] public enum ModifierKinds
+* &emsp; \[Flags\] public enum CommentFilter
+* &emsp; \[Flags\] public enum ModifierFilter
 * &emsp; \[Flags\] public enum NullCheckStyles
-* &emsp; \[Flags\] public enum PreprocessorDirectiveKinds
+* &emsp; \[Flags\] public enum PreprocessorDirectiveFilter
 * namespace Roslynator\.CSharp\.Syntax
 * &emsp; public readonly struct AsExpressionInfo : IEquatable\<AsExpressionInfo>
 * &emsp; public readonly struct AssignmentExpressionInfo : IEquatable\<AssignmentExpressionInfo>

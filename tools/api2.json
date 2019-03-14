@@ -133,13 +133,13 @@
         "public readonly struct IfStatementCascadeInfo : IEquatable<IfStatementCascadeInfo>",
         "public readonly struct IfStatementOrElseClause : IEquatable<IfStatementOrElseClause>",
         {
-          "type": "public enum CommentKinds",
+          "type": "public enum CommentFilter",
           "attributes": [
             "Flags"
           ]
         },
         {
-          "type": "public enum ModifierKinds",
+          "type": "public enum ModifierFilter",
           "attributes": [
             "Flags"
           ]
@@ -151,7 +151,7 @@
           ]
         },
         {
-          "type": "public enum PreprocessorDirectiveKinds",
+          "type": "public enum PreprocessorDirectiveFilter",
           "attributes": [
             "Flags"
           ]

@@ -1548,7 +1548,7 @@
 * &emsp; \| &emsp; \| &emsp; \| &emsp; Private = 1,
 * &emsp; \| &emsp; \| &emsp; \| &emsp; Internal = 2,
 * &emsp; \| &emsp; \| &emsp; \| &emsp; Public = 3,
-* &emsp; \| &emsp; \| &emsp; public enum Roslynator\.CSharp\.CommentKinds
+* &emsp; \| &emsp; \| &emsp; public enum Roslynator\.CSharp\.CommentFilter
 * &emsp; \| &emsp; \| &emsp; \| &emsp; None = 0,
 * &emsp; \| &emsp; \| &emsp; \| &emsp; SingleLine = 1,
 * &emsp; \| &emsp; \| &emsp; \| &emsp; MultiLine = 2,
@@ -1557,7 +1557,7 @@
 * &emsp; \| &emsp; \| &emsp; \| &emsp; MultiLineDocumentation = 8,
 * &emsp; \| &emsp; \| &emsp; \| &emsp; Documentation = SingleLineDocumentation \| MultiLineDocumentation,
 * &emsp; \| &emsp; \| &emsp; \| &emsp; All = NonDocumentation \| Documentation,
-* &emsp; \| &emsp; \| &emsp; public enum Roslynator\.CSharp\.ModifierKinds
+* &emsp; \| &emsp; \| &emsp; public enum Roslynator\.CSharp\.ModifierFilter
 * &emsp; \| &emsp; \| &emsp; \| &emsp; None = 0,
 * &emsp; \| &emsp; \| &emsp; \| &emsp; New = 1,
 * &emsp; \| &emsp; \| &emsp; \| &emsp; Public = 2,
@@ -1597,7 +1597,7 @@
 * &emsp; \| &emsp; \| &emsp; \| &emsp; CheckingNotNull = NotEqualsToNull \| NotIsNull \| HasValue,
 * &emsp; \| &emsp; \| &emsp; \| &emsp; HasValueProperty = NotHasValue \| HasValue,
 * &emsp; \| &emsp; \| &emsp; \| &emsp; All = ComparisonToNull \| IsPattern \| HasValueProperty,
-* &emsp; \| &emsp; \| &emsp; public enum Roslynator\.CSharp\.PreprocessorDirectiveKinds
+* &emsp; \| &emsp; \| &emsp; public enum Roslynator\.CSharp\.PreprocessorDirectiveFilter
 * &emsp; \| &emsp; \| &emsp; \| &emsp; None = 0,
 * &emsp; \| &emsp; \| &emsp; \| &emsp; If = 1,
 * &emsp; \| &emsp; \| &emsp; \| &emsp; Elif = 2,
@@ -2729,8 +2729,8 @@
 * &emsp; \| &emsp; \| &emsp; public bool Success \{ get; \}
 * &emsp; \| &emsp; \| &emsp; public override bool Equals\(object obj\);
 * &emsp; \| &emsp; \| &emsp; public bool Equals\(ModifierListInfo other\);
+* &emsp; \| &emsp; \| &emsp; public ModifierFilter GetFilter\(\);
 * &emsp; \| &emsp; \| &emsp; public override int GetHashCode\(\);
-* &emsp; \| &emsp; \| &emsp; public ModifierKinds GetKinds\(\);
 * &emsp; \| &emsp; \| &emsp; public override string ToString\(\);
 * &emsp; \| &emsp; \| &emsp; public ModifierListInfo WithExplicitAccessibility\(Accessibility newAccessibility, IComparer\<SyntaxKind> comparer = null\);
 * &emsp; \| &emsp; \| &emsp; public ModifierListInfo WithModifiers\(SyntaxTokenList modifiers\);
@@ -10935,10 +10935,10 @@
 * &emsp; \| &emsp; public static ExpressionSyntax LogicallyInvert\(ExpressionSyntax expression, CancellationToken cancellationToken = default\);
 * &emsp; \| &emsp; public static ExpressionSyntax LogicallyInvert\(ExpressionSyntax expression, SemanticModel semanticModel, CancellationToken cancellationToken = default\);
 * &emsp; public static class Roslynator\.CSharp\.WorkspaceExtensions
-* &emsp; \| &emsp; public static Task\<Document> RemoveCommentsAsync\(this Document document, CommentKinds kinds, CancellationToken cancellationToken = default\);
-* &emsp; \| &emsp; public static Task\<Document> RemoveCommentsAsync\(this Document document, TextSpan span, CommentKinds kinds, CancellationToken cancellationToken = default\);
-* &emsp; \| &emsp; public static Task\<Document> RemovePreprocessorDirectivesAsync\(this Document document, PreprocessorDirectiveKinds directiveKinds, CancellationToken cancellationToken = default\);
-* &emsp; \| &emsp; public static Task\<Document> RemovePreprocessorDirectivesAsync\(this Document document, TextSpan span, PreprocessorDirectiveKinds directiveKinds, CancellationToken cancellationToken = default\);
+* &emsp; \| &emsp; public static Task\<Document> RemoveCommentsAsync\(this Document document, CommentFilter comments, CancellationToken cancellationToken = default\);
+* &emsp; \| &emsp; public static Task\<Document> RemoveCommentsAsync\(this Document document, TextSpan span, CommentFilter comments, CancellationToken cancellationToken = default\);
+* &emsp; \| &emsp; public static Task\<Document> RemovePreprocessorDirectivesAsync\(this Document document, PreprocessorDirectiveFilter directiveFilter, CancellationToken cancellationToken = default\);
+* &emsp; \| &emsp; public static Task\<Document> RemovePreprocessorDirectivesAsync\(this Document document, TextSpan span, PreprocessorDirectiveFilter directiveFilter, CancellationToken cancellationToken = default\);
 * &emsp; \| &emsp; public static Task\<Document> RemoveRegionAsync\(this Document document, RegionInfo region, CancellationToken cancellationToken = default\);
 * &emsp; \| &emsp; public static Task\<Document> RemoveTriviaAsync\(this Document document, TextSpan span, CancellationToken cancellationToken = default\);
 * &emsp; public static class Roslynator\.CSharp\.WorkspaceSyntaxExtensions

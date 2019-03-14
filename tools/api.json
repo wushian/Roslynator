@@ -1181,10 +1181,10 @@
         {
           "type": "public static class WorkspaceExtensions",
           "members": [
-            "public static Task<Document> RemoveCommentsAsync(this Document document, CommentKinds kinds, CancellationToken cancellationToken = default)",
-            "public static Task<Document> RemoveCommentsAsync(this Document document, TextSpan span, CommentKinds kinds, CancellationToken cancellationToken = default)",
-            "public static Task<Document> RemovePreprocessorDirectivesAsync(this Document document, PreprocessorDirectiveKinds directiveKinds, CancellationToken cancellationToken = default)",
-            "public static Task<Document> RemovePreprocessorDirectivesAsync(this Document document, TextSpan span, PreprocessorDirectiveKinds directiveKinds, CancellationToken cancellationToken = default)",
+            "public static Task<Document> RemoveCommentsAsync(this Document document, CommentFilter comments, CancellationToken cancellationToken = default)",
+            "public static Task<Document> RemoveCommentsAsync(this Document document, TextSpan span, CommentFilter comments, CancellationToken cancellationToken = default)",
+            "public static Task<Document> RemovePreprocessorDirectivesAsync(this Document document, PreprocessorDirectiveFilter directiveFilter, CancellationToken cancellationToken = default)",
+            "public static Task<Document> RemovePreprocessorDirectivesAsync(this Document document, TextSpan span, PreprocessorDirectiveFilter directiveFilter, CancellationToken cancellationToken = default)",
             "public static Task<Document> RemoveRegionAsync(this Document document, RegionInfo region, CancellationToken cancellationToken = default)",
             "public static Task<Document> RemoveTriviaAsync(this Document document, TextSpan span, CancellationToken cancellationToken = default)"
           ]
@@ -1323,7 +1323,7 @@
           ]
         },
         {
-          "type": "public enum CommentKinds",
+          "type": "public enum CommentFilter",
           "attributes": [
             "Flags"
           ],
@@ -1339,7 +1339,7 @@
           ]
         },
         {
-          "type": "public enum ModifierKinds",
+          "type": "public enum ModifierFilter",
           "attributes": [
             "Flags"
           ],
@@ -1393,7 +1393,7 @@
           ]
         },
         {
-          "type": "public enum PreprocessorDirectiveKinds",
+          "type": "public enum PreprocessorDirectiveFilter",
           "attributes": [
             "Flags"
           ],
@@ -1623,8 +1623,8 @@
             "public bool Success { get; }",
             "public override bool Equals(object obj)",
             "public bool Equals(ModifierListInfo other)",
+            "public ModifierFilter GetFilter()",
             "public override int GetHashCode()",
-            "public ModifierKinds GetKinds()",
             "public override string ToString()",
             "public ModifierListInfo WithExplicitAccessibility(Accessibility newAccessibility, IComparer<SyntaxKind> comparer = null)",
             "public ModifierListInfo WithModifiers(SyntaxTokenList modifiers)",

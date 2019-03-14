@@ -1770,7 +1770,7 @@ assembly <b>Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, Publi
 <code class="csharp">        <b>Internal</b> = 2,</code>
 <code class="csharp">        <b>Public</b> = 3,</code>
 
-<a name="Roslynator_CSharp_CommentKinds" /><code class="csharp">      public enum <b>Roslynator.CSharp.CommentKinds</b></code>
+<a name="Roslynator_CSharp_CommentFilter" /><code class="csharp">      public enum <b>Roslynator.CSharp.CommentFilter</b></code>
 
 <code class="csharp">        <b>None</b> = 0,</code>
 <code class="csharp">        <b>SingleLine</b> = 1,</code>
@@ -1781,7 +1781,7 @@ assembly <b>Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, Publi
 <code class="csharp">        <b>Documentation</b> = SingleLineDocumentation | MultiLineDocumentation,</code>
 <code class="csharp">        <b>All</b> = NonDocumentation | Documentation,</code>
 
-<a name="Roslynator_CSharp_ModifierKinds" /><code class="csharp">      public enum <b>Roslynator.CSharp.ModifierKinds</b></code>
+<a name="Roslynator_CSharp_ModifierFilter" /><code class="csharp">      public enum <b>Roslynator.CSharp.ModifierFilter</b></code>
 
 <code class="csharp">        <b>None</b> = 0,</code>
 <code class="csharp">        <b>New</b> = 1,</code>
@@ -1825,7 +1825,7 @@ assembly <b>Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, Publi
 <code class="csharp">        <b>HasValueProperty</b> = NotHasValue | HasValue,</code>
 <code class="csharp">        <b>All</b> = ComparisonToNull | IsPattern | HasValueProperty,</code>
 
-<a name="Roslynator_CSharp_PreprocessorDirectiveKinds" /><code class="csharp">      public enum <b>Roslynator.CSharp.PreprocessorDirectiveKinds</b></code>
+<a name="Roslynator_CSharp_PreprocessorDirectiveFilter" /><code class="csharp">      public enum <b>Roslynator.CSharp.PreprocessorDirectiveFilter</b></code>
 
 <code class="csharp">        <b>None</b> = 0,</code>
 <code class="csharp">        <b>If</b> = 1,</code>
@@ -3289,8 +3289,8 @@ assembly <b>Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, Publi
 
 <code class="csharp">      public override <a href="https://docs.microsoft.com/en-us/dotnet/api/system.boolean">bool</a> <b>Equals</b>(<a href="https://docs.microsoft.com/en-us/dotnet/api/system.object">object</a> );</code>
 <code class="csharp">      public <a href="https://docs.microsoft.com/en-us/dotnet/api/system.boolean">bool</a> <b>Equals</b>(<a href="#Roslynator_CSharp_Syntax_ModifierListInfo">ModifierListInfo</a> );</code>
+<code class="csharp">      public <a href="#Roslynator_CSharp_ModifierFilter">ModifierFilter</a> <b>GetFilter</b>();</code>
 <code class="csharp">      public override <a href="https://docs.microsoft.com/en-us/dotnet/api/system.int32">int</a> <b>GetHashCode</b>();</code>
-<code class="csharp">      public <a href="#Roslynator_CSharp_ModifierKinds">ModifierKinds</a> <b>GetKinds</b>();</code>
 <code class="csharp">      public override <a href="https://docs.microsoft.com/en-us/dotnet/api/system.string">string</a> <b>ToString</b>();</code>
 <code class="csharp">      public <a href="#Roslynator_CSharp_Syntax_ModifierListInfo">ModifierListInfo</a> <b>WithExplicitAccessibility</b>(<a href="#Microsoft_CodeAnalysis_Accessibility">Accessibility</a> , <a href="https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.icomparer-1">IComparer</a>&lt;<a href="#Microsoft_CodeAnalysis_CSharp_SyntaxKind">SyntaxKind</a>&gt;  = null);</code>
 <code class="csharp">      public <a href="#Roslynator_CSharp_Syntax_ModifierListInfo">ModifierListInfo</a> <b>WithModifiers</b>(<a href="#Microsoft_CodeAnalysis_SyntaxTokenList">SyntaxTokenList</a> );</code>
@@ -12887,10 +12887,10 @@ assembly <b>Roslynator.Workspaces.Core, Version=1.0.0.10, Culture=neutral, Publi
 
 <a name="Roslynator_CSharp_WorkspaceExtensions" /><code class="csharp">  public static class <b>Roslynator.CSharp.WorkspaceExtensions</b></code>
 
-<code class="csharp">    public static <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a href="#Microsoft_CodeAnalysis_Document">Document</a>&gt; <b>RemoveCommentsAsync</b>(this <a href="#Microsoft_CodeAnalysis_Document">Document</a> , <a href="#Roslynator_CSharp_CommentKinds">CommentKinds</a> , <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken">CancellationToken</a>  = default);</code>
-<code class="csharp">    public static <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a href="#Microsoft_CodeAnalysis_Document">Document</a>&gt; <b>RemoveCommentsAsync</b>(this <a href="#Microsoft_CodeAnalysis_Document">Document</a> , <a href="#Microsoft_CodeAnalysis_Text_TextSpan">TextSpan</a> , <a href="#Roslynator_CSharp_CommentKinds">CommentKinds</a> , <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken">CancellationToken</a>  = default);</code>
-<code class="csharp">    public static <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a href="#Microsoft_CodeAnalysis_Document">Document</a>&gt; <b>RemovePreprocessorDirectivesAsync</b>(this <a href="#Microsoft_CodeAnalysis_Document">Document</a> , <a href="#Roslynator_CSharp_PreprocessorDirectiveKinds">PreprocessorDirectiveKinds</a> , <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken">CancellationToken</a>  = default);</code>
-<code class="csharp">    public static <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a href="#Microsoft_CodeAnalysis_Document">Document</a>&gt; <b>RemovePreprocessorDirectivesAsync</b>(this <a href="#Microsoft_CodeAnalysis_Document">Document</a> , <a href="#Microsoft_CodeAnalysis_Text_TextSpan">TextSpan</a> , <a href="#Roslynator_CSharp_PreprocessorDirectiveKinds">PreprocessorDirectiveKinds</a> , <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken">CancellationToken</a>  = default);</code>
+<code class="csharp">    public static <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a href="#Microsoft_CodeAnalysis_Document">Document</a>&gt; <b>RemoveCommentsAsync</b>(this <a href="#Microsoft_CodeAnalysis_Document">Document</a> , <a href="#Roslynator_CSharp_CommentFilter">CommentFilter</a> , <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken">CancellationToken</a>  = default);</code>
+<code class="csharp">    public static <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a href="#Microsoft_CodeAnalysis_Document">Document</a>&gt; <b>RemoveCommentsAsync</b>(this <a href="#Microsoft_CodeAnalysis_Document">Document</a> , <a href="#Microsoft_CodeAnalysis_Text_TextSpan">TextSpan</a> , <a href="#Roslynator_CSharp_CommentFilter">CommentFilter</a> , <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken">CancellationToken</a>  = default);</code>
+<code class="csharp">    public static <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a href="#Microsoft_CodeAnalysis_Document">Document</a>&gt; <b>RemovePreprocessorDirectivesAsync</b>(this <a href="#Microsoft_CodeAnalysis_Document">Document</a> , <a href="#Roslynator_CSharp_PreprocessorDirectiveFilter">PreprocessorDirectiveFilter</a> , <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken">CancellationToken</a>  = default);</code>
+<code class="csharp">    public static <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a href="#Microsoft_CodeAnalysis_Document">Document</a>&gt; <b>RemovePreprocessorDirectivesAsync</b>(this <a href="#Microsoft_CodeAnalysis_Document">Document</a> , <a href="#Microsoft_CodeAnalysis_Text_TextSpan">TextSpan</a> , <a href="#Roslynator_CSharp_PreprocessorDirectiveFilter">PreprocessorDirectiveFilter</a> , <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken">CancellationToken</a>  = default);</code>
 <code class="csharp">    public static <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a href="#Microsoft_CodeAnalysis_Document">Document</a>&gt; <b>RemoveRegionAsync</b>(this <a href="#Microsoft_CodeAnalysis_Document">Document</a> , <a href="#Roslynator_CSharp_Syntax_RegionInfo">RegionInfo</a> , <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken">CancellationToken</a>  = default);</code>
 <code class="csharp">    public static <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a href="#Microsoft_CodeAnalysis_Document">Document</a>&gt; <b>RemoveTriviaAsync</b>(this <a href="#Microsoft_CodeAnalysis_Document">Document</a> , <a href="#Microsoft_CodeAnalysis_Text_TextSpan">TextSpan</a> , <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken">CancellationToken</a>  = default);</code>
 

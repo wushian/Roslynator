@@ -1860,13 +1860,13 @@ namespace Roslynator.CSharp
   public static class WorkspaceExtensions
 
     <summary>Creates a new document with comments of the specified kind removed.</summary>
-    public static Task<Document> RemoveCommentsAsync(this Document document, CommentKinds kinds, CancellationToken cancellationToken = default);
+    public static Task<Document> RemoveCommentsAsync(this Document document, CommentFilter comments, CancellationToken cancellationToken = default);
     <summary>Creates a new document with comments of the specified kind removed.</summary>
-    public static Task<Document> RemoveCommentsAsync(this Document document, TextSpan span, CommentKinds kinds, CancellationToken cancellationToken = default);
+    public static Task<Document> RemoveCommentsAsync(this Document document, TextSpan span, CommentFilter comments, CancellationToken cancellationToken = default);
     <summary>Creates a new document with preprocessor directives of the specified kind removed.</summary>
-    public static Task<Document> RemovePreprocessorDirectivesAsync(this Document document, PreprocessorDirectiveKinds directiveKinds, CancellationToken cancellationToken = default);
+    public static Task<Document> RemovePreprocessorDirectivesAsync(this Document document, PreprocessorDirectiveFilter directiveFilter, CancellationToken cancellationToken = default);
     <summary>Creates a new document with preprocessor directives of the specified kind removed.</summary>
-    public static Task<Document> RemovePreprocessorDirectivesAsync(this Document document, TextSpan span, PreprocessorDirectiveKinds directiveKinds, CancellationToken cancellationToken = default);
+    public static Task<Document> RemovePreprocessorDirectivesAsync(this Document document, TextSpan span, PreprocessorDirectiveFilter directiveFilter, CancellationToken cancellationToken = default);
     <summary>Creates a new document with the specified region removed.</summary>
     public static Task<Document> RemoveRegionAsync(this Document document, RegionInfo region, CancellationToken cancellationToken = default);
     <summary>Creates a new document with trivia inside the specified span removed.</summary>
@@ -2078,7 +2078,7 @@ namespace Roslynator.CSharp
 
   <summary>Specifies C# comments.</summary>
   [Flags]
-  public enum CommentKinds
+  public enum CommentFilter
 
     <summary>None comment specified.</summary>
     None = 0,
@@ -2099,7 +2099,7 @@ namespace Roslynator.CSharp
 
   <summary>Specifies C# modifier.</summary>
   [Flags]
-  public enum ModifierKinds
+  public enum ModifierFilter
 
     <summary>None modifier.</summary>
     None = 0,
@@ -2185,7 +2185,7 @@ namespace Roslynator.CSharp
 
   <summary>Specifies C# preprocessor directives.</summary>
   [Flags]
-  public enum PreprocessorDirectiveKinds
+  public enum PreprocessorDirectiveFilter
 
     <summary>No preprocessor directive.</summary>
     None = 0,
@@ -2615,11 +2615,11 @@ namespace Roslynator.CSharp.Syntax
     <param name="other">An object to compare with this object.</param>
     <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
     public bool Equals(ModifierListInfo other);
+    <summary>Gets the modifier filter.</summary>
+    public ModifierFilter GetFilter();
     <summary>Returns the hash code for this instance.</summary>
     <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
     public override int GetHashCode();
-    <summary>Gets the modifier kinds.</summary>
-    public ModifierKinds GetKinds();
     <summary>Returns the string representation of the underlying syntax, not including its leading and trailing trivia.</summary>
     public override string ToString();
     <summary>Creates a new <see cref="T:Roslynator.CSharp.Syntax.ModifierListInfo" /> with accessibility modifiers updated.</summary>

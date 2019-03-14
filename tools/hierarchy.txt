@@ -1761,7 +1761,7 @@ public class System.Object
         Internal = 2,
         Public = 3,
 
-      public enum Roslynator.CSharp.CommentKinds
+      public enum Roslynator.CSharp.CommentFilter
 
         None = 0,
         SingleLine = 1,
@@ -1772,7 +1772,7 @@ public class System.Object
         Documentation = SingleLineDocumentation | MultiLineDocumentation,
         All = NonDocumentation | Documentation,
 
-      public enum Roslynator.CSharp.ModifierKinds
+      public enum Roslynator.CSharp.ModifierFilter
 
         None = 0,
         New = 1,
@@ -1816,7 +1816,7 @@ public class System.Object
         HasValueProperty = NotHasValue | HasValue,
         All = ComparisonToNull | IsPattern | HasValueProperty,
 
-      public enum Roslynator.CSharp.PreprocessorDirectiveKinds
+      public enum Roslynator.CSharp.PreprocessorDirectiveFilter
 
         None = 0,
         If = 1,
@@ -3280,8 +3280,8 @@ public class System.Object
 
       public override bool Equals(object obj);
       public bool Equals(ModifierListInfo other);
+      public ModifierFilter GetFilter();
       public override int GetHashCode();
-      public ModifierKinds GetKinds();
       public override string ToString();
       public ModifierListInfo WithExplicitAccessibility(Accessibility newAccessibility, IComparer<SyntaxKind> comparer = null);
       public ModifierListInfo WithModifiers(SyntaxTokenList modifiers);
@@ -12878,10 +12878,10 @@ public class System.Object
 
   public static class Roslynator.CSharp.WorkspaceExtensions
 
-    public static Task<Document> RemoveCommentsAsync(this Document document, CommentKinds kinds, CancellationToken cancellationToken = default);
-    public static Task<Document> RemoveCommentsAsync(this Document document, TextSpan span, CommentKinds kinds, CancellationToken cancellationToken = default);
-    public static Task<Document> RemovePreprocessorDirectivesAsync(this Document document, PreprocessorDirectiveKinds directiveKinds, CancellationToken cancellationToken = default);
-    public static Task<Document> RemovePreprocessorDirectivesAsync(this Document document, TextSpan span, PreprocessorDirectiveKinds directiveKinds, CancellationToken cancellationToken = default);
+    public static Task<Document> RemoveCommentsAsync(this Document document, CommentFilter comments, CancellationToken cancellationToken = default);
+    public static Task<Document> RemoveCommentsAsync(this Document document, TextSpan span, CommentFilter comments, CancellationToken cancellationToken = default);
+    public static Task<Document> RemovePreprocessorDirectivesAsync(this Document document, PreprocessorDirectiveFilter directiveFilter, CancellationToken cancellationToken = default);
+    public static Task<Document> RemovePreprocessorDirectivesAsync(this Document document, TextSpan span, PreprocessorDirectiveFilter directiveFilter, CancellationToken cancellationToken = default);
     public static Task<Document> RemoveRegionAsync(this Document document, RegionInfo region, CancellationToken cancellationToken = default);
     public static Task<Document> RemoveTriviaAsync(this Document document, TextSpan span, CancellationToken cancellationToken = default);
 

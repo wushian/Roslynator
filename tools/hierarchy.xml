@@ -1852,7 +1852,7 @@
               <member def="Public = 3" />
             </members>
           </type>
-          <type def="public enum Roslynator.CSharp.CommentKinds">
+          <type def="public enum Roslynator.CSharp.CommentFilter">
             <members>
               <member def="None = 0" />
               <member def="SingleLine = 1" />
@@ -1864,7 +1864,7 @@
               <member def="All = NonDocumentation | Documentation" />
             </members>
           </type>
-          <type def="public enum Roslynator.CSharp.ModifierKinds">
+          <type def="public enum Roslynator.CSharp.ModifierFilter">
             <members>
               <member def="None = 0" />
               <member def="New = 1" />
@@ -1910,7 +1910,7 @@
               <member def="All = ComparisonToNull | IsPattern | HasValueProperty" />
             </members>
           </type>
-          <type def="public enum Roslynator.CSharp.PreprocessorDirectiveKinds">
+          <type def="public enum Roslynator.CSharp.PreprocessorDirectiveFilter">
             <members>
               <member def="None = 0" />
               <member def="If = 1" />
@@ -3302,8 +3302,8 @@
             <member def="public bool Success { get; }" />
             <member def="public override bool Equals(object obj)" />
             <member def="public bool Equals(ModifierListInfo other)" />
+            <member def="public ModifierFilter GetFilter()" />
             <member def="public override int GetHashCode()" />
-            <member def="public ModifierKinds GetKinds()" />
             <member def="public override string ToString()" />
             <member def="public ModifierListInfo WithExplicitAccessibility(Accessibility newAccessibility, IComparer&lt;SyntaxKind&gt; comparer = null)" />
             <member def="public ModifierListInfo WithModifiers(SyntaxTokenList modifiers)" />
@@ -12891,10 +12891,10 @@
       </type>
       <type def="public static class Roslynator.CSharp.WorkspaceExtensions">
         <members>
-          <member def="public static Task&lt;Document&gt; RemoveCommentsAsync(this Document document, CommentKinds kinds, CancellationToken cancellationToken = default)" />
-          <member def="public static Task&lt;Document&gt; RemoveCommentsAsync(this Document document, TextSpan span, CommentKinds kinds, CancellationToken cancellationToken = default)" />
-          <member def="public static Task&lt;Document&gt; RemovePreprocessorDirectivesAsync(this Document document, PreprocessorDirectiveKinds directiveKinds, CancellationToken cancellationToken = default)" />
-          <member def="public static Task&lt;Document&gt; RemovePreprocessorDirectivesAsync(this Document document, TextSpan span, PreprocessorDirectiveKinds directiveKinds, CancellationToken cancellationToken = default)" />
+          <member def="public static Task&lt;Document&gt; RemoveCommentsAsync(this Document document, CommentFilter comments, CancellationToken cancellationToken = default)" />
+          <member def="public static Task&lt;Document&gt; RemoveCommentsAsync(this Document document, TextSpan span, CommentFilter comments, CancellationToken cancellationToken = default)" />
+          <member def="public static Task&lt;Document&gt; RemovePreprocessorDirectivesAsync(this Document document, PreprocessorDirectiveFilter directiveFilter, CancellationToken cancellationToken = default)" />
+          <member def="public static Task&lt;Document&gt; RemovePreprocessorDirectivesAsync(this Document document, TextSpan span, PreprocessorDirectiveFilter directiveFilter, CancellationToken cancellationToken = default)" />
           <member def="public static Task&lt;Document&gt; RemoveRegionAsync(this Document document, RegionInfo region, CancellationToken cancellationToken = default)" />
           <member def="public static Task&lt;Document&gt; RemoveTriviaAsync(this Document document, TextSpan span, CancellationToken cancellationToken = default)" />
         </members>
