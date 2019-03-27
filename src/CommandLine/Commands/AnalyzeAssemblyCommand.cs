@@ -4,8 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Xml;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -73,10 +76,37 @@ namespace Roslynator.CommandLine
             WriteLine($"{assemblies.Count} analyzer {((assemblies.Count == 1) ? "assembly" : "assemblies")} found", ConsoleColor.Green, Verbosity.Minimal);
             WriteLine(Verbosity.Minimal);
 
-            if (options.Output != null
-                && analyzerAssemblies.Length > 0)
+            if (analyzerAssemblies.Length > 0)
             {
-                AnalyzerAssemblyXmlSerializer.Serialize(analyzerAssemblies, options.Output);
+                CultureInfo culture = (options.Culture != null) ? CultureInfo.GetCultureInfo(options.Culture) : null;
+
+                foreach (string path in options.Output)
+                {
+                    WriteLine($"Save '{path}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+
+                    string extension = Path.GetExtension(path);
+
+                    if (string.Equals(extension, ".xml", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AnalyzerAssemblyXmlSerializer.Serialize(path, analyzerAssemblies, culture);
+                    }
+                    else if (string.Equals(extension, ".ruleset", StringComparison.OrdinalIgnoreCase))
+                    {
+                        WriteLine($"Save ruleset to '{path}'", ConsoleColor.DarkGray, Verbosity.Diagnostic);
+
+                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        using (XmlWriter xmlWriter = XmlWriter.Create(fileStream, new XmlWriterSettings() { Indent = true, IndentChars = "  ", CloseOutput = false }))
+                        {
+                            RuleSetUtility.WriteXml(
+                                writer: xmlWriter,
+                                analyzerAssemblies: analyzerAssemblies.Select(f => f.AnalyzerAssembly),
+                                name: "",
+                                toolsVersion: new Version(15, 0),
+                                description: null,
+                                formatProvider: culture);
+                        }
+                    }
+                }
             }
 
             return CommandResult.Success;
