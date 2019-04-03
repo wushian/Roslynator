@@ -57,6 +57,13 @@ namespace Roslynator.CSharp.Refactorings
                     }
                 }
 
+                if (context.IsRefactoringEnabled(RefactoringIdentifiers.AddMissingPropertiesToObjectInitializer))
+                {
+                    SemanticModel semanticModdel = await context.GetSemanticModelAsync().ConfigureAwait(false);
+
+                    AddMissingPropertiesToObjectInitializerRefactoring.ComputeRefactorings(context, initializer, semanticModdel);
+                }
+
                 if (context.IsRefactoringEnabled(RefactoringIdentifiers.ExpandInitializer))
                     await ExpandInitializerRefactoring.ComputeRefactoringsAsync(context, initializer).ConfigureAwait(false);
 
