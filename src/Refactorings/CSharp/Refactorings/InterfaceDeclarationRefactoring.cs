@@ -15,6 +15,12 @@ namespace Roslynator.CSharp.Refactorings
             if (context.IsRefactoringEnabled(RefactoringIdentifiers.ExtractTypeDeclarationToNewFile))
                 ExtractTypeDeclarationToNewFileRefactoring.ComputeRefactorings(context, interfaceDeclaration);
 
+            if (context.IsRefactoringEnabled(RefactoringIdentifiers.ConvertInterfaceToAbstractClass)
+                && context.Span.IsEmptyAndContainedInSpan(interfaceDeclaration.Identifier))
+            {
+                ConvertInterfaceToAbstractClassRefactoring.ComputeRefactorings(context, interfaceDeclaration);
+            }
+
             if (context.IsRefactoringEnabled(RefactoringIdentifiers.SortMemberDeclarations)
                 && interfaceDeclaration.BracesSpan().Contains(context.Span))
             {

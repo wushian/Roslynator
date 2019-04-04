@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Refactorings>
+  <Refactoring Id="RR0215" Identifier="ConvertInterfaceToAbstractClass" Title="Convert interface to abstract class" IsDevelopment="true">
+    <Syntaxes>
+      <Syntax>interface declaration</Syntax>
+    </Syntaxes>
+    <Span>identifier</Span>
+    <Summary></Summary>
+    <Samples>
+      <Sample>
+        <Before>
+          <![CDATA[public interface IFoo
+{
+    void M(object parameter);
+
+    string P { get; }
+
+    string this[int index] { get; set; }
+
+    event EventHandler E;
+}]]></Before>
+        <After><![CDATA[public abstract class Foo
+{
+    public abstract void M(object parameter);
+
+    public abstract string P { get; }
+
+    public abstract string this[int index] { get; set; }
+
+    public abstract event EventHandler E;
+}]]></After>
+      </Sample>
+    </Samples>
+    <Remarks></Remarks>
+    <Links>
+      <Link>
+        <Url></Url>
+        <Text></Text>
+      </Link>
+    </Links>
+  </Refactoring>
+</Refactorings>
