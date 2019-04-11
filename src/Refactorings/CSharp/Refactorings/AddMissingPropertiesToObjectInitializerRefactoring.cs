@@ -168,7 +168,7 @@ namespace Roslynator.CSharp.Refactorings
             {
                 return SimpleAssignmentExpression(
                     IdentifierName(propertySymbol.Name),
-                    propertySymbol.Type.GetDefaultValueSyntax(document.GetDefaultSyntaxOptions()));
+                    IdentifierName(MissingToken(TriviaList(), SyntaxKind.IdentifierToken, TriviaList(Space))));
             });
 
             InitializerExpressionSyntax newInitializer = initializer

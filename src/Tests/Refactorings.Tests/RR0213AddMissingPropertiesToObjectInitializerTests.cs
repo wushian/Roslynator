@@ -39,7 +39,7 @@ class C
 
     void M()
     {
-        var x = new C() { P1 = null, P2 = 0, P3 = null, P4 = default };
+        var x = new C() { P1 = , P2 = , P3 = , P4 = };
     }
 }
 ", equivalenceKey: RefactoringId);
@@ -79,7 +79,7 @@ class C2 : C
 {
     void M()
     {
-        var x = new C2() { P0 = null, P1 = null, P2 = null };
+        var x = new C2() { P0 = null, P1 = , P2 = };
     }
 }
 ", equivalenceKey: RefactoringId);
