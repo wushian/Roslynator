@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Text;
 
 #pragma warning disable RCS1213
 
@@ -72,6 +73,7 @@ namespace Roslynator.CSharp.Analysis
                 startContext.RegisterSyntaxNodeAction(AnalyzeDefaultSwitchLabel, SyntaxKind.DefaultSwitchLabel);
 
                 startContext.RegisterSyntaxNodeAction(AnalyzeNameColon, SyntaxKind.NameColon);
+                startContext.RegisterSyntaxNodeAction(AnalyzeElseClause, SyntaxKind.ElseClause);
             });
         }
 
@@ -468,6 +470,16 @@ namespace Roslynator.CSharp.Analysis
             }
         }
 
+        private static void AnalyzeElseClause(SyntaxNodeAnalysisContext context)
+        {
+            var elseClause = (ElseClauseSyntax)context.Node;
+
+            StatementSyntax statement = elseClause.Statement;
+
+            if (statement.IsKind(SyntaxKind.IfStatement))
+                AnalyzeUnnecessaryNewLine(context, elseClause.ElseKeyword, ((IfStatementSyntax)statement).IfKeyword);
+        }
+
         private static void AnalyzeUnnecessaryNewLine(SyntaxNodeAnalysisContext context, BaseTypeDeclarationSyntax declaration)
         {
             SyntaxToken closingBrace = declaration.CloseBraceToken;
@@ -481,9 +493,9 @@ namespace Roslynator.CSharp.Analysis
             }
         }
 
-        private static void AnalyzeUnnecessaryNewLine(SyntaxNodeAnalysisContext context, SyntaxNodeOrToken nodeOrToken, SyntaxToken token)
+        private static void AnalyzeUnnecessaryNewLine(SyntaxNodeAnalysisContext context, SyntaxNodeOrToken nodeOrToken1, SyntaxNodeOrToken nodeOrToken2)
         {
-            SyntaxTriviaList.Enumerator en = nodeOrToken.GetTrailingTrivia().GetEnumerator();
+            SyntaxTriviaList.Enumerator en = nodeOrToken1.GetTrailingTrivia().GetEnumerator();
 
             if (!en.MoveNext())
                 return;
@@ -504,7 +516,7 @@ namespace Roslynator.CSharp.Analysis
             if (en.MoveNext())
                 return;
 
-            en = token.LeadingTrivia.GetEnumerator();
+            en = nodeOrToken2.GetLeadingTrivia().GetEnumerator();
 
             if (en.MoveNext())
             {
@@ -515,7 +527,10 @@ namespace Roslynator.CSharp.Analysis
                     return;
             }
 
-            context.ReportDiagnostic(DiagnosticDescriptors.RemoveUnnecessaryNewLine, token);
+            DiagnosticHelpers.ReportDiagnostic(
+                context,
+                DiagnosticDescriptors.RemoveUnnecessaryNewLine,
+                Location.Create(context.Node.SyntaxTree, new TextSpan(nodeOrToken2.SpanStart, 0)));
         }
     }
 }

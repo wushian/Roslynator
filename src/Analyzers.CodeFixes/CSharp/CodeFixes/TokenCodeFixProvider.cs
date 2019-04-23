@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Immutable;
 using System.Composition;
 using System.Threading;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using Roslynator.CodeFixes;
 
@@ -53,9 +55,25 @@ namespace Roslynator.CSharp.CodeFixes
         {
             SyntaxToken previousToken = token.GetPreviousToken();
 
-            var textChange = new TextChange(TextSpan.FromBounds(previousToken.Span.End, token.Span.Start), "");
+            string newText = GetNewText();
+
+            var textChange = new TextChange(TextSpan.FromBounds(previousToken.Span.End, token.Span.Start), newText);
 
             return document.WithTextChangeAsync(textChange, cancellationToken);
+
+            string GetNewText()
+            {
+                switch (token.Kind())
+                {
+                    case SyntaxKind.SemicolonToken:
+                    case SyntaxKind.ColonToken:
+                        return "";
+                    case SyntaxKind.IfKeyword:
+                        return " ";
+                    default:
+                        throw new InvalidOperationException();
+                }
+            }
         }
     }
 }
