@@ -66,6 +66,13 @@ if errorlevel 1 (
  exit
 )
 
+dotnet test -c Release --no-build "..\src\Tests\Formatting.Analyzers.Tests\Formatting.Analyzers.Tests.csproj"
+
+if errorlevel 1 (
+ pause
+ exit
+)
+
 dotnet test -c Release --no-build "..\src\Tests\CodeFixes.Tests\CodeFixes.Tests.csproj"
 
 if errorlevel 1 (
@@ -81,6 +88,7 @@ if errorlevel 1 (
 )
 
 del /Q "..\src\Analyzers.CodeFixes\bin\Release\Roslynator.Analyzers.*.nupkg"
+del /Q "..\src\Formatting.Analyzers.CodeFixes\bin\Release\Roslynator.Formatting.Analyzers.*.nupkg"
 del /Q "..\src\CodeFixes\bin\Release\Roslynator.CodeFixes.*.nupkg"
 del /Q "..\src\Core\bin\Release\Roslynator.Core.*.nupkg"
 del /Q "..\src\Workspaces.Core\bin\Release\Roslynator.Workspaces.Core.*.nupkg"
@@ -88,6 +96,7 @@ del /Q "..\src\CSharp\bin\Release\Roslynator.CSharp.*.nupkg"
 del /Q "..\src\CSharp.Workspaces\bin\Release\Roslynator.CSharp.Workspaces.*.nupkg"
 
 dotnet pack -c Release --no-build -v normal "..\src\Analyzers.CodeFixes\Analyzers.CodeFixes.csproj"
+dotnet pack -c Release --no-build -v normal "..\src\Formatting.Analyzers.CodeFixes\Formatting.Analyzers.CodeFixes.csproj"
 dotnet pack -c Release --no-build -v normal "..\src\CodeFixes\CodeFixes.csproj"
 dotnet pack -c Release --no-build -v normal "..\src\Core\Core.csproj"
 dotnet pack -c Release --no-build -v normal "..\src\Workspaces.Core\Workspaces.Core.csproj"
