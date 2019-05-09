@@ -9,9 +9,12 @@ namespace Roslynator.Formatting.CSharp
     public static partial class DiagnosticIdentifiers
     {
         public const string AddNewLineAfterSwitchLabel = "RCS1028";
+        public const string AddNewLineBeforeOperatorOfMultilineConditionalExpression = "RCS1184";
         public const string AddNewLineBeforeEnumMember = "ROS1025";
         public const string AddNewLineBeforeStatement = "ROS1026";
         public const string AddNewLineBeforeEmbeddedStatement = "ROS1027";
+        public const string AddNewLineBeforeOperatorOfMultilineBinaryExpression = "ROS1029";
         public const string AddEmptyLineAfterEmbeddedStatement = "ROS1030";
+        public const string AddEmptyLineAfterClosingBraceOfBlock = "ROS1153";
     }
 }

@@ -81,6 +81,30 @@ Bar();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
+  <Analyzer Identifier="AddNewLineBeforeOperatorOfMultilineBinaryExpression"> <!--FormatBinaryOperatorOnNextLine-->
+    <Id>ROS1029</Id>
+    <Title>Add new line before operator of multi-line binary expression.</Title>
+    <MessageFormat>Add new line before operator of multi-line binary expression.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[if (x && // [|Id|]
+    y &&
+    z)
+{
+}]]></Before>
+        <After><![CDATA[if (x
+    && y
+    && z)
+{
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
   <Analyzer Identifier="AddEmptyLineAfterEmbeddedStatement">
     <Id>ROS1030</Id>
     <Title>Add empty line after embedded statement.</Title>
@@ -99,6 +123,49 @@ Bar();]]></Before>
     Foo();
 
 Bar();]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="AddEmptyLineAfterClosingBraceOfBlock"> <!--AddEmptyLineAfterClosingBrace-->
+    <Id>ROS1153</Id>
+    <Title>Add empty line after closing brace of block.</Title>
+    <MessageFormat>Add empty line after closing brace of block.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[if (x)
+{
+} // [|Id|]
+Foo();]]></Before>
+        <After><![CDATA[if (x)
+{
+}
+
+Foo();]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="AddNewLineBeforeOperatorOfMultilineConditionalExpression"> <!--FormatConditionalExpression-->
+    <Id>RCS1184</Id>
+    <Title>Add new line before operator of multi-line conditional expression.</Title>
+    <MessageFormat>Add new line before operator of multi-line conditional expression.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[var y = (x) ? // [|Id|]
+    Foo() :
+    Bar();]]></Before>
+        <After><![CDATA[var y = (x)
+    ? Foo()
+    : Bar();]]></After>
       </Sample>
     </Samples>
   </Analyzer>

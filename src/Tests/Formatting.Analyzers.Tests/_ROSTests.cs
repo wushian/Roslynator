@@ -18,7 +18,7 @@ namespace Roslynator.Formatting.CSharp.Tests
 
         public override CodeFixProvider FixProvider { get; }
 
-        //[Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UsePropertySyntaxNodeSpanStart)]
+        //[Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeStatement)]
         public async Task Test()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -40,7 +40,7 @@ class C
 ");
         }
 
-        //[Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UsePropertySyntaxNodeSpanStart)]
+        //[Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeStatement)]
         public async Task TestNoDiagnostic()
         {
             await VerifyNoDiagnosticAsync(@"
