@@ -4,10 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace Roslynator.Formatting.CSharp
+namespace Roslynator.Formatting
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public abstract class BaseDiagnosticAnalyzer : DiagnosticAnalyzer
+    internal abstract class BaseDiagnosticAnalyzer : DiagnosticAnalyzer
     {
         protected BaseDiagnosticAnalyzer()
         {

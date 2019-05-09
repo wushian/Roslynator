@@ -1,3 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Analyzers>
+  <Analyzer Identifier="AddNewLineBeforeEnumMember">
+    <Id>ROS1025</Id>
+    <Title>Add new line before enum member.</Title>
+    <MessageFormat>Add new line before enum member.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[enum Foo { A, B, C, } // [|Id|]]]></Before>
+        <After><![CDATA[enum Foo
+{
+    A,
+    B,
+    C,
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="AddNewLineBeforeStatement">
+    <Id>ROS1026</Id>
+    <Title>Add new line before statement.</Title>
+    <MessageFormat>Add new line before statement.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[Foo(); Bar(); // [|Id|]]]></Before>
+        <After><![CDATA[Foo();
+Bar();]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="AddNewLineBeforeEmbeddedStatement">
+    <Id>ROS1027</Id>
+    <Title>Add new line before embedded statement.</Title>
+    <MessageFormat>Add new line before embedded statement.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[if (x) Foo(); // [|Id|]]]></Before>
+        <After><![CDATA[if (x)
+    Foo();]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="AddNewLineAfterSwitchLabel">
+    <Id>RCS1028</Id>
+    <Title>Add new line after switch label.</Title>
+    <MessageFormat>Add new line after switch label.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[switch (x)
+{
+    case "a": return Foo(); // [|Id|]
+    case "b": return Bar();
+}]]></Before>
+        <After><![CDATA[switch (x)
+{
+    case "a":
+        return Foo();
+    case "b":
+        return Bar();
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="AddEmptyLineAfterEmbeddedStatement">
+    <Id>ROS1030</Id>
+    <Title>Add empty line after embedded statement.</Title>
+    <MessageFormat>Add empty line after embedded statement.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[if (x)
+    Foo(); // [|Id|]
+Bar();]]></Before>
+        <After><![CDATA[if (x)
+    Foo();
+
+Bar();]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
 </Analyzers>

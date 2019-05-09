@@ -9,5 +9,65 @@ namespace Roslynator.Formatting.CSharp
 {
     public static partial class DiagnosticDescriptors
     {
+        /// <summary>RCS1028</summary>
+        public static readonly DiagnosticDescriptor AddNewLineAfterSwitchLabel = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineAfterSwitchLabel, 
+            title:              "Add new line after switch label.", 
+            messageFormat:      "Add new line after switch label.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineAfterSwitchLabel}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>ROS1025</summary>
+        public static readonly DiagnosticDescriptor AddNewLineBeforeEnumMember = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineBeforeEnumMember, 
+            title:              "Add new line before enum member.", 
+            messageFormat:      "Add new line before enum member.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeEnumMember}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>ROS1026</summary>
+        public static readonly DiagnosticDescriptor AddNewLineBeforeStatement = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineBeforeStatement, 
+            title:              "Add new line before statement.", 
+            messageFormat:      "Add new line before statement.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeStatement}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>ROS1027</summary>
+        public static readonly DiagnosticDescriptor AddNewLineBeforeEmbeddedStatement = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement, 
+            title:              "Add new line before embedded statement.", 
+            messageFormat:      "Add new line before embedded statement.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>ROS1030</summary>
+        public static readonly DiagnosticDescriptor AddEmptyLineAfterEmbeddedStatement = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineAfterEmbeddedStatement, 
+            title:              "Add empty line after embedded statement.", 
+            messageFormat:      "Add empty line after embedded statement.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineAfterEmbeddedStatement}", 
+            customTags:         Array.Empty<string>());
+
     }
 }

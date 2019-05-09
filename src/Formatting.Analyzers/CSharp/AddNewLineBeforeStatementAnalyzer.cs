@@ -1,16 +1,17 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Text;
+using Roslynator.CSharp;
 
-namespace Roslynator.CSharp.Analysis
+namespace Roslynator.Formatting.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AddNewLineBeforeStatementAnalyzer : BaseDiagnosticAnalyzer
+    internal class AddNewLineBeforeStatementAnalyzer : BaseDiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
@@ -19,9 +20,6 @@ namespace Roslynator.CSharp.Analysis
 
         public override void Initialize(AnalysisContext context)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
-
             base.Initialize(context);
             context.EnableConcurrentExecution();
 
@@ -29,14 +27,14 @@ namespace Roslynator.CSharp.Analysis
             context.RegisterSyntaxNodeAction(AnalyzeSwitchSection, SyntaxKind.SwitchSection);
         }
 
-        public static void AnalyzeBlock(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeBlock(SyntaxNodeAnalysisContext context)
         {
             var block = (BlockSyntax)context.Node;
 
             Analyze(context, block.Statements);
         }
 
-        public static void AnalyzeSwitchSection(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeSwitchSection(SyntaxNodeAnalysisContext context)
         {
             var switchSection = (SwitchSectionSyntax)context.Node;
 
@@ -57,7 +55,9 @@ namespace Roslynator.CSharp.Analysis
                 if (!statement.IsKind(SyntaxKind.Block, SyntaxKind.EmptyStatement)
                     && statement.GetSpanStartLine() == previousEndLine)
                 {
-                    DiagnosticHelpers.ReportDiagnostic(context, DiagnosticDescriptors.AddNewLineBeforeStatement, statement);
+                    context.ReportDiagnostic(
+                        DiagnosticDescriptors.AddNewLineBeforeStatement,
+                        Location.Create(statement.SyntaxTree, new TextSpan(statement.SpanStart, 0)));
                 }
 
                 previousEndLine = statement.GetSpanEndLine();

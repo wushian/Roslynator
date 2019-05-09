@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Roslynator.Formatting.CodeFixes.CSharp;
 using Roslynator.Tests;
 using Xunit;
 
@@ -11,7 +12,7 @@ namespace Roslynator.Formatting.CSharp.Tests
 {
     public class ROSTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UsePropertySyntaxNodeSpanStart;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewLineBeforeStatement;
 
         public override DiagnosticAnalyzer Analyzer { get; }
 
@@ -39,28 +40,6 @@ class C
 ");
         }
 
-        //[Theory, Trait(Traits.Analyzer, DiagnosticIdentifiers.UsePropertySyntaxNodeSpanStart)]
-        //[InlineData("", "")]
-        public async Task Test2(string fromData, string toData)
-        {
-            await VerifyDiagnosticAndFixAsync(@"
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-
-class C
-{
-    void M()
-    {
-    }
-}
-", fromData, toData);
-        }
-
         //[Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UsePropertySyntaxNodeSpanStart)]
         public async Task TestNoDiagnostic()
         {
@@ -80,28 +59,6 @@ class C
     }
 }
 ");
-        }
-
-        //[Theory, Trait(Traits.Analyzer, DiagnosticIdentifiers.UsePropertySyntaxNodeSpanStart)]
-        //[InlineData("")]
-        public async Task TestNoDiagnostic2(string fromData)
-        {
-            await VerifyNoDiagnosticAsync(@"
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-
-class C
-{
-    void M()
-    {
-    }
-}
-", fromData);
         }
     }
 }

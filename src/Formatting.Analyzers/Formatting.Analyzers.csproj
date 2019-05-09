@@ -6,8 +6,8 @@
 
   <PropertyGroup>
     <Version>2.0.2.0</Version>
-    <AssemblyName>Roslynator.CodeAnalysis.Analyzers</AssemblyName>
-    <RootNamespace>Roslynator.CodeAnalysis</RootNamespace>
+    <AssemblyName>Roslynator.Formatting.Analyzers</AssemblyName>
+    <RootNamespace>Roslynator.Formatting</RootNamespace>
     <CodeAnalysisRuleSet>..\global.ruleset</CodeAnalysisRuleSet>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Roslynator.snk</AssemblyOriginatorKeyFile>
