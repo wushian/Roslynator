@@ -86,6 +86,25 @@
       </Sample>
     </Samples>
   </Analyzer>
+  <Analyzer Identifier="AddNewLineBeforeClosingBraceOfEmptyBlock"> <!--FormatEmptyBlock-->
+    <Id>RCS1023</Id>
+    <Title>Add new line before closing brace of empty block.</Title>
+    <MessageFormat>Add new line before closing brace of empty block.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[void Foo()
+{ } // [|Id|]]]></Before>
+        <After><![CDATA[void Foo()
+{
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
   <Analyzer Identifier="AddNewLineBeforeEnumMember">
     <Id>ROS1025</Id>
     <Title>Add new line before enum member.</Title>
@@ -291,6 +310,26 @@ enum Bar
     </Samples>
     <Remarks>This analyzer does not enforce an empty line between two single-line declaration.</Remarks>
   </Analyzer>
+  <Analyzer Identifier="AddNewLineBeforeClosingBraceOfEmptyTypeDeclaration"> <!--FormatDeclarationBraces-->
+    <Id>RCS1076</Id>
+    <Title>Add new line before closing brace of empty type declaration.</Title>
+    <MessageFormat>Add new line before closing brace of empty type declaration.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[interface IFoo
+{ } // [|Id|]]]></Before>
+        <After>
+          <![CDATA[interface IFoo
+{
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
   <Analyzer Identifier="AddEmptyLineBeforeClosingBraceOfDoStatement"> <!--AddEmptyLineBeforeWhileInDoStatement-->
     <Id>ROS1092</Id>
     <Title>Add empty line before closing brace of 'do' statement.</Title>
@@ -354,6 +393,25 @@ Foo();]]></After>
         <After><![CDATA[var y = (x)
     ? Foo()
     : Bar();]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="AddNewLinesToSinglelineBlock"> <!--FormatSingleLineBlock-->
+    <Id>RCS1185</Id>
+    <Title>Add new lines to single-line block.</Title>
+    <MessageFormat>Add new lines to single-line block.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[void Foo() { Bar(); } // [|Id|]]]></Before>
+        <After><![CDATA[void Foo()
+{
+    Bar();
+}]]></After>
       </Sample>
     </Samples>
   </Analyzer>

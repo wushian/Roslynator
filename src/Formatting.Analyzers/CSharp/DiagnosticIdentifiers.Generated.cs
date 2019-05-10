@@ -8,6 +8,9 @@ namespace Roslynator.Formatting.CSharp
 {
     public static partial class DiagnosticIdentifiers
     {
+        public const string AddNewLineBeforeClosingBraceOfEmptyBlock = "RCS1023";
+        public const string AddNewLineBeforeClosingBraceOfEmptyTypeDeclaration = "RCS1076";
+        public const string AddNewLinesToSinglelineBlock = "RCS1185";
         public const string RemoveNewLinesFromAccessorListOfAutoProperty = "ROS0001";
         public const string AddNewLinesToAccessorListOfFullProperty = "ROS0002";
         public const string RemoveNewLinesFromAccessorWithSinglelineExpression = "ROS0003";

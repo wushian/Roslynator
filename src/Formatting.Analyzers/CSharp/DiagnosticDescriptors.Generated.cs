@@ -9,6 +9,42 @@ namespace Roslynator.Formatting.CSharp
 {
     public static partial class DiagnosticDescriptors
     {
+        /// <summary>RCS1023</summary>
+        public static readonly DiagnosticDescriptor AddNewLineBeforeClosingBraceOfEmptyBlock = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyBlock, 
+            title:              "Add new line before closing brace of empty block.", 
+            messageFormat:      "Add new line before closing brace of empty block.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyBlock}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS1076</summary>
+        public static readonly DiagnosticDescriptor AddNewLineBeforeClosingBraceOfEmptyTypeDeclaration = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyTypeDeclaration, 
+            title:              "Add new line before closing brace of empty type declaration.", 
+            messageFormat:      "Add new line before closing brace of empty type declaration.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyTypeDeclaration}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS1185</summary>
+        public static readonly DiagnosticDescriptor AddNewLinesToSinglelineBlock = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLinesToSinglelineBlock, 
+            title:              "Add new lines to single-line block.", 
+            messageFormat:      "Add new lines to single-line block.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLinesToSinglelineBlock}", 
+            customTags:         Array.Empty<string>());
+
         /// <summary>ROS0001</summary>
         public static readonly DiagnosticDescriptor RemoveNewLinesFromAccessorListOfAutoProperty = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty, 
