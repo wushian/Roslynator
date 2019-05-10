@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class AddNewLineBeforeOperatorOfMultilineBinaryExpressionTests : AbstractCSharpFixVerifier
+    public class PlaceBinaryOperatorBeforeOperandTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewLineBeforeOperatorOfMultilineBinaryExpression;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.PlaceBinaryOperatorBeforeOperand;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewLineBeforeOperatorOfMultilineBinaryExpressionAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new PlaceBinaryOperatorBeforeOperandAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new BinaryExpressionCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineBinaryExpression)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceBinaryOperatorBeforeOperand)]
         public async Task Test()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -55,7 +55,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineBinaryExpression)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceBinaryOperatorBeforeOperand)]
         public async Task TestNoDiagnostic()
         {
             await VerifyNoDiagnosticAsync(@"
@@ -77,7 +77,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineBinaryExpression)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceBinaryOperatorBeforeOperand)]
         public async Task TestNoDiagnostic_Singleline()
         {
             await VerifyNoDiagnosticAsync(@"

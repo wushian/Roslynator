@@ -15,11 +15,11 @@ namespace Roslynator.Formatting.CSharp
         public const string AddNewLineBeforeStatement = "ROS1026";
         public const string AddNewLineBeforeEmbeddedStatement = "ROS1027";
         public const string AddNewLineAfterSwitchLabel = "ROS1028";
-        public const string AddNewLineBeforeOperatorOfMultilineBinaryExpression = "ROS1029";
+        public const string PlaceBinaryOperatorBeforeOperand = "ROS1029";
         public const string AddEmptyLineAfterEmbeddedStatement = "ROS1030";
         public const string AddEmptyLineBetweenDeclarations = "ROS1057";
         public const string AddEmptyLineBeforeClosingBraceOfDoStatement = "ROS1092";
         public const string AddEmptyLineAfterClosingBraceOfBlock = "ROS1153";
-        public const string AddNewLineBeforeOperatorOfMultilineConditionalExpression = "ROS1184";
+        public const string PlaceConditionalOperatorBeforeExpression = "ROS1184";
     }
 }

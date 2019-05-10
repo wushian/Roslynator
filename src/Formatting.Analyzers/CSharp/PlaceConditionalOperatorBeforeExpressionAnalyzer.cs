@@ -10,11 +10,11 @@ using Roslynator.CSharp;
 namespace Roslynator.Formatting.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    internal class AddNewLineBeforeOperatorOfMultilineConditionalExpressionAnalyzer : BaseDiagnosticAnalyzer
+    internal class PlaceConditionalOperatorBeforeExpressionAnalyzer : BaseDiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(DiagnosticDescriptors.AddNewLineBeforeOperatorOfMultilineConditionalExpression); }
+            get { return ImmutableArray.Create(DiagnosticDescriptors.PlaceConditionalOperatorBeforeExpression); }
         }
 
         public override void Initialize(AnalysisContext context)
@@ -40,7 +40,7 @@ namespace Roslynator.Formatting.CSharp
                 return;
             }
 
-            context.ReportDiagnostic(DiagnosticDescriptors.AddNewLineBeforeOperatorOfMultilineConditionalExpression, conditionalExpression);
+            context.ReportDiagnostic(DiagnosticDescriptors.PlaceConditionalOperatorBeforeExpression, conditionalExpression);
         }
 
         internal static bool IsFixable(ExpressionSyntax expression, SyntaxToken token)

@@ -22,7 +22,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineConditionalExpression); }
+            get { return ImmutableArray.Create(DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression); }
         }
 
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
@@ -37,11 +37,11 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             switch (diagnostic.Id)
             {
-                case DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineConditionalExpression:
+                case DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression:
                     {
                         CodeAction codeAction = CodeAction.Create(
-                            "Add new line before ?:",
-                            ct => AddNewLineBeforeOperatorOfMultilineConditionalExpressionAsync(document, conditionalExpression, ct),
+                            "Place ?: before expression",
+                            ct => PlaceConditionalOperatorBeforeExpressionAsync(document, conditionalExpression, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
@@ -50,7 +50,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             }
         }
 
-        private static Task<Document> AddNewLineBeforeOperatorOfMultilineConditionalExpressionAsync(
+        private static Task<Document> PlaceConditionalOperatorBeforeExpressionAsync(
             Document document,
             ConditionalExpressionSyntax conditionalExpression,
             CancellationToken cancellationToken)
@@ -86,7 +86,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             string newText,
             SyntaxNodeTextBuilder builder)
         {
-            if (AddNewLineBeforeOperatorOfMultilineConditionalExpressionAnalyzer.IsFixable(expression, token))
+            if (PlaceConditionalOperatorBeforeExpressionAnalyzer.IsFixable(expression, token))
             {
                 if (!expression.GetTrailingTrivia().IsEmptyOrWhitespace()
                     || !token.LeadingTrivia.IsEmptyOrWhitespace())

@@ -167,10 +167,10 @@ Bar();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLineBeforeOperatorOfMultilineBinaryExpression"> <!--FormatBinaryOperatorOnNextLine-->
+  <Analyzer Identifier="PlaceBinaryOperatorBeforeOperand"> <!--FormatBinaryOperatorOnNextLine-->
     <Id>ROS1029</Id>
-    <Title>Add new line before operator of multi-line binary expression.</Title>
-    <MessageFormat>Add new line before operator of multi-line binary expression.</MessageFormat>
+    <Title>Place operator before operand.</Title>
+    <MessageFormat>Place operator before operand.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -337,10 +337,10 @@ Foo();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLineBeforeOperatorOfMultilineConditionalExpression"> <!--FormatConditionalExpression-->
+  <Analyzer Identifier="PlaceConditionalOperatorBeforeExpression"> <!--FormatConditionalExpression-->
     <Id>ROS1184</Id>
-    <Title>Add new line before operator of multi-line conditional expression.</Title>
-    <MessageFormat>Add new line before operator of multi-line conditional expression.</MessageFormat>
+    <Title>Place conditional operator before expression.</Title>
+    <MessageFormat>Place conditional operator before expression.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>

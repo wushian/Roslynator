@@ -21,7 +21,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineBinaryExpression); }
+            get { return ImmutableArray.Create(DiagnosticIdentifiers.PlaceBinaryOperatorBeforeOperand); }
         }
 
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
@@ -35,14 +35,14 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             Diagnostic diagnostic = context.Diagnostics[0];
 
             CodeAction codeAction = CodeAction.Create(
-                "Add new line before binary operator",
-                ct => AddNewLineBeforeOperatorOfMultilineBinaryExpressionAsync(document, binaryExpression, ct),
+                $"Place '{binaryExpression.OperatorToken.ToString()}' before operand",
+                ct => PlaceBinaryOperatorBeforeOperandAsync(document, binaryExpression, ct),
                 GetEquivalenceKey(diagnostic));
 
             context.RegisterCodeFix(codeAction, diagnostic);
         }
 
-        private static Task<Document> AddNewLineBeforeOperatorOfMultilineBinaryExpressionAsync(
+        private static Task<Document> PlaceBinaryOperatorBeforeOperandAsync(
             Document document,
             BinaryExpressionSyntax binaryExpression,
             CancellationToken cancellationToken)

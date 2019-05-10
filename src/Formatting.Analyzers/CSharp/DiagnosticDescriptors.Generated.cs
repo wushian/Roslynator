@@ -94,15 +94,15 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>ROS1029</summary>
-        public static readonly DiagnosticDescriptor AddNewLineBeforeOperatorOfMultilineBinaryExpression = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineBinaryExpression, 
-            title:              "Add new line before operator of multi-line binary expression.", 
-            messageFormat:      "Add new line before operator of multi-line binary expression.", 
+        public static readonly DiagnosticDescriptor PlaceBinaryOperatorBeforeOperand = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.PlaceBinaryOperatorBeforeOperand, 
+            title:              "Place operator before operand.", 
+            messageFormat:      "Place operator before operand.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineBinaryExpression}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.PlaceBinaryOperatorBeforeOperand}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>ROS1030</summary>
@@ -154,15 +154,15 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>ROS1184</summary>
-        public static readonly DiagnosticDescriptor AddNewLineBeforeOperatorOfMultilineConditionalExpression = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineConditionalExpression, 
-            title:              "Add new line before operator of multi-line conditional expression.", 
-            messageFormat:      "Add new line before operator of multi-line conditional expression.", 
+        public static readonly DiagnosticDescriptor PlaceConditionalOperatorBeforeExpression = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression, 
+            title:              "Place conditional operator before expression.", 
+            messageFormat:      "Place conditional operator before expression.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineConditionalExpression}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression}", 
             customTags:         Array.Empty<string>());
 
     }

@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class AddNewLineBeforeOperatorOfMultilineConditionalExpressionTests : AbstractCSharpFixVerifier
+    public class PlaceConditionalOperatorBeforeExpressionTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewLineBeforeOperatorOfMultilineConditionalExpression;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.PlaceConditionalOperatorBeforeExpression;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewLineBeforeOperatorOfMultilineConditionalExpressionAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new PlaceConditionalOperatorBeforeExpressionAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new ConditionalExpressionCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineConditionalExpression)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression)]
         public async Task Test()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -47,7 +47,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineConditionalExpression)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression)]
         public async Task Test2()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -77,7 +77,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineConditionalExpression)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression)]
         public async Task Test3()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -107,7 +107,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineConditionalExpression)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression)]
         public async Task Test4()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -137,7 +137,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineConditionalExpression)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression)]
         public async Task Test5()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -167,7 +167,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineConditionalExpression)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression)]
         public async Task TestNoDiagnostic()
         {
             await VerifyNoDiagnosticAsync(@"
