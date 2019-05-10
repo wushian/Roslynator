@@ -1,5 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Analyzers>
+  <!--<Analyzer Identifier="">
+    <Id>ROS000</Id>
+    <Title>.</Title>
+    <MessageFormat>.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[]]></Before>
+        <After><![CDATA[]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>-->
+  <Analyzer Identifier="RemoveNewLinesFromAccessorListOfAutoProperty"> <!--FormatAccessorList-->
+    <Id>ROS0001</Id>
+    <Title>Remove newlines from accessor list of auto-property.</Title>
+    <MessageFormat>Remove newlines from accessor list of auto-property.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[string Foo
+{ // [|Id|]
+    get;
+    set;
+}]]></Before>
+        <After><![CDATA[string Foo { get; set; }]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="AddNewLinesToAccessorListOfFullProperty"> <!--FormatAccessorList-->
+    <Id>ROS0002</Id>
+    <Title>Add newlines to accessor list of full property.</Title>
+    <MessageFormat>Add newlines to accessor list of full property.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[string Foo { get { return _foo; } set { _foo = value; } } // [|Id|]]]></Before>
+        <After><![CDATA[string Foo
+{
+    get { return _foo; }
+    set { _foo = value; }
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="RemoveNewLinesFromAccessorWithSinglelineExpression"> <!--FormatAccessorList-->
+    <Id>ROS0003</Id>
+    <Title>Remove newlines from accessor with single-line expression.</Title>
+    <MessageFormat>Remove newlines from accessor with single-line expression.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[string Foo
+{
+    get
+    {
+        return _foo;
+    }
+    set
+    {
+        _foo = value;
+    }
+}]]></Before>
+        <After><![CDATA[string Foo
+{
+    get { return _foo; }
+    set { _foo = value; }
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
   <Analyzer Identifier="AddNewLineBeforeEnumMember">
     <Id>ROS1025</Id>
     <Title>Add new line before enum member.</Title>
@@ -56,7 +142,7 @@ Bar();]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddNewLineAfterSwitchLabel">
-    <Id>RCS1028</Id>
+    <Id>ROS1028</Id>
     <Title>Add new line after switch label.</Title>
     <MessageFormat>Add new line after switch label.</MessageFormat>
     <Category>Formatting</Category>
@@ -126,6 +212,108 @@ Bar();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
+  <Analyzer Identifier="AddEmptyLineBetweenDeclarations">
+    <Id>ROS1057</Id>
+    <Title>Add empty line between declarations.</Title>
+    <MessageFormat>Add empty line between declarations.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before>
+      <![CDATA[class Foo
+{
+    void M1()
+    {
+    } // [|Id|]
+    void M2()
+    {
+    } // [|Id|]
+    /// <summary>
+    /// ...
+    /// </summary>
+    void M3()
+    {
+    } // [|Id|]
+    string P1 { get; set; } // [|Id|]
+    [Obsolete]
+    string P2 { get; set; }
+} // [|Id|]
+enum Bar
+{
+    A = 0, // [|Id|]
+    /// <summary>
+    /// ...
+    /// </summary>
+    B = 1, // [|Id|]
+    [Obsolete]
+    C = 2,
+}]]></Before>
+        <After><![CDATA[class Foo
+{
+    void M1()
+    {
+    }
+
+    void M2()
+    {
+    }
+
+    /// <summary>
+    /// ...
+    /// </summary>
+    void M3()
+    {
+    }
+
+    string P1 { get; set; }
+
+    [Obsolete]
+    string P2 { get; set; }
+}
+
+enum Bar
+{
+    A = 0,
+
+    /// <summary>
+    /// ...
+    /// </summary>
+    B = 1,
+
+    [Obsolete]
+    C = 2,
+}]]></After>
+      </Sample>
+    </Samples>
+    <Remarks>This analyzer does not enforce an empty line between two single-line declaration.</Remarks>
+  </Analyzer>
+  <Analyzer Identifier="AddEmptyLineBeforeClosingBraceOfDoStatement"> <!--AddEmptyLineBeforeWhileInDoStatement-->
+    <Id>ROS1092</Id>
+    <Title>Add empty line before closing brace of 'do' statement.</Title>
+    <MessageFormat>Add empty line before closing brace of 'do' statement.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[do
+{
+    Foo(); // [|Id|]
+} while (x);]]></Before>
+        <After><![CDATA[do
+{
+    Foo();
+
+} while (x);]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
   <Analyzer Identifier="AddEmptyLineAfterClosingBraceOfBlock"> <!--AddEmptyLineAfterClosingBrace-->
     <Id>ROS1153</Id>
     <Title>Add empty line after closing brace of block.</Title>
@@ -150,7 +338,7 @@ Foo();]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddNewLineBeforeOperatorOfMultilineConditionalExpression"> <!--FormatConditionalExpression-->
-    <Id>RCS1184</Id>
+    <Id>ROS1184</Id>
     <Title>Add new line before operator of multi-line conditional expression.</Title>
     <MessageFormat>Add new line before operator of multi-line conditional expression.</MessageFormat>
     <Category>Formatting</Category>

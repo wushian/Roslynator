@@ -24,7 +24,7 @@ namespace Roslynator.Formatting.CSharp
             context.RegisterSyntaxNodeAction(AnalyzeConditionalExpression, SyntaxKind.ConditionalExpression);
         }
 
-        public static void AnalyzeConditionalExpression(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeConditionalExpression(SyntaxNodeAnalysisContext context)
         {
             var conditionalExpression = (ConditionalExpressionSyntax)context.Node;
 

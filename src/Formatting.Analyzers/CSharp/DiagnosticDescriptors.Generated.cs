@@ -9,28 +9,40 @@ namespace Roslynator.Formatting.CSharp
 {
     public static partial class DiagnosticDescriptors
     {
-        /// <summary>RCS1028</summary>
-        public static readonly DiagnosticDescriptor AddNewLineAfterSwitchLabel = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddNewLineAfterSwitchLabel, 
-            title:              "Add new line after switch label.", 
-            messageFormat:      "Add new line after switch label.", 
+        /// <summary>ROS0001</summary>
+        public static readonly DiagnosticDescriptor RemoveNewLinesFromAccessorListOfAutoProperty = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty, 
+            title:              "Remove newlines from accessor list of auto-property.", 
+            messageFormat:      "Remove newlines from accessor list of auto-property.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineAfterSwitchLabel}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS1184</summary>
-        public static readonly DiagnosticDescriptor AddNewLineBeforeOperatorOfMultilineConditionalExpression = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineConditionalExpression, 
-            title:              "Add new line before operator of multi-line conditional expression.", 
-            messageFormat:      "Add new line before operator of multi-line conditional expression.", 
+        /// <summary>ROS0002</summary>
+        public static readonly DiagnosticDescriptor AddNewLinesToAccessorListOfFullProperty = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLinesToAccessorListOfFullProperty, 
+            title:              "Add newlines to accessor list of full property.", 
+            messageFormat:      "Add newlines to accessor list of full property.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineConditionalExpression}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLinesToAccessorListOfFullProperty}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>ROS0003</summary>
+        public static readonly DiagnosticDescriptor RemoveNewLinesFromAccessorWithSinglelineExpression = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.RemoveNewLinesFromAccessorWithSinglelineExpression, 
+            title:              "Remove newlines from accessor with single-line expression.", 
+            messageFormat:      "Remove newlines from accessor with single-line expression.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveNewLinesFromAccessorWithSinglelineExpression}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>ROS1025</summary>
@@ -69,6 +81,18 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement}", 
             customTags:         Array.Empty<string>());
 
+        /// <summary>ROS1028</summary>
+        public static readonly DiagnosticDescriptor AddNewLineAfterSwitchLabel = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineAfterSwitchLabel, 
+            title:              "Add new line after switch label.", 
+            messageFormat:      "Add new line after switch label.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineAfterSwitchLabel}", 
+            customTags:         Array.Empty<string>());
+
         /// <summary>ROS1029</summary>
         public static readonly DiagnosticDescriptor AddNewLineBeforeOperatorOfMultilineBinaryExpression = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineBinaryExpression, 
@@ -93,6 +117,30 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineAfterEmbeddedStatement}", 
             customTags:         Array.Empty<string>());
 
+        /// <summary>ROS1057</summary>
+        public static readonly DiagnosticDescriptor AddEmptyLineBetweenDeclarations = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineBetweenDeclarations, 
+            title:              "Add empty line between declarations.", 
+            messageFormat:      "Add empty line between declarations.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBetweenDeclarations}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>ROS1092</summary>
+        public static readonly DiagnosticDescriptor AddEmptyLineBeforeClosingBraceOfDoStatement = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineBeforeClosingBraceOfDoStatement, 
+            title:              "Add empty line before closing brace of 'do' statement.", 
+            messageFormat:      "Add empty line before closing brace of 'do' statement.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBeforeClosingBraceOfDoStatement}", 
+            customTags:         Array.Empty<string>());
+
         /// <summary>ROS1153</summary>
         public static readonly DiagnosticDescriptor AddEmptyLineAfterClosingBraceOfBlock = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock, 
@@ -103,6 +151,18 @@ namespace Roslynator.Formatting.CSharp
             isEnabledByDefault: false, 
             description:        null, 
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>ROS1184</summary>
+        public static readonly DiagnosticDescriptor AddNewLineBeforeOperatorOfMultilineConditionalExpression = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineConditionalExpression, 
+            title:              "Add new line before operator of multi-line conditional expression.", 
+            messageFormat:      "Add new line before operator of multi-line conditional expression.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeOperatorOfMultilineConditionalExpression}", 
             customTags:         Array.Empty<string>());
 
     }

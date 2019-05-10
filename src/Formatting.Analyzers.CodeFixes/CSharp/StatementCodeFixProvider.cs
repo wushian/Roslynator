@@ -26,7 +26,8 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                     DiagnosticIdentifiers.AddNewLineBeforeStatement,
                     DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement,
                     DiagnosticIdentifiers.AddNewLineAfterSwitchLabel,
-                    DiagnosticIdentifiers.AddEmptyLineAfterEmbeddedStatement);
+                    DiagnosticIdentifiers.AddEmptyLineAfterEmbeddedStatement,
+                    DiagnosticIdentifiers.AddEmptyLineBeforeClosingBraceOfDoStatement);
             }
         }
 
@@ -59,6 +60,16 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                         CodeAction codeAction = CodeAction.Create(
                             "Add empty line",
                             ct => AddEmptyLineAfterEmbeddedStatementAsync(document, statement, ct),
+                            GetEquivalenceKey(diagnostic));
+
+                        context.RegisterCodeFix(codeAction, diagnostic);
+                        break;
+                    }
+                case DiagnosticIdentifiers.AddEmptyLineBeforeClosingBraceOfDoStatement:
+                    {
+                        CodeAction codeAction = CodeAction.Create(
+                            "Add empty line",
+                            ct => AddEmptyLineBeforeWhileInDoStatementAsync(document, statement, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
@@ -113,6 +124,22 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 .WithFormatterAnnotation();
 
             return document.ReplaceNodeAsync(statement, newNode, cancellationToken);
+        }
+
+        private static Task<Document> AddEmptyLineBeforeWhileInDoStatementAsync(
+            Document document,
+            StatementSyntax statement,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            SyntaxTriviaList trailingTrivia = statement.GetTrailingTrivia();
+
+            int index = trailingTrivia.IndexOf(SyntaxKind.EndOfLineTrivia);
+
+            SyntaxTriviaList newTrailingTrivia = trailingTrivia.Insert(index, CSharpFactory.NewLine());
+
+            StatementSyntax newStatement = statement.WithTrailingTrivia(newTrailingTrivia);
+
+            return document.ReplaceNodeAsync(statement, newStatement, cancellationToken);
         }
     }
 }
