@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Analyzers>
-  <!--<Analyzer Identifier="">
-    <Id>ROS000</Id>
-    <Title>.</Title>
-    <MessageFormat>.</MessageFormat>
-    <Category>Formatting</Category>
-    <DefaultSeverity>Info</DefaultSeverity>
-    <IsEnabledByDefault>false</IsEnabledByDefault>
-    <SupportsFadeOut>false</SupportsFadeOut>
-    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
-    <Samples>
-      <Sample>
-        <Before><![CDATA[]]></Before>
-        <After><![CDATA[]]></After>
-      </Sample>
-    </Samples>
-  </Analyzer>-->
   <Analyzer Identifier="RemoveNewLinesFromAccessorListOfAutoProperty"> <!--FormatAccessorList-->
     <Id>ROS0001</Id>
     <Title>Remove newlines from accessor list of auto-property.</Title>
@@ -87,7 +71,7 @@
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddNewLineBeforeClosingBraceOfEmptyBlock"> <!--FormatEmptyBlock-->
-    <Id>RCS1023</Id>
+    <Id>ROS1023</Id>
     <Title>Add new line before closing brace of empty block.</Title>
     <MessageFormat>Add new line before closing brace of empty block.</MessageFormat>
     <Category>Formatting</Category>
@@ -311,7 +295,7 @@ enum Bar
     <Remarks>This analyzer does not enforce an empty line between two single-line declaration.</Remarks>
   </Analyzer>
   <Analyzer Identifier="AddNewLineBeforeClosingBraceOfEmptyTypeDeclaration"> <!--FormatDeclarationBraces-->
-    <Id>RCS1076</Id>
+    <Id>ROS1076</Id>
     <Title>Add new line before closing brace of empty type declaration.</Title>
     <MessageFormat>Add new line before closing brace of empty type declaration.</MessageFormat>
     <Category>Formatting</Category>
@@ -329,6 +313,36 @@ enum Bar
 }]]></After>
       </Sample>
     </Samples>
+  </Analyzer>
+  <Analyzer Identifier="UseLinefeedAsNewLine">
+    <Id>ROS1086</Id>
+    <Title>Use linefeed as newline.</Title>
+    <MessageFormat>Use linefeed as newline.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+  </Analyzer>
+  <Analyzer Identifier="UseCarriageReturnAndLinefeedAsNewLine">
+    <Id>ROS1087</Id>
+    <Title>Use carriage return + linefeed as newline.</Title>
+    <MessageFormat>Use carriage return + linefeed as newline.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+  </Analyzer>
+  <Analyzer Identifier="UseSpacesInsteadOfTab">
+    <Id>ROS1088</Id>
+    <Title>Use spaces instead of tab.</Title>
+    <MessageFormat>Use spaces instead of tab.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
   </Analyzer>
   <Analyzer Identifier="AddEmptyLineBeforeClosingBraceOfDoStatement"> <!--AddEmptyLineBeforeWhileInDoStatement-->
     <Id>ROS1092</Id>
@@ -397,7 +411,7 @@ Foo();]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddNewLinesToSinglelineBlock"> <!--FormatSingleLineBlock-->
-    <Id>RCS1185</Id>
+    <Id>ROS1185</Id>
     <Title>Add new lines to single-line block.</Title>
     <MessageFormat>Add new lines to single-line block.</MessageFormat>
     <Category>Formatting</Category>

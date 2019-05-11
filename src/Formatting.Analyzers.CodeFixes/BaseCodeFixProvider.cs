@@ -2,7 +2,7 @@
 
 using Roslynator.CodeFixes;
 
-namespace Roslynator.Formatting.CodeFixes.CSharp
+namespace Roslynator.Formatting.CodeFixes
 {
     public abstract class BaseCodeFixProvider : AbstractCodeFixProvider
     {

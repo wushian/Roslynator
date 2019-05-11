@@ -129,7 +129,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
         private static Task<Document> AddEmptyLineBeforeWhileInDoStatementAsync(
             Document document,
             StatementSyntax statement,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             SyntaxTriviaList trailingTrivia = statement.GetTrailingTrivia();
 
