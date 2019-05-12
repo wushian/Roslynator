@@ -10,99 +10,99 @@ namespace Roslynator.Formatting.CSharp
     public static partial class DiagnosticDescriptors
     {
         /// <summary>ROS0001</summary>
-        public static readonly DiagnosticDescriptor RemoveNewLinesFromAccessorListOfAutoProperty = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty, 
+        public static readonly DiagnosticDescriptor RemoveNewlinesFromAccessorListOfAutoProperty = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.RemoveNewlinesFromAccessorListOfAutoProperty, 
             title:              "Remove newlines from accessor list of auto-property.", 
             messageFormat:      "Remove newlines from accessor list of auto-property.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveNewlinesFromAccessorListOfAutoProperty}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>ROS0002</summary>
-        public static readonly DiagnosticDescriptor AddNewLinesToAccessorListOfFullProperty = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddNewLinesToAccessorListOfFullProperty, 
+        public static readonly DiagnosticDescriptor AddNewlinesToAccessorListOfFullProperty = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewlinesToAccessorListOfFullProperty, 
             title:              "Add newlines to accessor list of full property.", 
             messageFormat:      "Add newlines to accessor list of full property.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLinesToAccessorListOfFullProperty}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewlinesToAccessorListOfFullProperty}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>ROS0003</summary>
-        public static readonly DiagnosticDescriptor RemoveNewLinesFromAccessorWithSinglelineExpression = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.RemoveNewLinesFromAccessorWithSinglelineExpression, 
+        public static readonly DiagnosticDescriptor RemoveNewlinesFromAccessor = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.RemoveNewlinesFromAccessor, 
             title:              "Remove newlines from accessor with single-line expression.", 
             messageFormat:      "Remove newlines from accessor with single-line expression.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveNewLinesFromAccessorWithSinglelineExpression}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveNewlinesFromAccessor}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>ROS1023</summary>
-        public static readonly DiagnosticDescriptor AddNewLineBeforeClosingBraceOfEmptyBlock = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyBlock, 
-            title:              "Add new line before closing brace of empty block.", 
-            messageFormat:      "Add new line before closing brace of empty block.", 
+        public static readonly DiagnosticDescriptor AddNewlineToEmptyBlock = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewlineToEmptyBlock, 
+            title:              "Add newline to empty block.", 
+            messageFormat:      "Add newline to empty block.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyBlock}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewlineToEmptyBlock}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>ROS1025</summary>
-        public static readonly DiagnosticDescriptor AddNewLineBeforeEnumMember = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddNewLineBeforeEnumMember, 
-            title:              "Add new line before enum member.", 
-            messageFormat:      "Add new line before enum member.", 
+        public static readonly DiagnosticDescriptor AddNewlineBeforeEnumMember = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewlineBeforeEnumMember, 
+            title:              "Add newline before enum member.", 
+            messageFormat:      "Add newline before enum member.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeEnumMember}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewlineBeforeEnumMember}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>ROS1026</summary>
-        public static readonly DiagnosticDescriptor AddNewLineBeforeStatement = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddNewLineBeforeStatement, 
-            title:              "Add new line before statement.", 
-            messageFormat:      "Add new line before statement.", 
+        public static readonly DiagnosticDescriptor AddNewlineBeforeStatement = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewlineBeforeStatement, 
+            title:              "Add newline before statement.", 
+            messageFormat:      "Add newline before statement.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeStatement}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewlineBeforeStatement}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>ROS1027</summary>
-        public static readonly DiagnosticDescriptor AddNewLineBeforeEmbeddedStatement = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement, 
-            title:              "Add new line before embedded statement.", 
-            messageFormat:      "Add new line before embedded statement.", 
+        public static readonly DiagnosticDescriptor AddNewlineBeforeEmbeddedStatement = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewlineBeforeEmbeddedStatement, 
+            title:              "Add newline before embedded statement.", 
+            messageFormat:      "Add newline before embedded statement.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewlineBeforeEmbeddedStatement}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>ROS1028</summary>
-        public static readonly DiagnosticDescriptor AddNewLineAfterSwitchLabel = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddNewLineAfterSwitchLabel, 
-            title:              "Add new line after switch label.", 
-            messageFormat:      "Add new line after switch label.", 
+        public static readonly DiagnosticDescriptor AddNewlineAfterSwitchLabel = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewlineAfterSwitchLabel, 
+            title:              "Add newline after switch label.", 
+            messageFormat:      "Add newline after switch label.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineAfterSwitchLabel}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewlineAfterSwitchLabel}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>ROS1029</summary>
@@ -142,46 +142,46 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>ROS1076</summary>
-        public static readonly DiagnosticDescriptor AddNewLineBeforeClosingBraceOfEmptyTypeDeclaration = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyTypeDeclaration, 
-            title:              "Add new line before closing brace of empty type declaration.", 
-            messageFormat:      "Add new line before closing brace of empty type declaration.", 
+        public static readonly DiagnosticDescriptor AddNewlineToEmptyTypeDeclaration = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewlineToEmptyTypeDeclaration, 
+            title:              "Add newline to empty type declaration.", 
+            messageFormat:      "Add newline to empty type declaration.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyTypeDeclaration}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewlineToEmptyTypeDeclaration}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>ROS1086</summary>
-        public static readonly DiagnosticDescriptor UseLinefeedAsNewLine = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.UseLinefeedAsNewLine, 
+        public static readonly DiagnosticDescriptor UseLinefeedAsNewline = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.UseLinefeedAsNewline, 
             title:              "Use linefeed as newline.", 
             messageFormat:      "Use linefeed as newline.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseLinefeedAsNewLine}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseLinefeedAsNewline}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>ROS1087</summary>
-        public static readonly DiagnosticDescriptor UseCarriageReturnAndLinefeedAsNewLine = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.UseCarriageReturnAndLinefeedAsNewLine, 
+        public static readonly DiagnosticDescriptor UseCarriageReturnAndLinefeedAsNewline = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.UseCarriageReturnAndLinefeedAsNewline, 
             title:              "Use carriage return + linefeed as newline.", 
             messageFormat:      "Use carriage return + linefeed as newline.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseCarriageReturnAndLinefeedAsNewLine}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseCarriageReturnAndLinefeedAsNewline}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>ROS1088</summary>
         public static readonly DiagnosticDescriptor UseSpacesInsteadOfTab = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.UseSpacesInsteadOfTab, 
-            title:              "Use space(s) instead of tab.", 
-            messageFormat:      "Use space(s) instead of tab.", 
+            title:              "Use spaces instead of tab.", 
+            messageFormat:      "Use spaces instead of tab.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
@@ -226,15 +226,15 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>ROS1185</summary>
-        public static readonly DiagnosticDescriptor AddNewLinesToSinglelineBlock = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddNewLinesToSinglelineBlock, 
-            title:              "Add new lines to single-line block.", 
-            messageFormat:      "Add new lines to single-line block.", 
+        public static readonly DiagnosticDescriptor AddNewlinesToBlock = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewlinesToBlock, 
+            title:              "Add newlines to block.", 
+            messageFormat:      "Add newlines to block.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLinesToSinglelineBlock}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewlinesToBlock}", 
             customTags:         Array.Empty<string>());
 
     }

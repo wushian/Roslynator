@@ -11,11 +11,11 @@ using Roslynator.CSharp;
 namespace Roslynator.Formatting.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    internal class AddNewLineBeforeStatementAnalyzer : BaseDiagnosticAnalyzer
+    internal class AddNewlineBeforeStatementAnalyzer : BaseDiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(DiagnosticDescriptors.AddNewLineBeforeStatement); }
+            get { return ImmutableArray.Create(DiagnosticDescriptors.AddNewlineBeforeStatement); }
         }
 
         public override void Initialize(AnalysisContext context)
@@ -56,7 +56,7 @@ namespace Roslynator.Formatting.CSharp
                     && statement.GetSpanStartLine() == previousEndLine)
                 {
                     context.ReportDiagnostic(
-                        DiagnosticDescriptors.AddNewLineBeforeStatement,
+                        DiagnosticDescriptors.AddNewlineBeforeStatement,
                         Location.Create(statement.SyntaxTree, new TextSpan(statement.SpanStart, 0)));
                 }
 

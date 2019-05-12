@@ -11,11 +11,11 @@ using Roslynator.CSharp;
 namespace Roslynator.Formatting.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    internal class AddNewLineBeforeClosingBraceOfEmptyTypeDeclarationAnalyzer : BaseDiagnosticAnalyzer
+    internal class AddNewlineToEmptyTypeDeclarationAnalyzer : BaseDiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(DiagnosticDescriptors.AddNewLineBeforeClosingBraceOfEmptyTypeDeclaration); }
+            get { return ImmutableArray.Create(DiagnosticDescriptors.AddNewlineToEmptyTypeDeclaration); }
         }
 
         public override void Initialize(AnalysisContext context)
@@ -55,7 +55,7 @@ namespace Roslynator.Formatting.CSharp
                 return;
 
             context.ReportDiagnostic(
-                DiagnosticDescriptors.AddNewLineBeforeClosingBraceOfEmptyTypeDeclaration,
+                DiagnosticDescriptors.AddNewlineToEmptyTypeDeclaration,
                 Location.Create(typeDeclaration.SyntaxTree, new TextSpan(closeBrace.SpanStart, 0)));
         }
     }

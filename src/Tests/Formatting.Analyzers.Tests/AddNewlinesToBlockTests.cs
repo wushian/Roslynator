@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class AddNewLinesToSinglelineBlockTests : AbstractCSharpFixVerifier
+    public class AddNewlinesToBlockTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewLinesToSinglelineBlock;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewlinesToBlock;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewLinesToSinglelineBlockAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewlinesToBlockAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new BlockCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLinesToSinglelineBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlinesToBlock)]
         public async Task Test_Constructor()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -44,7 +44,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLinesToSinglelineBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlinesToBlock)]
         public async Task Test_Destructor()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -71,7 +71,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLinesToSinglelineBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlinesToBlock)]
         public async Task Test_Method()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -97,7 +97,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLinesToSinglelineBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlinesToBlock)]
         public async Task Test_ExplicitOperator()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -116,7 +116,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLinesToSinglelineBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlinesToBlock)]
         public async Task Test_Operator()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -135,7 +135,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLinesToSinglelineBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlinesToBlock)]
         public async Task TestNoDiagnostic_SinglelineAccessorList()
         {
             await VerifyNoDiagnosticAsync(@"
@@ -160,7 +160,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLinesToSinglelineBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlinesToBlock)]
         public async Task TestNoDiagnostic()
         {
             await VerifyNoDiagnosticAsync(@"

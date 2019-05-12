@@ -15,7 +15,7 @@ namespace Roslynator.Formatting.CSharp.Tests
 
         public override DiagnosticAnalyzer Analyzer { get; } = new PlaceConditionalOperatorBeforeExpressionAnalyzer();
 
-        public override CodeFixProvider FixProvider { get; } = new ConditionalExpressionCodeFixProvider();
+        public override CodeFixProvider FixProvider { get; } = new TokenCodeFixProvider();
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression)]
         public async Task Test()
@@ -27,9 +27,9 @@ class C
     {
         bool x = false, y = false, z = false;
 
-        x = [|(x) ?
+        x = (x) [|?|]
             y :
-            z|];
+            z;
     }
 }
 ", @"
@@ -57,9 +57,9 @@ class C
     {
         bool x = false, y = false, z = false;
 
-        x = [|(x) ?
+        x = (x) [|?|]
             y :
-            z|];
+            z;
     }
 }
 ", @"
@@ -87,9 +87,9 @@ class C
     {
         bool x = false, y = false, z = false;
 
-        x = [|(x) ?
+        x = (x) [|?|]
             y :
-            z|];
+            z;
     }
 }
 ", @"
@@ -117,9 +117,9 @@ class C
     {
         bool x = false, y = false, z = false;
 
-        x = [|(x) ?
+        x = (x) [|?|]
             y
-            : z|];
+            : z;
     }
 }
 ", @"
@@ -147,9 +147,9 @@ class C
     {
         bool x = false, y = false, z = false;
 
-        x = [|(x)
-            ? y :
-            z|];
+        x = (x)
+            ? y [|:|]
+            z;
     }
 }
 ", @"

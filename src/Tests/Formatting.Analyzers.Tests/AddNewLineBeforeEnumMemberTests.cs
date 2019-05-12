@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class AddNewLineBeforeEnumMemberTests : AbstractCSharpFixVerifier
+    public class AddNewlineBeforeEnumMemberTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewLineBeforeEnumMember;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewlineBeforeEnumMember;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewLineBeforeEnumMemberAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewlineBeforeEnumMemberAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new EnumDeclarationCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeEnumMember)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeEnumMember)]
         public async Task Test_WithoutExplicitValues()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -36,7 +36,7 @@ enum Foo
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeEnumMember)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeEnumMember)]
         public async Task Test_WithExplicitValues()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -55,7 +55,7 @@ enum Foo
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeEnumMember)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeEnumMember)]
         public async Task Test_WithoutTrailingComma()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -74,7 +74,7 @@ enum Foo
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeEnumMember)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeEnumMember)]
         public async Task TestNoDiagnostic_SingleMember()
         {
             await VerifyNoDiagnosticAsync(@"
@@ -85,7 +85,7 @@ enum Foo
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeEnumMember)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeEnumMember)]
         public async Task TestNoDiagnostic_MultipleMembers()
         {
             await VerifyNoDiagnosticAsync(@"

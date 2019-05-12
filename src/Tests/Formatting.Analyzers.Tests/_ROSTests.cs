@@ -12,13 +12,13 @@ namespace Roslynator.Formatting.CSharp.Tests
 {
     public class ROSTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewLineBeforeStatement;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewlineBeforeStatement;
 
         public override DiagnosticAnalyzer Analyzer { get; }
 
         public override CodeFixProvider FixProvider { get; }
 
-        //[Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeStatement)]
+        //[Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeStatement)]
         public async Task Test()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -40,7 +40,7 @@ class C
 ");
         }
 
-        //[Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeStatement)]
+        //[Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeStatement)]
         public async Task TestNoDiagnostic()
         {
             await VerifyNoDiagnosticAsync(@"

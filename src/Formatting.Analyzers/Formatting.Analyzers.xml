@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Analyzers>
-  <Analyzer Identifier="RemoveNewLinesFromAccessorListOfAutoProperty"> <!--FormatAccessorList-->
+  <Analyzer Identifier="RemoveNewlinesFromAccessorListOfAutoProperty"> <!--FormatAccessorList-->
     <Id>ROS0001</Id>
     <Title>Remove newlines from accessor list of auto-property.</Title>
     <MessageFormat>Remove newlines from accessor list of auto-property.</MessageFormat>
@@ -20,7 +20,7 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLinesToAccessorListOfFullProperty"> <!--FormatAccessorList-->
+  <Analyzer Identifier="AddNewlinesToAccessorListOfFullProperty"> <!--FormatAccessorList-->
     <Id>ROS0002</Id>
     <Title>Add newlines to accessor list of full property.</Title>
     <MessageFormat>Add newlines to accessor list of full property.</MessageFormat>
@@ -40,7 +40,7 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="RemoveNewLinesFromAccessorWithSinglelineExpression"> <!--FormatAccessorList-->
+  <Analyzer Identifier="RemoveNewlinesFromAccessor"> <!--FormatAccessorList-->
     <Id>ROS0003</Id>
     <Title>Remove newlines from accessor with single-line expression.</Title>
     <MessageFormat>Remove newlines from accessor with single-line expression.</MessageFormat>
@@ -70,10 +70,10 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLineBeforeClosingBraceOfEmptyBlock"> <!--FormatEmptyBlock-->
+  <Analyzer Identifier="AddNewlineToEmptyBlock"> <!--FormatEmptyBlock-->
     <Id>ROS1023</Id>
-    <Title>Add new line before closing brace of empty block.</Title>
-    <MessageFormat>Add new line before closing brace of empty block.</MessageFormat>
+    <Title>Add newline to empty block.</Title>
+    <MessageFormat>Add newline to empty block.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -89,10 +89,10 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLineBeforeEnumMember">
+  <Analyzer Identifier="AddNewlineBeforeEnumMember">
     <Id>ROS1025</Id>
-    <Title>Add new line before enum member.</Title>
-    <MessageFormat>Add new line before enum member.</MessageFormat>
+    <Title>Add newline before enum member.</Title>
+    <MessageFormat>Add newline before enum member.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -110,10 +110,10 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLineBeforeStatement">
+  <Analyzer Identifier="AddNewlineBeforeStatement">
     <Id>ROS1026</Id>
-    <Title>Add new line before statement.</Title>
-    <MessageFormat>Add new line before statement.</MessageFormat>
+    <Title>Add newline before statement.</Title>
+    <MessageFormat>Add newline before statement.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -127,10 +127,10 @@ Bar();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLineBeforeEmbeddedStatement">
+  <Analyzer Identifier="AddNewlineBeforeEmbeddedStatement">
     <Id>ROS1027</Id>
-    <Title>Add new line before embedded statement.</Title>
-    <MessageFormat>Add new line before embedded statement.</MessageFormat>
+    <Title>Add newline before embedded statement.</Title>
+    <MessageFormat>Add newline before embedded statement.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -144,10 +144,10 @@ Bar();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLineAfterSwitchLabel">
+  <Analyzer Identifier="AddNewlineAfterSwitchLabel">
     <Id>ROS1028</Id>
-    <Title>Add new line after switch label.</Title>
-    <MessageFormat>Add new line after switch label.</MessageFormat>
+    <Title>Add newline after switch label.</Title>
+    <MessageFormat>Add newline after switch label.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -294,10 +294,10 @@ enum Bar
     </Samples>
     <Remarks>This analyzer does not enforce an empty line between two single-line declaration.</Remarks>
   </Analyzer>
-  <Analyzer Identifier="AddNewLineBeforeClosingBraceOfEmptyTypeDeclaration"> <!--FormatDeclarationBraces-->
+  <Analyzer Identifier="AddNewlineToEmptyTypeDeclaration"> <!--FormatDeclarationBraces-->
     <Id>ROS1076</Id>
-    <Title>Add new line before closing brace of empty type declaration.</Title>
-    <MessageFormat>Add new line before closing brace of empty type declaration.</MessageFormat>
+    <Title>Add newline to empty type declaration.</Title>
+    <MessageFormat>Add newline to empty type declaration.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -314,7 +314,7 @@ enum Bar
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="UseLinefeedAsNewLine">
+  <Analyzer Identifier="UseLinefeedAsNewline">
     <Id>ROS1086</Id>
     <Title>Use linefeed as newline.</Title>
     <MessageFormat>Use linefeed as newline.</MessageFormat>
@@ -324,7 +324,7 @@ enum Bar
     <SupportsFadeOut>false</SupportsFadeOut>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
   </Analyzer>
-  <Analyzer Identifier="UseCarriageReturnAndLinefeedAsNewLine">
+  <Analyzer Identifier="UseCarriageReturnAndLinefeedAsNewline">
     <Id>ROS1087</Id>
     <Title>Use carriage return + linefeed as newline.</Title>
     <MessageFormat>Use carriage return + linefeed as newline.</MessageFormat>
@@ -410,10 +410,10 @@ Foo();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLinesToSinglelineBlock"> <!--FormatSingleLineBlock-->
+  <Analyzer Identifier="AddNewlinesToBlock"> <!--FormatSingleLineBlock-->
     <Id>ROS1185</Id>
-    <Title>Add new lines to single-line block.</Title>
-    <MessageFormat>Add new lines to single-line block.</MessageFormat>
+    <Title>Add newlines to block.</Title>
+    <MessageFormat>Add newlines to block.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>

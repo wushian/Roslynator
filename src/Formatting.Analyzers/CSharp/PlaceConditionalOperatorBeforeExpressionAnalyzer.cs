@@ -34,13 +34,14 @@ namespace Roslynator.Formatting.CSharp
             if (conditionalExpression.ContainsDirectives)
                 return;
 
-            if (!IsFixable(conditionalExpression.Condition, conditionalExpression.QuestionToken)
-                && !IsFixable(conditionalExpression.WhenTrue, conditionalExpression.ColonToken))
+            if (IsFixable(conditionalExpression.Condition, conditionalExpression.QuestionToken))
             {
-                return;
+                context.ReportDiagnostic(DiagnosticDescriptors.PlaceConditionalOperatorBeforeExpression, conditionalExpression.QuestionToken);
             }
-
-            context.ReportDiagnostic(DiagnosticDescriptors.PlaceConditionalOperatorBeforeExpression, conditionalExpression);
+            else if (IsFixable(conditionalExpression.WhenTrue, conditionalExpression.ColonToken))
+            {
+                context.ReportDiagnostic(DiagnosticDescriptors.PlaceConditionalOperatorBeforeExpression, conditionalExpression.ColonToken);
+            }
         }
 
         internal static bool IsFixable(ExpressionSyntax expression, SyntaxToken token)

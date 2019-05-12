@@ -9,11 +9,11 @@ using Roslynator.Formatting.CSharp;
 namespace Roslynator.Formatting
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
-    internal class UseCarriageReturnAndLinefeedAsNewLineAnalyzer : BaseDiagnosticAnalyzer
+    internal class UseCarriageReturnAndLinefeedAsNewlineAnalyzer : BaseDiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(DiagnosticDescriptors.UseCarriageReturnAndLinefeedAsNewLine); }
+            get { return ImmutableArray.Create(DiagnosticDescriptors.UseCarriageReturnAndLinefeedAsNewline); }
         }
 
         public override void Initialize(AnalysisContext context)
@@ -36,7 +36,7 @@ namespace Roslynator.Formatting
                     && textLine.Text[end] == '\n')
                 {
                     context.ReportDiagnostic(
-                        DiagnosticDescriptors.UseCarriageReturnAndLinefeedAsNewLine,
+                        DiagnosticDescriptors.UseCarriageReturnAndLinefeedAsNewline,
                         Location.Create(context.Tree, new TextSpan(end, 1)));
                 }
             }

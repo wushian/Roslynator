@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class AddNewLineBeforeStatementTests : AbstractCSharpFixVerifier
+    public class AddNewlineBeforeStatementTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewLineBeforeStatement;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewlineBeforeStatement;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewLineBeforeStatementAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewlineBeforeStatementAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new StatementCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeStatement)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeStatement)]
         public async Task Test_Block()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -40,7 +40,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeStatement)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeStatement)]
         public async Task Test_Block_SingleLine()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -60,7 +60,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeStatement)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeStatement)]
         public async Task Test_SwitchSection()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -95,7 +95,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeStatement)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeStatement)]
         public async Task TestNoDiagnostic_EmptyStatement()
         {
             await VerifyNoDiagnosticAsync(@"

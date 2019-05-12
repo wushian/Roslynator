@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class UseLinefeedAsNewLineTests : AbstractCSharpFixVerifier
+    public class UseLinefeedAsNewlineTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UseLinefeedAsNewLine;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UseLinefeedAsNewline;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new UseLinefeedAsNewLineAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new UseLinefeedAsNewlineAnalyzer();
 
-        public override CodeFixProvider FixProvider { get; } = new NewLineCodeFixProvider();
+        public override CodeFixProvider FixProvider { get; } = new NewlineCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseLinefeedAsNewLine)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseLinefeedAsNewline)]
         public async Task Test()
         {
             await VerifyDiagnosticAndFixAsync("\n"
@@ -42,7 +42,7 @@ namespace Roslynator.Formatting.CSharp.Tests
 + "}\n");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseLinefeedAsNewLine)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseLinefeedAsNewline)]
         public async Task TestNoDiagnostic()
         {
             await VerifyNoDiagnosticAsync("\n"

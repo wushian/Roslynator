@@ -21,7 +21,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(DiagnosticIdentifiers.AddNewLineBeforeEnumMember); }
+            get { return ImmutableArray.Create(DiagnosticIdentifiers.AddNewlineBeforeEnumMember); }
         }
 
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
@@ -35,30 +35,30 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             Diagnostic diagnostic = context.Diagnostics[0];
 
             CodeAction codeAction = CodeAction.Create(
-                "Add new line",
-                ct => AddNewLineBeforeEnumMemberAsync(document, enumDeclaration, ct),
+                "Add newline",
+                ct => AddNewlineBeforeEnumMemberAsync(document, enumDeclaration, ct),
                 GetEquivalenceKey(diagnostic));
 
             context.RegisterCodeFix(codeAction, diagnostic);
         }
 
-        private static Task<Document> AddNewLineBeforeEnumMemberAsync(
+        private static Task<Document> AddNewlineBeforeEnumMemberAsync(
             Document document,
             EnumDeclarationSyntax enumDeclaration,
             CancellationToken cancellationToken)
         {
-            var rewriter = new AddNewLineBeforeEnumMemberAsyncRewriter(enumDeclaration);
+            var rewriter = new AddNewlineBeforeEnumMemberAsyncRewriter(enumDeclaration);
 
             SyntaxNode newNode = rewriter.Visit(enumDeclaration).WithFormatterAnnotation();
 
             return document.ReplaceNodeAsync(enumDeclaration, newNode, cancellationToken);
         }
 
-        private class AddNewLineBeforeEnumMemberAsyncRewriter : CSharpSyntaxRewriter
+        private class AddNewlineBeforeEnumMemberAsyncRewriter : CSharpSyntaxRewriter
         {
             private readonly SyntaxToken[] _separators;
 
-            public AddNewLineBeforeEnumMemberAsyncRewriter(EnumDeclarationSyntax enumDeclaration)
+            public AddNewlineBeforeEnumMemberAsyncRewriter(EnumDeclarationSyntax enumDeclaration)
             {
                 _separators = enumDeclaration.Members.GetSeparators().ToArray();
             }

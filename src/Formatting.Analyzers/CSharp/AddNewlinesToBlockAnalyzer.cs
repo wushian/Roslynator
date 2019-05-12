@@ -6,16 +6,15 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
-using Roslynator.CSharp;
 
 namespace Roslynator.Formatting.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    internal class AddNewLineBeforeClosingBraceOfEmptyBlockAnalyzer : BaseDiagnosticAnalyzer
+    internal class AddNewlinesToBlockAnalyzer : BaseDiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(DiagnosticDescriptors.AddNewLineBeforeClosingBraceOfEmptyBlock); }
+            get { return ImmutableArray.Create(DiagnosticDescriptors.AddNewlinesToBlock); }
         }
 
         public override void Initialize(AnalysisContext context)
@@ -29,32 +28,31 @@ namespace Roslynator.Formatting.CSharp
         {
             var block = (BlockSyntax)context.Node;
 
-            SyntaxList<StatementSyntax> statements = block.Statements;
-
-            if (statements.Any())
-                return;
-
             if (block.Parent is AccessorDeclarationSyntax)
                 return;
 
             if (block.Parent is AnonymousFunctionExpressionSyntax)
                 return;
 
+            SyntaxList<StatementSyntax> statements = block.Statements;
+
+            if (!statements.Any())
+                return;
+
             SyntaxToken openBrace = block.OpenBraceToken;
+
+            if (openBrace.IsMissing)
+                return;
+
             SyntaxToken closeBrace = block.CloseBraceToken;
 
-            if (block.SyntaxTree.GetLineCount(TextSpan.FromBounds(openBrace.SpanStart, closeBrace.Span.End)) != 1)
+            if (closeBrace.IsMissing)
                 return;
 
-            if (!openBrace.TrailingTrivia.IsEmptyOrWhitespace())
+            if (!block.SyntaxTree.IsSingleLineSpan(TextSpan.FromBounds(openBrace.SpanStart, closeBrace.Span.End), context.CancellationToken))
                 return;
 
-            if (closeBrace.LeadingTrivia.Any())
-                return;
-
-            context.ReportDiagnostic(
-                DiagnosticDescriptors.AddNewLineBeforeClosingBraceOfEmptyBlock,
-                Location.Create(block.SyntaxTree, new TextSpan(closeBrace.SpanStart, 0)));
+            context.ReportDiagnostic(DiagnosticDescriptors.AddNewlinesToBlock, block);
         }
     }
 }

@@ -11,17 +11,17 @@ using Roslynator.Formatting.CSharp;
 
 namespace Roslynator.Formatting.CodeFixes
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp, LanguageNames.VisualBasic, Name = nameof(NewLineCodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, LanguageNames.VisualBasic, Name = nameof(NewlineCodeFixProvider))]
     [Shared]
-    public class NewLineCodeFixProvider : BaseCodeFixProvider
+    public class NewlineCodeFixProvider : BaseCodeFixProvider
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
             get
             {
                 return ImmutableArray.Create(
-                    DiagnosticIdentifiers.UseLinefeedAsNewLine,
-                    DiagnosticIdentifiers.UseCarriageReturnAndLinefeedAsNewLine);
+                    DiagnosticIdentifiers.UseLinefeedAsNewline,
+                    DiagnosticIdentifiers.UseCarriageReturnAndLinefeedAsNewline);
             }
         }
 
@@ -29,25 +29,26 @@ namespace Roslynator.Formatting.CodeFixes
         {
             Document document = context.Document;
             Diagnostic diagnostic = context.Diagnostics[0];
+            TextSpan span = context.Span;
 
             switch (diagnostic.Id)
             {
-                case DiagnosticIdentifiers.UseLinefeedAsNewLine:
+                case DiagnosticIdentifiers.UseLinefeedAsNewline:
                     {
                         CodeAction codeAction = CodeAction.Create(
                             "Use linefeed as newline",
-                            ct => document.WithTextChangeAsync(new TextChange(context.Span, "\n"), ct),
-                            GetEquivalenceKey(diagnostic));
+                            ct => document.WithTextChangeAsync(new TextChange(span, "\n"), ct),
+                            base.GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
                         break;
                     }
-                case DiagnosticIdentifiers.UseCarriageReturnAndLinefeedAsNewLine:
+                case DiagnosticIdentifiers.UseCarriageReturnAndLinefeedAsNewline:
                     {
                         CodeAction codeAction = CodeAction.Create(
                             "Use carriage return + linefeed as newline",
-                            ct => document.WithTextChangeAsync(new TextChange(context.Span, "\r\n"), ct),
-                            GetEquivalenceKey(diagnostic));
+                            ct => document.WithTextChangeAsync(new TextChange(span, "\r\n"), ct),
+                            base.GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
                         break;

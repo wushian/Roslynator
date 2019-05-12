@@ -22,8 +22,8 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             get
             {
                 return ImmutableArray.Create(
-                    DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyBlock,
-                    DiagnosticIdentifiers.AddNewLinesToSinglelineBlock);
+                    DiagnosticIdentifiers.AddNewlineToEmptyBlock,
+                    DiagnosticIdentifiers.AddNewlinesToBlock);
             }
         }
 
@@ -39,21 +39,21 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             switch (diagnostic.Id)
             {
-                case DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyBlock:
+                case DiagnosticIdentifiers.AddNewlineToEmptyBlock:
                     {
                         CodeAction codeAction = CodeAction.Create(
-                            "Add new line",
-                            ct => AddNewLineBeforeClosingBraceOfEmptyBlockAsync(document, block, ct),
+                            "Add newline",
+                            ct => AddNewlineBeforeClosingBraceOfEmptyBlockAsync(document, block, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
                         break;
                     }
-                case DiagnosticIdentifiers.AddNewLinesToSinglelineBlock:
+                case DiagnosticIdentifiers.AddNewlinesToBlock:
                     {
                         CodeAction codeAction = CodeAction.Create(
-                            "Add new lines",
-                            ct => AddNewLinesToSinglelineBlockAsync(document, block, ct),
+                            "Add newlines",
+                            ct => AddNewlinesToSinglelineBlockAsync(document, block, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
@@ -62,7 +62,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             }
         }
 
-        private static Task<Document> AddNewLineBeforeClosingBraceOfEmptyBlockAsync(
+        private static Task<Document> AddNewlineBeforeClosingBraceOfEmptyBlockAsync(
             Document document,
             BlockSyntax block,
             CancellationToken cancellationToken)
@@ -75,7 +75,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             return document.ReplaceNodeAsync(block, newBlock, cancellationToken);
         }
 
-        private static Task<Document> AddNewLinesToSinglelineBlockAsync(
+        private static Task<Document> AddNewlinesToSinglelineBlockAsync(
             Document document,
             BlockSyntax block,
             CancellationToken cancellationToken)

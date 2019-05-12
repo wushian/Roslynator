@@ -10,11 +10,11 @@ using Microsoft.CodeAnalysis.Text;
 namespace Roslynator.Formatting.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    internal class AddNewLineAfterSwitchLabelAnalyzer : BaseDiagnosticAnalyzer
+    internal class AddNewlineAfterSwitchLabelAnalyzer : BaseDiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(DiagnosticDescriptors.AddNewLineAfterSwitchLabel); }
+            get { return ImmutableArray.Create(DiagnosticDescriptors.AddNewlineAfterSwitchLabel); }
         }
 
         public override void Initialize(AnalysisContext context)
@@ -42,7 +42,7 @@ namespace Roslynator.Formatting.CSharp
                 return;
 
             context.ReportDiagnostic(
-                DiagnosticDescriptors.AddNewLineAfterSwitchLabel,
+                DiagnosticDescriptors.AddNewlineAfterSwitchLabel,
                 Location.Create(statement.SyntaxTree, new TextSpan(statement.SpanStart, 0)));
         }
     }
