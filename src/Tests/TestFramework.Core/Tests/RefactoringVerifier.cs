@@ -43,7 +43,7 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default)
         {
-            TextParserResult result = TextParser.GetSpans(source, reverse: true);
+            TextParserResult result = TextParser.GetSpans(source, LinePositionSpanInfoComparer.IndexDescending);
 
             await VerifyRefactoringAsync(
                 source: result.Text,
@@ -65,7 +65,7 @@ namespace Roslynator.Tests
         {
             (TextSpan span, string source, string expected) = TextParser.ReplaceEmptySpan(theory, fromData, toData);
 
-            TextParserResult result = TextParser.GetSpans(source, reverse: true);
+            TextParserResult result = TextParser.GetSpans(source, LinePositionSpanInfoComparer.IndexDescending);
 
             if (result.Spans.Any())
             {
@@ -133,7 +133,7 @@ namespace Roslynator.Tests
 
             using (Workspace workspace = new AdhocWorkspace())
             {
-                Project project = WorkspaceFactory.AddProject(workspace.CurrentSolution);
+                Project project = WorkspaceFactory.AddProject(workspace.CurrentSolution, options);
 
                 Document document = WorkspaceFactory.AddDocument(project, source, additionalSources ?? Array.Empty<string>());
 
@@ -188,7 +188,7 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default)
         {
-            TextParserResult result = TextParser.GetSpans(source, reverse: true);
+            TextParserResult result = TextParser.GetSpans(source, LinePositionSpanInfoComparer.IndexDescending);
 
             await VerifyNoRefactoringAsync(
                 source: result.Text,
@@ -224,7 +224,7 @@ namespace Roslynator.Tests
 
             using (Workspace workspace = new AdhocWorkspace())
             {
-                Project project = WorkspaceFactory.AddProject(workspace.CurrentSolution);
+                Project project = WorkspaceFactory.AddProject(workspace.CurrentSolution, options);
 
                 Document document = WorkspaceFactory.AddDocument(project, source);
 
