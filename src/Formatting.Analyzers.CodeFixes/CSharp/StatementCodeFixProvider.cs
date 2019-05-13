@@ -84,7 +84,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             CancellationToken cancellationToken)
         {
             StatementSyntax newStatement = statement
-                .WithLeadingTrivia(statement.GetLeadingTrivia().Insert(0, CSharpFactory.NewLine()))
+                .PrependEndOfLineToLeadingTrivia()
                 .WithFormatterAnnotation();
 
             if (statement.IsParentKind(SyntaxKind.Block))
@@ -93,11 +93,8 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
                 if (block.IsSingleLine(includeExteriorTrivia: false))
                 {
-                    SyntaxTriviaList triviaList = block.CloseBraceToken.LeadingTrivia
-                        .Add(CSharpFactory.NewLine());
-
                     BlockSyntax newBlock = block
-                        .WithCloseBraceToken(block.CloseBraceToken.WithLeadingTrivia(triviaList))
+                        .WithCloseBraceToken(block.CloseBraceToken.AppendEndOfLineToLeadingTrivia())
                         .WithStatements(block.Statements.Replace(statement, newStatement))
                         .WithFormatterAnnotation();
 
@@ -120,7 +117,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             CancellationToken cancellationToken)
         {
             StatementSyntax newNode = statement
-                .AppendToTrailingTrivia(CSharpFactory.NewLine())
+                .AppendEndOfLineToTrailingTrivia()
                 .WithFormatterAnnotation();
 
             return document.ReplaceNodeAsync(statement, newNode, cancellationToken);
@@ -135,7 +132,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             int index = trailingTrivia.IndexOf(SyntaxKind.EndOfLineTrivia);
 
-            SyntaxTriviaList newTrailingTrivia = trailingTrivia.Insert(index, CSharpFactory.NewLine());
+            SyntaxTriviaList newTrailingTrivia = trailingTrivia.Insert(index, trailingTrivia[index]);
 
             StatementSyntax newStatement = statement.WithTrailingTrivia(newTrailingTrivia);
 

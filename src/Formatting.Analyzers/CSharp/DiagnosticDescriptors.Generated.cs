@@ -21,6 +21,18 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression}", 
             customTags:         Array.Empty<string>());
 
+        /// <summary>R0S0006</summary>
+        public static readonly DiagnosticDescriptor AddEmptyLineAfterRegionAndBeforeEndRegion = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineAfterRegionAndBeforeEndRegion, 
+            title:              "Add empty line after #region and before #endregion.", 
+            messageFormat:      "Add empty line {0}.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineAfterRegionAndBeforeEndRegion}", 
+            customTags:         Array.Empty<string>());
+
         /// <summary>ROS0001</summary>
         public static readonly DiagnosticDescriptor RemoveNewLinesFromAccessorListOfAutoProperty = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty, 

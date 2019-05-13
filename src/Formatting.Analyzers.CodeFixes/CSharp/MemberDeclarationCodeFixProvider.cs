@@ -59,6 +59,8 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             MemberDeclarationSyntax GetNewDeclaration()
             {
+                SyntaxTrivia endOfLine = SyntaxTriviaAnalysis.FindEndOfLine(declaration, CSharpFactory.NewLine());
+
                 switch (declaration.Kind())
                 {
                     case SyntaxKind.ClassDeclaration:
@@ -67,7 +69,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
                             return classDeclaration
                                 .WithOpenBraceToken(classDeclaration.OpenBraceToken.WithoutTrailingTrivia())
-                                .WithCloseBraceToken(classDeclaration.CloseBraceToken.WithLeadingTrivia(CSharpFactory.NewLine()));
+                                .WithCloseBraceToken(classDeclaration.CloseBraceToken.WithLeadingTrivia(endOfLine));
                         }
                     case SyntaxKind.StructDeclaration:
                         {
@@ -75,7 +77,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
                             return structDeclaration
                                 .WithOpenBraceToken(structDeclaration.OpenBraceToken.WithoutTrailingTrivia())
-                                .WithCloseBraceToken(structDeclaration.CloseBraceToken.WithLeadingTrivia(CSharpFactory.NewLine()));
+                                .WithCloseBraceToken(structDeclaration.CloseBraceToken.WithLeadingTrivia(endOfLine));
                         }
                     case SyntaxKind.InterfaceDeclaration:
                         {
@@ -83,7 +85,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
                             return interfaceDeclaration
                                 .WithOpenBraceToken(interfaceDeclaration.OpenBraceToken.WithoutTrailingTrivia())
-                                .WithCloseBraceToken(interfaceDeclaration.CloseBraceToken.WithLeadingTrivia(CSharpFactory.NewLine()));
+                                .WithCloseBraceToken(interfaceDeclaration.CloseBraceToken.WithLeadingTrivia(endOfLine));
                         }
                 }
 

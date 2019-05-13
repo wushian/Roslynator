@@ -69,7 +69,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
         {
             BlockSyntax newBlock = block
                 .WithOpenBraceToken(block.OpenBraceToken.WithoutTrailingTrivia())
-                .WithCloseBraceToken(block.CloseBraceToken.WithLeadingTrivia(CSharpFactory.NewLine()))
+                .WithCloseBraceToken(block.CloseBraceToken.WithLeadingTrivia(SyntaxTriviaAnalysis.FindEndOfLine(block, CSharpFactory.NewLine())))
                 .WithFormatterAnnotation();
 
             return document.ReplaceNodeAsync(block, newBlock, cancellationToken);
@@ -83,7 +83,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             SyntaxToken closeBrace = block.CloseBraceToken;
 
             BlockSyntax newBlock = block
-                .WithCloseBraceToken(closeBrace.WithLeadingTrivia(closeBrace.LeadingTrivia.Add(CSharpFactory.NewLine())))
+                .WithCloseBraceToken(closeBrace.AppendEndOfLineToLeadingTrivia())
                 .WithFormatterAnnotation();
 
             return document.ReplaceNodeAsync(block, newBlock, cancellationToken);

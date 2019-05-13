@@ -46,7 +46,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                     {
                         CodeAction codeAction = CodeAction.Create(
                             "Add empty line",
-                            ct => AddEmptyLineAfterClosingBraceOfBlockAsync(document, token, ct),
+                            ct => AddEmptyLineAsync(document, token, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
@@ -103,12 +103,12 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             }
         }
 
-        private static Task<Document> AddEmptyLineAfterClosingBraceOfBlockAsync(
+        private static Task<Document> AddEmptyLineAsync(
             Document document,
             SyntaxToken token,
             CancellationToken cancellationToken)
         {
-            SyntaxToken newToken = token.AppendToTrailingTrivia(CSharpFactory.NewLine());
+            SyntaxToken newToken = token.AppendToTrailingTrivia(SyntaxTriviaAnalysis.FindEndOfLine(token));
 
             return document.ReplaceTokenAsync(token, newToken, cancellationToken);
         }

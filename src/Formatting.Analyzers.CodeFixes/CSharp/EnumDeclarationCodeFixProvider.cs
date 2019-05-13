@@ -68,7 +68,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 if (_separators.Contains(token)
                     && !token.TrailingTrivia.Contains(SyntaxKind.EndOfLineTrivia))
                 {
-                    return token.TrimTrailingTrivia().AppendToTrailingTrivia(CSharpFactory.NewLine());
+                    return token.TrimTrailingTrivia().AppendEndOfLineToTrailingTrivia();
                 }
 
                 return base.VisitToken(token);

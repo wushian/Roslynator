@@ -9,6 +9,7 @@ namespace Roslynator.Formatting.CSharp
     public static partial class DiagnosticIdentifiers
     {
         public const string PlaceConditionalOperatorAfterExpression = "R0S0005";
+        public const string AddEmptyLineAfterRegionAndBeforeEndRegion = "R0S0006";
         public const string RemoveNewLinesFromAccessorListOfAutoProperty = "ROS0001";
         public const string AddNewLinesToAccessorListOfFullProperty = "ROS0002";
         public const string RemoveNewLinesFromAccessor = "ROS0003";

@@ -39,7 +39,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                     Title,
                     ct =>
                     {
-                        SyntaxToken newToken = token.AppendToTrailingTrivia(CSharpFactory.NewLine());
+                        SyntaxToken newToken = token.AppendEndOfLineToTrailingTrivia();
 
                         return document.ReplaceTokenAsync(token, newToken, ct);
                     },
@@ -56,7 +56,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                     Title,
                     ct =>
                     {
-                        MemberDeclarationSyntax newMemberDeclaration = memberDeclaration.AppendToTrailingTrivia(CSharpFactory.NewLine());
+                        MemberDeclarationSyntax newMemberDeclaration = memberDeclaration.AppendEndOfLineToTrailingTrivia();
 
                         return document.ReplaceNodeAsync(memberDeclaration, newMemberDeclaration, ct);
                     },

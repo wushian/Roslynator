@@ -9,6 +9,60 @@ namespace Roslynator.Formatting.CSharp
 {
     internal static class SyntaxTriviaAnalysis
     {
+        public static SyntaxTrivia FindEndOfLine(SyntaxNode node, SyntaxTrivia? defaultEndOfLine = null)
+        {
+            SyntaxToken lastToken = node.GetFirstToken();
+
+            return FindEndOfLine(lastToken, defaultEndOfLine);
+        }
+
+        public static SyntaxTrivia FindEndOfLine(SyntaxToken token, SyntaxTrivia? defaultEndOfLine = null)
+        {
+            SyntaxToken t = token;
+
+            do
+            {
+                foreach (SyntaxTrivia trivia in t.LeadingTrivia)
+                {
+                    if (trivia.IsKind(SyntaxKind.EndOfLineTrivia))
+                        return trivia;
+                }
+
+                foreach (SyntaxTrivia trivia in t.TrailingTrivia)
+                {
+                    if (trivia.IsKind(SyntaxKind.EndOfLineTrivia))
+                        return trivia;
+                }
+
+                t = t.GetNextToken();
+            }
+            while (!t.IsKind(SyntaxKind.None));
+
+            t = token;
+
+            while (true)
+            {
+                t = t.GetPreviousToken();
+
+                if (t.IsKind(SyntaxKind.None))
+                    break;
+
+                foreach (SyntaxTrivia trivia in t.LeadingTrivia)
+                {
+                    if (trivia.IsKind(SyntaxKind.EndOfLineTrivia))
+                        return trivia;
+                }
+
+                foreach (SyntaxTrivia trivia in t.TrailingTrivia)
+                {
+                    if (trivia.IsKind(SyntaxKind.EndOfLineTrivia))
+                        return trivia;
+                }
+            }
+
+            return defaultEndOfLine ?? default;
+        }
+
         public static bool IsTokenPlacedBeforeExpression(
             ExpressionSyntax left,
             SyntaxToken token,

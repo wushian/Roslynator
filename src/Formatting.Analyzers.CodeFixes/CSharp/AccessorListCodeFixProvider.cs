@@ -70,14 +70,9 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             AccessorListSyntax accessorList,
             CancellationToken cancellationToken)
         {
-            SyntaxTriviaList triviaList = accessorList
-                .CloseBraceToken
-                .LeadingTrivia
-                .Add(NewLine());
-
             AccessorListSyntax newAccessorList = accessorList
                 .RemoveWhitespace()
-                .WithCloseBraceToken(accessorList.CloseBraceToken.WithLeadingTrivia(triviaList));
+                .WithCloseBraceToken(accessorList.CloseBraceToken.AppendEndOfLineToLeadingTrivia());
 
             SyntaxList<AccessorDeclarationSyntax> accessors = newAccessorList.Accessors;
 
@@ -86,7 +81,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 AccessorDeclarationSyntax accessor = accessors[0];
 
                 if (accessorList.SyntaxTree.IsSingleLineSpan(accessor.GetTrailingTrivia().Span, cancellationToken))
-                    newAccessorList = newAccessorList.ReplaceNode(accessor, accessor.AppendToTrailingTrivia(NewLine()));
+                    newAccessorList = newAccessorList.ReplaceNode(accessor, accessor.AppendEndOfLineToTrailingTrivia());
             }
 
             newAccessorList = newAccessorList.WithFormatterAnnotation();

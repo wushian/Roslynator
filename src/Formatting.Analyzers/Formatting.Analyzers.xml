@@ -130,6 +130,38 @@
       </Sample>
     </Samples>
   </Analyzer>
+  <Analyzer Identifier="AddEmptyLineAfterRegionAndBeforeEndRegion">
+    <Id>R0S0006</Id>
+    <Title>Add empty line after #region and before #endregion.</Title>
+    <MessageFormat>Add empty line {0}.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[class C
+{
+    #region Methods
+    void M()
+    {
+    }
+    #endregion
+}]]></Before>
+        <After><![CDATA[class C
+{
+    #region Methods
+
+    void M()
+    {
+    }
+    
+    #endregion
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
   <Analyzer Identifier="AddNewLineToEmptyBlock"> <!--FormatEmptyBlock-->
     <Id>ROS1023</Id>
     <Title>Add newline to empty block.</Title>

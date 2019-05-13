@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-namespace Roslynator.Formatting.CodeFixes
+namespace Roslynator.CSharp
 {
     internal static class SyntaxTriviaManipulation
     {

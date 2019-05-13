@@ -23,7 +23,6 @@ namespace Roslynator.Formatting.CSharp
         public override void Initialize(AnalysisContext context)
         {
             base.Initialize(context);
-            context.EnableConcurrentExecution();
 
             context.RegisterSyntaxNodeAction(AnalyzeBlock, SyntaxKind.Block);
             context.RegisterSyntaxNodeAction(AnalyzeTryStatement, SyntaxKind.TryStatement);
