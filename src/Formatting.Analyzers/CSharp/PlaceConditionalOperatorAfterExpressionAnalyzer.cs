@@ -5,16 +5,15 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Roslynator.CSharp;
 
 namespace Roslynator.Formatting.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    internal class PlaceConditionalOperatorBeforeExpressionAnalyzer : BaseDiagnosticAnalyzer
+    internal class PlaceConditionalOperatorAfterExpressionAnalyzer : BaseDiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(DiagnosticDescriptors.PlaceConditionalOperatorBeforeExpression); }
+            get { return ImmutableArray.Create(DiagnosticDescriptors.PlaceConditionalOperatorAfterExpression); }
         }
 
         public override void Initialize(AnalysisContext context)
@@ -38,7 +37,7 @@ namespace Roslynator.Formatting.CSharp
             if (whenTrue.IsMissing)
                 return;
 
-            if (SyntaxTriviaAnalysis.IsTokenPlacedAfterExpression(condition, conditionalExpression.QuestionToken, whenTrue))
+            if (SyntaxTriviaAnalysis.IsTokenPlacedBeforeExpression(condition, conditionalExpression.QuestionToken, whenTrue))
             {
                 ReportDiagnostic(context, conditionalExpression.QuestionToken);
             }
@@ -47,7 +46,7 @@ namespace Roslynator.Formatting.CSharp
                 ExpressionSyntax whenFalse = conditionalExpression.WhenFalse;
 
                 if (!whenFalse.IsMissing
-                    && SyntaxTriviaAnalysis.IsTokenPlacedAfterExpression(whenTrue, conditionalExpression.ColonToken, whenFalse))
+                    && SyntaxTriviaAnalysis.IsTokenPlacedBeforeExpression(whenTrue, conditionalExpression.ColonToken, whenFalse))
                 {
                     ReportDiagnostic(context, conditionalExpression.ColonToken);
                 }
@@ -57,7 +56,7 @@ namespace Roslynator.Formatting.CSharp
         private static void ReportDiagnostic(SyntaxNodeAnalysisContext context, SyntaxToken token)
         {
             context.ReportDiagnostic(
-                DiagnosticDescriptors.PlaceConditionalOperatorBeforeExpression,
+                DiagnosticDescriptors.PlaceConditionalOperatorAfterExpression,
                 Location.Create(token.SyntaxTree, token.Span.WithLength(0)));
         }
     }

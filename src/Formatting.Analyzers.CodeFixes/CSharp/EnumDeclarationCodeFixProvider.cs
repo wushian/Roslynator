@@ -21,7 +21,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(DiagnosticIdentifiers.AddNewlineBeforeEnumMember); }
+            get { return ImmutableArray.Create(DiagnosticIdentifiers.AddNewLineBeforeEnumMember); }
         }
 
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
@@ -36,29 +36,29 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             CodeAction codeAction = CodeAction.Create(
                 "Add newline",
-                ct => AddNewlineBeforeEnumMemberAsync(document, enumDeclaration, ct),
+                ct => AddNewLineBeforeEnumMemberAsync(document, enumDeclaration, ct),
                 GetEquivalenceKey(diagnostic));
 
             context.RegisterCodeFix(codeAction, diagnostic);
         }
 
-        private static Task<Document> AddNewlineBeforeEnumMemberAsync(
+        private static Task<Document> AddNewLineBeforeEnumMemberAsync(
             Document document,
             EnumDeclarationSyntax enumDeclaration,
             CancellationToken cancellationToken)
         {
-            var rewriter = new AddNewlineBeforeEnumMemberAsyncRewriter(enumDeclaration);
+            var rewriter = new AddNewLineBeforeEnumMemberAsyncRewriter(enumDeclaration);
 
             SyntaxNode newNode = rewriter.Visit(enumDeclaration).WithFormatterAnnotation();
 
             return document.ReplaceNodeAsync(enumDeclaration, newNode, cancellationToken);
         }
 
-        private class AddNewlineBeforeEnumMemberAsyncRewriter : CSharpSyntaxRewriter
+        private class AddNewLineBeforeEnumMemberAsyncRewriter : CSharpSyntaxRewriter
         {
             private readonly SyntaxToken[] _separators;
 
-            public AddNewlineBeforeEnumMemberAsyncRewriter(EnumDeclarationSyntax enumDeclaration)
+            public AddNewLineBeforeEnumMemberAsyncRewriter(EnumDeclarationSyntax enumDeclaration)
             {
                 _separators = enumDeclaration.Members.GetSeparators().ToArray();
             }

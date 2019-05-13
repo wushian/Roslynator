@@ -4,9 +4,9 @@
     <Id>R0S</Id>
     <Title></Title>
     <MessageFormat></MessageFormat>
-    <Category>General</Category>
+    <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
-    <IsEnabledByDefault>true</IsEnabledByDefault>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
     <SupportsFadeOut>false</SupportsFadeOut>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
     <MinLanguageVersion></MinLanguageVersion>

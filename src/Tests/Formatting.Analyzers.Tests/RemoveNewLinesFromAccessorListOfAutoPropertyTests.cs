@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class RemoveNewlinesFromAccessorListOfAutoPropertyTests : AbstractCSharpFixVerifier
+    public class RemoveNewLinesFromAccessorListOfAutoPropertyTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.RemoveNewlinesFromAccessorListOfAutoProperty;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.RemoveNewLinesFromAccessorListOfAutoProperty;
 
         public override DiagnosticAnalyzer Analyzer { get; } = new AccessorListAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new AccessorListCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewlinesFromAccessorListOfAutoProperty)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty)]
         public async Task Test_ReadOnlyProperty()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -36,7 +36,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewlinesFromAccessorListOfAutoProperty)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty)]
         public async Task Test_Property()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -56,7 +56,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewlinesFromAccessorListOfAutoProperty)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty)]
         public async Task Test_ReadOnlyIndexer()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -75,7 +75,7 @@ interface I
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewlinesFromAccessorListOfAutoProperty)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty)]
         public async Task Test_Indexer()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -95,7 +95,7 @@ interface I
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewlinesFromAccessorListOfAutoProperty)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty)]
         public async Task TestNoDiagnostic()
         {
             await VerifyNoDiagnosticAsync(@"

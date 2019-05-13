@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class UseCarriageReturnAndLinefeedAsNewlineTests : AbstractCSharpFixVerifier
+    public class UseCarriageReturnAndLinefeedAsNewLineTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UseCarriageReturnAndLinefeedAsNewline;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UseCarriageReturnAndLinefeedAsNewLine;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new UseCarriageReturnAndLinefeedAsNewlineAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new UseCarriageReturnAndLinefeedAsNewLineAnalyzer();
 
-        public override CodeFixProvider FixProvider { get; } = new NewlineCodeFixProvider();
+        public override CodeFixProvider FixProvider { get; } = new NewLineCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseCarriageReturnAndLinefeedAsNewline)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseCarriageReturnAndLinefeedAsNewLine)]
         public async Task Test()
         {
             await VerifyDiagnosticAndFixAsync("\r\n"
@@ -42,7 +42,7 @@ namespace Roslynator.Formatting.CSharp.Tests
 + "}\r\n");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseCarriageReturnAndLinefeedAsNewline)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseCarriageReturnAndLinefeedAsNewLine)]
         public async Task TestNoDiagnostic()
         {
             await VerifyNoDiagnosticAsync("\r\n"

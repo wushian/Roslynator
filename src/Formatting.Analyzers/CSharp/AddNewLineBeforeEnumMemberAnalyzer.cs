@@ -10,11 +10,11 @@ using Microsoft.CodeAnalysis.Text;
 namespace Roslynator.Formatting.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    internal class AddNewlineBeforeEnumMemberAnalyzer : BaseDiagnosticAnalyzer
+    internal class AddNewLineBeforeEnumMemberAnalyzer : BaseDiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(DiagnosticDescriptors.AddNewlineBeforeEnumMember); }
+            get { return ImmutableArray.Create(DiagnosticDescriptors.AddNewLineBeforeEnumMember); }
         }
 
         public override void Initialize(AnalysisContext context)
@@ -40,8 +40,8 @@ namespace Roslynator.Formatting.CSharp
                 if (members[i].GetSpanStartLine() == previousIndex)
                 {
                     context.ReportDiagnostic(
-                        DiagnosticDescriptors.AddNewlineBeforeEnumMember,
-                        Location.Create(enumDeclaration.SyntaxTree, new TextSpan(members[i].SpanStart, 0)));
+                        DiagnosticDescriptors.AddNewLineBeforeEnumMember,
+                        Location.Create(enumDeclaration.SyntaxTree, members[i].Span.WithLength(0)));
 
                     return;
                 }

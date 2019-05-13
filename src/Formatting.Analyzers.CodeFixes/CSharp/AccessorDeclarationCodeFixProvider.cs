@@ -19,7 +19,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(DiagnosticIdentifiers.RemoveNewlinesFromAccessor); }
+            get { return ImmutableArray.Create(DiagnosticIdentifiers.RemoveNewLinesFromAccessor); }
         }
 
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
@@ -34,13 +34,13 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             CodeAction codeAction = CodeAction.Create(
                 "Remove newlines from accessor",
-                ct => RemoveNewlinesFromAccessorAsync(document, accessorDeclaration, ct),
+                ct => RemoveNewLinesFromAccessorAsync(document, accessorDeclaration, ct),
                 GetEquivalenceKey(diagnostic));
 
             context.RegisterCodeFix(codeAction, diagnostic);
         }
 
-        private static Task<Document> RemoveNewlinesFromAccessorAsync(
+        private static Task<Document> RemoveNewLinesFromAccessorAsync(
             Document document,
             AccessorDeclarationSyntax accessorDeclaration,
             CancellationToken cancellationToken)

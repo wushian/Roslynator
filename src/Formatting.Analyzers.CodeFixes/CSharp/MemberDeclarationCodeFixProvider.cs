@@ -20,7 +20,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(DiagnosticIdentifiers.AddNewlineToEmptyTypeDeclaration); }
+            get { return ImmutableArray.Create(DiagnosticIdentifiers.AddNewLineToEmptyTypeDeclaration); }
         }
 
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
@@ -35,11 +35,11 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             switch (diagnostic.Id)
             {
-                case DiagnosticIdentifiers.AddNewlineToEmptyTypeDeclaration:
+                case DiagnosticIdentifiers.AddNewLineToEmptyTypeDeclaration:
                     {
                         CodeAction codeAction = CodeAction.Create(
                             "Add newline",
-                            ct => AddNewlineBeforeClosingBraceOfEmptyTypeDeclarationAsync(document, memberDeclaration, ct),
+                            ct => AddNewLineBeforeClosingBraceOfEmptyTypeDeclarationAsync(document, memberDeclaration, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
@@ -48,7 +48,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             }
         }
 
-        private static Task<Document> AddNewlineBeforeClosingBraceOfEmptyTypeDeclarationAsync(
+        private static Task<Document> AddNewLineBeforeClosingBraceOfEmptyTypeDeclarationAsync(
             Document document,
             MemberDeclarationSyntax declaration,
             CancellationToken cancellationToken)

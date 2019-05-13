@@ -203,7 +203,7 @@ namespace Roslynator.Formatting.CSharp
         {
             context.ReportDiagnostic(
                 DiagnosticDescriptors.AddEmptyLineBetweenDeclarations,
-                Location.Create(trivia.SyntaxTree, new TextSpan(trivia.SpanStart, 0)));
+                Location.Create(trivia.SyntaxTree, trivia.Span.WithLength(0)));
         }
     }
 }

@@ -23,9 +23,9 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             get
             {
                 return ImmutableArray.Create(
-                    DiagnosticIdentifiers.AddNewlineBeforeStatement,
-                    DiagnosticIdentifiers.AddNewlineBeforeEmbeddedStatement,
-                    DiagnosticIdentifiers.AddNewlineAfterSwitchLabel,
+                    DiagnosticIdentifiers.AddNewLineBeforeStatement,
+                    DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement,
+                    DiagnosticIdentifiers.AddNewLineAfterSwitchLabel,
                     DiagnosticIdentifiers.AddEmptyLineAfterEmbeddedStatement,
                     DiagnosticIdentifiers.AddEmptyLineBeforeClosingBraceOfDoStatement);
             }
@@ -43,13 +43,13 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             switch (diagnostic.Id)
             {
-                case DiagnosticIdentifiers.AddNewlineBeforeStatement:
-                case DiagnosticIdentifiers.AddNewlineBeforeEmbeddedStatement:
-                case DiagnosticIdentifiers.AddNewlineAfterSwitchLabel:
+                case DiagnosticIdentifiers.AddNewLineBeforeStatement:
+                case DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement:
+                case DiagnosticIdentifiers.AddNewLineAfterSwitchLabel:
                     {
                         CodeAction codeAction = CodeAction.Create(
                             "Add newline",
-                            ct => AddNewlineBeforeStatementAsync(document, statement, ct),
+                            ct => AddNewLineBeforeStatementAsync(document, statement, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
@@ -78,7 +78,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             }
         }
 
-        private static async Task<Document> AddNewlineBeforeStatementAsync(
+        private static async Task<Document> AddNewLineBeforeStatementAsync(
             Document document,
             StatementSyntax statement,
             CancellationToken cancellationToken)

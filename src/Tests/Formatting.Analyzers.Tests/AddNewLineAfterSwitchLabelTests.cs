@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class AddNewlineAfterSwitchLabelTests : AbstractCSharpFixVerifier
+    public class AddNewLineAfterSwitchLabelTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewlineAfterSwitchLabel;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewLineAfterSwitchLabel;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewlineAfterSwitchLabelAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewLineAfterSwitchLabelAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new StatementCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineAfterSwitchLabel)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineAfterSwitchLabel)]
         public async Task Test()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -50,7 +50,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineAfterSwitchLabel)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineAfterSwitchLabel)]
         public async Task Test_MultipleLabels()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -85,7 +85,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineAfterSwitchLabel)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineAfterSwitchLabel)]
         public async Task TestNoDiagnostic()
         {
             await VerifyNoDiagnosticAsync(@"

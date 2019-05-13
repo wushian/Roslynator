@@ -10,11 +10,11 @@ using Microsoft.CodeAnalysis.Text;
 namespace Roslynator.Formatting.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    internal class AddNewlinesToBlockAnalyzer : BaseDiagnosticAnalyzer
+    internal class AddNewLinesToBlockAnalyzer : BaseDiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(DiagnosticDescriptors.AddNewlinesToBlock); }
+            get { return ImmutableArray.Create(DiagnosticDescriptors.AddNewLinesToBlock); }
         }
 
         public override void Initialize(AnalysisContext context)
@@ -52,7 +52,7 @@ namespace Roslynator.Formatting.CSharp
             if (!block.SyntaxTree.IsSingleLineSpan(TextSpan.FromBounds(openBrace.SpanStart, closeBrace.Span.End), context.CancellationToken))
                 return;
 
-            context.ReportDiagnostic(DiagnosticDescriptors.AddNewlinesToBlock, block);
+            context.ReportDiagnostic(DiagnosticDescriptors.AddNewLinesToBlock, block);
         }
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Analyzers>
-  <Analyzer Identifier="RemoveNewlinesFromAccessorListOfAutoProperty"> <!--FormatAccessorList-->
+  <Analyzer Identifier="RemoveNewLinesFromAccessorListOfAutoProperty"> <!--FormatAccessorList-->
     <Id>ROS0001</Id>
     <Title>Remove newlines from accessor list of auto-property.</Title>
     <MessageFormat>Remove newlines from accessor list of auto-property.</MessageFormat>
@@ -20,7 +20,7 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewlinesToAccessorListOfFullProperty"> <!--FormatAccessorList-->
+  <Analyzer Identifier="AddNewLinesToAccessorListOfFullProperty"> <!--FormatAccessorList-->
     <Id>ROS0002</Id>
     <Title>Add newlines to accessor list of full property.</Title>
     <MessageFormat>Add newlines to accessor list of full property.</MessageFormat>
@@ -40,7 +40,7 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="RemoveNewlinesFromAccessor"> <!--FormatAccessorList-->
+  <Analyzer Identifier="RemoveNewLinesFromAccessor"> <!--FormatAccessorList-->
     <Id>ROS0003</Id>
     <Title>Remove newlines from accessor with single-line expression.</Title>
     <MessageFormat>Remove newlines from accessor with single-line expression.</MessageFormat>
@@ -70,7 +70,67 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewlineToEmptyBlock"> <!--FormatEmptyBlock-->
+  <!--<Analyzer Identifier="">
+    <Id>R0S</Id>
+    <Title></Title>
+    <MessageFormat></MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[]]></Before>
+        <After><![CDATA[]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>-->
+  <Analyzer Identifier="PlaceBinaryOperatorAfterOperand">
+    <Id>ROS0004</Id>
+    <Title>Place binary operator after operand.</Title>
+    <MessageFormat>Place binary operator after operand.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[if (x
+    && y // [|Id|]
+    && z)
+{
+}]]></Before>
+        <After><![CDATA[if (x &&
+    y &&
+    z)
+{
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="PlaceConditionalOperatorAfterExpression">
+    <Id>R0S0005</Id>
+    <Title>Place conditional operator after expression.</Title>
+    <MessageFormat>Place conditional operator after expression.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[var y = (x)
+    ? Foo() // [|Id|]
+    : Bar();]]></Before>
+        <After><![CDATA[var y = (x) ?
+     Foo() :
+     Bar();]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="AddNewLineToEmptyBlock"> <!--FormatEmptyBlock-->
     <Id>ROS1023</Id>
     <Title>Add newline to empty block.</Title>
     <MessageFormat>Add newline to empty block.</MessageFormat>
@@ -89,7 +149,7 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewlineBeforeEnumMember">
+  <Analyzer Identifier="AddNewLineBeforeEnumMember">
     <Id>ROS1025</Id>
     <Title>Add newline before enum member.</Title>
     <MessageFormat>Add newline before enum member.</MessageFormat>
@@ -110,7 +170,7 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewlineBeforeStatement">
+  <Analyzer Identifier="AddNewLineBeforeStatement">
     <Id>ROS1026</Id>
     <Title>Add newline before statement.</Title>
     <MessageFormat>Add newline before statement.</MessageFormat>
@@ -127,7 +187,7 @@ Bar();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewlineBeforeEmbeddedStatement">
+  <Analyzer Identifier="AddNewLineBeforeEmbeddedStatement">
     <Id>ROS1027</Id>
     <Title>Add newline before embedded statement.</Title>
     <MessageFormat>Add newline before embedded statement.</MessageFormat>
@@ -144,7 +204,7 @@ Bar();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewlineAfterSwitchLabel">
+  <Analyzer Identifier="AddNewLineAfterSwitchLabel">
     <Id>ROS1028</Id>
     <Title>Add newline after switch label.</Title>
     <MessageFormat>Add newline after switch label.</MessageFormat>
@@ -294,7 +354,7 @@ enum Bar
     </Samples>
     <Remarks>This analyzer does not enforce an empty line between two single-line declaration.</Remarks>
   </Analyzer>
-  <Analyzer Identifier="AddNewlineToEmptyTypeDeclaration"> <!--FormatDeclarationBraces-->
+  <Analyzer Identifier="AddNewLineToEmptyTypeDeclaration"> <!--FormatDeclarationBraces-->
     <Id>ROS1076</Id>
     <Title>Add newline to empty type declaration.</Title>
     <MessageFormat>Add newline to empty type declaration.</MessageFormat>
@@ -314,7 +374,7 @@ enum Bar
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="UseLinefeedAsNewline">
+  <Analyzer Identifier="UseLinefeedAsNewLine">
     <Id>ROS1086</Id>
     <Title>Use linefeed as newline.</Title>
     <MessageFormat>Use linefeed as newline.</MessageFormat>
@@ -324,7 +384,7 @@ enum Bar
     <SupportsFadeOut>false</SupportsFadeOut>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
   </Analyzer>
-  <Analyzer Identifier="UseCarriageReturnAndLinefeedAsNewline">
+  <Analyzer Identifier="UseCarriageReturnAndLinefeedAsNewLine">
     <Id>ROS1087</Id>
     <Title>Use carriage return + linefeed as newline.</Title>
     <MessageFormat>Use carriage return + linefeed as newline.</MessageFormat>
@@ -410,7 +470,7 @@ Foo();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewlinesToBlock"> <!--FormatSingleLineBlock-->
+  <Analyzer Identifier="AddNewLinesToBlock"> <!--FormatSingleLineBlock-->
     <Id>ROS1185</Id>
     <Title>Add newlines to block.</Title>
     <MessageFormat>Add newlines to block.</MessageFormat>

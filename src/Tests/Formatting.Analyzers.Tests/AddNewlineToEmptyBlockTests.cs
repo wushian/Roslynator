@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class AddNewlineToEmptyBlockTests : AbstractCSharpFixVerifier
+    public class AddNewLineToEmptyBlockTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewlineToEmptyBlock;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewLineToEmptyBlock;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewlineToEmptyBlockAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewLineToEmptyBlockAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new BlockCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineToEmptyBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineToEmptyBlock)]
         public async Task Test()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -36,7 +36,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineToEmptyBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineToEmptyBlock)]
         public async Task Test_WithWhitespace()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -55,7 +55,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineToEmptyBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineToEmptyBlock)]
         public async Task TestNoDiagnostic_EmptyLine()
         {
             await VerifyNoDiagnosticAsync(@"

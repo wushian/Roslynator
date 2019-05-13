@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Roslynator.CSharp;
 using Roslynator.Formatting.CSharp;
@@ -21,7 +20,12 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(DiagnosticIdentifiers.PlaceBinaryOperatorBeforeOperand); }
+            get
+            {
+                return ImmutableArray.Create(
+                    DiagnosticIdentifiers.PlaceBinaryOperatorBeforeOperand,
+                    DiagnosticIdentifiers.PlaceBinaryOperatorAfterOperand);
+            }
         }
 
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
@@ -34,12 +38,29 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             Document document = context.Document;
             Diagnostic diagnostic = context.Diagnostics[0];
 
-            CodeAction codeAction = CodeAction.Create(
-                $"Place '{binaryExpression.OperatorToken.ToString()}' before operand",
-                ct => PlaceBinaryOperatorBeforeOperandAsync(document, binaryExpression, ct),
-                GetEquivalenceKey(diagnostic));
+            switch (diagnostic.Id)
+            {
+                case DiagnosticIdentifiers.PlaceBinaryOperatorBeforeOperand:
+                    {
+                        CodeAction codeAction = CodeAction.Create(
+                            $"Place '{binaryExpression.OperatorToken.ToString()}' before operand",
+                            ct => PlaceBinaryOperatorBeforeOperandAsync(document, binaryExpression, ct),
+                            GetEquivalenceKey(diagnostic));
 
-            context.RegisterCodeFix(codeAction, diagnostic);
+                        context.RegisterCodeFix(codeAction, diagnostic);
+                        break;
+                    }
+                case DiagnosticIdentifiers.PlaceBinaryOperatorAfterOperand:
+                    {
+                        CodeAction codeAction = CodeAction.Create(
+                            $"Place '{binaryExpression.OperatorToken.ToString()}' after operand",
+                            ct => PlaceBinaryOperatorAfterOperandAsync(document, binaryExpression, ct),
+                            GetEquivalenceKey(diagnostic));
+
+                        context.RegisterCodeFix(codeAction, diagnostic);
+                        break;
+                    }
+            }
         }
 
         private static Task<Document> PlaceBinaryOperatorBeforeOperandAsync(
@@ -47,18 +68,29 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             BinaryExpressionSyntax binaryExpression,
             CancellationToken cancellationToken)
         {
+            var (left, token, right) = SyntaxTriviaManipulation.PlaceTokenBeforeExpression(binaryExpression.Left, binaryExpression.OperatorToken, binaryExpression.Right);
+
             BinaryExpressionSyntax newBinaryExpression = BinaryExpression(
                 binaryExpression.Kind(),
-                binaryExpression.Left.WithTrailingTrivia(binaryExpression.OperatorToken.TrailingTrivia),
-                Token(
-                    binaryExpression.Right.GetLeadingTrivia(),
-                    binaryExpression.OperatorToken.Kind(),
-                    TriviaList(Space)),
-                binaryExpression.Right.WithoutLeadingTrivia());
+                left,
+                token,
+                right);
 
-            newBinaryExpression = newBinaryExpression
-                .WithTriviaFrom(binaryExpression)
-                .WithFormatterAnnotation();
+            return document.ReplaceNodeAsync(binaryExpression, newBinaryExpression, cancellationToken);
+        }
+
+        private static Task<Document> PlaceBinaryOperatorAfterOperandAsync(
+            Document document,
+            BinaryExpressionSyntax binaryExpression,
+            CancellationToken cancellationToken)
+        {
+            var (left, token, right) = SyntaxTriviaManipulation.PlaceTokenAfterExpression(binaryExpression.Left, binaryExpression.OperatorToken, binaryExpression.Right);
+
+            BinaryExpressionSyntax newBinaryExpression = BinaryExpression(
+                binaryExpression.Kind(),
+                left,
+                token,
+                right);
 
             return document.ReplaceNodeAsync(binaryExpression, newBinaryExpression, cancellationToken);
         }

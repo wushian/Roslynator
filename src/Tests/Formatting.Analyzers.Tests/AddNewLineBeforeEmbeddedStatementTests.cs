@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class AddNewlineBeforeEmbeddedStatementTests : AbstractCSharpFixVerifier
+    public class AddNewLineBeforeEmbeddedStatementTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewlineBeforeEmbeddedStatement;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewLineBeforeEmbeddedStatement;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewlineBeforeEmbeddedStatementAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewLineBeforeEmbeddedStatementAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new StatementCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeEmbeddedStatement)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement)]
         public async Task Test_If()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -44,7 +44,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeEmbeddedStatement)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement)]
         public async Task Test_Else()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -75,7 +75,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeEmbeddedStatement)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement)]
         public async Task Test_ForEach()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -108,7 +108,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeEmbeddedStatement)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement)]
         public async Task Test_ForEachVariable()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -141,7 +141,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeEmbeddedStatement)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement)]
         public async Task Test_For()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -174,7 +174,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeEmbeddedStatement)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement)]
         public async Task Test_Using()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -205,7 +205,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeEmbeddedStatement)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement)]
         public async Task Test_While()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -232,7 +232,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeEmbeddedStatement)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement)]
         public async Task Test_Do()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -261,7 +261,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeEmbeddedStatement)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement)]
         public async Task Test_Lock()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -288,7 +288,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeEmbeddedStatement)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement)]
         public async Task Test_Fixed()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -321,7 +321,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeEmbeddedStatement)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement)]
         public async Task TestNoDiagnostic_EmbeddedStatement()
         {
             await VerifyNoDiagnosticAsync(@"
@@ -372,7 +372,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineBeforeEmbeddedStatement)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement)]
         public async Task TestNoDiagnostic_Block()
         {
             await VerifyNoDiagnosticAsync(@"

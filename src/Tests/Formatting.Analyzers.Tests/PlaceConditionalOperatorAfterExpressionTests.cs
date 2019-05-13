@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class PlaceConditionalOperatorBeforeExpressionTests : AbstractCSharpFixVerifier
+    public class PlaceConditionalOperatorAfterExpressionTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.PlaceConditionalOperatorBeforeExpression;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.PlaceConditionalOperatorAfterExpression;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new PlaceConditionalOperatorBeforeExpressionAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new PlaceConditionalOperatorAfterExpressionAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new TokenCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression)]
         public async Task Test()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -27,9 +27,9 @@ class C
     {
         bool x = false, y = false, z = false;
 
-        x = (x) [||]?
-            y :
-            z;
+        x = (x)
+            [||]? y
+            : z;
     }
 }
 ", @"
@@ -39,15 +39,15 @@ class C
     {
         bool x = false, y = false, z = false;
 
-        x = (x)
-            ? y
-            : z;
+        x = (x) ?
+            y :
+            z;
     }
 }
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression)]
         public async Task Test_QuestionToken()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -57,38 +57,8 @@ class C
     {
         bool x = false, y = false, z = false;
 
-        x = (x) [||]?
-            y
-            : z;
-    }
-}
-", @"
-class C
-{
-    void M()
-    {
-        bool x = false, y = false, z = false;
-
         x = (x)
-            ? y
-            : z;
-    }
-}
-");
-        }
-
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression)]
-        public async Task Test_ColonToken()
-        {
-            await VerifyDiagnosticAndFixAsync(@"
-class C
-{
-    void M()
-    {
-        bool x = false, y = false, z = false;
-
-        x = (x)
-            ? y [||]:
+            [||]? y :
             z;
     }
 }
@@ -99,15 +69,45 @@ class C
     {
         bool x = false, y = false, z = false;
 
-        x = (x)
-            ? y
-            : z;
+        x = (x) ?
+            y :
+            z;
     }
 }
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression)]
+        public async Task Test_ColonToken()
+        {
+            await VerifyDiagnosticAndFixAsync(@"
+class C
+{
+    void M()
+    {
+        bool x = false, y = false, z = false;
+
+        x = (x) ?
+            y
+            [||]: z;
+    }
+}
+", @"
+class C
+{
+    void M()
+    {
+        bool x = false, y = false, z = false;
+
+        x = (x) ?
+            y :
+            z;
+    }
+}
+");
+        }
+
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression)]
         public async Task TestNoDiagnostic()
         {
             await VerifyNoDiagnosticAsync(@"
@@ -117,9 +117,9 @@ class C
     {
         bool x = false, y = false, z = false;
 
-        x = (x)
-            ? y
-            : z;
+        x = (x) ?
+            y :
+            z;
     }
 }
 ");

@@ -19,9 +19,9 @@ namespace Roslynator.Formatting.CSharp
             get
             {
                 return ImmutableArray.Create(
-                    DiagnosticDescriptors.RemoveNewlinesFromAccessorListOfAutoProperty,
-                    DiagnosticDescriptors.AddNewlinesToAccessorListOfFullProperty,
-                    DiagnosticDescriptors.RemoveNewlinesFromAccessor);
+                    DiagnosticDescriptors.RemoveNewLinesFromAccessorListOfAutoProperty,
+                    DiagnosticDescriptors.AddNewLinesToAccessorListOfFullProperty,
+                    DiagnosticDescriptors.RemoveNewLinesFromAccessor);
             }
         }
 
@@ -42,21 +42,21 @@ namespace Roslynator.Formatting.CSharp
             {
                 if (accessorList.IsSingleLine(includeExteriorTrivia: false))
                 {
-                    if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.AddNewlinesToAccessorListOfFullProperty))
+                    if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.AddNewLinesToAccessorListOfFullProperty))
                     {
-                        context.ReportDiagnostic(DiagnosticDescriptors.AddNewlinesToAccessorListOfFullProperty, accessorList);
+                        context.ReportDiagnostic(DiagnosticDescriptors.AddNewLinesToAccessorListOfFullProperty, accessorList);
                     }
                 }
-                else if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveNewlinesFromAccessor))
+                else if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveNewLinesFromAccessor))
                 {
                     foreach (AccessorDeclarationSyntax accessor in accessors)
                     {
-                        if (CanRemoveNewlinesFromAccessor(accessor))
-                            context.ReportDiagnostic(DiagnosticDescriptors.RemoveNewlinesFromAccessor, accessor);
+                        if (CanRemoveNewLinesFromAccessor(accessor))
+                            context.ReportDiagnostic(DiagnosticDescriptors.RemoveNewLinesFromAccessor, accessor);
                     }
                 }
             }
-            else if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveNewlinesFromAccessorListOfAutoProperty))
+            else if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveNewLinesFromAccessorListOfAutoProperty))
             {
                 SyntaxNode parent = accessorList.Parent;
 
@@ -82,7 +82,7 @@ namespace Roslynator.Formatting.CSharp
                                             .DescendantTrivia(span)
                                             .All(f => f.IsWhitespaceOrEndOfLineTrivia()))
                                         {
-                                            context.ReportDiagnostic(DiagnosticDescriptors.RemoveNewlinesFromAccessorListOfAutoProperty, accessorList);
+                                            context.ReportDiagnostic(DiagnosticDescriptors.RemoveNewLinesFromAccessorListOfAutoProperty, accessorList);
                                         }
                                     }
                                 }
@@ -115,7 +115,7 @@ namespace Roslynator.Formatting.CSharp
                                                 .DescendantTrivia(span)
                                                 .All(f => f.IsWhitespaceOrEndOfLineTrivia()))
                                             {
-                                                context.ReportDiagnostic(DiagnosticDescriptors.RemoveNewlinesFromAccessorListOfAutoProperty, accessorList);
+                                                context.ReportDiagnostic(DiagnosticDescriptors.RemoveNewLinesFromAccessorListOfAutoProperty, accessorList);
                                             }
                                         }
                                     }
@@ -128,7 +128,7 @@ namespace Roslynator.Formatting.CSharp
             }
         }
 
-        private static bool CanRemoveNewlinesFromAccessor(AccessorDeclarationSyntax accessor)
+        private static bool CanRemoveNewLinesFromAccessor(AccessorDeclarationSyntax accessor)
         {
             BlockSyntax body = accessor.Body;
 

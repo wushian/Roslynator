@@ -25,8 +25,8 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             get
             {
                 return ImmutableArray.Create(
-                    DiagnosticIdentifiers.RemoveNewlinesFromAccessorListOfAutoProperty,
-                    DiagnosticIdentifiers.AddNewlinesToAccessorListOfFullProperty);
+                    DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty,
+                    DiagnosticIdentifiers.AddNewLinesToAccessorListOfFullProperty);
             }
         }
 
@@ -42,21 +42,21 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             switch (diagnostic.Id)
             {
-                case DiagnosticIdentifiers.AddNewlinesToAccessorListOfFullProperty:
+                case DiagnosticIdentifiers.AddNewLinesToAccessorListOfFullProperty:
                     {
                         CodeAction codeAction = CodeAction.Create(
                             "Add newlines to accessor list",
-                            ct => AddNewlinesToAccessorListAsync(document, accessorList, ct),
+                            ct => AddNewLinesToAccessorListAsync(document, accessorList, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
                         break;
                     }
-                case DiagnosticIdentifiers.RemoveNewlinesFromAccessorListOfAutoProperty:
+                case DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty:
                     {
                         CodeAction codeAction = CodeAction.Create(
                             "Remove newlines from accessor list",
-                            ct => RemoveNewlinesFromAccessorListAsync(document, accessorList, ct),
+                            ct => RemoveNewLinesFromAccessorListAsync(document, accessorList, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
@@ -65,7 +65,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             }
         }
 
-        private static Task<Document> AddNewlinesToAccessorListAsync(
+        private static Task<Document> AddNewLinesToAccessorListAsync(
             Document document,
             AccessorListSyntax accessorList,
             CancellationToken cancellationToken)
@@ -94,7 +94,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             return document.ReplaceNodeAsync(accessorList, newAccessorList, cancellationToken);
         }
 
-        private static Task<Document> RemoveNewlinesFromAccessorListAsync(
+        private static Task<Document> RemoveNewLinesFromAccessorListAsync(
             Document document,
             AccessorListSyntax accessorList,
             CancellationToken cancellationToken)

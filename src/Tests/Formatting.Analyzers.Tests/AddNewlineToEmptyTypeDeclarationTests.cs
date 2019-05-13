@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class AddNewlineToEmptyTypeDeclarationTests : AbstractCSharpFixVerifier
+    public class AddNewLineToEmptyTypeDeclarationTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewlineToEmptyTypeDeclaration;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewLineToEmptyTypeDeclaration;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewlineToEmptyTypeDeclarationAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewLineToEmptyTypeDeclarationAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new MemberDeclarationCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineToEmptyTypeDeclaration)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineToEmptyTypeDeclaration)]
         public async Task Test()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -30,7 +30,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineToEmptyTypeDeclaration)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineToEmptyTypeDeclaration)]
         public async Task Test_WithWhitespace()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -43,7 +43,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewlineToEmptyTypeDeclaration)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineToEmptyTypeDeclaration)]
         public async Task TestNoDiagnostic_EmptyLine()
         {
             await VerifyNoDiagnosticAsync(@"

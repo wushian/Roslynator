@@ -11,17 +11,17 @@ using Roslynator.Formatting.CSharp;
 
 namespace Roslynator.Formatting.CodeFixes
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp, LanguageNames.VisualBasic, Name = nameof(NewlineCodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, LanguageNames.VisualBasic, Name = nameof(NewLineCodeFixProvider))]
     [Shared]
-    public class NewlineCodeFixProvider : BaseCodeFixProvider
+    public class NewLineCodeFixProvider : BaseCodeFixProvider
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
             get
             {
                 return ImmutableArray.Create(
-                    DiagnosticIdentifiers.UseLinefeedAsNewline,
-                    DiagnosticIdentifiers.UseCarriageReturnAndLinefeedAsNewline);
+                    DiagnosticIdentifiers.UseLinefeedAsNewLine,
+                    DiagnosticIdentifiers.UseCarriageReturnAndLinefeedAsNewLine);
             }
         }
 
@@ -33,7 +33,7 @@ namespace Roslynator.Formatting.CodeFixes
 
             switch (diagnostic.Id)
             {
-                case DiagnosticIdentifiers.UseLinefeedAsNewline:
+                case DiagnosticIdentifiers.UseLinefeedAsNewLine:
                     {
                         CodeAction codeAction = CodeAction.Create(
                             "Use linefeed as newline",
@@ -43,7 +43,7 @@ namespace Roslynator.Formatting.CodeFixes
                         context.RegisterCodeFix(codeAction, diagnostic);
                         break;
                     }
-                case DiagnosticIdentifiers.UseCarriageReturnAndLinefeedAsNewline:
+                case DiagnosticIdentifiers.UseCarriageReturnAndLinefeedAsNewLine:
                     {
                         CodeAction codeAction = CodeAction.Create(
                             "Use carriage return + linefeed as newline",

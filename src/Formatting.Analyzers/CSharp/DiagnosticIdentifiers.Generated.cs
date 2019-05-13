@@ -8,24 +8,26 @@ namespace Roslynator.Formatting.CSharp
 {
     public static partial class DiagnosticIdentifiers
     {
-        public const string RemoveNewlinesFromAccessorListOfAutoProperty = "ROS0001";
-        public const string AddNewlinesToAccessorListOfFullProperty = "ROS0002";
-        public const string RemoveNewlinesFromAccessor = "ROS0003";
-        public const string AddNewlineToEmptyBlock = "ROS1023";
-        public const string AddNewlineBeforeEnumMember = "ROS1025";
-        public const string AddNewlineBeforeStatement = "ROS1026";
-        public const string AddNewlineBeforeEmbeddedStatement = "ROS1027";
-        public const string AddNewlineAfterSwitchLabel = "ROS1028";
+        public const string PlaceConditionalOperatorAfterExpression = "R0S0005";
+        public const string RemoveNewLinesFromAccessorListOfAutoProperty = "ROS0001";
+        public const string AddNewLinesToAccessorListOfFullProperty = "ROS0002";
+        public const string RemoveNewLinesFromAccessor = "ROS0003";
+        public const string PlaceBinaryOperatorAfterOperand = "ROS0004";
+        public const string AddNewLineToEmptyBlock = "ROS1023";
+        public const string AddNewLineBeforeEnumMember = "ROS1025";
+        public const string AddNewLineBeforeStatement = "ROS1026";
+        public const string AddNewLineBeforeEmbeddedStatement = "ROS1027";
+        public const string AddNewLineAfterSwitchLabel = "ROS1028";
         public const string PlaceBinaryOperatorBeforeOperand = "ROS1029";
         public const string AddEmptyLineAfterEmbeddedStatement = "ROS1030";
         public const string AddEmptyLineBetweenDeclarations = "ROS1057";
-        public const string AddNewlineToEmptyTypeDeclaration = "ROS1076";
-        public const string UseLinefeedAsNewline = "ROS1086";
-        public const string UseCarriageReturnAndLinefeedAsNewline = "ROS1087";
+        public const string AddNewLineToEmptyTypeDeclaration = "ROS1076";
+        public const string UseLinefeedAsNewLine = "ROS1086";
+        public const string UseCarriageReturnAndLinefeedAsNewLine = "ROS1087";
         public const string UseSpacesInsteadOfTab = "ROS1088";
         public const string AddEmptyLineBeforeClosingBraceOfDoStatement = "ROS1092";
         public const string AddEmptyLineAfterClosingBraceOfBlock = "ROS1153";
         public const string PlaceConditionalOperatorBeforeExpression = "ROS1184";
-        public const string AddNewlinesToBlock = "ROS1185";
+        public const string AddNewLinesToBlock = "ROS1185";
     }
 }
