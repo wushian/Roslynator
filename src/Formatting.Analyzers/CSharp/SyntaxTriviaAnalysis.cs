@@ -103,7 +103,7 @@ namespace Roslynator.Formatting.CSharp
             return true;
         }
 
-        private static bool IsOptionalWhitespaceTriviaFollowedWithEndOfLineTrivia(SyntaxTriviaList triviaList)
+        public static bool IsOptionalWhitespaceTriviaFollowedWithEndOfLineTrivia(SyntaxTriviaList triviaList)
         {
             SyntaxTriviaList.Enumerator en = triviaList.GetEnumerator();
 

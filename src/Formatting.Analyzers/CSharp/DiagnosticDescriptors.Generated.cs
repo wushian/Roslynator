@@ -33,6 +33,30 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineAfterRegionAndBeforeEndRegion}", 
             customTags:         Array.Empty<string>());
 
+        /// <summary>R0S0007</summary>
+        public static readonly DiagnosticDescriptor RemoveNewLineBetweenIfKeywordAndElseKeyword = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.RemoveNewLineBetweenIfKeywordAndElseKeyword, 
+            title:              "Remove newline between 'if' keyword and 'else' keyword.", 
+            messageFormat:      "Remove newline between 'if' keyword and 'else' keyword.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveNewLineBetweenIfKeywordAndElseKeyword}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>R0S0008</summary>
+        public static readonly DiagnosticDescriptor RemoveNewLineBeforeWhileKeywordOfDoStatement = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.RemoveNewLineBeforeWhileKeywordOfDoStatement, 
+            title:              "Remove newline before 'while' keyword of do statement.", 
+            messageFormat:      "Remove newline before 'while' keyword of do statement.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveNewLineBeforeWhileKeywordOfDoStatement}", 
+            customTags:         Array.Empty<string>());
+
         /// <summary>ROS0001</summary>
         public static readonly DiagnosticDescriptor RemoveNewLinesFromAccessorListOfAutoProperty = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty, 

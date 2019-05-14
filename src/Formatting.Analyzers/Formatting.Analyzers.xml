@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Analyzers>
+  <!--<Analyzer Identifier="">
+    <Id>R0S</Id>
+    <Title></Title>
+    <MessageFormat></MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[]]></Before>
+        <After><![CDATA[]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>-->
   <Analyzer Identifier="RemoveNewLinesFromAccessorListOfAutoProperty"> <!--FormatAccessorList-->
     <Id>ROS0001</Id>
     <Title>Remove newlines from accessor list of auto-property.</Title>
@@ -70,22 +86,6 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <!--<Analyzer Identifier="">
-    <Id>R0S</Id>
-    <Title></Title>
-    <MessageFormat></MessageFormat>
-    <Category>Formatting</Category>
-    <DefaultSeverity>Info</DefaultSeverity>
-    <IsEnabledByDefault>false</IsEnabledByDefault>
-    <SupportsFadeOut>false</SupportsFadeOut>
-    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
-    <Samples>
-      <Sample>
-        <Before><![CDATA[]]></Before>
-        <After><![CDATA[]]></After>
-      </Sample>
-    </Samples>
-  </Analyzer>-->
   <Analyzer Identifier="PlaceBinaryOperatorAfterOperand">
     <Id>ROS0004</Id>
     <Title>Place binary operator after operand.</Title>
@@ -159,6 +159,60 @@
     
     #endregion
 }]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="RemoveNewLineBetweenIfKeywordAndElseKeyword">
+    <Id>R0S0007</Id>
+    <Title>Remove newline between 'if' keyword and 'else' keyword.</Title>
+    <MessageFormat>Remove newline between 'if' keyword and 'else' keyword.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[if (x)
+{
+    Foo();
+}
+else // [|Id|]
+if (y)
+{
+    Bar();
+}]]></Before>
+        <After><![CDATA[if (x)
+{
+    Foo();
+}
+else if (y)
+{
+    Bar();
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="RemoveNewLineBeforeWhileKeywordOfDoStatement">
+    <Id>R0S0008</Id>
+    <Title>Remove newline before 'while' keyword of do statement.</Title>
+    <MessageFormat>Remove newline before 'while' keyword of do statement.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[do
+{
+    Foo();
+} // [|Id|]
+while (x);]]></Before>
+        <After><![CDATA[do
+{
+    Foo();
+} while (x);]]></After>
       </Sample>
     </Samples>
   </Analyzer>
