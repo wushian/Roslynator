@@ -123,5 +123,34 @@ namespace Roslynator.Formatting.CSharp
             return kind == SyntaxKind.EndOfLineTrivia
                 && !en.MoveNext();
         }
+
+        public static bool IsOptionalWhitespaceThenOptionalSingleLineCommentThenEndOfLineTrivia(SyntaxTriviaList triviaList)
+        {
+            SyntaxTriviaList.Enumerator en = triviaList.GetEnumerator();
+
+            if (!en.MoveNext())
+                return false;
+
+            SyntaxKind kind = en.Current.Kind();
+
+            if (kind == SyntaxKind.WhitespaceTrivia)
+            {
+                if (!en.MoveNext())
+                    return false;
+
+                kind = en.Current.Kind();
+            }
+
+            if (kind == SyntaxKind.SingleLineCommentTrivia)
+            {
+                if (!en.MoveNext())
+                    return false;
+
+                kind = en.Current.Kind();
+            }
+
+            return kind == SyntaxKind.EndOfLineTrivia
+                && !en.MoveNext();
+        }
     }
 }

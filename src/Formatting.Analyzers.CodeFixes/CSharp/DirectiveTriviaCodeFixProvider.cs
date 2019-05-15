@@ -1,17 +1,8 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Immutable;
-using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeActions;
-using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Roslynator.CSharp;
-using Roslynator.Formatting.CSharp;
 
 namespace Roslynator.Formatting.CodeFixes.CSharp
 {
@@ -54,45 +45,14 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             DirectiveTriviaSyntax directiveTrivia,
             CancellationToken cancellationToken)
         {
-            if (directiveTrivia.IsKind(SyntaxKind.RegionDirectiveTrivia))
+            switch (directiveTrivia.Kind())
             {
-                var regionDirective = (RegionDirectiveTriviaSyntax)directiveTrivia;
-                SyntaxTrivia parentTrivia = regionDirective.ParentTrivia;
-                SyntaxToken token = parentTrivia.Token;
-                SyntaxTriviaList leadingTrivia = token.LeadingTrivia;
-
-                int index = leadingTrivia.IndexOf(parentTrivia);
-
-                SyntaxTriviaList newLeadingTrivia = leadingTrivia.Insert(index + 1, SyntaxTriviaAnalysis.FindEndOfLine(token, CSharpFactory.NewLine()));
-
-                SyntaxToken newToken = token.WithLeadingTrivia(newLeadingTrivia);
-
-                return document.ReplaceTokenAsync(token, newToken, cancellationToken);
-            }
-            else if (directiveTrivia.IsKind(SyntaxKind.EndRegionDirectiveTrivia))
-            {
-                var regionDirective = (EndRegionDirectiveTriviaSyntax)directiveTrivia;
-                SyntaxTrivia parentTrivia = regionDirective.ParentTrivia;
-                SyntaxToken token = parentTrivia.Token;
-                SyntaxTriviaList leadingTrivia = token.LeadingTrivia;
-
-                int index = leadingTrivia.IndexOf(parentTrivia);
-
-                if (index > 0
-                    && leadingTrivia[index - 1].IsWhitespaceTrivia())
-                {
-                    index--;
-                }
-
-                SyntaxTriviaList newLeadingTrivia = leadingTrivia.Insert(index, SyntaxTriviaAnalysis.FindEndOfLine(token, CSharpFactory.NewLine()));
-
-                SyntaxToken newToken = token.WithLeadingTrivia(newLeadingTrivia);
-
-                return document.ReplaceTokenAsync(token, newToken, cancellationToken);
-            }
-            else
-            {
-                throw new InvalidOperationException();
+                case SyntaxKind.RegionDirectiveTrivia:
+                    return CodeFixHelpers.AddEmptyLineAfterDirectiveAsync(document, directiveTrivia, cancellationToken);
+                case SyntaxKind.EndRegionDirectiveTrivia:
+                    return CodeFixHelpers.AddEmptyLineBeforeDirectiveAsync(document, directiveTrivia, cancellationToken);
+                default:
+                    throw new InvalidOperationException();
             }
         }
     }

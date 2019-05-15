@@ -57,6 +57,18 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveNewLineBeforeWhileKeywordOfDoStatement}", 
             customTags:         Array.Empty<string>());
 
+        /// <summary>R0S0009</summary>
+        public static readonly DiagnosticDescriptor AddEmptyLineBeforeAndAfterUsingDirectiveList = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineBeforeAndAfterUsingDirectiveList, 
+            title:              "Add empty line before and after using directive list.", 
+            messageFormat:      ">Add empty line before and after using directive list.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBeforeAndAfterUsingDirectiveList}", 
+            customTags:         Array.Empty<string>());
+
         /// <summary>ROS0001</summary>
         public static readonly DiagnosticDescriptor RemoveNewLinesFromAccessorListOfAutoProperty = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty, 

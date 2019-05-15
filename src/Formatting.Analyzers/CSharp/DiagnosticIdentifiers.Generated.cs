@@ -12,6 +12,7 @@ namespace Roslynator.Formatting.CSharp
         public const string AddEmptyLineAfterRegionAndBeforeEndRegion = "R0S0006";
         public const string RemoveNewLineBetweenIfKeywordAndElseKeyword = "R0S0007";
         public const string RemoveNewLineBeforeWhileKeywordOfDoStatement = "R0S0008";
+        public const string AddEmptyLineBeforeAndAfterUsingDirectiveList = "R0S0009";
         public const string RemoveNewLinesFromAccessorListOfAutoProperty = "ROS0001";
         public const string AddNewLinesToAccessorListOfFullProperty = "ROS0002";
         public const string RemoveNewLinesFromAccessor = "ROS0003";
