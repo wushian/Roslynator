@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 using Roslynator.CSharp;
 using Roslynator.Formatting.CSharp;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -26,7 +27,9 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 return ImmutableArray.Create(
                     DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock,
                     DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression,
-                    DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression);
+                    DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression,
+                    DiagnosticIdentifiers.PlaceExpressionBodyArrowAtEndOfLine,
+                    DiagnosticIdentifiers.PlaceExpressionBodyArrowBeforeExpression);
             }
         }
 
@@ -95,6 +98,44 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                         CodeAction codeAction = CodeAction.Create(
                             title,
                             ct => PlaceConditionalOperatorAfterExpressionAsync(document, conditionalExpression, ct),
+                            GetEquivalenceKey(diagnostic));
+
+                        context.RegisterCodeFix(codeAction, diagnostic);
+                        break;
+                    }
+                case DiagnosticIdentifiers.PlaceExpressionBodyArrowAtEndOfLine:
+                    {
+                        CodeAction codeAction = CodeAction.Create(
+                            "Place '=>' at the end of line",
+                            ct =>
+                            {
+                                var expressionBody = (ArrowExpressionClauseSyntax)token.Parent;
+
+                                var textChange = new TextChange(
+                                    TextSpan.FromBounds(token.GetPreviousToken().Span.End, expressionBody.Expression.SpanStart),
+                                    " =>" + SyntaxTriviaAnalysis.GetEndOfLine(token).ToString() + token.LeadingTrivia.ToString());
+
+                                return document.WithTextChangeAsync(textChange, ct);
+                            },
+                            GetEquivalenceKey(diagnostic));
+
+                        context.RegisterCodeFix(codeAction, diagnostic);
+                        break;
+                    }
+                case DiagnosticIdentifiers.PlaceExpressionBodyArrowBeforeExpression:
+                    {
+                        CodeAction codeAction = CodeAction.Create(
+                            "Place '=>' before expression",
+                            ct =>
+                            {
+                                var expressionBody = (ArrowExpressionClauseSyntax)token.Parent;
+
+                                var textChange = new TextChange(
+                                    TextSpan.FromBounds(token.GetPreviousToken().Span.End, expressionBody.Expression.SpanStart),
+                                    SyntaxTriviaAnalysis.GetEndOfLine(token).ToString() + expressionBody.Expression.GetLeadingTrivia().ToString() + "=> ");
+
+                                return document.WithTextChangeAsync(textChange, ct);
+                            },
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);

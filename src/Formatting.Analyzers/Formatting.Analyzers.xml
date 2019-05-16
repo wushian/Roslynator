@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Analyzers>
   <!--<Analyzer Identifier="">
-    <Id>R0S</Id>
+    <Id>ROS</Id>
     <Title></Title>
     <MessageFormat></MessageFormat>
     <Category>Formatting</Category>
@@ -111,7 +111,7 @@
     </Samples>
   </Analyzer>
   <Analyzer Identifier="PlaceConditionalOperatorAfterExpression">
-    <Id>R0S0005</Id>
+    <Id>ROS0005</Id>
     <Title>Place conditional operator after expression.</Title>
     <MessageFormat>Place conditional operator after expression.</MessageFormat>
     <Category>Formatting</Category>
@@ -131,7 +131,7 @@
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddEmptyLineAfterRegionAndBeforeEndRegion">
-    <Id>R0S0006</Id>
+    <Id>ROS0006</Id>
     <Title>Add empty line after #region and before #endregion.</Title>
     <MessageFormat>Add empty line {0}.</MessageFormat>
     <Category>Formatting</Category>
@@ -163,7 +163,7 @@
     </Samples>
   </Analyzer>
   <Analyzer Identifier="RemoveNewLineBetweenIfKeywordAndElseKeyword">
-    <Id>R0S0007</Id>
+    <Id>ROS0007</Id>
     <Title>Remove newline between 'if' keyword and 'else' keyword.</Title>
     <MessageFormat>Remove newline between 'if' keyword and 'else' keyword.</MessageFormat>
     <Category>Formatting</Category>
@@ -194,7 +194,7 @@ else if (y)
     </Samples>
   </Analyzer>
   <Analyzer Identifier="RemoveNewLineBeforeWhileKeywordOfDoStatement">
-    <Id>R0S0008</Id>
+    <Id>ROS0008</Id>
     <Title>Remove newline before 'while' keyword of do statement.</Title>
     <MessageFormat>Remove newline before 'while' keyword of do statement.</MessageFormat>
     <Category>Formatting</Category>
@@ -217,7 +217,7 @@ while (x);]]></Before>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddEmptyLineBeforeAndAfterUsingDirectiveList">
-    <Id>R0S0009</Id>
+    <Id>ROS0009</Id>
     <Title>Add empty line before and after using directive list.</Title>
     <MessageFormat>>Add empty line before and after using directive list.</MessageFormat>
     <Category>Formatting</Category>
@@ -245,7 +245,7 @@ namespace N
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddEmptyLineBetweenSwitchSections">
-    <Id>R0S0010</Id>
+    <Id>ROS0010</Id>
     <Title>Add empty line between switch sections.</Title>
     <MessageFormat>Add empty line between switch sections.</MessageFormat>
     <Category>Formatting</Category>
@@ -257,6 +257,42 @@ namespace N
       <Sample>
         <Before><![CDATA[]]></Before>
         <After><![CDATA[]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="PlaceExpressionBodyArrowAtEndOfLine">
+    <Id>ROS0011</Id>
+    <Title>Place expression-body arrow at the end of line.</Title>
+    <MessageFormat>Place expression-body arrow at the end of line.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[object Foo()
+    => null; // [|Id|]]]></Before>
+        <After><![CDATA[object Foo() =>
+    null;]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="PlaceExpressionBodyArrowBeforeExpression">
+    <Id>ROS0012</Id>
+    <Title>Place expression-body arrow after expression.</Title>
+    <MessageFormat>Place expression-body arrow after expression.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[object Foo() => // [|Id|]
+    null;]]></Before>
+        <After><![CDATA[object Foo()
+    => null;]]></After>
       </Sample>
     </Samples>
   </Analyzer>

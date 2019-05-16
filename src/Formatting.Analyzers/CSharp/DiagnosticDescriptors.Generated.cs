@@ -9,78 +9,6 @@ namespace Roslynator.Formatting.CSharp
 {
     public static partial class DiagnosticDescriptors
     {
-        /// <summary>R0S0005</summary>
-        public static readonly DiagnosticDescriptor PlaceConditionalOperatorAfterExpression = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression, 
-            title:              "Place conditional operator after expression.", 
-            messageFormat:      "Place conditional operator after expression.", 
-            category:           DiagnosticCategories.Formatting, 
-            defaultSeverity:    DiagnosticSeverity.Info, 
-            isEnabledByDefault: false, 
-            description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression}", 
-            customTags:         Array.Empty<string>());
-
-        /// <summary>R0S0006</summary>
-        public static readonly DiagnosticDescriptor AddEmptyLineAfterRegionAndBeforeEndRegion = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddEmptyLineAfterRegionAndBeforeEndRegion, 
-            title:              "Add empty line after #region and before #endregion.", 
-            messageFormat:      "Add empty line {0}.", 
-            category:           DiagnosticCategories.Formatting, 
-            defaultSeverity:    DiagnosticSeverity.Info, 
-            isEnabledByDefault: false, 
-            description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineAfterRegionAndBeforeEndRegion}", 
-            customTags:         Array.Empty<string>());
-
-        /// <summary>R0S0007</summary>
-        public static readonly DiagnosticDescriptor RemoveNewLineBetweenIfKeywordAndElseKeyword = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.RemoveNewLineBetweenIfKeywordAndElseKeyword, 
-            title:              "Remove newline between 'if' keyword and 'else' keyword.", 
-            messageFormat:      "Remove newline between 'if' keyword and 'else' keyword.", 
-            category:           DiagnosticCategories.Formatting, 
-            defaultSeverity:    DiagnosticSeverity.Info, 
-            isEnabledByDefault: false, 
-            description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveNewLineBetweenIfKeywordAndElseKeyword}", 
-            customTags:         Array.Empty<string>());
-
-        /// <summary>R0S0008</summary>
-        public static readonly DiagnosticDescriptor RemoveNewLineBeforeWhileKeywordOfDoStatement = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.RemoveNewLineBeforeWhileKeywordOfDoStatement, 
-            title:              "Remove newline before 'while' keyword of do statement.", 
-            messageFormat:      "Remove newline before 'while' keyword of do statement.", 
-            category:           DiagnosticCategories.Formatting, 
-            defaultSeverity:    DiagnosticSeverity.Info, 
-            isEnabledByDefault: false, 
-            description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveNewLineBeforeWhileKeywordOfDoStatement}", 
-            customTags:         Array.Empty<string>());
-
-        /// <summary>R0S0009</summary>
-        public static readonly DiagnosticDescriptor AddEmptyLineBeforeAndAfterUsingDirectiveList = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddEmptyLineBeforeAndAfterUsingDirectiveList, 
-            title:              "Add empty line before and after using directive list.", 
-            messageFormat:      ">Add empty line before and after using directive list.", 
-            category:           DiagnosticCategories.Formatting, 
-            defaultSeverity:    DiagnosticSeverity.Info, 
-            isEnabledByDefault: false, 
-            description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBeforeAndAfterUsingDirectiveList}", 
-            customTags:         Array.Empty<string>());
-
-        /// <summary>R0S0010</summary>
-        public static readonly DiagnosticDescriptor AddEmptyLineBetweenSwitchSections = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddEmptyLineBetweenSwitchSections, 
-            title:              "Add empty line between switch sections.", 
-            messageFormat:      "Add empty line between switch sections.", 
-            category:           DiagnosticCategories.Formatting, 
-            defaultSeverity:    DiagnosticSeverity.Info, 
-            isEnabledByDefault: false, 
-            description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBetweenSwitchSections}", 
-            customTags:         Array.Empty<string>());
-
         /// <summary>ROS0001</summary>
         public static readonly DiagnosticDescriptor RemoveNewLinesFromAccessorListOfAutoProperty = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty, 
@@ -127,6 +55,102 @@ namespace Roslynator.Formatting.CSharp
             isEnabledByDefault: false, 
             description:        null, 
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.PlaceBinaryOperatorAfterOperand}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>ROS0005</summary>
+        public static readonly DiagnosticDescriptor PlaceConditionalOperatorAfterExpression = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression, 
+            title:              "Place conditional operator after expression.", 
+            messageFormat:      "Place conditional operator after expression.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>ROS0006</summary>
+        public static readonly DiagnosticDescriptor AddEmptyLineAfterRegionAndBeforeEndRegion = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineAfterRegionAndBeforeEndRegion, 
+            title:              "Add empty line after #region and before #endregion.", 
+            messageFormat:      "Add empty line {0}.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineAfterRegionAndBeforeEndRegion}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>ROS0007</summary>
+        public static readonly DiagnosticDescriptor RemoveNewLineBetweenIfKeywordAndElseKeyword = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.RemoveNewLineBetweenIfKeywordAndElseKeyword, 
+            title:              "Remove newline between 'if' keyword and 'else' keyword.", 
+            messageFormat:      "Remove newline between 'if' keyword and 'else' keyword.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveNewLineBetweenIfKeywordAndElseKeyword}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>ROS0008</summary>
+        public static readonly DiagnosticDescriptor RemoveNewLineBeforeWhileKeywordOfDoStatement = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.RemoveNewLineBeforeWhileKeywordOfDoStatement, 
+            title:              "Remove newline before 'while' keyword of do statement.", 
+            messageFormat:      "Remove newline before 'while' keyword of do statement.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveNewLineBeforeWhileKeywordOfDoStatement}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>ROS0009</summary>
+        public static readonly DiagnosticDescriptor AddEmptyLineBeforeAndAfterUsingDirectiveList = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineBeforeAndAfterUsingDirectiveList, 
+            title:              "Add empty line before and after using directive list.", 
+            messageFormat:      ">Add empty line before and after using directive list.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBeforeAndAfterUsingDirectiveList}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>ROS0010</summary>
+        public static readonly DiagnosticDescriptor AddEmptyLineBetweenSwitchSections = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineBetweenSwitchSections, 
+            title:              "Add empty line between switch sections.", 
+            messageFormat:      "Add empty line between switch sections.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBetweenSwitchSections}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>ROS0011</summary>
+        public static readonly DiagnosticDescriptor PlaceExpressionBodyArrowAtEndOfLine = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.PlaceExpressionBodyArrowAtEndOfLine, 
+            title:              "Place expression-body arrow at the end of line.", 
+            messageFormat:      "Place expression-body arrow at the end of line.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.PlaceExpressionBodyArrowAtEndOfLine}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>ROS0012</summary>
+        public static readonly DiagnosticDescriptor PlaceExpressionBodyArrowBeforeExpression = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.PlaceExpressionBodyArrowBeforeExpression, 
+            title:              "Place expression-body arrow after expression.", 
+            messageFormat:      "Place expression-body arrow after expression.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.PlaceExpressionBodyArrowBeforeExpression}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>ROS1023</summary>

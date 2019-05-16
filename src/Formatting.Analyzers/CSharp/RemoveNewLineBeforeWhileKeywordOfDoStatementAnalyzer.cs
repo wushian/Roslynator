@@ -34,7 +34,7 @@ namespace Roslynator.Formatting.CSharp
             if (!statement.IsKind(SyntaxKind.Block))
                 return;
 
-            if (!SyntaxTriviaAnalysis.IsOptionalWhitespaceTriviaFollowedWithEndOfLineTrivia(statement.GetTrailingTrivia()))
+            if (!SyntaxTriviaAnalysis.IsOptionalWhitespaceThenEndOfLineTrivia(statement.GetTrailingTrivia()))
                 return;
 
             if (!doStatement.WhileKeyword.LeadingTrivia.IsEmptyOrWhitespace())

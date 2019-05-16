@@ -86,7 +86,7 @@ namespace Roslynator.Formatting.CSharp
             SyntaxToken token,
             ExpressionSyntax right)
         {
-            if (!IsOptionalWhitespaceTriviaFollowedWithEndOfLineTrivia(left.GetTrailingTrivia()))
+            if (!IsOptionalWhitespaceThenEndOfLineTrivia(left.GetTrailingTrivia()))
                 return false;
 
             if (!token.LeadingTrivia.IsEmptyOrWhitespace())
@@ -112,7 +112,7 @@ namespace Roslynator.Formatting.CSharp
             if (token.LeadingTrivia.Any())
                 return false;
 
-            if (!IsOptionalWhitespaceTriviaFollowedWithEndOfLineTrivia(token.TrailingTrivia))
+            if (!IsOptionalWhitespaceThenEndOfLineTrivia(token.TrailingTrivia))
                 return false;
 
             if (!right.GetLeadingTrivia().IsEmptyOrWhitespace())
@@ -121,7 +121,7 @@ namespace Roslynator.Formatting.CSharp
             return true;
         }
 
-        public static bool IsOptionalWhitespaceTriviaFollowedWithEndOfLineTrivia(SyntaxTriviaList triviaList)
+        public static bool IsOptionalWhitespaceThenEndOfLineTrivia(SyntaxTriviaList triviaList)
         {
             SyntaxTriviaList.Enumerator en = triviaList.GetEnumerator();
 

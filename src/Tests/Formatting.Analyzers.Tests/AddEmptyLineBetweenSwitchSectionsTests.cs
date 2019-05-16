@@ -5,7 +5,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Roslynator.Formatting.CodeFixes.CSharp;
-using Roslynator.Tests;
 using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
