@@ -9,14 +9,32 @@ namespace Roslynator.Formatting.CSharp
 {
     internal static class SyntaxTriviaAnalysis
     {
-        public static SyntaxTrivia FindEndOfLine(SyntaxNode node, SyntaxTrivia? defaultEndOfLine = null)
+        public static bool IsEmptyOrSingleWhitespaceTrivia(SyntaxTriviaList triviaList)
         {
-            SyntaxToken lastToken = node.GetFirstToken();
+            int count = triviaList.Count;
 
-            return FindEndOfLine(lastToken, defaultEndOfLine);
+            return count == 0
+                || (count == 1 && triviaList[0].IsWhitespaceTrivia());
         }
 
-        public static SyntaxTrivia FindEndOfLine(SyntaxToken token, SyntaxTrivia? defaultEndOfLine = null)
+        public static SyntaxTrivia GetEndOfLine(SyntaxNode node)
+        {
+            return GetEndOfLine(node.GetFirstToken());
+        }
+
+        public static SyntaxTrivia GetEndOfLine(SyntaxToken token)
+        {
+            SyntaxTrivia trivia = FindEndOfLine(token);
+
+            return (trivia.IsEndOfLineTrivia()) ? trivia : CSharpFactory.NewLine();
+        }
+
+        public static SyntaxTrivia FindEndOfLine(SyntaxNode node)
+        {
+            return FindEndOfLine(node.GetFirstToken());
+        }
+
+        public static SyntaxTrivia FindEndOfLine(SyntaxToken token)
         {
             SyntaxToken t = token;
 
@@ -60,7 +78,7 @@ namespace Roslynator.Formatting.CSharp
                 }
             }
 
-            return defaultEndOfLine ?? default;
+            return default;
         }
 
         public static bool IsTokenPlacedBeforeExpression(

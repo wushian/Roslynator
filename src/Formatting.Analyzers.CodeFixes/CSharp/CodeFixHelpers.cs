@@ -3,14 +3,44 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Roslynator.CSharp;
 using Roslynator.Formatting.CSharp;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Roslynator.Formatting.CodeFixes.CSharp
 {
     internal static class CodeFixHelpers
     {
+        public static (ExpressionSyntax left, SyntaxToken token, ExpressionSyntax right) PlaceTokenBeforeExpression(
+            ExpressionSyntax left,
+            SyntaxToken token,
+            ExpressionSyntax right)
+        {
+            return (
+                left.WithTrailingTrivia(token.TrailingTrivia),
+                Token(
+                    right.GetLeadingTrivia(),
+                    token.Kind(),
+                    TriviaList(Space)),
+                right.WithoutLeadingTrivia());
+        }
+
+        public static (ExpressionSyntax left, SyntaxToken token, ExpressionSyntax right) PlaceTokenAfterExpression(
+            ExpressionSyntax left,
+            SyntaxToken token,
+            ExpressionSyntax right)
+        {
+            return (
+                left.WithTrailingTrivia(Space),
+                Token(
+                    SyntaxTriviaList.Empty,
+                    token.Kind(),
+                    left.GetTrailingTrivia()),
+                right.WithLeadingTrivia(token.LeadingTrivia));
+        }
+
         public static Task<Document> AddEmptyLineBeforeDirectiveAsync(
             Document document,
             DirectiveTriviaSyntax directiveTrivia,
@@ -28,7 +58,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 index--;
             }
 
-            SyntaxTriviaList newLeadingTrivia = leadingTrivia.Insert(index, SyntaxTriviaAnalysis.FindEndOfLine(token, CSharpFactory.NewLine()));
+            SyntaxTriviaList newLeadingTrivia = leadingTrivia.Insert(index, SyntaxTriviaAnalysis.GetEndOfLine(token));
 
             SyntaxToken newToken = token.WithLeadingTrivia(newLeadingTrivia);
 
@@ -46,7 +76,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             int index = leadingTrivia.IndexOf(parentTrivia);
 
-            SyntaxTriviaList newLeadingTrivia = leadingTrivia.Insert(index + 1, SyntaxTriviaAnalysis.FindEndOfLine(token, CSharpFactory.NewLine()));
+            SyntaxTriviaList newLeadingTrivia = leadingTrivia.Insert(index + 1, SyntaxTriviaAnalysis.GetEndOfLine(token));
 
             SyntaxToken newToken = token.WithLeadingTrivia(newLeadingTrivia);
 

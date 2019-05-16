@@ -108,7 +108,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             SyntaxToken token,
             CancellationToken cancellationToken)
         {
-            SyntaxToken newToken = token.AppendToTrailingTrivia(SyntaxTriviaAnalysis.FindEndOfLine(token));
+            SyntaxToken newToken = token.AppendEndOfLineToTrailingTrivia();
 
             return document.ReplaceTokenAsync(token, newToken, cancellationToken);
         }
@@ -132,7 +132,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             if (SyntaxTriviaAnalysis.IsTokenPlacedAfterExpression(condition, questionToken, whenTrue))
             {
-                var (left, token, right) = SyntaxTriviaManipulation.PlaceTokenBeforeExpression(condition, questionToken, whenTrue);
+                var (left, token, right) = CodeFixHelpers.PlaceTokenBeforeExpression(condition, questionToken, whenTrue);
 
                 newCondition = left;
                 newQuestionToken = token;
@@ -141,7 +141,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             if (SyntaxTriviaAnalysis.IsTokenPlacedAfterExpression(whenTrue, colonToken, whenFalse))
             {
-                var (left, token, right) = SyntaxTriviaManipulation.PlaceTokenBeforeExpression(newWhenTrue, colonToken, whenFalse);
+                var (left, token, right) = CodeFixHelpers.PlaceTokenBeforeExpression(newWhenTrue, colonToken, whenFalse);
 
                 newWhenTrue = left;
                 newColonToken = token;
@@ -177,7 +177,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             if (SyntaxTriviaAnalysis.IsTokenPlacedBeforeExpression(condition, questionToken, whenTrue))
             {
-                var (left, token, right) = SyntaxTriviaManipulation.PlaceTokenAfterExpression(condition, questionToken, whenTrue);
+                var (left, token, right) = CodeFixHelpers.PlaceTokenAfterExpression(condition, questionToken, whenTrue);
 
                 newCondition = left;
                 newQuestionToken = token;
@@ -186,7 +186,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             if (SyntaxTriviaAnalysis.IsTokenPlacedBeforeExpression(whenTrue, colonToken, whenFalse))
             {
-                var (left, token, right) = SyntaxTriviaManipulation.PlaceTokenAfterExpression(newWhenTrue, colonToken, whenFalse);
+                var (left, token, right) = CodeFixHelpers.PlaceTokenAfterExpression(newWhenTrue, colonToken, whenFalse);
 
                 newWhenTrue = left;
                 newColonToken = token;

@@ -69,6 +69,18 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBeforeAndAfterUsingDirectiveList}", 
             customTags:         Array.Empty<string>());
 
+        /// <summary>R0S0010</summary>
+        public static readonly DiagnosticDescriptor AddEmptyLineBetweenSwitchSections = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineBetweenSwitchSections, 
+            title:              "Add empty line between switch sections.", 
+            messageFormat:      "Add empty line between switch sections.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBetweenSwitchSections}", 
+            customTags:         Array.Empty<string>());
+
         /// <summary>ROS0001</summary>
         public static readonly DiagnosticDescriptor RemoveNewLinesFromAccessorListOfAutoProperty = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty, 

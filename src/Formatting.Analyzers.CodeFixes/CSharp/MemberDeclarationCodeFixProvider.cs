@@ -59,7 +59,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             MemberDeclarationSyntax GetNewDeclaration()
             {
-                SyntaxTrivia endOfLine = SyntaxTriviaAnalysis.FindEndOfLine(declaration, CSharpFactory.NewLine());
+                SyntaxTrivia endOfLine = SyntaxTriviaAnalysis.GetEndOfLine(declaration);
 
                 switch (declaration.Kind())
                 {

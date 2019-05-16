@@ -8,7 +8,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Roslynator.CSharp;
 using Roslynator.Formatting.CSharp;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
@@ -68,7 +67,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             BinaryExpressionSyntax binaryExpression,
             CancellationToken cancellationToken)
         {
-            var (left, token, right) = SyntaxTriviaManipulation.PlaceTokenBeforeExpression(binaryExpression.Left, binaryExpression.OperatorToken, binaryExpression.Right);
+            var (left, token, right) = CodeFixHelpers.PlaceTokenBeforeExpression(binaryExpression.Left, binaryExpression.OperatorToken, binaryExpression.Right);
 
             BinaryExpressionSyntax newBinaryExpression = BinaryExpression(
                 binaryExpression.Kind(),
@@ -84,7 +83,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             BinaryExpressionSyntax binaryExpression,
             CancellationToken cancellationToken)
         {
-            var (left, token, right) = SyntaxTriviaManipulation.PlaceTokenAfterExpression(binaryExpression.Left, binaryExpression.OperatorToken, binaryExpression.Right);
+            var (left, token, right) = CodeFixHelpers.PlaceTokenAfterExpression(binaryExpression.Left, binaryExpression.OperatorToken, binaryExpression.Right);
 
             BinaryExpressionSyntax newBinaryExpression = BinaryExpression(
                 binaryExpression.Kind(),

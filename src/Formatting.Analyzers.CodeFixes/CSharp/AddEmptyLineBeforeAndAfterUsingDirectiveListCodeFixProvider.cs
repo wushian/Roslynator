@@ -103,7 +103,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 index--;
             }
 
-            SyntaxTriviaList newLeadingTrivia = leadingTrivia.Insert(index, SyntaxTriviaAnalysis.FindEndOfLine(usingDirective, CSharpFactory.NewLine()));
+            SyntaxTriviaList newLeadingTrivia = leadingTrivia.Insert(index, SyntaxTriviaAnalysis.GetEndOfLine(usingDirective));
 
             UsingDirectiveSyntax newUsingDirective = usingDirective.WithLeadingTrivia(newLeadingTrivia);
 
