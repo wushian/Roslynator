@@ -153,6 +153,18 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.PlaceExpressionBodyArrowBeforeExpression}", 
             customTags:         Array.Empty<string>());
 
+        /// <summary>ROS0013</summary>
+        public static readonly DiagnosticDescriptor AddNewLineBeforeTypeParameterConstraint = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineBeforeTypeParameterConstraint, 
+            title:              "Add newline before type parameter constraint.", 
+            messageFormat:      "Add newline before type parameter constraint.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeTypeParameterConstraint}", 
+            customTags:         Array.Empty<string>());
+
         /// <summary>ROS1023</summary>
         public static readonly DiagnosticDescriptor AddNewLineToEmptyBlock = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.AddNewLineToEmptyBlock, 

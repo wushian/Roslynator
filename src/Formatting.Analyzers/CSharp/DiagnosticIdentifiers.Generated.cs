@@ -20,6 +20,7 @@ namespace Roslynator.Formatting.CSharp
         public const string AddEmptyLineBetweenSwitchSections = "ROS0010";
         public const string PlaceExpressionBodyArrowAtEndOfLine = "ROS0011";
         public const string PlaceExpressionBodyArrowBeforeExpression = "ROS0012";
+        public const string AddNewLineBeforeTypeParameterConstraint = "ROS0013";
         public const string AddNewLineToEmptyBlock = "ROS1023";
         public const string AddNewLineBeforeEnumMember = "ROS1025";
         public const string AddNewLineBeforeStatement = "ROS1026";
