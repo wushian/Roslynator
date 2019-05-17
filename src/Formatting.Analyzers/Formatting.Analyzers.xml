@@ -228,8 +228,8 @@ while (x);]]></Before>
     <Samples>
       <Sample>
         <Before><![CDATA[// Copyright ...
-[||]using System;
-using System.Linq;[||]
+using System; // [|Id|]
+using System.Linq; // [|Id|]
 namespace N
 {
 }]]></Before>
@@ -315,6 +315,49 @@ namespace N
     where T2 : struct
 {
 }]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="AddNewLineBeforeConstructorInitializer">
+    <Id>ROS0014</Id>
+    <Title>Add newline before constructor initializer.</Title>
+    <MessageFormat>Add newline before constructor initializer.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[Foo(string id, string name) : base(id) // [|Id|]
+{
+    Name = name;
+}]]></Before>
+        <After><![CDATA[Foo(string id, string name)
+    : base(id)
+{
+    Name = name;
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="AddEmptyLineBetweenSinglelineDeclarations">
+    <Id>ROS0015</Id>
+    <Title>Add empty line between single-line declarations.</Title>
+    <MessageFormat>Add empty line between single-line declarations.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[object P1 { get; } // [|Id|]
+object P2 { get; }]]></Before>
+        <After>
+          <![CDATA[object P1 { get; }
+
+object P2 { get; }]]></After>
       </Sample>
     </Samples>
   </Analyzer>

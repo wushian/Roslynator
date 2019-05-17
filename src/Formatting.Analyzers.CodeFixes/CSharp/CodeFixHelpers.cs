@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 using Roslynator.CSharp;
 using Roslynator.Formatting.CSharp;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -13,6 +14,35 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 {
     internal static class CodeFixHelpers
     {
+        public static Task<Document> PrependWithNewLineAndIncreaseIndentationAsync(
+            Document document,
+            SyntaxToken token,
+            CancellationToken cancellationToken = default)
+        {
+            return AddNewLineBeforeAndIncreaseIndentationAsync(
+                document,
+                token,
+                token.Parent.GetIndentation(cancellationToken),
+                cancellationToken);
+        }
+
+        public static Task<Document> AddNewLineBeforeAndIncreaseIndentationAsync(
+            Document document,
+            SyntaxToken token,
+            SyntaxTrivia indentation,
+            CancellationToken cancellationToken = default)
+        {
+            SyntaxTrivia endOfLine = SyntaxTriviaAnalysis.GetEndOfLine(token);
+
+            SyntaxTrivia singleIndentation = token.SyntaxTree.GetFirstIndentation(cancellationToken);
+
+            var textChange = new TextChange(
+                TextSpan.FromBounds(token.GetPreviousToken().Span.End, token.SpanStart),
+                endOfLine.ToString() + indentation.ToString() + singleIndentation.ToString());
+
+            return document.WithTextChangeAsync(textChange, cancellationToken);
+        }
+
         public static (ExpressionSyntax left, SyntaxToken token, ExpressionSyntax right) PlaceTokenBeforeExpression(
             ExpressionSyntax left,
             SyntaxToken token,

@@ -165,6 +165,30 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeTypeParameterConstraint}", 
             customTags:         Array.Empty<string>());
 
+        /// <summary>ROS0014</summary>
+        public static readonly DiagnosticDescriptor AddNewLineBeforeConstructorInitializer = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineBeforeConstructorInitializer, 
+            title:              "Add newline before constructor initializer.", 
+            messageFormat:      "Add newline before constructor initializer.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeConstructorInitializer}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>ROS0015</summary>
+        public static readonly DiagnosticDescriptor AddEmptyLineBetweenSinglelineDeclarations = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarations, 
+            title:              "Add empty line between single-line declarations.", 
+            messageFormat:      "Add empty line between single-line declarations.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarations}", 
+            customTags:         Array.Empty<string>());
+
         /// <summary>ROS1023</summary>
         public static readonly DiagnosticDescriptor AddNewLineToEmptyBlock = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.AddNewLineToEmptyBlock, 

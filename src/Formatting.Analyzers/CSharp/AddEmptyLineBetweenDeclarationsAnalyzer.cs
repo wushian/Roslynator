@@ -60,10 +60,7 @@ namespace Roslynator.Formatting.CSharp
 
             int count = members.Count;
 
-            if (count <= 1)
-                return;
-
-            SyntaxTree tree = context.Node.SyntaxTree;
+            SyntaxTree tree = enumDeclaration.SyntaxTree;
 
             bool? isPrevSingleLine = null;
 
@@ -71,11 +68,9 @@ namespace Roslynator.Formatting.CSharp
             {
                 SyntaxToken commaToken = members.GetSeparator(i - 1);
 
-                SyntaxTriviaList trailingTrivia = commaToken.TrailingTrivia;
+                SyntaxTrivia endOfLineTrivia = commaToken.TrailingTrivia.LastOrDefault();
 
-                SyntaxTrivia lastTrailingTrivia = trailingTrivia.LastOrDefault();
-
-                if (!lastTrailingTrivia.IsKind(SyntaxKind.EndOfLineTrivia))
+                if (!endOfLineTrivia.IsEndOfLineTrivia())
                 {
                     isPrevSingleLine = false;
                     continue;
@@ -85,9 +80,13 @@ namespace Roslynator.Formatting.CSharp
 
                 SyntaxTrivia documentationCommentTrivia = member.GetDocumentationCommentTrivia();
 
-                bool hasDocumentationComment = !documentationCommentTrivia.IsKind(SyntaxKind.None);
+                bool hasDocumentationComment = SyntaxFacts.IsDocumentationCommentTrivia(documentationCommentTrivia.Kind());
 
-                if (!hasDocumentationComment)
+                if (hasDocumentationComment)
+                {
+                    isPrevSingleLine = null;
+                }
+                else
                 {
                     bool isSingleLine = tree.IsSingleLineSpan(member.Span, context.CancellationToken);
 
@@ -105,15 +104,11 @@ namespace Roslynator.Formatting.CSharp
 
                     isPrevSingleLine = isSingleLine;
                 }
-                else
-                {
-                    isPrevSingleLine = null;
-                }
 
                 if (member
                     .GetLeadingTrivia()
                     .FirstOrDefault()
-                    .IsKind(SyntaxKind.EndOfLineTrivia))
+                    .IsEndOfLineTrivia())
                 {
                     continue;
                 }
@@ -122,7 +117,7 @@ namespace Roslynator.Formatting.CSharp
 
                 if (tree.GetLineCount(TextSpan.FromBounds(commaToken.Span.End, end), context.CancellationToken) == 2)
                 {
-                    ReportDiagnostic(context, lastTrailingTrivia);
+                    ReportDiagnostic(context, endOfLineTrivia);
                 }
             }
         }
@@ -130,9 +125,6 @@ namespace Roslynator.Formatting.CSharp
         private static void Analyze(SyntaxNodeAnalysisContext context, SyntaxList<MemberDeclarationSyntax> members)
         {
             int count = members.Count;
-
-            if (count <= 1)
-                return;
 
             SyntaxTree tree = context.Node.SyntaxTree;
 
@@ -142,11 +134,9 @@ namespace Roslynator.Formatting.CSharp
             {
                 MemberDeclarationSyntax prevMember = members[i - 1];
 
-                SyntaxTriviaList trailingTrivia = prevMember.GetTrailingTrivia();
+                SyntaxTrivia endOfLineTrivia = prevMember.GetTrailingTrivia().LastOrDefault();
 
-                SyntaxTrivia lastTrailingTrivia = trailingTrivia.LastOrDefault();
-
-                if (!lastTrailingTrivia.IsKind(SyntaxKind.EndOfLineTrivia))
+                if (!endOfLineTrivia.IsEndOfLineTrivia())
                 {
                     isPrevSingleLine = false;
                     continue;
@@ -156,9 +146,13 @@ namespace Roslynator.Formatting.CSharp
 
                 SyntaxTrivia documentationCommentTrivia = member.GetDocumentationCommentTrivia();
 
-                bool hasDocumentationComment = !documentationCommentTrivia.IsKind(SyntaxKind.None);
+                bool hasDocumentationComment = SyntaxFacts.IsDocumentationCommentTrivia(documentationCommentTrivia.Kind());
 
-                if (!hasDocumentationComment)
+                if (hasDocumentationComment)
+                {
+                    isPrevSingleLine = null;
+                }
+                else
                 {
                     bool isSingleLine = tree.IsSingleLineSpan(member.Span, context.CancellationToken);
 
@@ -176,15 +170,11 @@ namespace Roslynator.Formatting.CSharp
 
                     isPrevSingleLine = isSingleLine;
                 }
-                else
-                {
-                    isPrevSingleLine = null;
-                }
 
                 if (member
                     .GetLeadingTrivia()
                     .FirstOrDefault()
-                    .IsKind(SyntaxKind.EndOfLineTrivia))
+                    .IsEndOfLineTrivia())
                 {
                     continue;
                 }
@@ -193,7 +183,7 @@ namespace Roslynator.Formatting.CSharp
 
                 if (tree.GetLineCount(TextSpan.FromBounds(prevMember.Span.End, end), context.CancellationToken) == 2)
                 {
-                    ReportDiagnostic(context, lastTrailingTrivia);
+                    ReportDiagnostic(context, endOfLineTrivia);
                 }
             }
         }

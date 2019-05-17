@@ -53,5 +53,5 @@ namespace Roslynator.Formatting.CSharp.Tests
 + "    }\n"
 + "}\n");
         }
-}
+    }
 }

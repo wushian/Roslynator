@@ -2,13 +2,11 @@
 
 using System.Collections.Immutable;
 using System.Composition;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
 using Roslynator.CSharp;
 using Roslynator.Formatting.CSharp;
 
@@ -35,30 +33,17 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             CodeAction codeAction = CodeAction.Create(
                 "Add newline",
-                ct => AddNewLineBeforeTypeParameterConstraintAsync(document, constraintClause, ct),
+                ct =>
+                {
+                    return CodeFixHelpers.AddNewLineBeforeAndIncreaseIndentationAsync(
+                        document,
+                        constraintClause.WhereKeyword,
+                        constraintClause.Parent.GetIndentation(ct),
+                        ct);
+                },
                 GetEquivalenceKey(diagnostic));
 
             context.RegisterCodeFix(codeAction, diagnostic);
-        }
-
-        private static Task<Document> AddNewLineBeforeTypeParameterConstraintAsync(
-            Document document,
-            TypeParameterConstraintClauseSyntax constraintClause,
-            CancellationToken cancellationToken)
-        {
-            SyntaxTrivia endOfLine = SyntaxTriviaAnalysis.GetEndOfLine(constraintClause);
-
-            SyntaxTrivia indentation = constraintClause.Parent.GetIndentation(cancellationToken);
-
-            SyntaxTrivia singleIndentation = constraintClause.SyntaxTree.GetFirstIndentation(cancellationToken);
-
-            SyntaxToken previousToken = constraintClause.WhereKeyword.GetPreviousToken();
-
-            var textChange = new TextChange(
-                TextSpan.FromBounds(previousToken.Span.End, constraintClause.SpanStart),
-                endOfLine.ToString() + indentation.ToString() + singleIndentation.ToString());
-
-            return document.WithTextChangeAsync(textChange, cancellationToken);
         }
     }
 }

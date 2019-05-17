@@ -42,13 +42,13 @@ namespace Roslynator.Formatting.CSharp
             {
                 foreach (SyntaxTrivia trivia in t.LeadingTrivia)
                 {
-                    if (trivia.IsKind(SyntaxKind.EndOfLineTrivia))
+                    if (trivia.IsEndOfLineTrivia())
                         return trivia;
                 }
 
                 foreach (SyntaxTrivia trivia in t.TrailingTrivia)
                 {
-                    if (trivia.IsKind(SyntaxKind.EndOfLineTrivia))
+                    if (trivia.IsEndOfLineTrivia())
                         return trivia;
                 }
 
@@ -67,13 +67,13 @@ namespace Roslynator.Formatting.CSharp
 
                 foreach (SyntaxTrivia trivia in t.LeadingTrivia)
                 {
-                    if (trivia.IsKind(SyntaxKind.EndOfLineTrivia))
+                    if (trivia.IsEndOfLineTrivia())
                         return trivia;
                 }
 
                 foreach (SyntaxTrivia trivia in t.TrailingTrivia)
                 {
-                    if (trivia.IsKind(SyntaxKind.EndOfLineTrivia))
+                    if (trivia.IsEndOfLineTrivia())
                         return trivia;
                 }
             }
@@ -86,19 +86,10 @@ namespace Roslynator.Formatting.CSharp
             SyntaxToken token,
             ExpressionSyntax right)
         {
-            if (!IsOptionalWhitespaceThenEndOfLineTrivia(left.GetTrailingTrivia()))
-                return false;
-
-            if (!token.LeadingTrivia.IsEmptyOrWhitespace())
-                return false;
-
-            if (!token.TrailingTrivia.SingleOrDefault(shouldThrow: false).IsKind(SyntaxKind.WhitespaceTrivia))
-                return false;
-
-            if (right.GetLeadingTrivia().Any())
-                return false;
-
-            return true;
+            return IsOptionalWhitespaceThenEndOfLineTrivia(left.GetTrailingTrivia())
+                && token.LeadingTrivia.IsEmptyOrWhitespace()
+                && token.TrailingTrivia.SingleOrDefault(shouldThrow: false).IsWhitespaceTrivia()
+                && !right.GetLeadingTrivia().Any();
         }
 
         public static bool IsTokenPlacedAfterExpression(
@@ -106,19 +97,10 @@ namespace Roslynator.Formatting.CSharp
             SyntaxToken token,
             ExpressionSyntax right)
         {
-            if (!left.GetTrailingTrivia().SingleOrDefault(shouldThrow: false).IsKind(SyntaxKind.WhitespaceTrivia))
-                return false;
-
-            if (token.LeadingTrivia.Any())
-                return false;
-
-            if (!IsOptionalWhitespaceThenEndOfLineTrivia(token.TrailingTrivia))
-                return false;
-
-            if (!right.GetLeadingTrivia().IsEmptyOrWhitespace())
-                return false;
-
-            return true;
+            return left.GetTrailingTrivia().SingleOrDefault(shouldThrow: false).IsWhitespaceTrivia()
+                && !token.LeadingTrivia.Any()
+                && IsOptionalWhitespaceThenEndOfLineTrivia(token.TrailingTrivia)
+                && right.GetLeadingTrivia().IsEmptyOrWhitespace();
         }
 
         public static bool IsOptionalWhitespaceThenEndOfLineTrivia(SyntaxTriviaList triviaList)

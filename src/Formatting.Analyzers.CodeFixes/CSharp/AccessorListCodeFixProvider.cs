@@ -12,7 +12,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Roslynator.CSharp;
 using Roslynator.Formatting.CSharp;
-using static Roslynator.CSharp.CSharpFactory;
 
 namespace Roslynator.Formatting.CodeFixes.CSharp
 {
