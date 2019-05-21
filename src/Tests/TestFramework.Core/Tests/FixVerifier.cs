@@ -218,7 +218,7 @@ namespace Roslynator.Tests
                 Assert.Equal(expected, actual);
 
                 if (expectedDocuments.Any())
-                    await VerifyAdditionalDocumentsAsync(document.Project, expectedDocuments).ConfigureAwait(false);
+                    await VerifyAdditionalDocumentsAsync(document.Project, expectedDocuments, cancellationToken).ConfigureAwait(false);
             }
 
             Diagnostic FindFirstFixableDiagnostic(ImmutableArray<Diagnostic> diagnostics, ImmutableArray<string> fixableDiagnosticIds)
