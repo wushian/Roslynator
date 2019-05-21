@@ -377,8 +377,7 @@ object P2 { get; }]]></After>
 /// ...
 /// </summary>
 object P2 { get; }]]></Before>
-        <After>
-          <![CDATA[object P1 { get; }
+        <After><![CDATA[object P1 { get; }
 
 /// <summary>
 /// ...
@@ -387,7 +386,46 @@ object P2 { get; }]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLineToEmptyBlock"> <!--FormatEmptyBlock-->
+  <Analyzer Identifier="AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind">
+    <Id>ROS0017</Id>
+    <Title>Add empty line between singl-line declarations of different kind.</Title>
+    <MessageFormat>Add empty line between singl-line declarations of different kind.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[object P { get; } // [|Id|]
+object this[int index] { get; }]]></Before>
+        <After><![CDATA[object P { get; }
+
+object this[int index] { get; }]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind">
+    <Id>ROS0018</Id>
+    <Title>Remove empty between single-line declarations of same kind.</Title>
+    <MessageFormat>Remove empty between single-line declarations of same kind.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[object P1 { get; }
+// [|Id|]
+object P2 { get; }]]></Before>
+        <After><![CDATA[object P1 { get; }
+object P2 { get; }]]></After>
+      </Sample>
+    </Samples>
+    </Samples>
+  </Analyzer>  <Analyzer Identifier="AddNewLineToEmptyBlock"> <!--FormatEmptyBlock-->
     <Id>ROS1023</Id>
     <Title>Add newline to empty block.</Title>
     <MessageFormat>Add newline to empty block.</MessageFormat>

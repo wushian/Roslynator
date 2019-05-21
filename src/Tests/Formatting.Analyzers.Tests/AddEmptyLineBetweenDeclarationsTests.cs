@@ -13,9 +13,9 @@ namespace Roslynator.Formatting.CSharp.Tests
     {
         public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddEmptyLineBetweenDeclarations;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new AddEmptyLineBetweenDeclarationsAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new EmptyLineBetweenDeclarationsAnalyzer();
 
-        public override CodeFixProvider FixProvider { get; } = new AddEmptyLineBetweenDeclarationsCodeFixProvider();
+        public override CodeFixProvider FixProvider { get; } = new EmptyLineBetweenDeclarationsCodeFixProvider();
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenDeclarations)]
         public async Task Test_MemberDeclaration_FirstIsMultiline()

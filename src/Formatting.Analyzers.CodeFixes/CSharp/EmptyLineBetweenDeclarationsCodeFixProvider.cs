@@ -2,6 +2,7 @@
 
 using System.Collections.Immutable;
 using System.Composition;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
@@ -11,9 +12,9 @@ using Roslynator.Formatting.CSharp;
 
 namespace Roslynator.Formatting.CodeFixes.CSharp
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AddEmptyLineBetweenDeclarationsCodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(EmptyLineBetweenDeclarationsCodeFixProvider))]
     [Shared]
-    public class AddEmptyLineBetweenDeclarationsCodeFixProvider : BaseCodeFixProvider
+    public class EmptyLineBetweenDeclarationsCodeFixProvider : BaseCodeFixProvider
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
@@ -22,7 +23,9 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 return ImmutableArray.Create(
                     DiagnosticIdentifiers.AddEmptyLineBetweenDeclarations,
                     DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarations,
-                    DiagnosticIdentifiers.AddEmptyLineBetweenDeclarationAndDocumentationComment);
+                    DiagnosticIdentifiers.AddEmptyLineBetweenDeclarationAndDocumentationComment,
+                    DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind,
+                    DiagnosticIdentifiers.RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind);
             }
         }
 
@@ -41,6 +44,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 case DiagnosticIdentifiers.AddEmptyLineBetweenDeclarations:
                 case DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarations:
                 case DiagnosticIdentifiers.AddEmptyLineBetweenDeclarationAndDocumentationComment:
+                case DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind:
                     {
                         CodeAction codeAction = CodeAction.Create(
                             "Add empty line",
@@ -56,7 +60,55 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                         context.RegisterCodeFix(codeAction, diagnostic);
                         break;
                     }
+                case DiagnosticIdentifiers.RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind:
+                    {
+                        CodeAction codeAction = CodeAction.Create(
+                            "Remove empty line",
+                            ct => RemoveEmptyLineAsync(document, trivia, ct),
+                            GetEquivalenceKey(diagnostic));
+
+                        context.RegisterCodeFix(codeAction, diagnostic);
+                        break;
+                    }
             }
+        }
+
+        private static Task<Document> RemoveEmptyLineAsync(
+            Document document,
+            SyntaxTrivia trivia,
+            CancellationToken cancellationToken)
+        {
+            SyntaxToken token = trivia.Token;
+            SyntaxTriviaList leadingTrivia = token.LeadingTrivia;
+
+            int count = 0;
+
+            SyntaxTriviaList.Enumerator en = leadingTrivia.GetEnumerator();
+            while (en.MoveNext())
+            {
+                if (en.Current.IsWhitespaceTrivia())
+                {
+                    if (!en.MoveNext())
+                        break;
+
+                    if (!en.Current.IsEndOfLineTrivia())
+                        break;
+
+                    count += 2;
+                }
+                else if (en.Current.IsEndOfLineTrivia())
+                {
+                    count++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            SyntaxToken newToken = token.WithLeadingTrivia(leadingTrivia.RemoveRange(0, count));
+
+            return document.ReplaceTokenAsync(token, newToken, cancellationToken);
         }
     }
 }

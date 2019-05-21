@@ -24,6 +24,8 @@ namespace Roslynator.Formatting.CSharp
         public const string AddNewLineBeforeConstructorInitializer = "ROS0014";
         public const string AddEmptyLineBetweenSinglelineDeclarations = "ROS0015";
         public const string AddEmptyLineBetweenDeclarationAndDocumentationComment = "ROS0016";
+        public const string AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind = "ROS0017";
+        public const string RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind = "ROS0018";
         public const string AddNewLineToEmptyBlock = "ROS1023";
         public const string AddNewLineBeforeEnumMember = "ROS1025";
         public const string AddNewLineBeforeStatement = "ROS1026";

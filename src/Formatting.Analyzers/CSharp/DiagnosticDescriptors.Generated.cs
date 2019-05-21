@@ -201,6 +201,30 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBetweenDeclarationAndDocumentationComment}", 
             customTags:         Array.Empty<string>());
 
+        /// <summary>ROS0017</summary>
+        public static readonly DiagnosticDescriptor AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind, 
+            title:              "Add empty line between singl-line declarations of different kind.", 
+            messageFormat:      "Add empty line between singl-line declarations of different kind.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>ROS0018</summary>
+        public static readonly DiagnosticDescriptor RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind, 
+            title:              "Remove empty between single-line declarations of same kind.", 
+            messageFormat:      "Remove empty between single-line declarations of same kind.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind}", 
+            customTags:         Array.Empty<string>());
+
         /// <summary>ROS1023</summary>
         public static readonly DiagnosticDescriptor AddNewLineToEmptyBlock = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.AddNewLineToEmptyBlock, 

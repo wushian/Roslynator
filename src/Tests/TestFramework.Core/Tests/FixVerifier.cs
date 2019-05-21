@@ -213,7 +213,7 @@ namespace Roslynator.Tests
 
                 Assert.True(fixRegistered, "No code fix has been registered.");
 
-                string actual = await document.ToFullStringAsync(simplify: true, format: true).ConfigureAwait(false);
+                string actual = await document.ToFullStringAsync(simplify: true, format: true, cancellationToken).ConfigureAwait(false);
 
                 Assert.Equal(expected, actual);
 
@@ -225,8 +225,11 @@ namespace Roslynator.Tests
             {
                 foreach (Diagnostic diagnostic in diagnostics)
                 {
-                    if (fixableDiagnosticIds.Contains(diagnostic.Id))
+                    if (string.Equals(diagnostic.Id, Descriptor.Id, StringComparison.Ordinal)
+                        && fixableDiagnosticIds.Contains(diagnostic.Id))
+                    {
                         return diagnostic;
+                    }
                 }
 
                 return null;
