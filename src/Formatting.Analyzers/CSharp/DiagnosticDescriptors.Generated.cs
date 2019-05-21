@@ -189,6 +189,18 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarations}", 
             customTags:         Array.Empty<string>());
 
+        /// <summary>ROS0016</summary>
+        public static readonly DiagnosticDescriptor AddEmptyLineBetweenDeclarationAndDocumentationComment = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineBetweenDeclarationAndDocumentationComment, 
+            title:              "Add empty line between declarations and documentation comment.", 
+            messageFormat:      "Add empty line between declarations and documentation comment.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBetweenDeclarationAndDocumentationComment}", 
+            customTags:         Array.Empty<string>());
+
         /// <summary>ROS1023</summary>
         public static readonly DiagnosticDescriptor AddNewLineToEmptyBlock = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.AddNewLineToEmptyBlock, 

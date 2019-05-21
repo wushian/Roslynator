@@ -361,6 +361,32 @@ object P2 { get; }]]></After>
       </Sample>
     </Samples>
   </Analyzer>
+  <Analyzer Identifier="AddEmptyLineBetweenDeclarationAndDocumentationComment">
+    <Id>ROS0016</Id>
+    <Title>Add empty line between declarations and documentation comment.</Title>
+    <MessageFormat>Add empty line between declarations and documentation comment.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[object P1 { get; } // [|Id|]
+/// <summary>
+/// ...
+/// </summary>
+object P2 { get; }]]></Before>
+        <After>
+          <![CDATA[object P1 { get; }
+
+/// <summary>
+/// ...
+/// </summary>
+object P2 { get; }]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
   <Analyzer Identifier="AddNewLineToEmptyBlock"> <!--FormatEmptyBlock-->
     <Id>ROS1023</Id>
     <Title>Add newline to empty block.</Title>

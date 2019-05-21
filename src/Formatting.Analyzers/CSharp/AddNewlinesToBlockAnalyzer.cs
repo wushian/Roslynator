@@ -28,6 +28,7 @@ namespace Roslynator.Formatting.CSharp
         {
             var block = (BlockSyntax)context.Node;
 
+            //TODO: ?
             if (block.Parent is AccessorDeclarationSyntax)
                 return;
 

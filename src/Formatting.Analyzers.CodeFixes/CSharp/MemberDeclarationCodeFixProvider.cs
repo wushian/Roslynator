@@ -56,9 +56,10 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                             "Add newline",
                             ct =>
                             {
-                                return CodeFixHelpers.PrependWithNewLineAndIncreaseIndentationAsync(
+                                return CodeFixHelpers.AddNewLineBeforeAndIncreaseIndentationAsync(
                                     document,
                                     ((ConstructorDeclarationSyntax)memberDeclaration).Initializer.ColonToken,
+                                    memberDeclaration.GetIndentation(ct),
                                     ct);
                             },
                             GetEquivalenceKey(diagnostic));

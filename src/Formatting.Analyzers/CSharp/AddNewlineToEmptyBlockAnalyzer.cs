@@ -34,6 +34,7 @@ namespace Roslynator.Formatting.CSharp
             if (statements.Any())
                 return;
 
+            //TODO: ?
             if (block.Parent is AccessorDeclarationSyntax)
                 return;
 

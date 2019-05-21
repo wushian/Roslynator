@@ -14,7 +14,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 {
     internal static class CodeFixHelpers
     {
-        public static Task<Document> PrependWithNewLineAndIncreaseIndentationAsync(
+        public static Task<Document> AddNewLineBeforeAndIncreaseIndentationAsync(
             Document document,
             SyntaxToken token,
             CancellationToken cancellationToken = default)

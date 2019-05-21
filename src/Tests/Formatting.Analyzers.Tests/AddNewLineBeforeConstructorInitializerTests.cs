@@ -47,6 +47,39 @@ class C
         }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeConstructorInitializer)]
+        public async Task Test_ThisInitializer_Multiline()
+        {
+            await VerifyDiagnosticAndFixAsync(@"
+class C
+{
+    C(object p1)
+    {
+    }
+
+    C(
+        object p1,
+        object p2) [||]: this(p1)
+    {
+    }
+}
+", @"
+class C
+{
+    C(object p1)
+    {
+    }
+
+    C(
+        object p1,
+        object p2)
+        : this(p1)
+    {
+    }
+}
+");
+        }
+
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeConstructorInitializer)]
         public async Task Test_BaseInitializer()
         {
             await VerifyDiagnosticAndFixAsync(@"

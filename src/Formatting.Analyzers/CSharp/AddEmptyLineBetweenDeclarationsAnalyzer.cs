@@ -2,6 +2,7 @@
 
 using System.Collections.Immutable;
 using System.Linq;
+using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -16,7 +17,13 @@ namespace Roslynator.Formatting.CSharp
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(DiagnosticDescriptors.AddEmptyLineBetweenDeclarations); }
+            get
+            {
+                return ImmutableArray.Create(
+                    DiagnosticDescriptors.AddEmptyLineBetweenDeclarations,
+                    DiagnosticDescriptors.AddEmptyLineBetweenSinglelineDeclarations,
+                    DiagnosticDescriptors.AddEmptyLineBetweenDeclarationAndDocumentationComment);
+            }
         }
 
         public override void Initialize(AnalysisContext context)
@@ -29,6 +36,7 @@ namespace Roslynator.Formatting.CSharp
             context.RegisterSyntaxNodeAction(AnalyzeTypeDeclaration, SyntaxKind.StructDeclaration);
             context.RegisterSyntaxNodeAction(AnalyzeTypeDeclaration, SyntaxKind.InterfaceDeclaration);
             context.RegisterSyntaxNodeAction(AnalyzeEnumDeclaration, SyntaxKind.EnumDeclaration);
+            //TODO: AnalyzeAccessorDeclaration
         }
 
         private static void AnalyzeCompilationUnit(SyntaxNodeAnalysisContext context)
@@ -52,6 +60,75 @@ namespace Roslynator.Formatting.CSharp
             Analyze(context, typeDeclaration.Members);
         }
 
+        private static void Analyze(SyntaxNodeAnalysisContext context, SyntaxList<MemberDeclarationSyntax> members)
+        {
+            int count = members.Count;
+
+            if (count <= 1)
+                return;
+
+            SyntaxTree tree = context.Node.SyntaxTree;
+            CancellationToken cancellationToken = context.CancellationToken;
+            MemberDeclarationSyntax previousMember = members[0];
+            bool? isSingleline = null;
+            bool? isPreviousSingleline = null;
+            bool shouldReportDocumentationComment = !context.IsAnalyzerSuppressed(DiagnosticDescriptors.AddEmptyLineBetweenDeclarationAndDocumentationComment);
+
+            for (int i = 1; i < count; i++)
+            {
+                MemberDeclarationSyntax member = members[i];
+                isSingleline = null;
+
+                SyntaxTrivia endOfLine = previousMember.GetTrailingTrivia().LastOrDefault();
+
+                if (endOfLine.IsEndOfLineTrivia())
+                {
+                    bool containsEndOfLineOrDocumentationComment = false;
+
+                    foreach (SyntaxTrivia trivia in member.GetLeadingTrivia())
+                    {
+                        SyntaxKind kind = trivia.Kind();
+
+                        if (SyntaxFacts.IsDocumentationCommentTrivia(kind))
+                        {
+                            if (shouldReportDocumentationComment
+                                && tree.GetLineCount(TextSpan.FromBounds(previousMember.Span.End, trivia.SpanStart), cancellationToken) == 2)
+                            {
+                                ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenDeclarationAndDocumentationComment, endOfLine);
+                            }
+
+                            containsEndOfLineOrDocumentationComment = true;
+                            break;
+                        }
+                        else if (kind == SyntaxKind.EndOfLineTrivia)
+                        {
+                            containsEndOfLineOrDocumentationComment = true;
+                            break;
+                        }
+                    }
+
+                    if (!containsEndOfLineOrDocumentationComment
+                        && tree.GetLineCount(TextSpan.FromBounds(previousMember.Span.End, member.SpanStart), cancellationToken) == 2)
+                    {
+                        isSingleline = tree.IsSingleLineSpan(member.Span, cancellationToken);
+
+                        if (isSingleline.Value
+                            && (isPreviousSingleline ?? tree.IsSingleLineSpan(previousMember.Span, cancellationToken)))
+                        {
+                            ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenSinglelineDeclarations, endOfLine);
+                        }
+                        else
+                        {
+                            ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenDeclarations, endOfLine);
+                        }
+                    }
+                }
+
+                previousMember = member;
+                isPreviousSingleline = isSingleline;
+            }
+        }
+
         private static void AnalyzeEnumDeclaration(SyntaxNodeAnalysisContext context)
         {
             var enumDeclaration = (EnumDeclarationSyntax)context.Node;
@@ -60,139 +137,79 @@ namespace Roslynator.Formatting.CSharp
 
             int count = members.Count;
 
-            SyntaxTree tree = enumDeclaration.SyntaxTree;
+            if (count <= 1)
+                return;
 
-            bool? isPrevSingleLine = null;
+            SyntaxTree tree = enumDeclaration.SyntaxTree;
+            CancellationToken cancellationToken = context.CancellationToken;
+            EnumMemberDeclarationSyntax previousMember = members[0];
+            bool? isSingleline = null;
+            bool? isPreviousSingleline = null;
+            bool shouldReportDocumentationComment = !context.IsAnalyzerSuppressed(DiagnosticDescriptors.AddEmptyLineBetweenDeclarationAndDocumentationComment);
 
             for (int i = 1; i < count; i++)
             {
                 SyntaxToken commaToken = members.GetSeparator(i - 1);
-
-                SyntaxTrivia endOfLineTrivia = commaToken.TrailingTrivia.LastOrDefault();
-
-                if (!endOfLineTrivia.IsEndOfLineTrivia())
-                {
-                    isPrevSingleLine = false;
-                    continue;
-                }
-
                 EnumMemberDeclarationSyntax member = members[i];
+                isSingleline = null;
 
-                SyntaxTrivia documentationCommentTrivia = member.GetDocumentationCommentTrivia();
+                SyntaxTrivia endOfLine = commaToken.TrailingTrivia.LastOrDefault();
 
-                bool hasDocumentationComment = SyntaxFacts.IsDocumentationCommentTrivia(documentationCommentTrivia.Kind());
-
-                if (hasDocumentationComment)
+                if (endOfLine.IsEndOfLineTrivia())
                 {
-                    isPrevSingleLine = null;
-                }
-                else
-                {
-                    bool isSingleLine = tree.IsSingleLineSpan(member.Span, context.CancellationToken);
+                    bool containsEndOfLineOrDocumentationComment = false;
 
-                    if (isSingleLine)
+                    foreach (SyntaxTrivia trivia in member.GetLeadingTrivia())
                     {
-                        if (isPrevSingleLine == null)
-                            isPrevSingleLine = tree.IsSingleLineSpan(TextSpan.FromBounds(members[i - 1].SpanStart, commaToken.Span.End), context.CancellationToken);
+                        SyntaxKind kind = trivia.Kind();
 
-                        if (isPrevSingleLine == true)
+                        if (SyntaxFacts.IsDocumentationCommentTrivia(kind))
                         {
-                            isPrevSingleLine = isSingleLine;
-                            continue;
+                            if (shouldReportDocumentationComment
+                                && tree.GetLineCount(TextSpan.FromBounds(commaToken.Span.End, trivia.SpanStart), cancellationToken) == 2)
+                            {
+                                ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenDeclarationAndDocumentationComment, endOfLine);
+                            }
+
+                            containsEndOfLineOrDocumentationComment = true;
+                            break;
+                        }
+                        else if (kind == SyntaxKind.EndOfLineTrivia)
+                        {
+                            containsEndOfLineOrDocumentationComment = true;
+                            break;
                         }
                     }
 
-                    isPrevSingleLine = isSingleLine;
-                }
-
-                if (member
-                    .GetLeadingTrivia()
-                    .FirstOrDefault()
-                    .IsEndOfLineTrivia())
-                {
-                    continue;
-                }
-
-                int end = (hasDocumentationComment) ? documentationCommentTrivia.SpanStart : member.SpanStart;
-
-                if (tree.GetLineCount(TextSpan.FromBounds(commaToken.Span.End, end), context.CancellationToken) == 2)
-                {
-                    ReportDiagnostic(context, endOfLineTrivia);
-                }
-            }
-        }
-
-        private static void Analyze(SyntaxNodeAnalysisContext context, SyntaxList<MemberDeclarationSyntax> members)
-        {
-            int count = members.Count;
-
-            SyntaxTree tree = context.Node.SyntaxTree;
-
-            bool? isPrevSingleLine = null;
-
-            for (int i = 1; i < count; i++)
-            {
-                MemberDeclarationSyntax prevMember = members[i - 1];
-
-                SyntaxTrivia endOfLineTrivia = prevMember.GetTrailingTrivia().LastOrDefault();
-
-                if (!endOfLineTrivia.IsEndOfLineTrivia())
-                {
-                    isPrevSingleLine = false;
-                    continue;
-                }
-
-                MemberDeclarationSyntax member = members[i];
-
-                SyntaxTrivia documentationCommentTrivia = member.GetDocumentationCommentTrivia();
-
-                bool hasDocumentationComment = SyntaxFacts.IsDocumentationCommentTrivia(documentationCommentTrivia.Kind());
-
-                if (hasDocumentationComment)
-                {
-                    isPrevSingleLine = null;
-                }
-                else
-                {
-                    bool isSingleLine = tree.IsSingleLineSpan(member.Span, context.CancellationToken);
-
-                    if (isSingleLine)
+                    if (!containsEndOfLineOrDocumentationComment
+                        && tree.GetLineCount(TextSpan.FromBounds(commaToken.Span.End, member.SpanStart), cancellationToken) == 2)
                     {
-                        if (isPrevSingleLine == null)
-                            isPrevSingleLine = tree.IsSingleLineSpan(prevMember.Span, context.CancellationToken);
+                        isSingleline = tree.IsSingleLineSpan(member.Span, cancellationToken);
 
-                        if (isPrevSingleLine == true)
+                        if (isSingleline.Value
+                            && (isPreviousSingleline ?? tree.IsSingleLineSpan(members[i - 1].Span, cancellationToken)))
                         {
-                            isPrevSingleLine = isSingleLine;
-                            continue;
+                            ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenSinglelineDeclarations, endOfLine);
+                        }
+                        else
+                        {
+                            ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenDeclarations, endOfLine);
                         }
                     }
-
-                    isPrevSingleLine = isSingleLine;
                 }
 
-                if (member
-                    .GetLeadingTrivia()
-                    .FirstOrDefault()
-                    .IsEndOfLineTrivia())
-                {
-                    continue;
-                }
-
-                int end = (hasDocumentationComment) ? documentationCommentTrivia.SpanStart : member.SpanStart;
-
-                if (tree.GetLineCount(TextSpan.FromBounds(prevMember.Span.End, end), context.CancellationToken) == 2)
-                {
-                    ReportDiagnostic(context, endOfLineTrivia);
-                }
+                previousMember = member;
+                isPreviousSingleline = isSingleline;
             }
         }
 
-        private static void ReportDiagnostic(SyntaxNodeAnalysisContext context, SyntaxTrivia trivia)
+        private static void ReportDiagnostic(
+            SyntaxNodeAnalysisContext context,
+            DiagnosticDescriptor descriptor,
+            SyntaxTrivia trivia)
         {
-            context.ReportDiagnostic(
-                DiagnosticDescriptors.AddEmptyLineBetweenDeclarations,
-                Location.Create(trivia.SyntaxTree, trivia.Span.WithLength(0)));
+            if (!context.IsAnalyzerSuppressed(descriptor))
+                context.ReportDiagnostic(descriptor, Location.Create(context.Node.SyntaxTree, trivia.Span.WithLength(0)));
         }
     }
 }

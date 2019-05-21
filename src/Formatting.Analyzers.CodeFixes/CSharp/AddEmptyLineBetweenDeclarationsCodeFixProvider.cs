@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Roslynator.CSharp;
 using Roslynator.Formatting.CSharp;
 
@@ -17,11 +15,15 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
     [Shared]
     public class AddEmptyLineBetweenDeclarationsCodeFixProvider : BaseCodeFixProvider
     {
-        private const string Title = "Add empty line";
-
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(DiagnosticIdentifiers.AddEmptyLineBetweenDeclarations); }
+            get
+            {
+                return ImmutableArray.Create(
+                    DiagnosticIdentifiers.AddEmptyLineBetweenDeclarations,
+                    DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarations,
+                    DiagnosticIdentifiers.AddEmptyLineBetweenDeclarationAndDocumentationComment);
+            }
         }
 
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
@@ -31,38 +33,29 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             Document document = context.Document;
             Diagnostic diagnostic = context.Diagnostics[0];
 
-            SyntaxToken token = root.FindToken(context.Span.Start);
+            if (!TryFindTrivia(root, context.Span.Start, out SyntaxTrivia trivia, findInsideTrivia: false))
+                return;
 
-            if (token.IsKind(SyntaxKind.CommaToken))
+            switch (diagnostic.Id)
             {
-                CodeAction codeAction = CodeAction.Create(
-                    Title,
-                    ct =>
+                case DiagnosticIdentifiers.AddEmptyLineBetweenDeclarations:
+                case DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarations:
+                case DiagnosticIdentifiers.AddEmptyLineBetweenDeclarationAndDocumentationComment:
                     {
-                        SyntaxToken newToken = token.AppendEndOfLineToTrailingTrivia();
+                        CodeAction codeAction = CodeAction.Create(
+                            "Add empty line",
+                            ct =>
+                            {
+                                SyntaxToken token = trivia.Token;
+                                SyntaxToken newToken = token.AppendEndOfLineToTrailingTrivia();
 
-                        return document.ReplaceTokenAsync(token, newToken, ct);
-                    },
-                    GetEquivalenceKey(diagnostic));
+                                return document.ReplaceTokenAsync(token, newToken, ct);
+                            },
+                            GetEquivalenceKey(diagnostic));
 
-                context.RegisterCodeFix(codeAction, diagnostic);
-            }
-            else
-            {
-                if (!TryFindFirstAncestorOrSelf(root, context.Span, out MemberDeclarationSyntax memberDeclaration))
-                    return;
-
-                CodeAction codeAction = CodeAction.Create(
-                    Title,
-                    ct =>
-                    {
-                        MemberDeclarationSyntax newMemberDeclaration = memberDeclaration.AppendEndOfLineToTrailingTrivia();
-
-                        return document.ReplaceNodeAsync(memberDeclaration, newMemberDeclaration, ct);
-                    },
-                    GetEquivalenceKey(diagnostic));
-
-                context.RegisterCodeFix(codeAction, diagnostic);
+                        context.RegisterCodeFix(codeAction, diagnostic);
+                        break;
+                    }
             }
         }
     }
