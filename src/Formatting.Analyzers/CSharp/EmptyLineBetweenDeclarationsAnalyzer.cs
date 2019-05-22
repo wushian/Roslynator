@@ -87,23 +87,29 @@ namespace Roslynator.Formatting.CSharp
 
                 SyntaxTriviaList leadingTrivia = member.GetLeadingTrivia();
 
-                (bool containsDocumentationComment, bool containsUndefinedTrivia, bool startsWithEmptyLine) = AnalyzeLeadingTrivia(leadingTrivia);
+                (bool emptyOrWhitespaceTrivia, bool documentationComment, bool emptyLine) = AnalyzeLeadingTrivia(leadingTrivia);
 
-                if (containsDocumentationComment)
+                if (documentationComment)
                 {
                     ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenDeclarationAndDocumentationComment, trailingTrivia.Last());
+                    continue;
+                }
+
+                if (!emptyOrWhitespaceTrivia
+                    && !emptyLine)
+                {
                     continue;
                 }
 
                 if ((isSingleline ?? (isSingleline = tree.IsSingleLineSpan(member.Span, cancellationToken)).Value)
                     && (isPreviousSingleline ?? tree.IsSingleLineSpan(members[i - 1].Span, cancellationToken)))
                 {
-                    if (startsWithEmptyLine)
+                    if (emptyLine)
                     {
                         if (MemberKindEquals(previousMember, member))
                             ReportDiagnostic(context, DiagnosticDescriptors.RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind, leadingTrivia[0]);
                     }
-                    else if (!containsUndefinedTrivia)
+                    else if (emptyOrWhitespaceTrivia)
                     {
                         ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenSinglelineDeclarations, trailingTrivia.Last());
 
@@ -111,8 +117,7 @@ namespace Roslynator.Formatting.CSharp
                             ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind, trailingTrivia.Last());
                     }
                 }
-                else if (!startsWithEmptyLine
-                    && !containsUndefinedTrivia)
+                else if (emptyOrWhitespaceTrivia)
                 {
                     ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenDeclarations, trailingTrivia.Last());
                 }
@@ -176,45 +181,50 @@ namespace Roslynator.Formatting.CSharp
 
                 SyntaxTriviaList leadingTrivia = member.GetLeadingTrivia();
 
-                (bool containsDocumentationComment, bool containsUndefinedTrivia, bool startsWithEmptyLine) = AnalyzeLeadingTrivia(leadingTrivia);
+                (bool emptyOrWhitespaceTrivia, bool documentationComment, bool emptyLine) = AnalyzeLeadingTrivia(leadingTrivia);
 
-                if (containsDocumentationComment)
+                if (documentationComment)
                 {
                     ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenDeclarationAndDocumentationComment, trailingTrivia.Last());
+                    continue;
+                }
+
+                if (!emptyOrWhitespaceTrivia
+                    && !emptyLine)
+                {
                     continue;
                 }
 
                 if ((isSingleline ?? (isSingleline = tree.IsSingleLineSpan(member.Span, cancellationToken)).Value)
                     && (isPreviousSingleline ?? tree.IsSingleLineSpan(members[i - 1].Span, cancellationToken)))
                 {
-                    if (startsWithEmptyLine)
+                    if (emptyLine)
                     {
                         ReportDiagnostic(context, DiagnosticDescriptors.RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind, leadingTrivia[0]);
                     }
-                    else if (!containsUndefinedTrivia)
+                    else if (emptyOrWhitespaceTrivia)
                     {
                         ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenSinglelineDeclarations, trailingTrivia.Last());
                     }
                 }
-                else if (!startsWithEmptyLine
-                    && !containsUndefinedTrivia)
+                else if (emptyOrWhitespaceTrivia)
                 {
                     ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenDeclarations, trailingTrivia.Last());
                 }
             }
         }
 
-        private static (bool containsDocumentationComment, bool containsUndefinedTrivia, bool startsWithEmptyLine) AnalyzeLeadingTrivia(SyntaxTriviaList leadingTrivia)
+        private static (bool emptyOrWhitespaceTrivia, bool documentationComment, bool emptyLine) AnalyzeLeadingTrivia(SyntaxTriviaList leadingTrivia)
         {
             SyntaxTriviaList.Enumerator en = leadingTrivia.GetEnumerator();
 
             if (!en.MoveNext())
-                return default;
+                return (true, false, false);
 
             if (en.Current.IsWhitespaceTrivia()
                 && !en.MoveNext())
             {
-                return default;
+                return (true, false, false);
             }
 
             switch (en.Current.Kind())
@@ -222,15 +232,21 @@ namespace Roslynator.Formatting.CSharp
                 case SyntaxKind.SingleLineDocumentationCommentTrivia:
                 case SyntaxKind.MultiLineDocumentationCommentTrivia:
                     {
-                        return (true, false, false);
+                        return (false, true, false);
                     }
                 case SyntaxKind.EndOfLineTrivia:
                     {
+                        while (en.MoveNext())
+                        {
+                            if (!en.Current.IsWhitespaceOrEndOfLineTrivia())
+                                return default;
+                        }
+
                         return (false, false, true);
                     }
             }
 
-            return (false, true, false);
+            return default;
         }
 
         private static void ReportDiagnostic(
