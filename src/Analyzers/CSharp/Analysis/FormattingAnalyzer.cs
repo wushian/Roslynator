@@ -39,6 +39,22 @@ namespace Roslynator.CSharp.Analysis
                 startContext.RegisterSyntaxNodeAction(AnalyzeStructDeclaration, SyntaxKind.StructDeclaration);
                 startContext.RegisterSyntaxNodeAction(AnalyzeEnumDeclaration, SyntaxKind.EnumDeclaration);
 
+                startContext.RegisterSyntaxNodeAction(AnalyzeAccessorDeclaration, SyntaxKind.GetAccessorDeclaration);
+                startContext.RegisterSyntaxNodeAction(AnalyzeAccessorDeclaration, SyntaxKind.SetAccessorDeclaration);
+                startContext.RegisterSyntaxNodeAction(AnalyzeAccessorDeclaration, SyntaxKind.AddAccessorDeclaration);
+                startContext.RegisterSyntaxNodeAction(AnalyzeAccessorDeclaration, SyntaxKind.RemoveAccessorDeclaration);
+                startContext.RegisterSyntaxNodeAction(AnalyzeConstructorDeclaration, SyntaxKind.ConstructorDeclaration);
+                startContext.RegisterSyntaxNodeAction(AnalyzeConversionOperatorDeclaration, SyntaxKind.ConversionOperatorDeclaration);
+                startContext.RegisterSyntaxNodeAction(AnalyzeDelegateDeclaration, SyntaxKind.DelegateDeclaration);
+                startContext.RegisterSyntaxNodeAction(AnalyzeDestructorDeclaration, SyntaxKind.DestructorDeclaration);
+                startContext.RegisterSyntaxNodeAction(AnalyzeEventDeclaration, SyntaxKind.EventDeclaration);
+                startContext.RegisterSyntaxNodeAction(AnalyzeEventFieldDeclaration, SyntaxKind.EventFieldDeclaration);
+                startContext.RegisterSyntaxNodeAction(AnalyzeFieldDeclaration, SyntaxKind.FieldDeclaration);
+                startContext.RegisterSyntaxNodeAction(AnalyzeIndexerDeclaration, SyntaxKind.IndexerDeclaration);
+                startContext.RegisterSyntaxNodeAction(AnalyzeMethodDeclaration, SyntaxKind.MethodDeclaration);
+                startContext.RegisterSyntaxNodeAction(AnalyzeOperatorDeclaration, SyntaxKind.OperatorDeclaration);
+                startContext.RegisterSyntaxNodeAction(AnalyzePropertyDeclaration, SyntaxKind.PropertyDeclaration);
+
                 startContext.RegisterSyntaxNodeAction(AnalyzeLocalDeclarationStatement, SyntaxKind.LocalDeclarationStatement);
                 startContext.RegisterSyntaxNodeAction(AnalyzeExpressionStatement, SyntaxKind.ExpressionStatement);
                 //startContext.RegisterSyntaxNodeAction(AnalyzeEmptyStatement, SyntaxKind.EmptyStatement);
@@ -65,7 +81,7 @@ namespace Roslynator.CSharp.Analysis
                 //startContext.RegisterSyntaxNodeAction(AnalyzeIfStatement, SyntaxKind.IfStatement);
                 //startContext.RegisterSyntaxNodeAction(AnalyzeSwitchStatement, SyntaxKind.SwitchStatement);
                 //startContext.RegisterSyntaxNodeAction(AnalyzeTryStatement, SyntaxKind.TryStatement);
-                //startContext.RegisterSyntaxNodeAction(AnalyzeLocalFunctionStatement, SyntaxKind.LocalFunctionStatement);
+                startContext.RegisterSyntaxNodeAction(AnalyzeLocalFunctionStatement, SyntaxKind.LocalFunctionStatement);
                 //startContext.RegisterSyntaxNodeAction(AnalyzeCommonForEachStement, SyntaxKind.ForEachVariableStatement);
 
                 startContext.RegisterSyntaxNodeAction(AnalyzeCasePatternSwitchLabel, SyntaxKind.CasePatternSwitchLabel);
@@ -74,6 +90,8 @@ namespace Roslynator.CSharp.Analysis
 
                 startContext.RegisterSyntaxNodeAction(AnalyzeNameColon, SyntaxKind.NameColon);
                 startContext.RegisterSyntaxNodeAction(AnalyzeElseClause, SyntaxKind.ElseClause);
+
+                startContext.RegisterSyntaxNodeAction(AnalyzeParameter, SyntaxKind.Parameter);
             });
         }
 
@@ -127,12 +145,110 @@ namespace Roslynator.CSharp.Analysis
                 AnalyzeUnnecessaryNewLine(context, enumDeclaration);
         }
 
+        private static void AnalyzeAccessorDeclaration(SyntaxNodeAnalysisContext context)
+        {
+            var accessorDeclaration = (AccessorDeclarationSyntax)context.Node;
+
+            if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveUnnecessaryNewLine))
+                AnalyzeModifiers(context, accessorDeclaration.Modifiers);
+        }
+
+        private static void AnalyzeConstructorDeclaration(SyntaxNodeAnalysisContext context)
+        {
+            var constructorDeclaration = (ConstructorDeclarationSyntax)context.Node;
+
+            if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveUnnecessaryNewLine))
+                AnalyzeModifiers(context, constructorDeclaration.Modifiers);
+        }
+
+        private static void AnalyzeConversionOperatorDeclaration(SyntaxNodeAnalysisContext context)
+        {
+            var conversionOperatorDeclaration = (ConversionOperatorDeclarationSyntax)context.Node;
+
+            if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveUnnecessaryNewLine))
+                AnalyzeModifiers(context, conversionOperatorDeclaration.Modifiers);
+        }
+
+        private static void AnalyzeDelegateDeclaration(SyntaxNodeAnalysisContext context)
+        {
+            var delegateDeclaration = (DelegateDeclarationSyntax)context.Node;
+
+            if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveUnnecessaryNewLine))
+                AnalyzeModifiers(context, delegateDeclaration.Modifiers);
+        }
+
+        private static void AnalyzeDestructorDeclaration(SyntaxNodeAnalysisContext context)
+        {
+            var destructorDeclaration = (DestructorDeclarationSyntax)context.Node;
+
+            if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveUnnecessaryNewLine))
+                AnalyzeModifiers(context, destructorDeclaration.Modifiers);
+        }
+
+        private static void AnalyzeEventDeclaration(SyntaxNodeAnalysisContext context)
+        {
+            var eventDeclaration = (EventDeclarationSyntax)context.Node;
+
+            if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveUnnecessaryNewLine))
+                AnalyzeModifiers(context, eventDeclaration.Modifiers);
+        }
+
+        private static void AnalyzeEventFieldDeclaration(SyntaxNodeAnalysisContext context)
+        {
+            var eventFieldDeclaration = (EventFieldDeclarationSyntax)context.Node;
+
+            if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveUnnecessaryNewLine))
+                AnalyzeModifiers(context, eventFieldDeclaration.Modifiers);
+        }
+
+        private static void AnalyzeFieldDeclaration(SyntaxNodeAnalysisContext context)
+        {
+            var fieldDeclaration = (FieldDeclarationSyntax)context.Node;
+
+            if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveUnnecessaryNewLine))
+                AnalyzeModifiers(context, fieldDeclaration.Modifiers);
+        }
+
+        private static void AnalyzeIndexerDeclaration(SyntaxNodeAnalysisContext context)
+        {
+            var indexerDeclaration = (IndexerDeclarationSyntax)context.Node;
+
+            if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveUnnecessaryNewLine))
+                AnalyzeModifiers(context, indexerDeclaration.Modifiers);
+        }
+
+        private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
+        {
+            var methodDeclaration = (MethodDeclarationSyntax)context.Node;
+
+            if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveUnnecessaryNewLine))
+                AnalyzeModifiers(context, methodDeclaration.Modifiers);
+        }
+
+        private static void AnalyzeOperatorDeclaration(SyntaxNodeAnalysisContext context)
+        {
+            var operatorDeclaration = (OperatorDeclarationSyntax)context.Node;
+
+            if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveUnnecessaryNewLine))
+                AnalyzeModifiers(context, operatorDeclaration.Modifiers);
+        }
+
+        private static void AnalyzePropertyDeclaration(SyntaxNodeAnalysisContext context)
+        {
+            var propertyDeclaration = (PropertyDeclarationSyntax)context.Node;
+
+            if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveUnnecessaryNewLine))
+                AnalyzeModifiers(context, propertyDeclaration.Modifiers);
+        }
+
         private static void AnalyzeLocalDeclarationStatement(SyntaxNodeAnalysisContext context)
         {
             var localDeclarationStatement = (LocalDeclarationStatementSyntax)context.Node;
 
             if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveUnnecessaryNewLine))
             {
+                AnalyzeModifiers(context, localDeclarationStatement.Modifiers);
+
                 VariableDeclarationSyntax variableDeclaration = localDeclarationStatement.Declaration;
 
                 SyntaxToken semicolon = localDeclarationStatement.SemicolonToken;
@@ -397,6 +513,8 @@ namespace Roslynator.CSharp.Analysis
         private static void AnalyzeLocalFunctionStatement(SyntaxNodeAnalysisContext context)
         {
             var localFunctionStatement = (LocalFunctionStatementSyntax)context.Node;
+
+            AnalyzeModifiers(context, localFunctionStatement.Modifiers);
         }
 
         private static void AnalyzeCommonForEachStement(SyntaxNodeAnalysisContext context)
@@ -480,8 +598,17 @@ namespace Roslynator.CSharp.Analysis
                 AnalyzeUnnecessaryNewLine(context, elseClause.ElseKeyword, ((IfStatementSyntax)statement).IfKeyword);
         }
 
+        private static void AnalyzeParameter(SyntaxNodeAnalysisContext context)
+        {
+            var parameter = (ParameterSyntax)context.Node;
+
+            AnalyzeModifiers(context, parameter.Modifiers);
+        }
+
         private static void AnalyzeUnnecessaryNewLine(SyntaxNodeAnalysisContext context, BaseTypeDeclarationSyntax declaration)
         {
+            AnalyzeModifiers(context, declaration.Modifiers);
+
             SyntaxToken closingBrace = declaration.CloseBraceToken;
 
             if (!closingBrace.IsMissing)
@@ -493,44 +620,40 @@ namespace Roslynator.CSharp.Analysis
             }
         }
 
+        private static void AnalyzeModifiers(SyntaxNodeAnalysisContext context, SyntaxTokenList modifiers)
+        {
+            if (!modifiers.Any())
+                return;
+
+            SyntaxToken modifier1 = modifiers[0];
+
+            for (int i = 1; i < modifiers.Count; i++)
+            {
+                SyntaxToken modifier2 = modifiers[i];
+                AnalyzeUnnecessaryNewLine(context, modifier1, modifier2);
+                modifier1 = modifier2;
+            }
+
+            SyntaxToken last = modifiers.Last();
+
+            AnalyzeUnnecessaryNewLine(context, last, last.GetNextToken());
+        }
+
         private static void AnalyzeUnnecessaryNewLine(SyntaxNodeAnalysisContext context, SyntaxNodeOrToken nodeOrToken1, SyntaxNodeOrToken nodeOrToken2)
         {
-            SyntaxTriviaList.Enumerator en = nodeOrToken1.GetTrailingTrivia().GetEnumerator();
-
-            if (!en.MoveNext())
-                return;
-
-            SyntaxKind kind = en.Current.Kind();
-
-            if (kind == SyntaxKind.WhitespaceTrivia)
+            if (SyntaxTriviaAnalysis.IsOptionalWhitespaceThenEndOfLineTrivia(nodeOrToken1.GetTrailingTrivia())
+                && nodeOrToken2.GetLeadingTrivia().IsEmptyOrWhitespace())
             {
-                if (!en.MoveNext())
-                    return;
-
-                kind = en.Current.Kind();
+                ReportDiagnostic(context, nodeOrToken1);
             }
+        }
 
-            if (kind != SyntaxKind.EndOfLineTrivia)
-                return;
-
-            if (en.MoveNext())
-                return;
-
-            en = nodeOrToken2.GetLeadingTrivia().GetEnumerator();
-
-            if (en.MoveNext())
-            {
-                if (!en.Current.IsKind(SyntaxKind.WhitespaceTrivia))
-                    return;
-
-                if (en.MoveNext())
-                    return;
-            }
-
+        private static void ReportDiagnostic(SyntaxNodeAnalysisContext context, SyntaxNodeOrToken nodeOrToken)
+        {
             DiagnosticHelpers.ReportDiagnostic(
                 context,
                 DiagnosticDescriptors.RemoveUnnecessaryNewLine,
-                Location.Create(context.Node.SyntaxTree, new TextSpan(nodeOrToken2.SpanStart, 0)));
+                Location.Create(nodeOrToken.SyntaxTree, new TextSpan(nodeOrToken.Span.End, 0)));
         }
     }
 }

@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Roslynator.CSharp.Analysis.Tests
 {
-    public class RCS1234RemoveUnnecessaryNewLineTests : AbstractCSharpFixVerifier
+    public class RCS1245RemoveUnnecessaryNewLineTests : AbstractCSharpFixVerifier
     {
         public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.RemoveUnnecessaryNewLine;
 
@@ -23,8 +23,8 @@ namespace Roslynator.CSharp.Analysis.Tests
             await VerifyDiagnosticAndFixAsync(@"
 class C
 {
-}   
-    [||];
+}[||]   
+    ;
 ", @"
 class C
 {
@@ -40,8 +40,8 @@ class C
 {
     void M()
     {
-        string s = null
-[||];
+        string s = null[||]
+;
     }
 }   
 ", @"
@@ -63,8 +63,8 @@ class C
 {
     void M(string p)
     {
-        M(p
-[||]: null);
+        M(p[||]
+: null);
     }
 }   
 ", @"
@@ -91,8 +91,8 @@ class C
         if(f)
         {
         }
-        else
-            [||]if (f)
+        else[||]
+            if (f)
         {
         }
     }
@@ -111,6 +111,22 @@ class C
         {
         }
     }
+}   
+");
+        }
+
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveUnnecessaryNewLine)]
+        public async Task Test_Modifiers()
+        {
+            await VerifyDiagnosticAndFixAsync(@"
+public[||]
+static[||]
+class C
+{
+}   
+", @"
+public static class C
+{
 }   
 ");
         }

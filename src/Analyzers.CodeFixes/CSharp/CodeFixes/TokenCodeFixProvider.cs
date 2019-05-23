@@ -1,6 +1,5 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Immutable;
 using System.Composition;
 using System.Threading;
@@ -30,21 +29,21 @@ namespace Roslynator.CSharp.CodeFixes
             if (!TryFindToken(root, context.Span.Start, out SyntaxToken token))
                 return;
 
-            foreach (Diagnostic diagnostic in context.Diagnostics)
-            {
-                switch (diagnostic.Id)
-                {
-                    case DiagnosticIdentifiers.RemoveUnnecessaryNewLine:
-                        {
-                            CodeAction codeAction = CodeAction.Create(
-                                "Remove new line",
-                                ct => RemoveUnnecessaryNewLineAsync(context.Document, token, ct),
-                                GetEquivalenceKey(diagnostic.Id));
+            Diagnostic diagnostic = context.Diagnostics[0];
+            Document document = context.Document;
 
-                            context.RegisterCodeFix(codeAction, diagnostic);
-                            break;
-                        }
-                }
+            switch (diagnostic.Id)
+            {
+                case DiagnosticIdentifiers.RemoveUnnecessaryNewLine:
+                    {
+                        CodeAction codeAction = CodeAction.Create(
+                            "Remove new line",
+                            ct => RemoveUnnecessaryNewLineAsync(document, token, ct),
+                            GetEquivalenceKey(diagnostic.Id));
+
+                        context.RegisterCodeFix(codeAction, diagnostic);
+                        break;
+                    }
             }
         }
 
@@ -53,27 +52,15 @@ namespace Roslynator.CSharp.CodeFixes
             SyntaxToken token,
             CancellationToken cancellationToken)
         {
-            SyntaxToken previousToken = token.GetPreviousToken();
+            SyntaxToken nextToken = token.GetNextToken();
 
-            string newText = GetNewText();
+            string newText = (nextToken.IsKind(SyntaxKind.SemicolonToken, SyntaxKind.ColonToken))
+                ? ""
+                : " ";
 
-            var textChange = new TextChange(TextSpan.FromBounds(previousToken.Span.End, token.Span.Start), newText);
+            var textChange = new TextChange(TextSpan.FromBounds(token.Span.End, nextToken.Span.Start), newText);
 
             return document.WithTextChangeAsync(textChange, cancellationToken);
-
-            string GetNewText()
-            {
-                switch (token.Kind())
-                {
-                    case SyntaxKind.SemicolonToken:
-                    case SyntaxKind.ColonToken:
-                        return "";
-                    case SyntaxKind.IfKeyword:
-                        return " ";
-                    default:
-                        throw new InvalidOperationException();
-                }
-            }
         }
     }
 }
