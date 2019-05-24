@@ -1,6 +1,6 @@
 @echo off
 
-set _roslynatorExe="..\src\CommandLine\bin\Debug\net461\roslynator"
+set _roslynatorExe="..\src\CommandLine\bin\Debug\net472\roslynator"
 set _msbuildPath="C:\Program Files\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin"
 set _msbuildProperties="Configuration=Release"
 set _rootDirectoryUrl="../../docs/api/"
