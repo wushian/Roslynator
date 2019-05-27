@@ -5,7 +5,7 @@ set _msbuildPath="C:\Program Files\Microsoft Visual Studio\2017\Community\MSBuil
 set _msbuildProperties="Configuration=Release"
 set _rootDirectoryUrl="../../docs/api/"
 
-%_msbuildPath%\msbuild "..\src\CommandLine.sln" /t:Build /p:Configuration=Debug /v:m /m
+%_msbuildPath%\msbuild "..\src\CommandLine.sln" /t:Clean,Build /p:Configuration=Debug /v:m /m
 
 %_roslynatorExe% generate-doc "..\src\Core.sln" ^
  --msbuild-path %_msbuildPath% ^
@@ -18,7 +18,7 @@ set _rootDirectoryUrl="../../docs/api/"
  --properties %_msbuildProperties% ^
  --visibility public ^
  --depth member ^
- --ignored-parts containing-namespace ^
+ --ignored-parts containing-namespace assembly-attributes ^
  --ignored-attributes System.Runtime.CompilerServices.InternalsVisibleToAttribute ^
  --output "..\docs\api.txt"
 

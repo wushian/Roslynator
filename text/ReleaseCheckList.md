@@ -12,7 +12,6 @@
   * Roslynator Refactorings 2017
 * Publish Packages
   * Roslynator.Analyzers
-  * Roslynator.CodeFixes
 * Publish Packages (API)
   * Roslynator.Core
   * Roslynator.CSharp
