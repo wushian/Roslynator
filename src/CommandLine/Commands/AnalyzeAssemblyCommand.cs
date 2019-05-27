@@ -33,6 +33,7 @@ namespace Roslynator.CommandLine
             AnalyzerAssemblyInfo[] analyzerAssemblies = options.GetPaths()
                 .SelectMany(path => AnalyzerAssemblyLoader.LoadFrom(
                     path: path,
+                    searchPattern: options.FileNamePattern ?? AnalyzerAssemblyLoader.DefaultSearchPattern,
                     loadAnalyzers: !options.NoAnalyzers,
                     loadFixers: !options.NoFixers,
                     language: Language))
@@ -361,6 +362,13 @@ namespace Roslynator.CommandLine
                     return languageName;
                 case LanguageNames.VisualBasic:
                     return "VB";
+#if DEBUG
+                // bug in CodeCracker.CSharp.dll
+                case "StaticConstructorExceptionCodeFixProvider":
+                case "StringRepresentationCodeFixProvider":
+                case "XmlDocumentationCodeFixProvider":
+                    return languageName;
+#endif
             }
 
             Debug.Fail(languageName);

@@ -22,6 +22,9 @@ namespace Roslynator.CommandLine
         [Option(longName: "culture")]
         public string Culture { get; set; }
 
+        [Option(longName: "file-name-pattern")]
+        public string FileNamePattern { get; set; }
+
         [Option(longName: "language")]
         public string Language { get; set; }
 
