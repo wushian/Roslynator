@@ -177,7 +177,7 @@ namespace Roslynator.Documentation
 
                 foreach (IAssemblySymbol assembly in Assemblies)
                 {
-                    if (type.ContainingAssembly.Identity.Equals(assembly))
+                    if (type.ContainingAssembly.Identity.Equals(assembly.Identity))
                         return null;
                 }
 

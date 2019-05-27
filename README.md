@@ -1,9 +1,14 @@
 # Roslynator <img align="left" width="48px" height="48px" src="http://pihrt.net/images/Roslynator.ico">
 
-* A collection of 500+ analyzers, refactorings and fixes for C#, powered by [Roslyn](http://github.com/dotnet/roslyn).
-* [List of analyzers](src/Analyzers/README.md)
-* [List of refactorings](src/Refactorings/README.md)
-* [List of code fixes for CS diagnostics](src/CodeFixes/README.md)
+A collection of 500+ [analyzers](src/Analyzers/README.md), [refactorings](src/Refactorings/README.md) and [fixes](src/CodeFixes/README.md) for C#, powered by [Roslyn](http://github.com/dotnet/roslyn).
+
+### Features
+
+* [Extensions for Visual Studio](#extensions-for-visual-studio)
+* [NuGet Analyzers](#nuget-analyzers)
+* [Roslynator API](#roslynator-api)
+* [Roslynator Command-Line Interface](#roslynator-command-line-interface)
+* [Roslynator for VS Code](#roslynator-for-vs-code)
 * [Release notes](ChangeLog.md)
 * Follow on [Twitter](https://twitter.com/roslynator)
 
@@ -22,10 +27,8 @@ Although Roslynator products are free of charge, any [donation](https://www.payp
 
 | Extension | Comment |
 | --- | --- |
-| [Roslynator 2019](https://marketplace.visualstudio.com/items?itemName=josefpihrt.Roslynator2019) | contains all features - analyzers, refactorings and fixes for CS diagnostics. |
-| [Roslynator 2017](https://marketplace.visualstudio.com/items?itemName=josefpihrt.Roslynator2017) | contains all features - analyzers, refactorings and fixes for CS diagnostics. |
-
-*Note: Roslynator for Visual Studio 2015 is no longer in development.*
+| [Roslynator 2019](https://marketplace.visualstudio.com/items?itemName=josefpihrt.Roslynator2019) | contains analyzers, refactorings and fixes for CS diagnostics. |
+| [Roslynator 2017](https://marketplace.visualstudio.com/items?itemName=josefpihrt.Roslynator2017) | contains analyzers, refactorings and fixes for CS diagnostics. |
 
 ## NuGet Analyzers
 
@@ -48,8 +51,7 @@ Although Roslynator products are free of charge, any [donation](https://www.payp
 
 ## Roslynator Command-Line Interface
 
-* Roslynator CLI is distributed via &ensp;[![NuGet](https://img.shields.io/nuget/v/Roslynator.CommandLine.svg)](https://www.nuget.org/packages/Roslynator.CommandLine)
-
+* Roslynator CLI is distributed via NuGet package [Roslynator.CommandLine](https://www.nuget.org/packages/Roslynator.CommandLine). &ensp;[![NuGet](https://img.shields.io/nuget/v/Roslynator.CommandLine.svg)](https://www.nuget.org/packages/Roslynator.CommandLine)
 * See [documentation](docs/cli/README.md).
 
 ## Roslynator for VS Code
