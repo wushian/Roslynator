@@ -38,8 +38,8 @@ namespace Roslynator.CSharp.Analysis
                     DiagnosticDescriptors.UseNameOfOperator,
                     DiagnosticDescriptors.RemoveRedundantCast,
                     DiagnosticDescriptors.SimplifyLogicalNegation,
-                    DiagnosticDescriptors.CallStringConcatInsteadOfStringJoin,
                     DiagnosticDescriptors.UseCoalesceExpression,
+                    DiagnosticDescriptors.OptimizeMethodCall,
                     DiagnosticDescriptors.UseForEachInsteadOfForEachMethod);
             }
         }
@@ -216,6 +216,13 @@ namespace Roslynator.CSharp.Analysis
 
                                     break;
                                 }
+                            case "ContainsKey":
+                                {
+                                    if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.OptimizeMethodCall))
+                                        OptimizeMethodCallAnalysis.OptimizeDictionaryContainsKey(context, invocationInfo);
+
+                                    break;
+                                }
                             case "ElementAt":
                                 {
                                     if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.OptimizeLinqMethodCall)
@@ -360,6 +367,13 @@ namespace Roslynator.CSharp.Analysis
 
                                     break;
                                 }
+                            case "Compare":
+                                {
+                                    if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.OptimizeMethodCall))
+                                        OptimizeMethodCallAnalysis.OptimizeStringCompare(context, invocationInfo);
+
+                                    break;
+                                }
                         }
 
                         break;
@@ -411,14 +425,27 @@ namespace Roslynator.CSharp.Analysis
                         if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.OptimizeStringBuilderAppendCall))
                             OptimizeStringBuilderAppendCallAnalysis.Analyze(context, invocationInfo);
 
+                        if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.AvoidBoxingOfValueType))
+                            AvoidBoxingOfValueTypeAnalysis.Analyze(context, invocationInfo);
+
+                        break;
+                    }
+                case "Assert":
+                    {
+                        if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.OptimizeMethodCall)
+                            && (argumentCount >= 1 && argumentCount <= 3))
+                        {
+                            OptimizeMethodCallAnalysis.OptimizeDebugAssert(context, invocationInfo);
+                        }
+
                         break;
                     }
                 case "Join":
                     {
-                        if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.CallStringConcatInsteadOfStringJoin)
+                        if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.OptimizeMethodCall)
                             && argumentCount >= 2)
                         {
-                            CallStringConcatInsteadOfStringJoinAnalysis.Analyze(context, invocationInfo);
+                            OptimizeMethodCallAnalysis.OptimizeStringJoin(context, invocationInfo);
                         }
 
                         break;

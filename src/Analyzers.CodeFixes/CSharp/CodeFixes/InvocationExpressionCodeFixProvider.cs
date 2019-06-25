@@ -33,8 +33,6 @@ namespace Roslynator.CSharp.CodeFixes
                     DiagnosticIdentifiers.RemoveRedundantToStringCall,
                     DiagnosticIdentifiers.RemoveRedundantStringToCharArrayCall,
                     DiagnosticIdentifiers.CombineEnumerableWhereMethodChain,
-                    DiagnosticIdentifiers.CallStringConcatInsteadOfStringJoin,
-                    DiagnosticIdentifiers.CallDebugFailInsteadOfDebugAssert,
                     DiagnosticIdentifiers.CallExtensionMethodAsInstanceMethod,
                     DiagnosticIdentifiers.CallThenByInsteadOfOrderBy,
                     DiagnosticIdentifiers.UseForEachInsteadOfForEachMethod);
@@ -99,26 +97,6 @@ namespace Roslynator.CSharp.CodeFixes
                             CodeAction codeAction = CodeAction.Create(
                                 "Remove redundant 'ToCharArray' call",
                                 cancellationToken => context.Document.ReplaceNodeAsync(invocation, RemoveInvocation(invocation).WithFormatterAnnotation(), cancellationToken),
-                                GetEquivalenceKey(diagnostic));
-
-                            context.RegisterCodeFix(codeAction, diagnostic);
-                            break;
-                        }
-                    case DiagnosticIdentifiers.CallStringConcatInsteadOfStringJoin:
-                        {
-                            CodeAction codeAction = CodeAction.Create(
-                                "Call 'Concat' instead of 'Join'",
-                                cancellationToken => CallStringConcatInsteadOfStringJoinRefactoring.RefactorAsync(context.Document, invocation, cancellationToken),
-                                GetEquivalenceKey(diagnostic));
-
-                            context.RegisterCodeFix(codeAction, diagnostic);
-                            break;
-                        }
-                    case DiagnosticIdentifiers.CallDebugFailInsteadOfDebugAssert:
-                        {
-                            CodeAction codeAction = CodeAction.Create(
-                                "Call 'Fail' instead of 'Assert'",
-                                cancellationToken => CallDebugFailInsteadOfDebugAssertRefactoring.RefactorAsync(context.Document, invocation, cancellationToken),
                                 GetEquivalenceKey(diagnostic));
 
                             context.RegisterCodeFix(codeAction, diagnostic);
