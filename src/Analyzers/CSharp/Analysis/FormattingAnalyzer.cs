@@ -220,15 +220,6 @@ namespace Roslynator.CSharp.Analysis
             }
         }
 
-        private static void AnalyzeAccessorList(SyntaxNodeAnalysisContext context, SyntaxToken token, AccessorListSyntax accessorList)
-        {
-            if (accessorList.Accessors.All(f => f.BodyOrExpressionBody() == null)
-                && accessorList.IsSingleLine())
-            {
-                AnalyzeUnnecessaryNewLine(context, token, accessorList);
-            }
-        }
-
         private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
         {
             var methodDeclaration = (MethodDeclarationSyntax)context.Node;
@@ -652,6 +643,15 @@ namespace Roslynator.CSharp.Analysis
             SyntaxToken last = modifiers.Last();
 
             AnalyzeUnnecessaryNewLine(context, last, last.GetNextToken());
+        }
+
+        private static void AnalyzeAccessorList(SyntaxNodeAnalysisContext context, SyntaxToken token, AccessorListSyntax accessorList)
+        {
+            if (accessorList.Accessors.All(f => f.BodyOrExpressionBody() == null)
+                && accessorList.IsSingleLine())
+            {
+                AnalyzeUnnecessaryNewLine(context, token, accessorList);
+            }
         }
 
         private static void AnalyzeUnnecessaryNewLine(SyntaxNodeAnalysisContext context, SyntaxNodeOrToken nodeOrToken1, SyntaxNodeOrToken nodeOrToken2)
