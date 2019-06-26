@@ -214,7 +214,19 @@ namespace Roslynator.CSharp.Analysis
             var indexerDeclaration = (IndexerDeclarationSyntax)context.Node;
 
             if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveUnnecessaryNewLine))
+            {
                 AnalyzeModifiers(context, indexerDeclaration.Modifiers);
+                AnalyzeAccessorList(context, indexerDeclaration.ParameterList.CloseBracketToken, indexerDeclaration.AccessorList);
+            }
+        }
+
+        private static void AnalyzeAccessorList(SyntaxNodeAnalysisContext context, SyntaxToken token, AccessorListSyntax accessorList)
+        {
+            if (accessorList.Accessors.All(f => f.BodyOrExpressionBody() == null)
+                && accessorList.IsSingleLine())
+            {
+                AnalyzeUnnecessaryNewLine(context, token, accessorList);
+            }
         }
 
         private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
@@ -238,7 +250,10 @@ namespace Roslynator.CSharp.Analysis
             var propertyDeclaration = (PropertyDeclarationSyntax)context.Node;
 
             if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveUnnecessaryNewLine))
+            {
                 AnalyzeModifiers(context, propertyDeclaration.Modifiers);
+                AnalyzeAccessorList(context, propertyDeclaration.Identifier, propertyDeclaration.AccessorList);
+            }
         }
 
         private static void AnalyzeLocalDeclarationStatement(SyntaxNodeAnalysisContext context)

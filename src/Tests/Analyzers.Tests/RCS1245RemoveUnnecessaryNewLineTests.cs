@@ -132,6 +132,28 @@ public static class C
         }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveUnnecessaryNewLine)]
+        public async Task Test_Modifiers_AccessorList()
+        {
+            await VerifyDiagnosticAndFixAsync(@"
+interface I
+{
+    object P[||]
+    { get; }
+
+    object this[int index][||]
+    { get; }
+}   
+", @"
+interface I
+{
+    object P { get; }
+
+    object this[int index] { get; }
+}   
+");
+        }
+
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveUnnecessaryNewLine)]
         public async Task TestNoDiagnostic_NoSemicolon()
         {
             await VerifyNoDiagnosticAsync(@"
