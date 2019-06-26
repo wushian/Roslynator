@@ -46,6 +46,7 @@ namespace Roslynator.VisualStudio
             analyzers.Add(new BaseModel("RCS1028", "Add new line after switch label.", !IsEnabled("RCS1028")));
             analyzers.Add(new BaseModel("RCS1029", "Format binary operator on next line.", !IsEnabled("RCS1029")));
             analyzers.Add(new BaseModel("RCS1030", "Add empty line after embedded statement.", !IsEnabled("RCS1030")));
+            analyzers.Add(new BaseModel("RCS1031", "Remove unnecessary braces.", !IsEnabled("RCS1031")));
             analyzers.Add(new BaseModel("RCS1032", "Remove redundant parentheses.", !IsEnabled("RCS1032")));
             analyzers.Add(new BaseModel("RCS1033", "Remove redundant boolean literal.", !IsEnabled("RCS1033")));
             analyzers.Add(new BaseModel("RCS1034", "Remove redundant 'sealed' modifier.", !IsEnabled("RCS1034")));
@@ -160,7 +161,7 @@ namespace Roslynator.VisualStudio
             analyzers.Add(new BaseModel("RCS1165", "Unconstrained type parameter checked for null.", !IsEnabled("RCS1165")));
             analyzers.Add(new BaseModel("RCS1166", "Value type object is never equal to null.", !IsEnabled("RCS1166")));
             analyzers.Add(new BaseModel("RCS1168", "Parameter name differs from base name.", !IsEnabled("RCS1168")));
-            analyzers.Add(new BaseModel("RCS1169", "Mark field as read-only.", !IsEnabled("RCS1169")));
+            analyzers.Add(new BaseModel("RCS1169", "Make field read-only.", !IsEnabled("RCS1169")));
             analyzers.Add(new BaseModel("RCS1170", "Use read-only auto-implemented property.", !IsEnabled("RCS1170")));
             analyzers.Add(new BaseModel("RCS1171", "Simplify lazy initialization.", !IsEnabled("RCS1171")));
             analyzers.Add(new BaseModel("RCS1172", "Use 'is' operator instead of 'as' operator.", !IsEnabled("RCS1172")));
@@ -226,6 +227,8 @@ namespace Roslynator.VisualStudio
             analyzers.Add(new BaseModel("RCS1233", "Use short-circuiting operator.", !IsEnabled("RCS1233")));
             analyzers.Add(new BaseModel("RCS1234", "Duplicate enum value.", !IsEnabled("RCS1234")));
             analyzers.Add(new BaseModel("RCS1235", "Optimize method call.", !IsEnabled("RCS1235")));
+            analyzers.Add(new BaseModel("RCS1236", "Use exception filter.", !IsEnabled("RCS1236")));
+            analyzers.Add(new BaseModel("RCS1237", "Use bit shift operator.", !IsEnabled("RCS1237")));
             analyzers.Add(new BaseModel("RCS1245", "Remove unnecessary new line.", !IsEnabled("RCS1245")));
         }
     }
