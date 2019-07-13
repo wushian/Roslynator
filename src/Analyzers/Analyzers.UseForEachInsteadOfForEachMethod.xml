@@ -9,7 +9,6 @@
     <IsEnabledByDefault>true</IsEnabledByDefault>
     <SupportsFadeOut>false</SupportsFadeOut>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
-    <Summary></Summary>
     <Samples>
       <Sample>
         <Before><![CDATA[list.ForEach(item => M(item));]]></Before>
@@ -26,12 +25,5 @@
 }]]></After>
       </Sample>
     </Samples>
-    <Remarks></Remarks>
-    <Links>
-      <Link>
-        <Url></Url>
-        <Text></Text>
-      </Link>
-    </Links>
   </Analyzer>
 </Analyzers>
