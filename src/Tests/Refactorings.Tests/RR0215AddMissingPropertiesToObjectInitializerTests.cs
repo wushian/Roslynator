@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Roslynator.CSharp.Refactorings.Tests
 {
-    public class RR0213AddMissingPropertiesToObjectInitializerTests : AbstractCSharpRefactoringVerifier
+    public class RR0215AddMissingPropertiesToObjectInitializerTests : AbstractCSharpRefactoringVerifier
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.AddMissingPropertiesToObjectInitializer;
 
