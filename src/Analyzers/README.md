@@ -21,10 +21,10 @@
 | RCS1016 | [Use expression-bodied member](../../docs/analyzers/RCS1016.md) | Usage | None |
 | RCS1017 | [Avoid multiline expression body](../../docs/analyzers/RCS1017.md) | Style | None |
 | RCS1018 | [Add default access modifier](../../docs/analyzers/RCS1018.md) | Readability | Info |
-| RCS1019 | [Reorder modifiers](../../docs/analyzers/RCS1019.md) | Readability | None |
+| RCS1019 | [Order modifiers](../../docs/analyzers/RCS1019.md) | Readability | None |
 | RCS1020 | [Simplify Nullable\<T> to T?](../../docs/analyzers/RCS1020.md) | Simplification | Info |
 | RCS1021 | [Simplify lambda expression](../../docs/analyzers/RCS1021.md) | Simplification | Info |
-| RCS1023 | [Format empty block](../../docs/analyzers/RCS1023.md) | Formatting | None |
+| RCS1023 | [Format empty block](../../docs/analyzers/RCS1023.md) | Formatting | Hidden |
 | RCS1024 | [Format accessor list](../../docs/analyzers/RCS1024.md) | Formatting | None |
 | RCS1025 | [Add new line before enum member](../../docs/analyzers/RCS1025.md) | Formatting | None |
 | RCS1026 | [Add new line before statement](../../docs/analyzers/RCS1026.md) | Formatting | None |
@@ -130,7 +130,6 @@
 | RCS1143 | [Simplify coalesce expression](../../docs/analyzers/RCS1143.md) | Simplification | Hidden |
 | RCS1145 | [Remove redundant 'as' operator](../../docs/analyzers/RCS1145.md) | Redundancy | Hidden |
 | RCS1146 | [Use conditional access](../../docs/analyzers/RCS1146.md) | Usage | Info |
-| RCS1150 | [Call string.Concat instead of string.Join](../../docs/analyzers/RCS1150.md) | Simplification | Info |
 | RCS1151 | [Remove redundant cast](../../docs/analyzers/RCS1151.md) | Redundancy | Hidden |
 | RCS1153 | [Add empty line after closing brace](../../docs/analyzers/RCS1153.md) | Formatting | None |
 | RCS1154 | [Sort enum members](../../docs/analyzers/RCS1154.md) | Readability | Info |
@@ -140,14 +139,14 @@
 | RCS1158 | [Static member in generic type should use a type parameter](../../docs/analyzers/RCS1158.md) | Design | Info |
 | RCS1159 | [Use EventHandler\<T>](../../docs/analyzers/RCS1159.md) | Usage | Info |
 | RCS1160 | [Abstract type should not have public constructors](../../docs/analyzers/RCS1160.md) | Design | Info |
-| RCS1161 | [Enum member should declare explicit value](../../docs/analyzers/RCS1161.md) | Readability | Hidden |
+| RCS1161 | [Enum should declare explicit values](../../docs/analyzers/RCS1161.md) | Readability | Hidden |
 | RCS1162 | [Avoid chain of assignments](../../docs/analyzers/RCS1162.md) | Readability | None |
 | RCS1163 | [Unused parameter](../../docs/analyzers/RCS1163.md) | Redundancy | Info |
 | RCS1164 | [Unused type parameter](../../docs/analyzers/RCS1164.md) | Redundancy | Info |
 | RCS1165 | [Unconstrained type parameter checked for null](../../docs/analyzers/RCS1165.md) | Usage | Hidden |
 | RCS1166 | [Value type object is never equal to null](../../docs/analyzers/RCS1166.md) | Usage | Info |
-| RCS1168 | [Parameter name differs from base name](../../docs/analyzers/RCS1168.md) | Maintainability | Warning |
-| RCS1169 | [Mark field as read-only](../../docs/analyzers/RCS1169.md) | Design | Info |
+| RCS1168 | [Parameter name differs from base name](../../docs/analyzers/RCS1168.md) | Maintainability | Hidden |
+| RCS1169 | [Make field read-only](../../docs/analyzers/RCS1169.md) | Design | Info |
 | RCS1170 | [Use read-only auto-implemented property](../../docs/analyzers/RCS1170.md) | Design | Info |
 | RCS1171 | [Simplify lazy initialization](../../docs/analyzers/RCS1171.md) | Simplification | Info |
 | RCS1172 | [Use 'is' operator instead of 'as' operator](../../docs/analyzers/RCS1172.md) | Simplification | Warning |
@@ -156,10 +155,9 @@
 | RCS1175 | [Unused this parameter](../../docs/analyzers/RCS1175.md) | Redundancy | Info |
 | RCS1176 | [Use 'var' instead of explicit type (when the type is not obvious)](../../docs/analyzers/RCS1176.md) | Simplification | None |
 | RCS1177 | [Use 'var' instead of explicit type (in foreach)](../../docs/analyzers/RCS1177.md) | Simplification | None |
-| RCS1178 | [Call Debug.Fail instead of Debug.Assert](../../docs/analyzers/RCS1178.md) | Usage | Info |
 | RCS1179 | [Use return instead of assignment](../../docs/analyzers/RCS1179.md) | Simplification | Info |
 | RCS1180 | [Inline lazy initialization](../../docs/analyzers/RCS1180.md) | Simplification | Info |
-| RCS1181 | [Replace comment with documentation comment](../../docs/analyzers/RCS1181.md) | General | Hidden |
+| RCS1181 | [Convert comment to documentation comment](../../docs/analyzers/RCS1181.md) | General | Hidden |
 | RCS1182 | [Remove redundant base interface](../../docs/analyzers/RCS1182.md) | Redundancy | Hidden |
 | RCS1183 | [Format initializer with single expression on single line](../../docs/analyzers/RCS1183.md) | Formatting | Hidden |
 | RCS1184 | [Format conditional expression (format ? and : on next line)](../../docs/analyzers/RCS1184.md) | Formatting | None |
@@ -183,11 +181,11 @@
 | RCS1202 | [Avoid NullReferenceException](../../docs/analyzers/RCS1202.md) | Usage | Info |
 | RCS1203 | [Use AttributeUsageAttribute](../../docs/analyzers/RCS1203.md) | Design | Warning |
 | RCS1204 | [Use EventArgs.Empty](../../docs/analyzers/RCS1204.md) | Usage | Info |
-| RCS1205 | [Reorder named arguments according to the order of parameters](../../docs/analyzers/RCS1205.md) | Readability | Info |
+| RCS1205 | [Order named arguments according to the order of parameters](../../docs/analyzers/RCS1205.md) | Readability | Info |
 | RCS1206 | [Use conditional access instead of conditional expression](../../docs/analyzers/RCS1206.md) | Usage | Info |
 | RCS1207 | [Use method group instead of anonymous function](../../docs/analyzers/RCS1207.md) | Simplification | Hidden |
 | RCS1208 | [Reduce if nesting](../../docs/analyzers/RCS1208.md) | Style | None |
-| RCS1209 | [Reorder type parameter constraints](../../docs/analyzers/RCS1209.md) | Readability | Info |
+| RCS1209 | [Order type parameter constraints](../../docs/analyzers/RCS1209.md) | Readability | Info |
 | RCS1210 | [Return Task.FromResult instead of returning null](../../docs/analyzers/RCS1210.md) | Usage | Warning |
 | RCS1211 | [Remove unnecessary else clause](../../docs/analyzers/RCS1211.md) | Redundancy | Hidden |
 | RCS1212 | [Remove redundant assignment](../../docs/analyzers/RCS1212.md) | Redundancy | Info |
@@ -209,7 +207,11 @@
 | RCS1228 | [Unused element in documentation comment](../../docs/analyzers/RCS1228.md) | Readability | Hidden |
 | RCS1229 | [Use async/await when necessary](../../docs/analyzers/RCS1229.md) | Usage | Info |
 | RCS1230 | [Unnecessary usage of enumerator](../../docs/analyzers/RCS1230.md) | Readability | Info |
-| RCS1231 | [Make parameter ref read-only](../../docs/analyzers/RCS1231.md) | Performance | Info |
+| RCS1231 | [Make parameter ref read-only](../../docs/analyzers/RCS1231.md) | Performance | None |
+| RCS1232 | [Order elements in documentation comment](../../docs/analyzers/RCS1232.md) | Readability | Info |
+| RCS1233 | [Use short-circuiting operator](../../docs/analyzers/RCS1233.md) | Usage | Info |
+| RCS1234 | [Duplicate enum value](../../docs/analyzers/RCS1234.md) | Readability | Info |
+| RCS1235 | [Optimize method call](../../docs/analyzers/RCS1235.md) | Performance | Info |
 
 
 *\(Generated with [DotMarkdown](http://github.com/JosefPihrt/DotMarkdown)\)*

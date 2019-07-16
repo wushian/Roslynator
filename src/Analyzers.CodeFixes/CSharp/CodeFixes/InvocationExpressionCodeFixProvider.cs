@@ -3,10 +3,12 @@
 using System;
 using System.Collections.Immutable;
 using System.Composition;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Roslynator.CodeFixes;
 using Roslynator.CSharp.Refactorings;
@@ -28,8 +30,6 @@ namespace Roslynator.CSharp.CodeFixes
                     DiagnosticIdentifiers.RemoveRedundantToStringCall,
                     DiagnosticIdentifiers.RemoveRedundantStringToCharArrayCall,
                     DiagnosticIdentifiers.CombineEnumerableWhereMethodChain,
-                    DiagnosticIdentifiers.CallStringConcatInsteadOfStringJoin,
-                    DiagnosticIdentifiers.CallDebugFailInsteadOfDebugAssert,
                     DiagnosticIdentifiers.CallExtensionMethodAsInstanceMethod,
                     DiagnosticIdentifiers.CallThenByInsteadOfOrderBy);
             }
@@ -82,7 +82,7 @@ namespace Roslynator.CSharp.CodeFixes
                         {
                             CodeAction codeAction = CodeAction.Create(
                                 "Remove redundant 'ToString' call",
-                                cancellationToken => context.Document.ReplaceNodeAsync(invocation, RefactoringUtility.RemoveInvocation(invocation).WithFormatterAnnotation(), cancellationToken),
+                                cancellationToken => context.Document.ReplaceNodeAsync(invocation, RemoveInvocation(invocation).WithFormatterAnnotation(), cancellationToken),
                                 GetEquivalenceKey(diagnostic));
 
                             context.RegisterCodeFix(codeAction, diagnostic);
@@ -92,27 +92,7 @@ namespace Roslynator.CSharp.CodeFixes
                         {
                             CodeAction codeAction = CodeAction.Create(
                                 "Remove redundant 'ToCharArray' call",
-                                cancellationToken => context.Document.ReplaceNodeAsync(invocation, RefactoringUtility.RemoveInvocation(invocation).WithFormatterAnnotation(), cancellationToken),
-                                GetEquivalenceKey(diagnostic));
-
-                            context.RegisterCodeFix(codeAction, diagnostic);
-                            break;
-                        }
-                    case DiagnosticIdentifiers.CallStringConcatInsteadOfStringJoin:
-                        {
-                            CodeAction codeAction = CodeAction.Create(
-                                "Call 'Concat' instead of 'Join'",
-                                cancellationToken => CallStringConcatInsteadOfStringJoinRefactoring.RefactorAsync(context.Document, invocation, cancellationToken),
-                                GetEquivalenceKey(diagnostic));
-
-                            context.RegisterCodeFix(codeAction, diagnostic);
-                            break;
-                        }
-                    case DiagnosticIdentifiers.CallDebugFailInsteadOfDebugAssert:
-                        {
-                            CodeAction codeAction = CodeAction.Create(
-                                "Call 'Fail' instead of 'Assert'",
-                                cancellationToken => CallDebugFailInsteadOfDebugAssertRefactoring.RefactorAsync(context.Document, invocation, cancellationToken),
+                                cancellationToken => context.Document.ReplaceNodeAsync(invocation, RemoveInvocation(invocation).WithFormatterAnnotation(), cancellationToken),
                                 GetEquivalenceKey(diagnostic));
 
                             context.RegisterCodeFix(codeAction, diagnostic);
@@ -148,6 +128,25 @@ namespace Roslynator.CSharp.CodeFixes
                         }
                 }
             }
+        }
+
+        private static ExpressionSyntax RemoveInvocation(InvocationExpressionSyntax invocation)
+        {
+            var memberAccess = (MemberAccessExpressionSyntax)invocation.Expression;
+
+            ArgumentListSyntax argumentList = invocation.ArgumentList;
+
+            SyntaxToken closeParen = argumentList.CloseParenToken;
+
+            return memberAccess.Expression
+                .AppendToTrailingTrivia(
+                    memberAccess.OperatorToken.GetAllTrivia()
+                        .Concat(memberAccess.Name.GetLeadingAndTrailingTrivia())
+                        .Concat(argumentList.OpenParenToken.GetAllTrivia())
+                        .Concat(closeParen.LeadingTrivia)
+                        .ToSyntaxTriviaList()
+                        .EmptyIfWhitespace()
+                        .AddRange(closeParen.TrailingTrivia));
         }
     }
 }

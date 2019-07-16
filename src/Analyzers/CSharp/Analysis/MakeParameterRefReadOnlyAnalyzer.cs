@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -17,8 +16,6 @@ namespace Roslynator.CSharp.Analysis
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class MakeParameterRefReadOnlyAnalyzer : BaseDiagnosticAnalyzer
     {
-        private static readonly SymbolDisplayFormat _symbolDisplayFormat = new SymbolDisplayFormat(kindOptions: SymbolDisplayKindOptions.IncludeTypeKeyword);
-
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
             get { return ImmutableArray.Create(DiagnosticDescriptors.MakeParameterRefReadOnly); }
@@ -32,12 +29,18 @@ namespace Roslynator.CSharp.Analysis
             base.Initialize(context);
             context.EnableConcurrentExecution();
 
-            //TODO: AnalyzeIndexerDeclaration
-            context.RegisterSyntaxNodeAction(AnalyzeMethodDeclaration, SyntaxKind.MethodDeclaration);
-            context.RegisterSyntaxNodeAction(AnalyzeConstructorDeclaration, SyntaxKind.ConstructorDeclaration);
-            context.RegisterSyntaxNodeAction(AnalyzeOperatorDeclaration, SyntaxKind.OperatorDeclaration);
-            context.RegisterSyntaxNodeAction(AnalyzeConversionOperatorDeclaration, SyntaxKind.ConversionOperatorDeclaration);
-            context.RegisterSyntaxNodeAction(AnalyzeLocalFunction, SyntaxKind.LocalFunctionStatement);
+            context.RegisterCompilationStartAction(startContext =>
+            {
+                if (((CSharpCompilation)startContext.Compilation).LanguageVersion <= LanguageVersion.CSharp7_1)
+                    return;
+
+                //TODO: AnalyzeIndexerDeclaration
+                startContext.RegisterSyntaxNodeAction(AnalyzeMethodDeclaration, SyntaxKind.MethodDeclaration);
+                startContext.RegisterSyntaxNodeAction(AnalyzeConstructorDeclaration, SyntaxKind.ConstructorDeclaration);
+                startContext.RegisterSyntaxNodeAction(AnalyzeOperatorDeclaration, SyntaxKind.OperatorDeclaration);
+                startContext.RegisterSyntaxNodeAction(AnalyzeConversionOperatorDeclaration, SyntaxKind.ConversionOperatorDeclaration);
+                startContext.RegisterSyntaxNodeAction(AnalyzeLocalFunction, SyntaxKind.LocalFunctionStatement);
+            });
         }
 
         private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
@@ -112,10 +115,7 @@ namespace Roslynator.CSharp.Analysis
                     ITypeSymbol type = parameter.Type;
 
                     //TODO: ITypeSymbol.IsReadOnly, https://github.com/dotnet/roslyn/issues/23792
-                    if (type.TypeKind == TypeKind.Struct
-                        && type
-                            .ToDisplayParts(_symbolDisplayFormat)
-                            .Any(f => f.Kind == SymbolDisplayPartKind.Keyword && f.ToString() == "readonly"))
+                    if (type.IsReadOnlyStruct())
                     {
                         if (walker == null)
                         {
@@ -123,6 +123,12 @@ namespace Roslynator.CSharp.Analysis
                                 return;
 
                             walker = SyntaxWalker.GetInstance();
+                        }
+
+                        if (walker.Parameters.ContainsKey(parameter.Name))
+                        {
+                            SyntaxWalker.Free(walker);
+                            return;
                         }
 
                         walker.Parameters.Add(parameter.Name, parameter);
@@ -145,10 +151,28 @@ namespace Roslynator.CSharp.Analysis
                 walker.VisitArrowExpressionClause((ArrowExpressionClauseSyntax)bodyOrExpressionBody);
             }
 
+            switch (declaration.Kind())
+            {
+                case SyntaxKind.MethodDeclaration:
+                    {
+                        if (MethodReferencedAsMethodGroupWalker.IsReferencedAsMethodGroup(declaration.Parent, methodSymbol, semanticModel, cancellationToken))
+                            return;
+
+                        break;
+                    }
+                case SyntaxKind.LocalFunctionStatement:
+                    {
+                        if (MethodReferencedAsMethodGroupWalker.IsReferencedAsMethodGroup(declaration.FirstAncestor<MemberDeclarationSyntax>(), methodSymbol, semanticModel, cancellationToken))
+                            return;
+
+                        break;
+                    }
+            }
+
             foreach (KeyValuePair<string, IParameterSymbol> kvp in walker.Parameters)
             {
                 if (kvp.Value.GetSyntaxOrDefault(cancellationToken) is ParameterSyntax parameter)
-                    context.ReportDiagnostic(DiagnosticDescriptors.MakeParameterRefReadOnly, parameter.Identifier);
+                    DiagnosticHelpers.ReportDiagnostic(context, DiagnosticDescriptors.MakeParameterRefReadOnly, parameter.Identifier);
             }
 
             SyntaxWalker.Free(walker);

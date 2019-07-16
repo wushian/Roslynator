@@ -11,7 +11,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Roslynator.CodeFixes;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Roslynator.CSharp.CSharpFactory;
-using static Roslynator.CSharp.CSharpSnippets;
 using static Roslynator.CSharp.CSharpTypeFactory;
 
 namespace Roslynator.CSharp.CodeFixes
@@ -33,13 +32,6 @@ namespace Roslynator.CSharp.CodeFixes
 
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
         {
-            if (!Settings.IsAnyCodeFixEnabled(
-                CodeFixIdentifiers.DefineObjectEquals,
-                CodeFixIdentifiers.DefineObjectGetHashCode))
-            {
-                return;
-            }
-
             SyntaxNode root = await context.GetSyntaxRootAsync().ConfigureAwait(false);
 
             if (!TryFindFirstAncestorOrSelf(root, context.Span, out TypeDeclarationSyntax typeDeclaration))
@@ -51,7 +43,7 @@ namespace Roslynator.CSharp.CodeFixes
                 {
                     case CompilerDiagnosticIdentifiers.TypeDefinesEqualityOperatorButDoesNotOverrideObjectEquals:
                         {
-                            if (!Settings.IsCodeFixEnabled(CodeFixIdentifiers.DefineObjectEquals))
+                            if (!Settings.IsEnabled(diagnostic.Id, CodeFixIdentifiers.DefineObjectEquals))
                                 break;
 
                             SemanticModel semanticModel = await context.GetSemanticModelAsync().ConfigureAwait(false);
@@ -67,7 +59,7 @@ namespace Roslynator.CSharp.CodeFixes
                                 {
                                     TypeSyntax type = typeSymbol.ToMinimalTypeSyntax(semanticModel, typeDeclaration.Identifier.SpanStart);
 
-                                    MethodDeclarationSyntax methodDeclaration = ObjectEqualsMethodDeclaration(type, semanticModel, typeDeclaration.OpenBraceToken.Span.End);
+                                    MethodDeclarationSyntax methodDeclaration = ObjectEqualsMethodDeclaration(type);
 
                                     TypeDeclarationSyntax newNode = MemberDeclarationInserter.Default.Insert(typeDeclaration, methodDeclaration);
 
@@ -81,12 +73,12 @@ namespace Roslynator.CSharp.CodeFixes
                     case CompilerDiagnosticIdentifiers.TypeDefinesEqualityOperatorButDoesNotOverrideObjectGetHashCode:
                     case CompilerDiagnosticIdentifiers.TypeOverridesObjectEqualsButDoesNotOverrideObjectGetHashCode:
                         {
-                            if (!Settings.IsCodeFixEnabled(CodeFixIdentifiers.DefineObjectGetHashCode))
+                            if (!Settings.IsEnabled(diagnostic.Id, CodeFixIdentifiers.DefineObjectGetHashCode))
                                 break;
 
                             SemanticModel semanticModel = await context.GetSemanticModelAsync().ConfigureAwait(false);
 
-                            MethodDeclarationSyntax methodDeclaration = ObjectGetHashCodeMethodDeclaration(semanticModel, typeDeclaration.CloseBraceToken.Span.End);
+                            MethodDeclarationSyntax methodDeclaration = ObjectGetHashCodeMethodDeclaration();
 
                             CodeAction codeAction = CodeAction.Create(
                                 "Override object.GetHashCode",
@@ -107,8 +99,6 @@ namespace Roslynator.CSharp.CodeFixes
 
         private static MethodDeclarationSyntax ObjectEqualsMethodDeclaration(
             TypeSyntax type,
-            SemanticModel semanticModel,
-            int position,
             string parameterName = "obj",
             string localName = "other")
         {
@@ -118,23 +108,25 @@ namespace Roslynator.CSharp.CodeFixes
                 Identifier("Equals"),
                 ParameterList(Parameter(ObjectType(), parameterName)),
                 Block(
-                    IfNotReturnFalse(
-                        IsPatternExpression(
-                            IdentifierName(parameterName),
-                            DeclarationPattern(
-                                type,
-                                SingleVariableDesignation(Identifier(localName))))),
-                    ThrowNewNotImplementedExceptionStatement(semanticModel, position)));
+                    IfStatement(
+                        LogicalNotExpression(
+                            IsPatternExpression(
+                                IdentifierName(parameterName),
+                                DeclarationPattern(
+                                    type,
+                                    SingleVariableDesignation(Identifier(localName)))).Parenthesize()),
+                        Block(ReturnStatement(FalseLiteralExpression()))),
+                    ThrowNewStatement(NotImplementedException())));
         }
 
-        private static MethodDeclarationSyntax ObjectGetHashCodeMethodDeclaration(SemanticModel semanticModel, int position)
+        private static MethodDeclarationSyntax ObjectGetHashCodeMethodDeclaration()
         {
             return MethodDeclaration(
                 Modifiers.Public_Override(),
                 IntType(),
                 Identifier("GetHashCode"),
                 ParameterList(),
-                Block(ThrowNewNotImplementedExceptionStatement(semanticModel, position)));
+                Block(ThrowNewStatement(NotImplementedException())));
         }
     }
 }

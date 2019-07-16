@@ -12,8 +12,8 @@
 | Design | [Implement exception constructors](../../docs/analyzers/RCS1194.md) | RCS1194 | Warning |
 | Design | [Make class sealed](../../docs/analyzers/RCS1225.md) | RCS1225 | Info |
 | Design | [Make class static](../../docs/analyzers/RCS1102.md) | RCS1102 | Warning |
+| Design | [Make field read-only](../../docs/analyzers/RCS1169.md) | RCS1169 | Info |
 | Design | [Make method an extension method](../../docs/analyzers/RCS1224.md) | RCS1224 | Info |
-| Design | [Mark field as read-only](../../docs/analyzers/RCS1169.md) | RCS1169 | Info |
 | Design | [Overriding member cannot change 'params' modifier](../../docs/analyzers/RCS1193.md) | RCS1193 | Warning |
 | Design | [Static member in generic type should use a type parameter](../../docs/analyzers/RCS1158.md) | RCS1158 | Info |
 | Design | [Use AttributeUsageAttribute](../../docs/analyzers/RCS1203.md) | RCS1203 | Warning |
@@ -34,12 +34,12 @@
 | Formatting | [Format declaration braces](../../docs/analyzers/RCS1076.md) | RCS1076 | Hidden |
 | Formatting | [Format documentation summary on a single line](../../docs/analyzers/RCS1100.md) | RCS1100 | None |
 | Formatting | [Format documentation summary on multiple lines](../../docs/analyzers/RCS1101.md) | RCS1101 | None |
-| Formatting | [Format empty block](../../docs/analyzers/RCS1023.md) | RCS1023 | None |
+| Formatting | [Format empty block](../../docs/analyzers/RCS1023.md) | RCS1023 | Hidden |
 | Formatting | [Format initializer with single expression on single line](../../docs/analyzers/RCS1183.md) | RCS1183 | Hidden |
 | Formatting | [Format single-line block](../../docs/analyzers/RCS1185.md) | RCS1185 | None |
 | General | [Bitwise operation on enum without Flags attribute](../../docs/analyzers/RCS1130.md) | RCS1130 | Info |
+| General | [Convert comment to documentation comment](../../docs/analyzers/RCS1181.md) | RCS1181 | Hidden |
 | General | [Mark local variable as const](../../docs/analyzers/RCS1118.md) | RCS1118 | Info |
-| General | [Replace comment with documentation comment](../../docs/analyzers/RCS1181.md) | RCS1181 | Hidden |
 | General | [Throwing of new NotImplementedException](../../docs/analyzers/RCS1079.md) | RCS1079 | Info |
 | General | [Use "" instead of string.Empty](../../docs/analyzers/RCS1078.md) | RCS1078 | None |
 | General | [Use carriage return + linefeed as newline](../../docs/analyzers/RCS1087.md) | RCS1087 | None |
@@ -51,7 +51,7 @@
 | Maintainability | [Add summary to documentation comment](../../docs/analyzers/RCS1138.md) | RCS1138 | Warning |
 | Maintainability | [Add 'typeparam' element to documentation comment](../../docs/analyzers/RCS1142.md) | RCS1142 | Hidden |
 | Maintainability | [Declare each type in separate file](../../docs/analyzers/RCS1060.md) | RCS1060 | None |
-| Maintainability | [Parameter name differs from base name](../../docs/analyzers/RCS1168.md) | RCS1168 | Warning |
+| Maintainability | [Parameter name differs from base name](../../docs/analyzers/RCS1168.md) | RCS1168 | Hidden |
 | Maintainability | [Remove original exception from throw statement](../../docs/analyzers/RCS1044.md) | RCS1044 | Warning |
 | Maintainability | [Use nameof operator](../../docs/analyzers/RCS1015.md) | RCS1015 | Info |
 | Naming | [Asynchronous method name should end with 'Async'](../../docs/analyzers/RCS1046.md) | RCS1046 | None |
@@ -59,8 +59,9 @@
 | Naming | [Rename private field according to camel case with underscore](../../docs/analyzers/RCS1045.md) | RCS1045 | None |
 | Performance | [Avoid unnecessary boxing of value type](../../docs/analyzers/RCS1198.md) | RCS1198 | None |
 | Performance | [Call 'Enumerable.Skip' and 'Enumerable.Any' instead of 'Enumerable.Count'](../../docs/analyzers/RCS1219.md) | RCS1219 | None |
-| Performance | [Make parameter ref read-only](../../docs/analyzers/RCS1231.md) | RCS1231 | Info |
+| Performance | [Make parameter ref read-only](../../docs/analyzers/RCS1231.md) | RCS1231 | None |
 | Performance | [Optimize LINQ method call](../../docs/analyzers/RCS1077.md) | RCS1077 | Info |
+| Performance | [Optimize method call](../../docs/analyzers/RCS1235.md) | RCS1235 | Info |
 | Performance | [Optimize StringBuilder.Append/AppendLine call](../../docs/analyzers/RCS1197.md) | RCS1197 | Info |
 | Performance | [Use bitwise operation instead of calling 'HasFlag'](../../docs/analyzers/RCS1096.md) | RCS1096 | Info |
 | Performance | [Use 'Count/Length' property instead of 'Any' method](../../docs/analyzers/RCS1080.md) | RCS1080 | Info |
@@ -76,11 +77,13 @@
 | Readability | [Declare enum value as combination of names](../../docs/analyzers/RCS1191.md) | RCS1191 | Info |
 | Readability | [Declare using directive on top level](../../docs/analyzers/RCS1094.md) | RCS1094 | None |
 | Readability | [Default label should be the last label in a switch section](../../docs/analyzers/RCS1099.md) | RCS1099 | Info |
-| Readability | [Enum member should declare explicit value](../../docs/analyzers/RCS1161.md) | RCS1161 | Hidden |
+| Readability | [Duplicate enum value](../../docs/analyzers/RCS1234.md) | RCS1234 | Info |
+| Readability | [Enum should declare explicit values](../../docs/analyzers/RCS1161.md) | RCS1161 | Hidden |
 | Readability | [Merge preprocessor directives](../../docs/analyzers/RCS1222.md) | RCS1222 | Info |
-| Readability | [Reorder modifiers](../../docs/analyzers/RCS1019.md) | RCS1019 | None |
-| Readability | [Reorder named arguments according to the order of parameters](../../docs/analyzers/RCS1205.md) | RCS1205 | Info |
-| Readability | [Reorder type parameter constraints](../../docs/analyzers/RCS1209.md) | RCS1209 | Info |
+| Readability | [Order elements in documentation comment](../../docs/analyzers/RCS1232.md) | RCS1232 | Info |
+| Readability | [Order modifiers](../../docs/analyzers/RCS1019.md) | RCS1019 | None |
+| Readability | [Order named arguments according to the order of parameters](../../docs/analyzers/RCS1205.md) | RCS1205 | Info |
+| Readability | [Order type parameter constraints](../../docs/analyzers/RCS1209.md) | RCS1209 | Info |
 | Readability | [Replace interpolated string with concatenation](../../docs/analyzers/RCS1217.md) | RCS1217 | Hidden |
 | Readability | [Simplify code branching](../../docs/analyzers/RCS1218.md) | RCS1218 | Info |
 | Readability | [Sort enum members](../../docs/analyzers/RCS1154.md) | RCS1154 | Info |
@@ -134,7 +137,6 @@
 | Redundancy | [Unused parameter](../../docs/analyzers/RCS1163.md) | RCS1163 | Info |
 | Redundancy | [Unused this parameter](../../docs/analyzers/RCS1175.md) | RCS1175 | Info |
 | Redundancy | [Unused type parameter](../../docs/analyzers/RCS1164.md) | RCS1164 | Info |
-| Simplification | [Call string.Concat instead of string.Join](../../docs/analyzers/RCS1150.md) | RCS1150 | Info |
 | Simplification | [Combine 'Enumerable.Where' method chain](../../docs/analyzers/RCS1112.md) | RCS1112 | Info |
 | Simplification | [Inline lazy initialization](../../docs/analyzers/RCS1180.md) | RCS1180 | Info |
 | Simplification | [Inline local variable](../../docs/analyzers/RCS1124.md) | RCS1124 | Hidden |
@@ -188,7 +190,6 @@
 | Style | [Remove braces](../../docs/analyzers/RCS1002.md) | RCS1002 | None |
 | Usage | [Add paragraph to documentation comment](../../docs/analyzers/RCS1226.md) | RCS1226 | Info |
 | Usage | [Avoid NullReferenceException](../../docs/analyzers/RCS1202.md) | RCS1202 | Info |
-| Usage | [Call Debug.Fail instead of Debug.Assert](../../docs/analyzers/RCS1178.md) | RCS1178 | Info |
 | Usage | [Call 'Enumerable.ThenBy' instead of 'Enumerable.OrderBy'](../../docs/analyzers/RCS1200.md) | RCS1200 | Info |
 | Usage | [Mark publicly visible type with DebuggerDisplay attribute](../../docs/analyzers/RCS1223.md) | RCS1223 | None |
 | Usage | [Return Task.FromResult instead of returning null](../../docs/analyzers/RCS1210.md) | RCS1210 | Warning |
@@ -204,6 +205,7 @@
 | Usage | [Use pattern matching instead of combination of 'is' operator and cast operator](../../docs/analyzers/RCS1220.md) | RCS1220 | Info |
 | Usage | [Use predefined type](../../docs/analyzers/RCS1013.md) | RCS1013 | None |
 | Usage | [Use Regex instance instead of static method](../../docs/analyzers/RCS1186.md) | RCS1186 | Hidden |
+| Usage | [Use short-circuiting operator](../../docs/analyzers/RCS1233.md) | RCS1233 | Info |
 | Usage | [Use 'string.IsNullOrEmpty' method](../../docs/analyzers/RCS1113.md) | RCS1113 | Info |
 | Usage | [Use string.Length instead of comparison with empty string](../../docs/analyzers/RCS1156.md) | RCS1156 | Info |
 | Usage | [Use StringComparison when comparing strings](../../docs/analyzers/RCS1155.md) | RCS1155 | Warning |

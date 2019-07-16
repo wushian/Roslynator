@@ -30,8 +30,12 @@ namespace Roslynator.CSharp
             if ((options & DefaultSyntaxOptions.UseDefault) != 0)
                 return CreateDefault();
 
-            if (typeSymbol.IsReferenceTypeOrNullableType())
+            if (typeSymbol.IsReferenceType
+                || typeSymbol.TypeKind == TypeKind.Pointer
+                || typeSymbol.IsNullableType())
+            {
                 return NullLiteralExpression();
+            }
 
             if (typeSymbol.TypeKind == TypeKind.Enum)
             {
@@ -72,7 +76,7 @@ namespace Roslynator.CSharp
 
             ExpressionSyntax CreateDefault()
             {
-                if ((options & DefaultSyntaxOptions.PreferDefaultLiteral) != 0)
+                if ((options & DefaultSyntaxOptions.AllowDefaultLiteral) != 0)
                     return DefaultLiteralExpression();
 
                 return DefaultExpression(GetTypeSyntax());

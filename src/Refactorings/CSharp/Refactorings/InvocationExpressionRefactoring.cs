@@ -16,7 +16,7 @@ namespace Roslynator.CSharp.Refactorings
         {
             if (context.IsRefactoringEnabled(RefactoringIdentifiers.UseElementAccessInsteadOfEnumerableMethod)
                 || context.IsRefactoringEnabled(RefactoringIdentifiers.ExpandLinqMethodOperation)
-                || context.IsRefactoringEnabled(RefactoringIdentifiers.ReplaceAnyWithAllOrAllWithAny)
+                || context.IsRefactoringEnabled(RefactoringIdentifiers.InvertLinqMethodCall)
                 || context.IsRefactoringEnabled(RefactoringIdentifiers.CallExtensionMethodAsInstanceMethod)
                 || context.IsRefactoringEnabled(RefactoringIdentifiers.CallIndexOfInsteadOfContains))
             {
@@ -34,8 +34,11 @@ namespace Roslynator.CSharp.Refactorings
                         if (context.IsRefactoringEnabled(RefactoringIdentifiers.ExpandLinqMethodOperation))
                             ExpandLinqMethodOperationRefactoring.ComputeRefactorings(context, invocationInfo, semanticModel);
 
-                        if (context.IsRefactoringEnabled(RefactoringIdentifiers.ReplaceAnyWithAllOrAllWithAny))
-                            ReplaceAnyWithAllOrAllWithAnyRefactoring.ComputeRefactoring(context, invocationExpression, semanticModel);
+                        if (context.IsRefactoringEnabled(RefactoringIdentifiers.InvertLinqMethodCall))
+                        {
+                            SemanticModel semanticModel = await context.GetSemanticModelAsync().ConfigureAwait(false);
+                            InvertLinqMethodCallRefactoring.ComputeRefactoring(context, invocationExpression, semanticModel);
+                        }
 
                         if (context.IsRefactoringEnabled(RefactoringIdentifiers.CallIndexOfInsteadOfContains))
                             CallIndexOfInsteadOfContainsRefactoring.ComputeRefactoring(context, invocationExpression, semanticModel);

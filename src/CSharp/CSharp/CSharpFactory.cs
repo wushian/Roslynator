@@ -1110,6 +1110,25 @@ namespace Roslynator.CSharp
                 expressionBody,
                 SemicolonToken());
         }
+
+        internal static ThrowStatementSyntax ThrowNewStatement(TypeSyntax exceptionType)
+        {
+            return ThrowStatement(ObjectCreationExpression(exceptionType, ArgumentList()));
+        }
+
+        public static ForStatementSyntax ForStatement(
+            VariableDeclarationSyntax declaration,
+            ExpressionSyntax condition,
+            ExpressionSyntax incrementor,
+            StatementSyntax statement)
+        {
+            return SyntaxFactory.ForStatement(
+                declaration: declaration,
+                initializers: default(SeparatedSyntaxList<ExpressionSyntax>),
+                condition: condition,
+                incrementors: SingletonSeparatedList(incrementor),
+                statement: statement);
+        }
         #endregion Statement
 
         #region BinaryExpression
@@ -1611,6 +1630,11 @@ namespace Roslynator.CSharp
                 Literal(value));
         }
 
+        internal static LiteralExpressionSyntax NumericLiteralExpression(ulong value, SpecialType numericType)
+        {
+            return LiteralExpression(ConvertHelpers.Convert(value, numericType));
+        }
+
         public static LiteralExpressionSyntax TrueLiteralExpression()
         {
             return SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression);
@@ -1797,6 +1821,11 @@ namespace Roslynator.CSharp
         public static CheckedExpressionSyntax UncheckedExpression(SyntaxToken openParenToken, ExpressionSyntax expression, SyntaxToken closeParenToken)
         {
             return SyntaxFactory.CheckedExpression(SyntaxKind.UncheckedExpression, Token(SyntaxKind.UncheckedKeyword), openParenToken, expression, closeParenToken);
+        }
+
+        internal static ThrowExpressionSyntax ThrowNewExpression(TypeSyntax exceptionType)
+        {
+            return ThrowExpression(ObjectCreationExpression(exceptionType, ArgumentList()));
         }
         #endregion Expression
 
@@ -2037,53 +2066,19 @@ namespace Roslynator.CSharp
         internal static bool AreEquivalent(
             SyntaxNode node1,
             SyntaxNode node2,
-            bool disregardTrivia = true,
             bool topLevel = false)
         {
-            if (disregardTrivia)
-                return SyntaxFactory.AreEquivalent(node1, node2, topLevel: topLevel);
-
-            if (node1 == null)
-                return node2 == null;
-
-            return node1.IsEquivalentTo(node2, topLevel: topLevel);
+            return SyntaxFactory.AreEquivalent(node1, node2, topLevel: topLevel);
         }
 
         internal static bool AreEquivalent(
             SyntaxNode node1,
             SyntaxNode node2,
             SyntaxNode node3,
-            bool disregardTrivia = true,
             bool topLevel = false)
         {
-            return AreEquivalent(node1, node2, disregardTrivia: disregardTrivia, topLevel: topLevel)
-                && AreEquivalent(node1, node3, disregardTrivia: disregardTrivia, topLevel: topLevel);
-        }
-
-        internal static bool AreEquivalent<TNode>(
-            IList<TNode> first,
-            IList<TNode> second,
-            bool disregardTrivia = true,
-            bool topLevel = false) where TNode : SyntaxNode
-        {
-            if (first == null)
-                throw new ArgumentNullException(nameof(first));
-
-            if (second == null)
-                throw new ArgumentNullException(nameof(second));
-
-            int count = first.Count;
-
-            if (count != second.Count)
-                return false;
-
-            for (int i = 0; i < count; i++)
-            {
-                if (!AreEquivalent(first[i], second[i], disregardTrivia: disregardTrivia, topLevel: topLevel))
-                    return false;
-            }
-
-            return true;
+            return AreEquivalent(node1, node2, topLevel: topLevel)
+                && AreEquivalent(node1, node3, topLevel: topLevel);
         }
     }
 }

@@ -31,6 +31,7 @@ namespace Roslynator.CSharp
         public const string ObjectOfTypeConvertibleToTypeIsRequired = "CS0126";
         public const string SinceMethodReturnsVoidReturnKeywordMustNotBeFollowedByObjectExpression = "CS0127";
         public const string LocalVariableOrFunctionIsAlreadyDefinedInThisScope = "CS0128";
+        public const string LeftHandSideOfAssignmentMustBeVariablePropertyOrIndexer = "CS0131";
         public const string StaticConstructorMustBeParameterless = "CS0132";
         public const string ExpressionBeingAssignedMustBeConstant = "CS0133";
         public const string LocalOrParameterCannotBeDeclaredInThisScopeBecauseThatNameIsUsedInEnclosingScopeToDefineLocalOrParameter = "CS0136";
@@ -44,6 +45,7 @@ namespace Roslynator.CSharp
         public const string VariableIsDeclaredButNeverUsed = "CS0168";
         public const string TypeOfConditionalExpressionCannotBeDetermined = "CS0173";
         public const string OutParameterMustBeAssignedToBeforeControlLeavesCurrentMethod = "CS0177";
+        public const string ReadOnlyFieldCannotBeAssignedTo = "CS0191";
         public const string ReadOnlyFieldCannotBePassedAsRefOrOutValue = "CS0192";
         public const string OnlyAssignmentCallIncrementDecrementAndNewObjectExpressionsCanBeUsedAsStatement = "CS0201";
         public const string PointersAndFixedSizeBuffersMayOnlyBeUsedInUnsafeContext = "CS0214";
@@ -115,6 +117,7 @@ namespace Roslynator.CSharp
         public const string SemicolonExpected = "CS1002";
         public const string SyntaxErrorCharExpected = "CS1003";
         public const string DuplicateModifier = "CS1004";
+        public const string TooManyCharactersInCharacterLiteral = "CS1012";
         public const string EmbeddedStatementCannotBeDeclarationOrLabeledStatement = "CS1023";
         public const string TypeExpected = "CS1031";
         public const string StaticClassesCannotContainProtectedMembers = "CS1057";
@@ -150,6 +153,18 @@ namespace Roslynator.CSharp
         public const string AsyncMethodsCannotHaveRefOrOutParameters = "CS1988";
         public const string AsyncModifierCanOnlyBeUsedInMethodsThatHaveBody = "CS1994";
         public const string SinceMethodIsAsyncMethodThatReturnsTaskReturnKeywordMustNotBeFollowedByObjectExpression = "CS1997";
+        public const string MethodsWithVariableArgumentsAreNotCLSCompliant = "CS3000";
+        public const string ArgumentTypeIsNotCLSCompliant = "CS3001";
+        public const string ReturnTypeIsNotCLSCompliant = "CS3002";
+        public const string TypeOfVariableIsNotCLSCompliant = "CS3003";
+        public const string IdentifierDifferingOnlyInCaseIsNotCLSCompliant = "CS3005";
+        public const string OverloadedMethodDifferingOnlyInRefOrOutOrInArrayRankIsNotCLSCompliant = "CS3006";
+        public const string OverloadedMethodDifferingOnlyByUnnamedArrayTypesIsNotCLSCompliant = "CS3007";
+        public const string IdentifierIsNotCLSCompliant = "CS3008";
+        public const string BaseTypeIsNotCLSCompliant = "CS3009";
+        public const string ArraysAsAttributeArgumentsIsNotCLSCompliant = "CS3016";
+        public const string ConstraintTypeIsNotCLSCompliant = "CS3024";
+        public const string TypeIsNotCLSCompliantBecauseBaseInterfaceIsNotCLSCompliant = "CS3027";
         public const string OnlyAutoImplementedPropertiesCanHaveInitializers = "CS8050";
         public const string ControlCannotFallOutOfSwitchFromFinalCaseLabel = "CS8070";
         public const string LocalFunctionMustAlwaysHaveBody = "CS8112";

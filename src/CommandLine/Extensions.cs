@@ -7,53 +7,31 @@ namespace Roslynator.CommandLine
 {
     internal static class Extensions
     {
-        public static OperationCanceledException GetOperationCanceledException(this AggregateException aggregateException)
+        public static bool ContainsProject(this Solution solution, string name)
         {
-            OperationCanceledException operationCanceledException = null;
-
-            foreach (Exception ex in aggregateException.InnerExceptions)
+            foreach (Project project in solution.Projects)
             {
-                if (ex is OperationCanceledException operationCanceledException2)
-                {
-                    if (operationCanceledException == null)
-                        operationCanceledException = operationCanceledException2;
-                }
-                else if (ex is AggregateException aggregateException2)
-                {
-                    foreach (Exception ex2 in aggregateException2.InnerExceptions)
-                    {
-                        if (ex2 is OperationCanceledException operationCanceledException3)
-                        {
-                            if (operationCanceledException == null)
-                                operationCanceledException = operationCanceledException3;
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                    }
-
-                    return operationCanceledException;
-                }
-                else
-                {
-                    return null;
-                }
+                if (project.Name == name)
+                    return true;
             }
 
-            return null;
+            return false;
         }
 
-        public static ConsoleColor GetColor(this WorkspaceDiagnosticKind kind)
+        public static VisibilityFilter ToVisibilityFilter(this Visibility visibility)
         {
-            switch (kind)
+            switch (visibility)
             {
-                case WorkspaceDiagnosticKind.Failure:
-                    return ConsoleColor.Red;
-                case WorkspaceDiagnosticKind.Warning:
-                    return ConsoleColor.Yellow;
+                case Visibility.NotApplicable:
+                    return VisibilityFilter.None;
+                case Visibility.Private:
+                    return VisibilityFilter.Private;
+                case Visibility.Internal:
+                    return VisibilityFilter.Internal;
+                case Visibility.Public:
+                    return VisibilityFilter.Public;
                 default:
-                    throw new InvalidOperationException($"Unknown value '{kind}'.");
+                    throw new InvalidOperationException();
             }
         }
     }
