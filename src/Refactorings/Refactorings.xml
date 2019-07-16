@@ -883,6 +883,24 @@ return true;]]></After>
       <Syntax>System.Linq.Enumerable.Any(Func&lt;T, bool&gt;) or System.Linq.Enumerable.All(Func&lt;T, bool&gt;)</Syntax>
     </Syntaxes>
     <Span>method name</Span>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[if (items.Any(predicate)
+{
+}]]></Before>
+        <After><![CDATA[if (items.All(!predicate)
+{
+}]]></After>
+      </Sample>
+      <Sample>
+        <Before><![CDATA[if (items.All(predicate)
+{
+}]]></Before>
+        <After><![CDATA[if (items.Any(!predicate)
+{
+}]]></After>
+      </Sample>
+    </Samples>
   </Refactoring>
   <Refactoring Id="RR0117" Identifier="ReplaceAsWithCast" Title="Replace as expression with cast expression">
     <Syntaxes>
@@ -900,12 +918,9 @@ return true;]]></After>
     </Syntaxes>
     <Span>selected true/false expression</Span>
   </Refactoring>
-  <Refactoring Id="RR0120" Identifier="ReplaceConditionalExpressionWithIfElse" Title="Replace ?: with if-else">
+  <Refactoring Id="RR0120" Identifier="ConvertConditionalOperatorToIfElse" Title="Convert ?: to if-else">
     <Syntaxes>
-      <Syntax>local declaration statement with conditional expression</Syntax>
-      <Syntax>assignment with conditional expression</Syntax>
-      <Syntax>return statement conditional expression</Syntax>
-      <Syntax>yield statement conditional expression</Syntax>
+      <Syntax>?: operator that is part of local declaration, assignment or (yield) return statement</Syntax>
     </Syntaxes>
     <Samples>
       <Sample>
@@ -1199,7 +1214,7 @@ i--;]]></After>
       </Sample>
     </Samples>
   </Refactoring>
-  <Refactoring Id="RR0151" Identifier="ReplaceWhileWithFor" Title="Replace while statement with for statement">
+  <Refactoring Id="RR0151" Identifier="ConvertWhileToFor" Title="Convert 'while' statement to 'for' statement">
     <Syntaxes>
       <Syntax>while statement</Syntax>
     </Syntaxes>
@@ -1311,7 +1326,7 @@ i--;]]></After>
     </Syntaxes>
     <Span>top if keyword or selected if statement</Span>
   </Refactoring>
-  <Refactoring Id="RR0166" Identifier="UseConditionalExpressionInsteadOfIf" Title="Use conditional expression instead of if">
+  <Refactoring Id="RR0166" Identifier="ConvertIfToConditionalOperator" Title="Convert 'if' to ?:">
     <Syntaxes>
       <Syntax>if statement</Syntax>
     </Syntaxes>
@@ -1568,7 +1583,7 @@ return false;]]></After>
       </Sample>
     </Samples>
   </Refactoring>
-  <Refactoring Id="RR0192" Identifier="ReplaceCommentWithDocumentationComment" Title="Replace comment with documentation comment">
+  <Refactoring Id="RR0192" Identifier="ConvertCommentToDocumentationComment" Title="Convert comment to documentation comment">
     <Syntaxes>
       <Syntax>single-line comment</Syntax>
     </Syntaxes>
@@ -2137,6 +2152,52 @@ else
 {
     return 0;
 }]]></After>
+      </Sample>
+    </Samples>
+  </Refactoring>
+  <Refactoring Id="RR0212" Identifier="DuplicateSwitchSection" Title="Duplicate switch section">
+    <Syntaxes>
+      <Syntax>switch section</Syntax>
+    </Syntaxes>
+    <Span>close brace or empty line after switch section</Span>
+    <Samples>
+      <Sample>
+        <Before>
+          <![CDATA[switch (s)
+{
+    case "a":
+        {
+            // ...
+
+            break;
+        }
+    default:
+        {
+            break;
+        }
+}]]>
+        </Before>
+        <After>
+          <![CDATA[switch (s)
+{
+    case "a":
+        {
+            // ...
+
+            break;
+        }
+    case "a":
+        {
+            // ...
+
+            break;
+        }
+    default:
+        {
+            break;
+        }
+}]]>
+        </After>
       </Sample>
     </Samples>
   </Refactoring>
