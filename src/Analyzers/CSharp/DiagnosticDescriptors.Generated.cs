@@ -359,6 +359,20 @@ namespace Roslynator.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineAfterEmbeddedStatement}", 
             customTags:         Array.Empty<string>());
 
+        /// <summary>RCS1031</summary>
+        public static readonly DiagnosticDescriptor RemoveUnnecessaryBraces = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.RemoveUnnecessaryBraces, 
+            title:              "Remove unnecessary braces.", 
+            messageFormat:      "Remove unnecessary braces.", 
+            category:           DiagnosticCategories.Redundancy, 
+            defaultSeverity:    DiagnosticSeverity.Hidden, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveUnnecessaryBraces}", 
+            customTags:         WellKnownDiagnosticTags.Unnecessary);
+
+        public static readonly DiagnosticDescriptor RemoveUnnecessaryBracesFadeOut = RemoveUnnecessaryBraces.CreateFadeOut();
+
         /// <summary>RCS1032</summary>
         public static readonly DiagnosticDescriptor RemoveRedundantParentheses = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.RemoveRedundantParentheses, 
@@ -2555,6 +2569,78 @@ namespace Roslynator.CSharp
             isEnabledByDefault: true, 
             description:        null, 
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.OptimizeMethodCall}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS1236</summary>
+        public static readonly DiagnosticDescriptor UseExceptionFilter = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.UseExceptionFilter, 
+            title:              "Use exception filter.", 
+            messageFormat:      "Use exception filter.", 
+            category:           DiagnosticCategories.Usage, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseExceptionFilter}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS1237</summary>
+        public static readonly DiagnosticDescriptor UseBitShiftOperator = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.UseBitShiftOperator, 
+            title:              "Use bit shift operator.", 
+            messageFormat:      "Use bit shift operator.", 
+            category:           DiagnosticCategories.Usage, 
+            defaultSeverity:    DiagnosticSeverity.Hidden, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseBitShiftOperator}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS1238</summary>
+        public static readonly DiagnosticDescriptor AvoidNestedConditionalOperators = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AvoidNestedConditionalOperators, 
+            title:              "Avoid nested ?: operators.", 
+            messageFormat:      "Avoid nested ?: operators.", 
+            category:           DiagnosticCategories.Readability, 
+            defaultSeverity:    DiagnosticSeverity.Hidden, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AvoidNestedConditionalOperators}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS1239</summary>
+        public static readonly DiagnosticDescriptor UseForStatementInsteadOfWhileStatement = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.UseForStatementInsteadOfWhileStatement, 
+            title:              "Use 'for' statement instead of 'while' statement.", 
+            messageFormat:      "Use 'for' statement instead of 'while' statement.", 
+            category:           DiagnosticCategories.Readability, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseForStatementInsteadOfWhileStatement}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS1240</summary>
+        public static readonly DiagnosticDescriptor UnnecessaryOperator = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.UnnecessaryOperator, 
+            title:              "Operator is unnecessary.", 
+            messageFormat:      "The '{0}' operator is unnecessary.", 
+            category:           DiagnosticCategories.Redundancy, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UnnecessaryOperator}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS1241</summary>
+        public static readonly DiagnosticDescriptor ImplementNonGenericCounterpart = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.ImplementNonGenericCounterpart, 
+            title:              "Implement non-generic counterpart.", 
+            messageFormat:      "Implement {0} when implementing {0}<T>.", 
+            category:           DiagnosticCategories.Design, 
+            defaultSeverity:    DiagnosticSeverity.Hidden, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.ImplementNonGenericCounterpart}", 
             customTags:         Array.Empty<string>());
 
     }
