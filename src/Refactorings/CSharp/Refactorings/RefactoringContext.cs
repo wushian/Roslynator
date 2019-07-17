@@ -29,11 +29,6 @@ namespace Roslynator.CSharp.Refactorings
 
         public RefactoringSettings Settings { get; }
 
-        public bool SupportsSemanticModel
-        {
-            get { return Document.SupportsSemanticModel; }
-        }
-
         public CancellationToken CancellationToken
         {
             get { return UnderlyingContext.CancellationToken; }
@@ -52,6 +47,11 @@ namespace Roslynator.CSharp.Refactorings
         public Solution Solution
         {
             get { return Project.Solution; }
+        }
+
+        public Workspace Workspace
+        {
+            get { return Solution.Workspace; }
         }
 
         public TextSpan Span
@@ -144,27 +144,27 @@ namespace Roslynator.CSharp.Refactorings
 
         public bool IsRefactoringEnabled(string identifier)
         {
-            return Settings.IsRefactoringEnabled(identifier);
+            return Settings.IsEnabled(identifier);
         }
 
         public bool IsAnyRefactoringEnabled(string identifier1, string identifier2)
         {
-            return Settings.IsAnyRefactoringEnabled(identifier1, identifier2);
+            return Settings.IsAnyEnabled(identifier1, identifier2);
         }
 
         public bool IsAnyRefactoringEnabled(string identifier1, string identifier2, string identifier3)
         {
-            return Settings.IsAnyRefactoringEnabled(identifier1, identifier2, identifier3);
+            return Settings.IsAnyEnabled(identifier1, identifier2, identifier3);
         }
 
         public bool IsAnyRefactoringEnabled(string identifier1, string identifier2, string identifier3, string identifier4)
         {
-            return Settings.IsAnyRefactoringEnabled(identifier1, identifier2, identifier3, identifier4);
+            return Settings.IsAnyEnabled(identifier1, identifier2, identifier3, identifier4);
         }
 
         public bool IsAnyRefactoringEnabled(string identifier1, string identifier2, string identifier3, string identifier4, string identifier5)
         {
-            return Settings.IsAnyRefactoringEnabled(identifier1, identifier2, identifier3, identifier4, identifier5);
+            return Settings.IsAnyEnabled(identifier1, identifier2, identifier3, identifier4, identifier5);
         }
 
         public async Task ComputeRefactoringsAsync()
@@ -331,16 +331,16 @@ namespace Roslynator.CSharp.Refactorings
                         RefactoringIdentifiers.UncommentSingleLineComment);
                 }
 
-                if (IsRefactoringEnabled(RefactoringIdentifiers.ReplaceCommentWithDocumentationComment))
+                if (IsRefactoringEnabled(RefactoringIdentifiers.ConvertCommentToDocumentationComment))
                 {
-                    TextSpan fixableSpan = ReplaceCommentWithDocumentationCommentAnalysis.GetFixableSpan(trivia);
+                    TextSpan fixableSpan = ConvertCommentToDocumentationCommentAnalysis.GetFixableSpan(trivia);
 
                     if (!fixableSpan.IsEmpty)
                     {
                         RegisterRefactoring(
-                            ReplaceCommentWithDocumentationCommentRefactoring.Title,
-                            cancellationToken => ReplaceCommentWithDocumentationCommentRefactoring.RefactorAsync(Document, (MemberDeclarationSyntax)trivia.Token.Parent, fixableSpan, cancellationToken),
-                            RefactoringIdentifiers.ReplaceCommentWithDocumentationComment);
+                            ConvertCommentToDocumentationCommentRefactoring.Title,
+                            cancellationToken => ConvertCommentToDocumentationCommentRefactoring.RefactorAsync(Document, (MemberDeclarationSyntax)trivia.Token.Parent, fixableSpan, cancellationToken),
+                            RefactoringIdentifiers.ConvertCommentToDocumentationComment);
                     }
                 }
             }

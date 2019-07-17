@@ -226,15 +226,15 @@ namespace Roslynator.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS1019</summary>
-        public static readonly DiagnosticDescriptor ReorderModifiers = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.ReorderModifiers, 
-            title:              "Reorder modifiers.", 
-            messageFormat:      "Reorder modifiers.", 
+        public static readonly DiagnosticDescriptor OrderModifiers = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.OrderModifiers, 
+            title:              "Order modifiers.", 
+            messageFormat:      "Order modifiers.", 
             category:           DiagnosticCategories.Readability, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.ReorderModifiers}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.OrderModifiers}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS1020</summary>
@@ -269,8 +269,8 @@ namespace Roslynator.CSharp
             title:              "Format empty block.", 
             messageFormat:      "Format empty block.", 
             category:           DiagnosticCategories.Formatting, 
-            defaultSeverity:    DiagnosticSeverity.Info, 
-            isEnabledByDefault: false, 
+            defaultSeverity:    DiagnosticSeverity.Hidden, 
+            isEnabledByDefault: true, 
             description:        null, 
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.FormatEmptyBlock}", 
             customTags:         Array.Empty<string>());
@@ -358,6 +358,20 @@ namespace Roslynator.CSharp
             description:        null, 
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineAfterEmbeddedStatement}", 
             customTags:         Array.Empty<string>());
+
+        /// <summary>RCS1031</summary>
+        public static readonly DiagnosticDescriptor RemoveUnnecessaryBraces = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.RemoveUnnecessaryBraces, 
+            title:              "Remove unnecessary braces.", 
+            messageFormat:      "Remove unnecessary braces.", 
+            category:           DiagnosticCategories.Redundancy, 
+            defaultSeverity:    DiagnosticSeverity.Hidden, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveUnnecessaryBraces}", 
+            customTags:         WellKnownDiagnosticTags.Unnecessary);
+
+        public static readonly DiagnosticDescriptor RemoveUnnecessaryBracesFadeOut = RemoveUnnecessaryBraces.CreateFadeOut();
 
         /// <summary>RCS1032</summary>
         public static readonly DiagnosticDescriptor RemoveRedundantParentheses = new DiagnosticDescriptor(
@@ -1563,18 +1577,6 @@ namespace Roslynator.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseConditionalAccess}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS1150</summary>
-        public static readonly DiagnosticDescriptor CallStringConcatInsteadOfStringJoin = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.CallStringConcatInsteadOfStringJoin, 
-            title:              "Call string.Concat instead of string.Join.", 
-            messageFormat:      "Call string.Concat instead of string.Join.", 
-            category:           DiagnosticCategories.Simplification, 
-            defaultSeverity:    DiagnosticSeverity.Info, 
-            isEnabledByDefault: true, 
-            description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.CallStringConcatInsteadOfStringJoin}", 
-            customTags:         Array.Empty<string>());
-
         /// <summary>RCS1151</summary>
         public static readonly DiagnosticDescriptor RemoveRedundantCast = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.RemoveRedundantCast, 
@@ -1684,15 +1686,15 @@ namespace Roslynator.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS1161</summary>
-        public static readonly DiagnosticDescriptor EnumMemberShouldDeclareExplicitValue = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.EnumMemberShouldDeclareExplicitValue, 
-            title:              "Enum member should declare explicit value.", 
-            messageFormat:      "Enum member should declare explicit value.", 
+        public static readonly DiagnosticDescriptor EnumShouldDeclareExplicitValues = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.EnumShouldDeclareExplicitValues, 
+            title:              "Enum should declare explicit values.", 
+            messageFormat:      "Enum should declare explicit values.", 
             category:           DiagnosticCategories.Readability, 
             defaultSeverity:    DiagnosticSeverity.Hidden, 
             isEnabledByDefault: true, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.EnumMemberShouldDeclareExplicitValue}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.EnumShouldDeclareExplicitValues}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS1162</summary>
@@ -1761,22 +1763,22 @@ namespace Roslynator.CSharp
             title:              "Parameter name differs from base name.", 
             messageFormat:      "Parameter name '{0}' differs from base name '{1}'.", 
             category:           DiagnosticCategories.Maintainability, 
-            defaultSeverity:    DiagnosticSeverity.Warning, 
+            defaultSeverity:    DiagnosticSeverity.Hidden, 
             isEnabledByDefault: true, 
             description:        null, 
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.ParameterNameDiffersFromBase}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS1169</summary>
-        public static readonly DiagnosticDescriptor MarkFieldAsReadOnly = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.MarkFieldAsReadOnly, 
-            title:              "Mark field as read-only.", 
-            messageFormat:      "Mark field as read-only.", 
+        public static readonly DiagnosticDescriptor MakeFieldReadOnly = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.MakeFieldReadOnly, 
+            title:              "Make field read-only.", 
+            messageFormat:      "Make field read-only.", 
             category:           DiagnosticCategories.Design, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: true, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.MarkFieldAsReadOnly}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.MakeFieldReadOnly}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS1170</summary>
@@ -1877,18 +1879,6 @@ namespace Roslynator.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseVarInsteadOfExplicitTypeInForEach}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS1178</summary>
-        public static readonly DiagnosticDescriptor CallDebugFailInsteadOfDebugAssert = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.CallDebugFailInsteadOfDebugAssert, 
-            title:              "Call Debug.Fail instead of Debug.Assert.", 
-            messageFormat:      "Call Debug.Fail instead of Debug.Assert.", 
-            category:           DiagnosticCategories.Usage, 
-            defaultSeverity:    DiagnosticSeverity.Info, 
-            isEnabledByDefault: true, 
-            description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.CallDebugFailInsteadOfDebugAssert}", 
-            customTags:         Array.Empty<string>());
-
         /// <summary>RCS1179</summary>
         public static readonly DiagnosticDescriptor UseReturnInsteadOfAssignment = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.UseReturnInsteadOfAssignment, 
@@ -1914,15 +1904,15 @@ namespace Roslynator.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS1181</summary>
-        public static readonly DiagnosticDescriptor ReplaceCommentWithDocumentationComment = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.ReplaceCommentWithDocumentationComment, 
-            title:              "Replace comment with documentation comment.", 
-            messageFormat:      "Replace comment with documentation comment.", 
+        public static readonly DiagnosticDescriptor ConvertCommentToDocumentationComment = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.ConvertCommentToDocumentationComment, 
+            title:              "Convert comment to documentation comment.", 
+            messageFormat:      "Convert comment to documentation comment.", 
             category:           DiagnosticCategories.General, 
             defaultSeverity:    DiagnosticSeverity.Hidden, 
             isEnabledByDefault: true, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.ReplaceCommentWithDocumentationComment}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.ConvertCommentToDocumentationComment}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS1182</summary>
@@ -2202,15 +2192,15 @@ namespace Roslynator.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS1205</summary>
-        public static readonly DiagnosticDescriptor ReorderNamedArguments = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.ReorderNamedArguments, 
-            title:              "Reorder named arguments according to the order of parameters.", 
-            messageFormat:      "Reorder named arguments according to the order of parameters.", 
+        public static readonly DiagnosticDescriptor OrderNamedArguments = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.OrderNamedArguments, 
+            title:              "Order named arguments according to the order of parameters.", 
+            messageFormat:      "Order named arguments according to the order of parameters.", 
             category:           DiagnosticCategories.Readability, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: true, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.ReorderNamedArguments}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.OrderNamedArguments}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS1206</summary>
@@ -2252,15 +2242,15 @@ namespace Roslynator.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS1209</summary>
-        public static readonly DiagnosticDescriptor ReorderTypeParameterConstraints = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.ReorderTypeParameterConstraints, 
-            title:              "Reorder type parameter constraints.", 
-            messageFormat:      "Reorder type parameter constraints.", 
+        public static readonly DiagnosticDescriptor OrderTypeParameterConstraints = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.OrderTypeParameterConstraints, 
+            title:              "Order type parameter constraints.", 
+            messageFormat:      "Order type parameter constraints.", 
             category:           DiagnosticCategories.Readability, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: true, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.ReorderTypeParameterConstraints}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.OrderTypeParameterConstraints}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS1210</summary>
@@ -2528,9 +2518,129 @@ namespace Roslynator.CSharp
             messageFormat:      "Make parameter ref read-only.", 
             category:           DiagnosticCategories.Performance, 
             defaultSeverity:    DiagnosticSeverity.Info, 
-            isEnabledByDefault: true, 
+            isEnabledByDefault: false, 
             description:        null, 
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.MakeParameterRefReadOnly}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS1232</summary>
+        public static readonly DiagnosticDescriptor OrderElementsInDocumentationComment = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.OrderElementsInDocumentationComment, 
+            title:              "Order elements in documentation comment.", 
+            messageFormat:      "Order elements in documentation comment.", 
+            category:           DiagnosticCategories.Readability, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.OrderElementsInDocumentationComment}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS1233</summary>
+        public static readonly DiagnosticDescriptor UseShortCircuitingOperator = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.UseShortCircuitingOperator, 
+            title:              "Use short-circuiting operator.", 
+            messageFormat:      "Use short-circuiting operator.", 
+            category:           DiagnosticCategories.Usage, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseShortCircuitingOperator}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS1234</summary>
+        public static readonly DiagnosticDescriptor DuplicateEnumValue = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.DuplicateEnumValue, 
+            title:              "Duplicate enum value.", 
+            messageFormat:      "Duplicate enum value.", 
+            category:           DiagnosticCategories.Readability, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.DuplicateEnumValue}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS1235</summary>
+        public static readonly DiagnosticDescriptor OptimizeMethodCall = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.OptimizeMethodCall, 
+            title:              "Optimize method call.", 
+            messageFormat:      "Optimize '{0}' call.", 
+            category:           DiagnosticCategories.Performance, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.OptimizeMethodCall}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS1236</summary>
+        public static readonly DiagnosticDescriptor UseExceptionFilter = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.UseExceptionFilter, 
+            title:              "Use exception filter.", 
+            messageFormat:      "Use exception filter.", 
+            category:           DiagnosticCategories.Usage, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseExceptionFilter}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS1237</summary>
+        public static readonly DiagnosticDescriptor UseBitShiftOperator = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.UseBitShiftOperator, 
+            title:              "Use bit shift operator.", 
+            messageFormat:      "Use bit shift operator.", 
+            category:           DiagnosticCategories.Usage, 
+            defaultSeverity:    DiagnosticSeverity.Hidden, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseBitShiftOperator}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS1238</summary>
+        public static readonly DiagnosticDescriptor AvoidNestedConditionalOperators = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AvoidNestedConditionalOperators, 
+            title:              "Avoid nested ?: operators.", 
+            messageFormat:      "Avoid nested ?: operators.", 
+            category:           DiagnosticCategories.Readability, 
+            defaultSeverity:    DiagnosticSeverity.Hidden, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AvoidNestedConditionalOperators}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS1239</summary>
+        public static readonly DiagnosticDescriptor UseForStatementInsteadOfWhileStatement = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.UseForStatementInsteadOfWhileStatement, 
+            title:              "Use 'for' statement instead of 'while' statement.", 
+            messageFormat:      "Use 'for' statement instead of 'while' statement.", 
+            category:           DiagnosticCategories.Readability, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseForStatementInsteadOfWhileStatement}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS1240</summary>
+        public static readonly DiagnosticDescriptor UnnecessaryOperator = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.UnnecessaryOperator, 
+            title:              "Operator is unnecessary.", 
+            messageFormat:      "The '{0}' operator is unnecessary.", 
+            category:           DiagnosticCategories.Redundancy, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UnnecessaryOperator}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS1241</summary>
+        public static readonly DiagnosticDescriptor ImplementNonGenericCounterpart = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.ImplementNonGenericCounterpart, 
+            title:              "Implement non-generic counterpart.", 
+            messageFormat:      "Implement {0} when implementing {0}<T>.", 
+            category:           DiagnosticCategories.Design, 
+            defaultSeverity:    DiagnosticSeverity.Hidden, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.ImplementNonGenericCounterpart}", 
             customTags:         Array.Empty<string>());
 
     }

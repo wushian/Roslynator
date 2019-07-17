@@ -81,7 +81,7 @@ namespace Roslynator
         /// Report a <see cref="Diagnostic"/> about a <see cref="ISymbol"/>.
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="descriptor">A <see cref="DiagnosticDescriptor"/> describing the diagnostic.</param>
+        /// <param name="descriptor"></param>
         /// <param name="location"></param>
         /// <param name="messageArgs"></param>
         public static void ReportDiagnostic(
@@ -163,27 +163,10 @@ namespace Roslynator
                 additionalLocations: additionalLocations,
                 properties: properties,
                 messageArgs: messageArgs));
-        }
-
-        internal static void ThrowIfCancellationRequested(this SymbolAnalysisContext context)
-        {
-            context.CancellationToken.ThrowIfCancellationRequested();
         }
         #endregion SymbolAnalysisContext
 
         #region SyntaxNodeAnalysisContext
-        internal static void ReportDiagnosticIfNotSuppressed(
-            this SyntaxNodeAnalysisContext context,
-            DiagnosticDescriptor descriptor,
-            SyntaxNode node,
-            params object[] messageArgs)
-        {
-            if (context.IsAnalyzerSuppressed(descriptor))
-                return;
-
-            ReportDiagnostic(context, descriptor, node, messageArgs);
-        }
-
         /// <summary>
         /// Report a <see cref="Diagnostic"/> about a <see cref="SyntaxNode"/>.
         /// </summary>
@@ -333,23 +316,6 @@ namespace Roslynator
                 additionalLocations: additionalLocations,
                 properties: properties,
                 messageArgs: messageArgs));
-        }
-
-        internal static void ReportToken(this SyntaxNodeAnalysisContext context, DiagnosticDescriptor descriptor, SyntaxToken token, params object[] messageArgs)
-        {
-            if (!token.IsMissing)
-                context.ReportDiagnostic(descriptor, token, messageArgs);
-        }
-
-        internal static void ReportNode(this SyntaxNodeAnalysisContext context, DiagnosticDescriptor descriptor, SyntaxNode node, params object[] messageArgs)
-        {
-            if (!node.IsMissing)
-                context.ReportDiagnostic(descriptor, node, messageArgs);
-        }
-
-        internal static void ThrowIfCancellationRequested(this SyntaxNodeAnalysisContext context)
-        {
-            context.CancellationToken.ThrowIfCancellationRequested();
         }
         #endregion SyntaxNodeAnalysisContext
 
@@ -504,65 +470,87 @@ namespace Roslynator
                 properties: properties,
                 messageArgs: messageArgs));
         }
-
-        internal static void ThrowIfCancellationRequested(this SyntaxTreeAnalysisContext context)
-        {
-            context.CancellationToken.ThrowIfCancellationRequested();
-        }
         #endregion SyntaxTreeAnalysisContext
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("AnalyzerPerformance", "RS1012:Start action has no registered actions.", Justification = "<Pending>")]
-        internal static bool IsAnalyzerSuppressed(this CompilationStartAnalysisContext context, DiagnosticDescriptor descriptor)
+        internal static ReportDiagnostic ToReportDiagnostic(this DiagnosticSeverity diagnosticSeverity)
         {
-            return IsAnalyzerSuppressed(context.Compilation, descriptor);
+            switch (diagnosticSeverity)
+            {
+                case DiagnosticSeverity.Hidden:
+                    return Microsoft.CodeAnalysis.ReportDiagnostic.Hidden;
+                case DiagnosticSeverity.Info:
+                    return Microsoft.CodeAnalysis.ReportDiagnostic.Info;
+                case DiagnosticSeverity.Warning:
+                    return Microsoft.CodeAnalysis.ReportDiagnostic.Warn;
+                case DiagnosticSeverity.Error:
+                    return Microsoft.CodeAnalysis.ReportDiagnostic.Error;
+                default:
+                    throw new ArgumentException($"Unknown value '{diagnosticSeverity}'.", nameof(diagnosticSeverity));
+            }
+        }
+
+        internal static DiagnosticSeverity ToDiagnosticSeverity(this ReportDiagnostic reportDiagnostic)
+        {
+            switch (reportDiagnostic)
+            {
+                case Microsoft.CodeAnalysis.ReportDiagnostic.Error:
+                    return DiagnosticSeverity.Error;
+                case Microsoft.CodeAnalysis.ReportDiagnostic.Warn:
+                    return DiagnosticSeverity.Warning;
+                case Microsoft.CodeAnalysis.ReportDiagnostic.Info:
+                    return DiagnosticSeverity.Info;
+                case Microsoft.CodeAnalysis.ReportDiagnostic.Hidden:
+                    return DiagnosticSeverity.Hidden;
+                default:
+                    throw new ArgumentException($"Unknown value '{reportDiagnostic}'.", nameof(reportDiagnostic));
+            }
+        }
+
+        internal static bool IsAnalyzerExceptionDiagnostic(this Diagnostic diagnostic)
+        {
+            if (diagnostic.Id == "AD0001"
+                || diagnostic.Id == "AD0002")
+            {
+                foreach (string tag in diagnostic.Descriptor.CustomTags)
+                {
+                    if (tag == WellKnownDiagnosticTags.AnalyzerException)
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        internal static bool IsAnalyzerSuppressed(this SymbolAnalysisContext context, DiagnosticDescriptor descriptor)
+        {
+            return context.Compilation.IsAnalyzerSuppressed(descriptor);
         }
 
         internal static bool IsAnalyzerSuppressed(this SyntaxNodeAnalysisContext context, DiagnosticDescriptor descriptor)
         {
-            return IsAnalyzerSuppressed(context.Compilation, descriptor);
+            return context.Compilation.IsAnalyzerSuppressed(descriptor);
         }
 
-        internal static bool IsAnalyzerSuppressed(this Compilation compilation, DiagnosticDescriptor descriptor)
+#pragma warning disable RS1012
+        internal static bool IsAnalyzerSuppressed(this CompilationStartAnalysisContext context, DiagnosticDescriptor descriptor)
         {
-            ReportDiagnostic reportDiagnostic = compilation
-                .Options
-                .SpecificDiagnosticOptions
-                .GetValueOrDefault(descriptor.Id);
-
-            switch (reportDiagnostic)
-            {
-                case Microsoft.CodeAnalysis.ReportDiagnostic.Default:
-                    return !descriptor.IsEnabledByDefault;
-                case Microsoft.CodeAnalysis.ReportDiagnostic.Suppress:
-                    return true;
-                default:
-                    return false;
-            }
+            return context.Compilation.IsAnalyzerSuppressed(descriptor);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("AnalyzerPerformance", "RS1012:Start action has no registered actions.", Justification = "<Pending>")]
         internal static bool AreAnalyzersSuppressed(this CompilationStartAnalysisContext context, ImmutableArray<DiagnosticDescriptor> descriptors)
         {
-            foreach (DiagnosticDescriptor descriptor in descriptors)
-            {
-                if (!context.IsAnalyzerSuppressed(descriptor))
-                    return false;
-            }
-
-            return true;
+            return context.Compilation.AreAnalyzersSuppressed(descriptors);
         }
 
         internal static bool AreAnalyzersSuppressed(this CompilationStartAnalysisContext context, DiagnosticDescriptor descriptor1, DiagnosticDescriptor descriptor2)
         {
-            return IsAnalyzerSuppressed(context, descriptor1)
-                && IsAnalyzerSuppressed(context, descriptor2);
+            return context.Compilation.AreAnalyzersSuppressed(descriptor1, descriptor2);
         }
 
         internal static bool AreAnalyzersSuppressed(this CompilationStartAnalysisContext context, DiagnosticDescriptor descriptor1, DiagnosticDescriptor descriptor2, DiagnosticDescriptor descriptor3)
         {
-            return IsAnalyzerSuppressed(context, descriptor1)
-                && IsAnalyzerSuppressed(context, descriptor2)
-                && IsAnalyzerSuppressed(context, descriptor3);
+            return context.Compilation.AreAnalyzersSuppressed(descriptor1, descriptor2, descriptor3);
         }
+#pragma warning restore RS1012
     }
 }

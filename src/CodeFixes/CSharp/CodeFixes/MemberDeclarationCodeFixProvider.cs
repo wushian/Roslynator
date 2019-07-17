@@ -13,6 +13,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Roslynator.CodeFixes;
 using Roslynator.CSharp.Refactorings;
 using Roslynator.CSharp.SyntaxRewriters;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static Roslynator.CSharp.CSharpFactory;
 
 namespace Roslynator.CSharp.CodeFixes
 {
@@ -40,25 +42,25 @@ namespace Roslynator.CSharp.CodeFixes
                     CompilerDiagnosticIdentifiers.OnlyClassTypesCanContainDestructors,
                     CompilerDiagnosticIdentifiers.StructsCannotContainExplicitParameterlessConstructors,
                     CompilerDiagnosticIdentifiers.NameOfDestructorMustMatchNameOfClass,
-                    CompilerDiagnosticIdentifiers.CannotChangeTupleElementNameWhenOverridingInheritedMember);
+                    CompilerDiagnosticIdentifiers.CannotChangeTupleElementNameWhenOverridingInheritedMember,
+                    CompilerDiagnosticIdentifiers.MethodsWithVariableArgumentsAreNotCLSCompliant,
+                    CompilerDiagnosticIdentifiers.ArgumentTypeIsNotCLSCompliant,
+                    CompilerDiagnosticIdentifiers.ReturnTypeIsNotCLSCompliant,
+                    CompilerDiagnosticIdentifiers.TypeOfVariableIsNotCLSCompliant,
+                    CompilerDiagnosticIdentifiers.IdentifierDifferingOnlyInCaseIsNotCLSCompliant,
+                    CompilerDiagnosticIdentifiers.OverloadedMethodDifferingOnlyInRefOrOutOrInArrayRankIsNotCLSCompliant,
+                    CompilerDiagnosticIdentifiers.OverloadedMethodDifferingOnlyByUnnamedArrayTypesIsNotCLSCompliant,
+                    CompilerDiagnosticIdentifiers.IdentifierIsNotCLSCompliant,
+                    CompilerDiagnosticIdentifiers.BaseTypeIsNotCLSCompliant,
+                    CompilerDiagnosticIdentifiers.ArraysAsAttributeArgumentsIsNotCLSCompliant,
+                    CompilerDiagnosticIdentifiers.ConstraintTypeIsNotCLSCompliant,
+                    CompilerDiagnosticIdentifiers.TypeIsNotCLSCompliantBecauseBaseInterfaceIsNotCLSCompliant,
+                    CompilerDiagnosticIdentifiers.ExplicitInterfaceDeclarationIsNotMemberOfInterface);
             }
         }
 
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
         {
-            if (!Settings.IsCodeFixEnabled(CodeFixIdentifiers.AddDocumentationComment)
-                && !Settings.IsCodeFixEnabled(CodeFixIdentifiers.ChangeMethodReturnType)
-                && !Settings.IsCodeFixEnabled(CodeFixIdentifiers.MemberTypeMustMatchOverriddenMemberType)
-                && !Settings.IsCodeFixEnabled(CodeFixIdentifiers.AddPartialModifier)
-                && !Settings.IsCodeFixEnabled(CodeFixIdentifiers.MakeContainingClassAbstract)
-                && !Settings.IsCodeFixEnabled(CodeFixIdentifiers.RemoveParametersFromStaticConstructor)
-                && !Settings.IsCodeFixEnabled(CodeFixIdentifiers.RemoveMemberDeclaration)
-                && !Settings.IsCodeFixEnabled(CodeFixIdentifiers.RenameDestructorToMatchClassName)
-                && !Settings.IsCodeFixEnabled(CodeFixIdentifiers.RenameTupleElement))
-            {
-                return;
-            }
-
             SyntaxNode root = await context.GetSyntaxRootAsync().ConfigureAwait(false);
 
             if (!TryFindFirstAncestorOrSelf(root, context.Span, out MemberDeclarationSyntax memberDeclaration))
@@ -70,7 +72,7 @@ namespace Roslynator.CSharp.CodeFixes
                 {
                     case CompilerDiagnosticIdentifiers.MissingXmlCommentForPubliclyVisibleTypeOrMember:
                         {
-                            if (!Settings.IsCodeFixEnabled(CodeFixIdentifiers.AddDocumentationComment))
+                            if (!Settings.IsEnabled(diagnostic.Id, CodeFixIdentifiers.AddDocumentationComment))
                                 break;
 
                             CodeAction codeAction = CodeAction.Create(
@@ -90,7 +92,7 @@ namespace Roslynator.CSharp.CodeFixes
                         }
                     case CompilerDiagnosticIdentifiers.MethodReturnTypeMustMatchOverriddenMethodReturnType:
                         {
-                            if (!Settings.IsCodeFixEnabled(CodeFixIdentifiers.ChangeMethodReturnType))
+                            if (!Settings.IsEnabled(diagnostic.Id, CodeFixIdentifiers.ChangeMethodReturnType))
                                 break;
 
                             SemanticModel semanticModel = await context.GetSemanticModelAsync().ConfigureAwait(false);
@@ -99,13 +101,13 @@ namespace Roslynator.CSharp.CodeFixes
 
                             ITypeSymbol typeSymbol = methodSymbol.OverriddenMethod.ReturnType;
 
-                            CodeFixRegistrator.ChangeMemberDeclarationType(context, diagnostic, memberDeclaration, typeSymbol, semanticModel);
+                            CodeFixRegistrator.ChangeTypeOrReturnType(context, diagnostic, memberDeclaration, typeSymbol, semanticModel);
 
                             break;
                         }
                     case CompilerDiagnosticIdentifiers.PartialMethodsMustHaveVoidReturnType:
                         {
-                            if (!Settings.IsCodeFixEnabled(CodeFixIdentifiers.ChangeMethodReturnType))
+                            if (!Settings.IsEnabled(diagnostic.Id, CodeFixIdentifiers.ChangeMethodReturnType))
                                 break;
 
                             SemanticModel semanticModel = await context.GetSemanticModelAsync().ConfigureAwait(false);
@@ -133,7 +135,7 @@ namespace Roslynator.CSharp.CodeFixes
                         }
                     case CompilerDiagnosticIdentifiers.MemberTypeMustMatchOverriddenMemberType:
                         {
-                            if (!Settings.IsCodeFixEnabled(CodeFixIdentifiers.MemberTypeMustMatchOverriddenMemberType))
+                            if (!Settings.IsEnabled(diagnostic.Id, CodeFixIdentifiers.MemberTypeMustMatchOverriddenMemberType))
                                 break;
 
                             SemanticModel semanticModel = await context.GetSemanticModelAsync().ConfigureAwait(false);
@@ -168,14 +170,14 @@ namespace Roslynator.CSharp.CodeFixes
                                     }
                             }
 
-                            CodeFixRegistrator.ChangeMemberDeclarationType(context, diagnostic, memberDeclaration, typeSymbol, semanticModel);
+                            CodeFixRegistrator.ChangeTypeOrReturnType(context, diagnostic, memberDeclaration, typeSymbol, semanticModel);
 
                             break;
                         }
                     case CompilerDiagnosticIdentifiers.MissingPartialModifier:
                     case CompilerDiagnosticIdentifiers.PartialMethodMustBeDeclaredInPartialClassOrPartialStruct:
                         {
-                            if (!Settings.IsCodeFixEnabled(CodeFixIdentifiers.AddPartialModifier))
+                            if (!Settings.IsEnabled(diagnostic.Id, CodeFixIdentifiers.AddPartialModifier))
                                 break;
 
                             SyntaxNode node = null;
@@ -208,7 +210,7 @@ namespace Roslynator.CSharp.CodeFixes
                         }
                     case CompilerDiagnosticIdentifiers.MemberIsAbstractButItIsContainedInNonAbstractClass:
                         {
-                            if (!Settings.IsCodeFixEnabled(CodeFixIdentifiers.MakeContainingClassAbstract))
+                            if (!Settings.IsEnabled(diagnostic.Id, CodeFixIdentifiers.MakeContainingClassAbstract))
                                 break;
 
                             if (!memberDeclaration.IsParentKind(SyntaxKind.ClassDeclaration))
@@ -225,7 +227,7 @@ namespace Roslynator.CSharp.CodeFixes
                         }
                     case CompilerDiagnosticIdentifiers.StaticConstructorMustBeParameterless:
                         {
-                            if (!Settings.IsCodeFixEnabled(CodeFixIdentifiers.RemoveParametersFromStaticConstructor))
+                            if (!Settings.IsEnabled(diagnostic.Id, CodeFixIdentifiers.RemoveParametersFromStaticConstructor))
                                 break;
 
                             var constructorDeclaration = (ConstructorDeclarationSyntax)memberDeclaration;
@@ -257,15 +259,15 @@ namespace Roslynator.CSharp.CodeFixes
                     case CompilerDiagnosticIdentifiers.OnlyClassTypesCanContainDestructors:
                     case CompilerDiagnosticIdentifiers.StructsCannotContainExplicitParameterlessConstructors:
                         {
-                            if (!Settings.IsCodeFixEnabled(CodeFixIdentifiers.RemoveMemberDeclaration))
+                            if (!Settings.IsEnabled(diagnostic.Id, CodeFixIdentifiers.RemoveMemberDeclaration))
                                 break;
 
-                            CodeFixRegistrator.RemoveMember(context, diagnostic, memberDeclaration);
+                            CodeFixRegistrator.RemoveMemberDeclaration(context, diagnostic, memberDeclaration);
                             break;
                         }
                     case CompilerDiagnosticIdentifiers.NameOfDestructorMustMatchNameOfClass:
                         {
-                            if (!Settings.IsCodeFixEnabled(CodeFixIdentifiers.RenameDestructorToMatchClassName))
+                            if (!Settings.IsEnabled(diagnostic.Id, CodeFixIdentifiers.RenameDestructorToMatchClassName))
                                 break;
 
                             if (!(memberDeclaration is DestructorDeclarationSyntax destructorDeclaration))
@@ -292,7 +294,7 @@ namespace Roslynator.CSharp.CodeFixes
                         }
                     case CompilerDiagnosticIdentifiers.CannotChangeTupleElementNameWhenOverridingInheritedMember:
                         {
-                            if (!Settings.IsCodeFixEnabled(CodeFixIdentifiers.RenameTupleElement))
+                            if (!Settings.IsEnabled(diagnostic.Id, CodeFixIdentifiers.RenameTupleElement))
                                 break;
 
                             SemanticModel semanticModel = await context.GetSemanticModelAsync().ConfigureAwait(false);
@@ -386,6 +388,48 @@ namespace Roslynator.CSharp.CodeFixes
 
                             break;
                         }
+                    case CompilerDiagnosticIdentifiers.MethodsWithVariableArgumentsAreNotCLSCompliant:
+                    case CompilerDiagnosticIdentifiers.ArgumentTypeIsNotCLSCompliant:
+                    case CompilerDiagnosticIdentifiers.ReturnTypeIsNotCLSCompliant:
+                    case CompilerDiagnosticIdentifiers.TypeOfVariableIsNotCLSCompliant:
+                    case CompilerDiagnosticIdentifiers.IdentifierDifferingOnlyInCaseIsNotCLSCompliant:
+                    case CompilerDiagnosticIdentifiers.OverloadedMethodDifferingOnlyInRefOrOutOrInArrayRankIsNotCLSCompliant:
+                    case CompilerDiagnosticIdentifiers.OverloadedMethodDifferingOnlyByUnnamedArrayTypesIsNotCLSCompliant:
+                    case CompilerDiagnosticIdentifiers.IdentifierIsNotCLSCompliant:
+                    case CompilerDiagnosticIdentifiers.BaseTypeIsNotCLSCompliant:
+                    case CompilerDiagnosticIdentifiers.ArraysAsAttributeArgumentsIsNotCLSCompliant:
+                    case CompilerDiagnosticIdentifiers.ConstraintTypeIsNotCLSCompliant:
+                    case CompilerDiagnosticIdentifiers.TypeIsNotCLSCompliantBecauseBaseInterfaceIsNotCLSCompliant:
+                        {
+                            if (!Settings.IsEnabled(diagnostic.Id, CodeFixIdentifiers.MarkDeclarationAsNonCLSCompliant))
+                                break;
+
+                            CodeAction codeAction = CodeAction.Create(
+                                $"Mark {CSharpFacts.GetTitle(memberDeclaration)} as non-CLS-compliant",
+                                ct => MarkDeclarationAsNonCLSCompliantAsync(context.Document, memberDeclaration, ct),
+                                GetEquivalenceKey(diagnostic));
+
+                            context.RegisterCodeFix(codeAction, diagnostic);
+                            break;
+                        }
+                    case CompilerDiagnosticIdentifiers.ExplicitInterfaceDeclarationIsNotMemberOfInterface:
+                        {
+                            if (!Settings.IsEnabled(diagnostic.Id, CodeFixIdentifiers.AddParameterToExplicitlyImplementedInterfaceMember))
+                                break;
+
+                            var context2 = new CommonFixContext(
+                                context.Document,
+                                GetEquivalenceKey(diagnostic),
+                                await context.GetSemanticModelAsync().ConfigureAwait(false),
+                                context.CancellationToken);
+
+                            CodeAction codeAction = AddParameterToInterfaceMemberRefactoring.ComputeRefactoringForExplicitImplementation(context2, memberDeclaration);
+
+                            if (codeAction != null)
+                                context.RegisterCodeFix(codeAction, diagnostic);
+
+                            break;
+                        }
                 }
             }
         }
@@ -449,6 +493,21 @@ namespace Roslynator.CSharp.CodeFixes
             newNode = newNode.WithAccessorList(newAccessorList);
 
             return document.ReplaceNodeAsync(propertyDeclaration, newNode, cancellationToken);
+        }
+
+        private static Task<Document> MarkDeclarationAsNonCLSCompliantAsync(
+            Document document,
+            MemberDeclarationSyntax memberDeclaration,
+            CancellationToken cancellationToken)
+        {
+            AttributeListSyntax attributeList = AttributeList(
+                Attribute(
+                    ParseName("global::System.CLSCompliantAttribute").WithSimplifierAnnotation(),
+                    AttributeArgument(FalseLiteralExpression()))).WithFormatterAnnotation();
+
+            MemberDeclarationSyntax newMemberDeclaration = SyntaxRefactorings.AddAttributeLists(memberDeclaration, keepDocumentationCommentOnTop: true, attributeList);
+
+            return document.ReplaceNodeAsync(memberDeclaration, newMemberDeclaration, cancellationToken);
         }
     }
 }

@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Roslynator.CSharp.Analysis.Tests
 {
-    public class RCS1207UseMethodGroupInsteadOfAnonymousFunctionTests : AbstractCSharpCodeFixVerifier
+    public class RCS1207UseMethodGroupInsteadOfAnonymousFunctionTests : AbstractCSharpFixVerifier
     {
         public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UseMethodGroupInsteadOfAnonymousFunction;
 
@@ -298,6 +298,29 @@ class C
         x = items?.Select(e => selector(e));
         x = items?.Where(f => f != null).Select(e => selector(e));
         x = items?.Where(f => f != null).Select(e => selector(e)).Distinct();
+    }
+}
+");
+        }
+
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseMethodGroupInsteadOfAnonymousFunction)]
+        public async Task TestNoDiagnostic_ConditionalAccess2()
+        {
+            await VerifyNoDiagnosticAsync(@"
+using System.Collections.Generic;
+using System.Linq;
+
+class C
+{
+    void M()
+    {
+        List<object> list = null;
+        list = list?.Select(f => M2(f))?.ToList();
+    }
+
+    object M2(object p)
+    {
+        return p;
     }
 }
 ");

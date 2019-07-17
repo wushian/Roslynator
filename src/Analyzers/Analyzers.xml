@@ -295,6 +295,7 @@ foreach (var item in items) // [|Id|]
     <IsEnabledByDefault>true</IsEnabledByDefault>
     <SupportsFadeOut>false</SupportsFadeOut>
     <SupportsFadeOutAnalyzer>true</SupportsFadeOutAnalyzer>
+    <MinLanguageVersion>6.0</MinLanguageVersion>
     <Samples>
       <Sample>
         <Before><![CDATA[public void Foo(object parameter)
@@ -324,6 +325,7 @@ foreach (var item in items) // [|Id|]
     <IsEnabledByDefault>false</IsEnabledByDefault>
     <SupportsFadeOut>false</SupportsFadeOut>
     <SupportsFadeOutAnalyzer>true</SupportsFadeOutAnalyzer>
+    <MinLanguageVersion>6.0</MinLanguageVersion>
     <Samples>
       <Sample>
         <Before><![CDATA[public object Foo()
@@ -389,10 +391,10 @@ foreach (var item in items) // [|Id|]
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="ReorderModifiers">
+  <Analyzer Identifier="OrderModifiers">
     <Id>RCS1019</Id>
-    <Title>Reorder modifiers.</Title>
-    <MessageFormat>Reorder modifiers.</MessageFormat>
+    <Title>Order modifiers.</Title>
+    <MessageFormat>Order modifiers.</MessageFormat>
     <Category>Readability</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -463,15 +465,15 @@ protected internal class Foo
     <Title>Format empty block.</Title>
     <MessageFormat>Format empty block.</MessageFormat>
     <Category>Formatting</Category>
-    <DefaultSeverity>Info</DefaultSeverity>
-    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <DefaultSeverity>Hidden</DefaultSeverity>
+    <IsEnabledByDefault>true</IsEnabledByDefault>
     <SupportsFadeOut>false</SupportsFadeOut>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
     <Samples>
       <Sample>
-        <Before><![CDATA[public void Foo()
+        <Before><![CDATA[void Foo()
 { } // [|Id|]]]></Before>
-        <After><![CDATA[public void Foo()
+        <After><![CDATA[void Foo()
 {
 }]]></After>
       </Sample>
@@ -488,9 +490,9 @@ protected internal class Foo
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
     <Samples>
       <Sample>
-        <Before><![CDATA[public string Foo { get { return _foo; } set { _foo = value; } } // [|Id|]]]></Before>
+        <Before><![CDATA[string Foo { get { return _foo; } set { _foo = value; } } // [|Id|]]]></Before>
         <After>
-          <![CDATA[public string Foo
+          <![CDATA[string Foo
 {
     get { return _foo; }
     set { _foo = value; }
@@ -509,8 +511,8 @@ protected internal class Foo
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
     <Samples>
       <Sample>
-        <Before><![CDATA[public enum Foo { A, B, C, } // [|Id|]]]></Before>
-        <After><![CDATA[public enum Foo
+        <Before><![CDATA[enum Foo { A, B, C, } // [|Id|]]]></Before>
+        <After><![CDATA[enum Foo
 {
     A,
     B,
@@ -530,9 +532,9 @@ protected internal class Foo
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
     <Samples>
       <Sample>
-        <Before><![CDATA[string s = ""; Foo(s); // [|Id|]]]></Before>
-        <After><![CDATA[string s = "";
-Foo(s);]]></After>
+        <Before><![CDATA[Foo(); Bar(); // [|Id|]]]></Before>
+        <After><![CDATA[Foo();
+Bar();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
@@ -547,8 +549,8 @@ Foo(s);]]></After>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
     <Samples>
       <Sample>
-        <Before><![CDATA[if (condition) Foo(); // [|Id|]]]></Before>
-        <After><![CDATA[if (condition)
+        <Before><![CDATA[if (x) Foo(); // [|Id|]]]></Before>
+        <After><![CDATA[if (x)
 {
     Foo();
 }]]></After>
@@ -566,12 +568,12 @@ Foo(s);]]></After>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
     <Samples>
       <Sample>
-        <Before><![CDATA[switch (s)
+        <Before><![CDATA[switch (x)
 {
     case "a": return Foo(); // [|Id|]
     case "b": return Bar();
 }]]></Before>
-        <After><![CDATA[switch (s)
+        <After><![CDATA[switch (x)
 {
     case "a":
         return Foo();
@@ -596,13 +598,11 @@ Foo(s);]]></After>
     y &&
     z)
 {
-
 }]]></Before>
         <After><![CDATA[if (x
     && y
     && z)
 {
-
 }]]></After>
       </Sample>
     </Samples>
@@ -620,25 +620,29 @@ Foo(s);]]></After>
       <Sample>
         <Before><![CDATA[if (x)
     Foo(); // [|Id|]
-if (y)
-    Bar();]]></Before>
+Bar();]]></Before>
         <After><![CDATA[if (x)
     Foo();
 
-if (y)
-    Bar();]]></After>
+Bar();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="RemoveRedundantBraces" IsObsolete="true">
+  <Analyzer Identifier="RemoveUnnecessaryBraces">
     <Id>RCS1031</Id>
-    <Title>Remove redundant braces.</Title>
-    <MessageFormat>Remove redundant braces.</MessageFormat>
+    <Title>Remove unnecessary braces.</Title>
+    <MessageFormat>Remove unnecessary braces.</MessageFormat>
     <Category>Redundancy</Category>
-    <DefaultSeverity>Info</DefaultSeverity>
+    <DefaultSeverity>Hidden</DefaultSeverity>
     <IsEnabledByDefault>true</IsEnabledByDefault>
-    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOut>true</SupportsFadeOut>
     <SupportsFadeOutAnalyzer>true</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[]]></Before>
+        <After><![CDATA[]]></After>
+      </Sample>
+    </Samples>
   </Analyzer>
   <Analyzer Identifier="RemoveRedundantParentheses">
     <Id>RCS1032</Id>
@@ -1190,25 +1194,25 @@ public class Foo
     <Samples>
       <Sample>
         <Before>
-      <![CDATA[public class Foo
+      <![CDATA[class Foo
 {
-    public void M1()
+    void M1()
     {
     } // [|Id|]
-    public void M2()
+    void M2()
     {
     } // [|Id|]
     /// <summary>
     /// ...
     /// </summary>
-    public void M3()
+    void M3()
     {
     } // [|Id|]
-    public string P1 { get; set; } // [|Id|]
+    string P1 { get; set; } // [|Id|]
     [Obsolete]
-    public string P2 { get; set; }
+    string P2 { get; set; }
 } // [|Id|]
-public enum FooEnum
+enum Bar
 {
     A = 0, // [|Id|]
     /// <summary>
@@ -1218,30 +1222,30 @@ public enum FooEnum
     [Obsolete]
     C = 2,
 }]]></Before>
-        <After><![CDATA[public class Foo
+        <After><![CDATA[class Foo
 {
-    public void M1()
+    void M1()
     {
     }
 
-    public void M2()
+    void M2()
     {
     }
 
     /// <summary>
     /// ...
     /// </summary>
-    public void M3()
+    void M3()
     {
     }
 
-    public string P1 { get; set; }
+    string P1 { get; set; }
 
     [Obsolete]
-    public string P2 { get; set; }
+    string P2 { get; set; }
 }
 
-public enum FooEnum
+enum Bar
 {
     A = 0,
 
@@ -1255,6 +1259,7 @@ public enum FooEnum
 }]]></After>
       </Sample>
     </Samples>
+    <Remarks>This analyzer does not enforce an empty line between two single-line declaration.</Remarks>
   </Analyzer>
   <Analyzer Identifier="UseCompoundAssignment">
     <Id>RCS1058</Id>
@@ -1417,10 +1422,9 @@ while (true);]]></Before>
         <Before><![CDATA[while (true) // [|Id|]
 {
 }]]></Before>
-        <After><![CDATA[do
+        <After><![CDATA[for (;;)
 {
-}
-while (true);]]></After>
+}]]></After>
       </Sample>
     </Samples>
   </Analyzer>
@@ -1686,10 +1690,10 @@ catch (Exception ex) // [|Id|]
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
     <Samples>
       <Sample>
-        <Before><![CDATA[public interface IFoo
+        <Before><![CDATA[interface IFoo
 { } // [|Id|]]]></Before>
         <After>
-          <![CDATA[public interface IFoo
+          <![CDATA[interface IFoo
 {
 }]]></After>
       </Sample>
@@ -1706,8 +1710,12 @@ catch (Exception ex) // [|Id|]
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
     <Samples>
       <Sample>
-        <Before><![CDATA[bool x = items.Where(f => Foo(f)).Any(); // [|Id|]]]></Before>
-        <After><![CDATA[bool x = items.Any(f => Foo(f));]]></After>
+        <Before><![CDATA[bool any = items.Where(predicate).Any(); // [|Id|]]]></Before>
+        <After><![CDATA[bool any = items.Any(predicate);]]></After>
+      </Sample>
+      <Sample>
+        <Before><![CDATA[int max = items.Select(selector).Max(); // [|Id|]]]></Before>
+        <After><![CDATA[int max = items.Max(selector);]]></After>
       </Sample>
       <Sample>
         <Before><![CDATA[IEnumerable<Foo> x = items.Where(f => f is Foo).Cast<Foo>(); // [|Id|]]]></Before>
@@ -1736,7 +1744,8 @@ catch (Exception ex) // [|Id|]
       <Sample>
         <Before><![CDATA[var x = list.First(); // [|Id|]]]></Before>
         <After><![CDATA[var x = list[0];]]></After>
-      </Sample>      <Sample>
+      </Sample>
+      <Sample>
         <Before><![CDATA[if (enumerable.Count() != 0) // [|Id|]
 {
 }]]></Before>
@@ -1767,6 +1776,10 @@ object x = stack.First(); // [|Id|]]]></Before>
         <After><![CDATA[var queue = new Queue<object>();
 // ...
 object x = items.Peek();]]></After>
+      </Sample>
+      <Sample>
+        <Before><![CDATA[enumerable.Any() ? enumerable.First() : default // [|Id|]]]></Before>
+        <After><![CDATA[enumerable.FirstOrDefault()]]></After>
       </Sample>
     </Samples>
   </Analyzer>
@@ -2019,12 +2032,12 @@ public string Foo // [|Id|]
         <Before><![CDATA[do
 {
     Foo(); // [|Id|]
-} while (condition);]]></Before>
+} while (x);]]></Before>
         <After><![CDATA[do
 {
     Foo();
 
-} while (condition);]]></After>
+} while (x);]]></After>
       </Sample>
     </Samples>
   </Analyzer>
@@ -2822,6 +2835,22 @@ if (s == null)
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
     <Samples>
       <Sample>
+        <Before><![CDATA[if (x)
+{
+    // ...
+
+    return false; // [|Id|]
+}
+
+return false;]]></Before>
+        <After><![CDATA[if (x)
+{
+    // ...
+}
+
+return false;]]></After>
+      </Sample>
+      <Sample>
         <Before><![CDATA[public void Foo()
 {
     // ...
@@ -3096,6 +3125,7 @@ string s2 = s as string; // [|Id|]]]></Before>
     <IsEnabledByDefault>true</IsEnabledByDefault>
     <SupportsFadeOut>false</SupportsFadeOut>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <MinLanguageVersion>6.0</MinLanguageVersion>
     <Samples>
       <Sample>
         <Before><![CDATA[if (s != null && s.StartsWith("a")) // [|Id|]
@@ -3150,7 +3180,7 @@ string s2 = s as string; // [|Id|]]]></Before>
     <SupportsFadeOut>true</SupportsFadeOut>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
   </Analyzer>
-  <Analyzer Identifier="CallStringConcatInsteadOfStringJoin">
+  <Analyzer Identifier="CallStringConcatInsteadOfStringJoin" IsObsolete="true">
     <Id>RCS1150</Id>
     <Title>Call string.Concat instead of string.Join.</Title>
     <MessageFormat>Call string.Concat instead of string.Join.</MessageFormat>
@@ -3209,19 +3239,15 @@ string s2 = s as string; // [|Id|]]]></Before>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
     <Samples>
       <Sample>
-        <Before><![CDATA[            if (x)
-            {
-            } // [|Id|]
-            if (y)
-            {
-            }]]></Before>
-        <After><![CDATA[            if (x)
-            {
-            }
+        <Before><![CDATA[if (x)
+{
+} // [|Id|]
+Foo();]]></Before>
+        <After><![CDATA[if (x)
+{
+}
 
-            if (y)
-            {
-            }]]></After>
+Foo();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
@@ -3388,10 +3414,10 @@ public delegate void FooEventHandler(object sender, FooEventArgs args);]]></Befo
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="EnumMemberShouldDeclareExplicitValue">
+  <Analyzer Identifier="EnumShouldDeclareExplicitValues">
     <Id>RCS1161</Id>
-    <Title>Enum member should declare explicit value.</Title>
-    <MessageFormat>Enum member should declare explicit value.</MessageFormat>
+    <Title>Enum should declare explicit values.</Title>
+    <MessageFormat>Enum should declare explicit values.</MessageFormat>
     <Category>Readability</Category>
     <DefaultSeverity>Hidden</DefaultSeverity>
     <IsEnabledByDefault>true</IsEnabledByDefault>
@@ -3399,9 +3425,9 @@ public delegate void FooEventHandler(object sender, FooEventArgs args);]]></Befo
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
     <Samples>
       <Sample>
-        <Before><![CDATA[public enum Foo
+        <Before><![CDATA[public enum Foo // [|Id|]
 {
-    A, // [|Id|]
+    A,
     B,
     C,
 }]]></Before>
@@ -3533,29 +3559,37 @@ if (x == null) // [|Id|]
     <Title>Parameter name differs from base name.</Title>
     <MessageFormat>Parameter name '{0}' differs from base name '{1}'.</MessageFormat>
     <Category>Maintainability</Category>
-    <DefaultSeverity>Warning</DefaultSeverity>
+    <DefaultSeverity>Hidden</DefaultSeverity>
     <IsEnabledByDefault>true</IsEnabledByDefault>
     <SupportsFadeOut>false</SupportsFadeOut>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
     <Samples>
       <Sample>
-        <Before><![CDATA[public interface IFoo
+        <Before><![CDATA[interface IFoo
 {
     string Bar(object parameter);
 }
 
-public abstract class Foo : IFoo
+abstract class Foo : IFoo
 {
     public abstract string Bar(object value); // [|Id|]
 }]]></Before>
-        <After><![CDATA[public abstract string Bar(object parameter);]]></After>
+        <After><![CDATA[interface IFoo
+{
+    string Bar(object parameter);
+}
+
+abstract class Foo : IFoo
+{
+    public abstract string Bar(object parameter)
+};]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="MarkFieldAsReadOnly">
+  <Analyzer Identifier="MakeFieldReadOnly">
     <Id>RCS1169</Id>
-    <Title>Mark field as read-only.</Title>
-    <MessageFormat>Mark field as read-only.</MessageFormat>
+    <Title>Make field read-only.</Title>
+    <MessageFormat>Make field read-only.</MessageFormat>
     <Category>Design</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>true</IsEnabledByDefault>
@@ -3585,6 +3619,7 @@ public abstract class Foo : IFoo
     <IsEnabledByDefault>true</IsEnabledByDefault>
     <SupportsFadeOut>true</SupportsFadeOut>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <MinLanguageVersion>6.0</MinLanguageVersion>
     <Samples>
       <Sample>
         <Before><![CDATA[public object Foo { get; private set; } // [|Id|]]]></Before>
@@ -3742,7 +3777,7 @@ else
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="CallDebugFailInsteadOfDebugAssert">
+  <Analyzer Identifier="CallDebugFailInsteadOfDebugAssert" IsObsolete="true">
     <Id>RCS1178</Id>
     <Title>Call Debug.Fail instead of Debug.Assert.</Title>
     <MessageFormat>Call Debug.Fail instead of Debug.Assert.</MessageFormat>
@@ -3816,10 +3851,10 @@ items.Add(x);]]></Before>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="ReplaceCommentWithDocumentationComment">
+  <Analyzer Identifier="ConvertCommentToDocumentationComment">
     <Id>RCS1181</Id>
-    <Title>Replace comment with documentation comment.</Title>
-    <MessageFormat>Replace comment with documentation comment.</MessageFormat>
+    <Title>Convert comment to documentation comment.</Title>
+    <MessageFormat>Convert comment to documentation comment.</MessageFormat>
     <Category>General</Category>
     <DefaultSeverity>Hidden</DefaultSeverity>
     <IsEnabledByDefault>true</IsEnabledByDefault>
@@ -3897,12 +3932,12 @@ public string Value { get; }]]></After>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
     <Samples>
       <Sample>
-        <Before><![CDATA[bool x = (condition) ? // [|Id|]
-    a :
-    b;]]></Before>
-        <After><![CDATA[bool x = (condition)
-    ? a
-    : b;]]></After>
+        <Before><![CDATA[var y = (x) ? // [|Id|]
+Foo() :
+Bar();]]></Before>
+        <After><![CDATA[var y = (x)
+? Foo()
+: Bar();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
@@ -3917,8 +3952,8 @@ public string Value { get; }]]></After>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
     <Samples>
       <Sample>
-        <Before><![CDATA[public Foo() { Bar(); } // [|Id|]]]></Before>
-        <After><![CDATA[public Foo()
+        <Before><![CDATA[void Foo() { Bar(); } // [|Id|]]]></Before>
+        <After><![CDATA[void Foo()
 {
     Bar();
 }]]></After>
@@ -4323,10 +4358,10 @@ public class FooAttribute : Attribute
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="ReorderNamedArguments">
+  <Analyzer Identifier="OrderNamedArguments">
     <Id>RCS1205</Id>
-    <Title>Reorder named arguments according to the order of parameters.</Title>
-    <MessageFormat>Reorder named arguments according to the order of parameters.</MessageFormat>
+    <Title>Order named arguments according to the order of parameters.</Title>
+    <MessageFormat>Order named arguments according to the order of parameters.</MessageFormat>
     <Category>Readability</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>true</IsEnabledByDefault>
@@ -4362,6 +4397,7 @@ public class FooAttribute : Attribute
     <IsEnabledByDefault>true</IsEnabledByDefault>
     <SupportsFadeOut>false</SupportsFadeOut>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <MinLanguageVersion>6.0</MinLanguageVersion>
     <Samples>
       <Sample>
         <Before><![CDATA[var x = new Foo();
@@ -4445,10 +4481,10 @@ Foo3();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="ReorderTypeParameterConstraints">
+  <Analyzer Identifier="OrderTypeParameterConstraints">
     <Id>RCS1209</Id>
-    <Title>Reorder type parameter constraints.</Title>
-    <MessageFormat>Reorder type parameter constraints.</MessageFormat>
+    <Title>Order type parameter constraints.</Title>
+    <MessageFormat>Order type parameter constraints.</MessageFormat>
     <Category>Readability</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>true</IsEnabledByDefault>
@@ -4703,10 +4739,10 @@ string y = $"{x}{x}{x}"; // [|Id|]]]></Before>
 }
 else
 {
-  Foo();
+  M();
 }]]></Before><After><![CDATA[if (!x)
 {
-  Foo();
+  M();
 }]]></After>
       </Sample>
       <Sample>
@@ -4714,7 +4750,7 @@ else
 {
   if (x)  // [|Id|]
   {
-    Foo();
+    M();
   }
   else
   {
@@ -4723,7 +4759,7 @@ else
 }]]></Before>
         <After><![CDATA[while (x)
 {
-  Foo();
+  M();
 }]]></After>
       </Sample>
       <Sample>
@@ -4734,30 +4770,43 @@ else
     break;
   }
 
-  Foo();
+  M();
 }]]></Before>
         <After><![CDATA[while (!x)
 {
-  Foo();
+  M();
       
 }]]></After>
       </Sample>
       <Sample>
         <Before><![CDATA[do
 {
-  Foo();
+  M();
 
   if (x)  // [|Id|]
   {
     break;
   }
   
-} while (true)]]></Before>
+} while (true);]]></Before>
         <After><![CDATA[do
 {
-  Foo();
+  M();
 
-} while (!x)]]></After>
+} while (!x);]]></After>
+      </Sample>
+      <Sample>
+        <Before><![CDATA[if (x)
+{
+  do
+  {
+    M();
+  }
+  while (x);]]></Before>
+        <After><![CDATA[while (x)
+{
+  M();
+}]]></After>
       </Sample>
     </Samples>
   </Analyzer>
@@ -4790,6 +4839,7 @@ else
     <IsEnabledByDefault>true</IsEnabledByDefault>
     <SupportsFadeOut>false</SupportsFadeOut>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <MinLanguageVersion>7.0</MinLanguageVersion>
     <Samples>
       <Sample>
         <Before><![CDATA[if (x is T && Foo((T)x)) // [|Id|]
@@ -4810,6 +4860,7 @@ else
     <IsEnabledByDefault>true</IsEnabledByDefault>
     <SupportsFadeOut>false</SupportsFadeOut>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <MinLanguageVersion>7.0</MinLanguageVersion>
     <Samples>
       <Sample>
         <Before><![CDATA[var y = x as Foo; // [|Id|]
@@ -5103,9 +5154,10 @@ public string Foo()
     <MessageFormat>Make parameter ref read-only.</MessageFormat>
     <Category>Performance</Category>
     <DefaultSeverity>Info</DefaultSeverity>
-    <IsEnabledByDefault>true</IsEnabledByDefault>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
     <SupportsFadeOut>false</SupportsFadeOut>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <MinLanguageVersion>7.2</MinLanguageVersion>
     <Summary></Summary>
     <Samples>
       <Sample>
@@ -5119,6 +5171,441 @@ public string Foo()
 {
     void M(in C c)
     {
+    }
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="OrderElementsInDocumentationComment">
+    <Id>RCS1232</Id>
+    <Title>Order elements in documentation comment.</Title>
+    <MessageFormat>Order elements in documentation comment.</MessageFormat>
+    <Category>Readability</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>true</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Summary></Summary>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[class C
+{
+    /// <summary></summary>
+    /// <param name="p3"></param> [|Id|]
+    /// <param name="p2"></param>
+    /// <param name="p1"></param>
+    void M(object p1, object p2, object p3)
+    {
+    }
+}]]></Before>
+        <After><![CDATA[class C
+{
+    /// <summary></summary>
+    /// <param name="p1"></param>
+    /// <param name="p2"></param>
+    /// <param name="p3"></param>
+    void M(object p1, object p2, object p3)
+    {
+    }
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="UseShortCircuitingOperator">
+    <Id>RCS1233</Id>
+    <Title>Use short-circuiting operator.</Title>
+    <MessageFormat>Use short-circuiting operator.</MessageFormat>
+    <Category>Usage</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>true</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Summary></Summary>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[boolExpr1 & boolExpr2 [|Id|]]]></Before>
+        <After><![CDATA[boolExpr1 && boolExpr2]]></After>
+      </Sample>
+      <Sample>
+        <Before><![CDATA[boolExpr1 | boolExpr2 [|Id|]]]></Before>
+        <After><![CDATA[boolExpr1 || boolExpr2]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="DuplicateEnumValue">
+    <Id>RCS1234</Id>
+    <Title>Duplicate enum value.</Title>
+    <MessageFormat>Duplicate enum value.</MessageFormat>
+    <Category>Readability</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>true</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Summary></Summary>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[enum E
+{
+    A = 1,
+    B = 2,
+    C = 2, [|Id|]
+}]]></Before>
+        <After><![CDATA[enum E
+{
+    A = 1,
+    B = 2,
+    C = B,
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="OptimizeMethodCall">
+    <Id>RCS1235</Id>
+    <Title>Optimize method call.</Title>
+    <MessageFormat>Optimize '{0}' call.</MessageFormat>
+    <Category>Performance</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>true</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[string.Compare(x, y, StringComparison.Ordinal) // [|Id|]]]></Before>
+        <After><![CDATA[string.CompareOrdinal(x, y)]]></After>
+      </Sample>
+      <Sample>
+        <Before><![CDATA[string.Compare(x, y, StringComparison.CurrentCulture) == 0 // [|Id|]]]></Before>
+        <After><![CDATA[string.Equals(x, y, StringComparison.CurrentCulture)]]></After>
+      </Sample>
+      <Sample>
+        <Before><![CDATA[string.Join("", x, z, y) // [|Id|]]]></Before>
+        <After><![CDATA[string.Concat(x, y, z)]]></After>
+      </Sample>
+      <Sample>
+        <Before><![CDATA[Debug.Assert(false, "message"); // [|Id|]]]></Before>
+        <After><![CDATA[Debug.Fail("message");]]></After>
+      </Sample>
+      <Sample>
+        <Before><![CDATA[if (dic.ContainsKey(key)) // [|Id|]
+{
+  dic[key] = value;
+}
+else
+{
+  dic.Add(key, value);
+}]]></Before>
+        <After><![CDATA[dic[key] = value;]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="UseExceptionFilter">
+    <Id>RCS1236</Id>
+    <Title>Use exception filter.</Title>
+    <MessageFormat>Use exception filter.</MessageFormat>
+    <Category>Usage</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>true</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <MinLanguageVersion>6.0</MinLanguageVersion>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[try
+{
+}
+catch (Exception ex)
+{
+    if (!(ex is InvalidOperationException)) // [|Id|]
+    {
+        throw;
+    }
+
+    return;
+}]]></Before>
+        <After><![CDATA[try
+{
+}
+catch (Exception ex) when (ex is InvalidOperationException)
+{
+    return;
+}]]></After>
+      </Sample>
+    </Samples>
+    <Links>
+      <Link>
+        <Url>https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-6#exception-filters</Url>
+        <Text>What's New in C# 6.0 - Exception Filters</Text>
+      </Link>
+    </Links>
+  </Analyzer>
+  <Analyzer Identifier="UseBitShiftOperator">
+    <Id>RCS1237</Id>
+    <Title>Use bit shift operator.</Title>
+    <MessageFormat>Use bit shift operator.</MessageFormat>
+    <Category>Usage</Category>
+    <DefaultSeverity>Hidden</DefaultSeverity>
+    <IsEnabledByDefault>true</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[[Flags]
+enum Foo // [|Id|]
+{
+    None = 0,
+    Alpha = 1,
+    Beta = 2,
+    Gamma = 4,
+}]]></Before>
+        <After><![CDATA[[Flags]
+enum Foo
+{
+    None = 0,
+    Alpha = 1,
+    Beta = 1 << 1,
+    Gamma = 1 << 2,
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="AvoidNestedConditionalOperators">
+    <Id>RCS1238</Id>
+    <Title>Avoid nested ?: operators.</Title>
+    <MessageFormat>Avoid nested ?: operators.</MessageFormat>
+    <Category>Readability</Category>
+    <DefaultSeverity>Hidden</DefaultSeverity>
+    <IsEnabledByDefault>true</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[var x = (a) ? "a" : (b) ? "b" : "c";]]></Before>
+        <After><![CDATA[var x;
+if (a)
+{
+    x = "a";
+}
+else if (b)
+{
+    x = "b";
+}
+else
+{
+    x = "c";
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="UseForStatementInsteadOfWhileStatement">
+    <Id>RCS1239</Id>
+    <Title>Use 'for' statement instead of 'while' statement.</Title>
+    <MessageFormat>Use 'for' statement instead of 'while' statement.</MessageFormat>
+    <Category>Readability</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>true</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[int i = 0;
+while (x)
+{
+    M();
+    i++;
+}]]></Before>
+        <After><![CDATA[for (int i = 0; f; i++)
+{
+    M();
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="UnnecessaryOperator">
+    <Id>RCS1240</Id>
+    <Title>Operator is unnecessary.</Title>
+    <MessageFormat>The '{0}' operator is unnecessary.</MessageFormat>
+    <Category>Redundancy</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>true</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[array.Length <= 0 [|Id|]]]></Before>
+        <After><![CDATA[array.Length == 0]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="ImplementNonGenericCounterpart">
+    <Id>RCS1241</Id>
+    <Title>Implement non-generic counterpart.</Title>
+    <MessageFormat>Implement {0} when implementing {0}&lt;T&gt;.</MessageFormat>
+    <Category>Design</Category>
+    <DefaultSeverity>Hidden</DefaultSeverity>
+    <IsEnabledByDefault>true</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Summary>Publicly visible type that implements `IComparable&lt;T&gt;`, `IComparer&lt;T&gt;` or `IEqualityComparer&lt;T&gt;` should implement their non-generic counterpart.</Summary>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[using System;
+using System.Collections.Generic;
+
+public class C
+{
+}
+
+public abstract class Comparable : IComparable<C> [|Id|]
+{
+    public abstract int CompareTo(C other);
+}]]></Before>
+        <After><![CDATA[using System;
+using System.Collections.Generic;
+
+public class C
+{
+}
+
+public abstract class Comparable : IComparable<C>, IComparable
+{
+    public abstract int CompareTo(C other);
+
+    public int CompareTo(object obj)
+    {
+        if (obj == null)
+        {
+            return 1;
+        }
+
+        if (obj is C x)
+        {
+            return CompareTo(x);
+        }
+
+        throw new ArgumentException("""", nameof(obj));
+    }
+}]]></After>
+      </Sample>
+      <Sample>
+        <Before><![CDATA[using System;
+using System.Collections;
+using System.Collections.Generic;
+
+public class C
+{
+}
+
+public abstract class Comparer : IComparer<C> [|Id|]
+{
+    public abstract int Compare(C x, C y);
+}]]></Before>
+        <After><![CDATA[using System;
+using System.Collections;
+using System.Collections.Generic;
+
+public class C
+{
+}
+
+public abstract class Comparer : IComparer<C>, IComparer
+{
+    public abstract int Compare(C x, C y);
+
+    public int Compare(object x, object y)
+    {
+        if (x == y)
+        {
+            return 0;
+        }
+
+        if (x == null)
+        {
+            return -1;
+        }
+
+        if (y == null)
+        {
+            return 1;
+        }
+
+        if (x is global::C a
+            && y is global::C b)
+        {
+            return Compare(a, b);
+        }
+
+        if (x is IComparable ic)
+        {
+            return ic.CompareTo(y);
+        }
+
+        throw new ArgumentException("""", nameof(x));
+    }
+}]]></After>
+      </Sample>
+      <Sample>
+        <Before><![CDATA[using System;
+using System.Collections;
+using System.Collections.Generic;
+
+public class C
+{
+}
+
+public abstract class EqualityComparer : IEqualityComparer<C> [|Id|]
+{
+    public abstract bool Equals(C x, C y);
+
+    public abstract int GetHashCode(C obj);
+}]]></Before>
+        <After><![CDATA[using System;
+using System.Collections;
+using System.Collections.Generic;
+
+public class C
+{
+}
+
+public abstract class EqualityComparer : IEqualityComparer<C>, IEqualityComparer
+{
+    public abstract bool Equals(C x, C y);
+
+    public abstract int GetHashCode(C obj);
+
+    new public bool Equals(object x, object y)
+    {
+        if (x == y)
+        {
+            return true;
+        }
+
+        if (x == null || y == null)
+        {
+            return false;
+        }
+
+        if (x is global::C a
+            && y is global::C b)
+        {
+            return Equals(a, b);
+        }
+
+        return x.Equals(y);
+    }
+
+    public int GetHashCode(object obj)
+    {
+        if (obj == null)
+        {
+            throw new ArgumentNullException(nameof(obj));
+        }
+
+        if (obj is C x)
+        {
+            return GetHashCode(x);
+        }
+
+        return obj.GetHashCode();
     }
 }]]></After>
       </Sample>

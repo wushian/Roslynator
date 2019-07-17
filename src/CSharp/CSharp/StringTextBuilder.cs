@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Roslynator.Text;
 using Roslynator.CSharp.Syntax;
 
 namespace Roslynator.CSharp
@@ -24,11 +25,6 @@ namespace Roslynator.CSharp
         public bool IsVerbatim { get; }
 
         public bool IsInterpolated { get; }
-
-        public int Length
-        {
-            get { return StringBuilder.Length; }
-        }
 
         public void Append(InterpolatedStringExpressionSyntax interpolatedString)
         {
@@ -61,7 +57,7 @@ namespace Roslynator.CSharp
                             }
                             else
                             {
-                                Append(interpolatedText.TextToken.ValueText, isVerbatim);
+                                Append(interpolatedText.TextToken.ValueText);
                             }
 
                             break;
@@ -90,6 +86,8 @@ namespace Roslynator.CSharp
                 if (length == 0)
                     return;
 
+                int startIndex = StringBuilder.Length;
+
                 if (isVerbatim)
                 {
                     StringBuilder.Append(text, 2, length - 3);
@@ -98,14 +96,20 @@ namespace Roslynator.CSharp
                 {
                     StringBuilder.Append(text, 1, length - 2);
                 }
+
+                if (IsInterpolated)
+                {
+                    StringBuilder.Replace("{", "{{", startIndex);
+                    StringBuilder.Replace("}", "}}", startIndex);
+                }
             }
             else
             {
-                Append(literalInfo.ValueText, isVerbatim);
+                Append(literalInfo.ValueText);
             }
         }
 
-        private void Append(string value, bool isVerbatim)
+        private void Append(string value)
         {
             int length = value.Length;
 
@@ -165,7 +169,7 @@ namespace Roslynator.CSharp
                     case '\r':
                     case '\n':
                         {
-                            return IsVerbatim && !isVerbatim;
+                            return !IsVerbatim;
                         }
                     default:
                         {

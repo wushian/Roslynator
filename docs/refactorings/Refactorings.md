@@ -120,6 +120,50 @@ public interface IFoo
 }
 ```
 
+#### Add missing cases to switch statement \(RR0059\)
+
+* **Syntax**: switch statement
+
+#### Before
+
+```csharp
+switch (dayOfWeek)
+{
+    case DayOfWeek.Sunday:
+        break;
+    case DayOfWeek.Monday:
+        break;
+    case DayOfWeek.Tuesday:
+        break;
+    case DayOfWeek.Wednesday:
+        break;
+    case DayOfWeek.Thursday:
+        break;
+}
+```
+
+#### After
+
+```csharp
+switch (dayOfWeek)
+{
+    case DayOfWeek.Sunday:
+        break;
+    case DayOfWeek.Monday:
+        break;
+    case DayOfWeek.Tuesday:
+        break;
+    case DayOfWeek.Wednesday:
+        break;
+    case DayOfWeek.Thursday:
+        break;
+    case DayOfWeek.Friday:
+        break;
+    case DayOfWeek.Saturday:
+        break;
+}
+```
+
 #### Add parameter name to argument \(RR0011\)
 
 * **Syntax**: argument list
@@ -235,9 +279,18 @@ if (s.IndexOf("a", StringComparison.OrdinalIgnoreCase) != -1)
 
 * **Syntax**: variable declaration, foreach statement
 * **Span**: type
-![Change type according to expression](../../images/refactorings/ChangeTypeAccordingToExpression.png)
 
-![Change type according to expression](../../images/refactorings/ChangeForEachTypeAccordingToExpression.png)
+#### Before
+
+```csharp
+IEnumerable<object> items = new List<object>();
+```
+
+#### After
+
+```csharp
+List<object> items = new List<object>();
+```
 
 #### Change 'var' to explicit type \(RR0023\)
 
@@ -273,6 +326,73 @@ if (s.IndexOf("a", StringComparison.OrdinalIgnoreCase) != -1)
 * **Span**: opening or closing brace
 ![Comment out statement](../../images/refactorings/CommentOutStatement.png)
 
+#### Convert comment to documentation comment \(RR0192\)
+
+* **Syntax**: single\-line comment
+
+#### Before
+
+```csharp
+// comment
+public class Foo
+{
+}
+```
+
+#### After
+
+```csharp
+/// <summary>
+/// comment
+/// </summary>
+public class Foo
+{
+}
+```
+
+#### Convert statements to if\-else \(RR0211\)
+
+* **Syntax**: selected statements \(first statement must be 'if' statement\)
+
+#### Before
+
+```csharp
+if (x)
+    return 1;
+
+if (y)
+{
+    return 2;
+}
+else if (z)
+{
+    return 3;
+}
+
+return 0;
+```
+
+#### After
+
+```csharp
+if (x)
+{
+    return 1;
+}
+else if (y)
+{
+    return 2;
+}
+else if (z)
+{
+    return 3;
+}
+else
+{
+    return 0;
+}
+```
+
 #### Copy documentation comment from base member \(RR0029\)
 
 * **Syntax**: constructor, method, property, indexer, event
@@ -301,6 +421,53 @@ if (s.IndexOf("a", StringComparison.OrdinalIgnoreCase) != -1)
 * **Syntax**: do statement, fixed statement, for statement, foreach statement, checked statement, if statement, lock statement, switch statement, try statement, unchecked statement, unsafe statement, using statement, while statement
 * **Span**: opening or closing brace
 ![Duplicate statement](../../images/refactorings/DuplicateStatement.png)
+
+#### Duplicate switch section \(RR0212\)
+
+* **Syntax**: switch section
+* **Span**: close brace or empty line after switch section
+
+#### Before
+
+```csharp
+switch (s)
+{
+    case "a":
+        {
+            // ...
+
+            break;
+        }
+    default:
+        {
+            break;
+        }
+}
+```
+
+#### After
+
+```csharp
+switch (s)
+{
+    case "a":
+        {
+            // ...
+
+            break;
+        }
+    case "a":
+        {
+            // ...
+
+            break;
+        }
+    default:
+        {
+            break;
+        }
+}
+```
 
 #### Expand coalesce expression \(RR0035\)
 
@@ -565,10 +732,139 @@ public class Foo
 }
 ```
 
-#### Generate switch sections \(RR0059\)
+#### Implement custom enumerator \(RR0210\)
 
-* **Syntax**: switch statement \(that is empty or contains only default section\)
-![Generate switch sections](../../images/refactorings/GenerateSwitchSections.png)
+* **Syntax**: class that implements IEnumerable\<T>
+* **Span**: identifier
+
+#### Before
+
+```csharp
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
+class C<T> : IEnumerable<T>
+{
+    IEnumerator<T> IEnumerable<T>.GetEnumerator()
+    {
+        throw new NotImplementedException();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        throw new NotImplementedException();
+    }
+}
+```
+
+#### After
+
+```csharp
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
+class C<T> : IEnumerable<T>
+{
+    IEnumerator<T> IEnumerable<T>.GetEnumerator()
+    {
+        throw new NotImplementedException();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Enumerator GetEnumerator()
+    {
+        return new Enumerator(this);
+    }
+
+    public struct Enumerator
+    {
+        private readonly C<T> _c;
+        private int _index;
+
+        internal Enumerator(C<T> c)
+        {
+            _c = c;
+            _index = -1;
+        }
+
+        public T Current
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public bool MoveNext()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Reset()
+        {
+            _index = -1;
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotSupportedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotSupportedException();
+        }
+    }
+
+    //TODO: IEnumerable.GetEnumerator() and IEnumerable<T>.GetEnumerator() should return instance of EnumeratorImpl.
+    private class EnumeratorImpl : IEnumerator<T>
+    {
+        private Enumerator _e;
+
+        internal EnumeratorImpl(C<T> c)
+        {
+            _e = new Enumerator(c);
+        }
+
+        public T Current
+        {
+            get
+            {
+                return _e.Current;
+            }
+        }
+
+        object IEnumerator.Current
+        {
+            get
+            {
+                return _e.Current;
+            }
+        }
+
+        public bool MoveNext()
+        {
+            return _e.MoveNext();
+        }
+
+        void IEnumerator.Reset()
+        {
+            _e.Reset();
+        }
+
+        void IDisposable.Dispose()
+        {
+        }
+    }
+}
+```
 
 #### Implement IEquatable\<T> \(RR0179\)
 
@@ -810,6 +1106,45 @@ if (condition1)
 * **Span**: operator
 ![Invert is expression](../../images/refactorings/InvertIsExpression.png)
 
+#### Invert LINQ method call \(RR0116\)
+
+* **Syntax**: System\.Linq\.Enumerable\.Any\(Func\<T, bool>\) or System\.Linq\.Enumerable\.All\(Func\<T, bool>\)
+* **Span**: method name
+
+#### Before
+
+```csharp
+if (items.Any(predicate)
+{
+}
+```
+
+#### After
+
+```csharp
+if (items.All(!predicate)
+{
+}
+```
+
+- - -
+
+#### Before
+
+```csharp
+if (items.All(predicate)
+{
+}
+```
+
+#### After
+
+```csharp
+if (items.Any(!predicate)
+{
+}
+```
+
 #### Invert operator \(RR0082\)
 
 * **Syntax**: \!=, &&, \|\|, \<, \<=, ==, >, >=
@@ -887,7 +1222,39 @@ int i = 0;
 #### Merge if statements \(RR0075\)
 
 * **Syntax**: selected if statements
-![Merge if statements](../../images/refactorings/MergeIfStatements.png)
+
+#### Before
+
+```csharp
+bool condition1 = false;
+bool condition2 = false;
+
+if (condition1)
+{
+    return false;
+}
+
+if (condition2)
+{
+    return false;
+}
+
+return true;
+```
+
+#### After
+
+```csharp
+bool condition1 = false;
+bool condition2 = false;
+
+if (condition1 || condition2)
+{
+    return false;
+}
+
+return true;
+```
 
 #### Merge if with parent if \(RR0196\)
 
@@ -956,11 +1323,11 @@ public unsafe class Foo
 }
 ```
 
-#### Notify property changed \(RR0083\)
+#### Notify when property change \(RR0083\)
 
-* **Syntax**: property in class/struct that implements INotifyPropertyChanged
+* **Syntax**: property in class/struct that implements System\.ComponentModel\.INotifyPropertyChanged
 * **Span**: setter
-![Notify property changed](../../images/refactorings/NotifyPropertyChanged.png)
+![Notify when property change](../../images/refactorings/NotifyWhenPropertyChange.png)
 
 #### Parenthesize expression \(RR0084\)
 
@@ -1206,16 +1573,14 @@ public enum Foo
 #### Before
 
 ```csharp
-string s = (condition) ? "a" : "b";
-{
-}
+string s = (x) ? "a" : "b";
 ```
 
 #### After
 
 ```csharp
 string s;
-if (condition)
+if (x)
 {
     s = "a";
 }
@@ -1225,11 +1590,31 @@ else
 }
 ```
 
-#### Replace Any with All \(or All with Any\) \(RR0116\)
+- - -
 
-* **Syntax**: Any\(Func\<T, bool> or All\(Func\<T, bool> from System\.Linq\.Enumerable namespace
-* **Span**: method name
-![Replace Any with All (or All with Any)](../../images/refactorings/ReplaceAnyWithAllOrAllWithAny.png)
+#### Before
+
+```csharp
+string s = (x) ? "a" : (y) ? "b" : "c";
+```
+
+#### After
+
+```csharp
+string s;
+if (x)
+{
+    s = "a";
+}
+else if (y)
+{
+    s = "b";
+}
+else
+{
+    s = "c";
+}
+```
 
 #### Replace as expression with cast expression \(RR0117\)
 
@@ -1240,30 +1625,6 @@ else
 
 * **Syntax**: cast expression
 ![Replace cast expression with as expression](../../images/refactorings/ReplaceCastWithAs.png)
-
-#### Replace comment with documentation comment \(RR0192\)
-
-* **Syntax**: single\-line comment
-
-#### Before
-
-```csharp
-// comment
-public class Foo
-{
-}
-```
-
-#### After
-
-```csharp
-/// <summary>
-/// comment
-/// </summary>
-public class Foo
-{
-}
-```
 
 #### Replace conditional expression with expression \(RR0119\)
 
@@ -1777,10 +2138,10 @@ if (y && x)
 string s = null;
 ```
 
-#### UncommentSingleLineComment \(RR0163\)
+#### Uncomment single\-line comment \(RR0163\)
 
 * **Syntax**: single\-line comment\(s\)
-![UncommentSingleLineComment](../../images/refactorings/UncommentSingleLineComment.png)
+![Uncomment single-line comment](../../images/refactorings/UncommentSingleLineComment.png)
 
 #### Use "" instead of string\.Empty \(RR0168\)
 

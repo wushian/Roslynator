@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Immutable;
 using System.Composition;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
@@ -11,6 +13,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Roslynator.CodeFixes;
 using Roslynator.CSharp.Refactorings;
+using Roslynator.CSharp.Syntax;
 
 namespace Roslynator.CSharp.CodeFixes
 {
@@ -28,11 +31,11 @@ namespace Roslynator.CSharp.CodeFixes
                     DiagnosticIdentifiers.AddDefaultAccessModifier,
                     DiagnosticIdentifiers.RemoveRedundantSealedModifier,
                     DiagnosticIdentifiers.AvoidSemicolonAtEndOfDeclaration,
-                    DiagnosticIdentifiers.ReorderModifiers,
-                    DiagnosticIdentifiers.MarkFieldAsReadOnly,
+                    DiagnosticIdentifiers.OrderModifiers,
+                    DiagnosticIdentifiers.MakeFieldReadOnly,
                     DiagnosticIdentifiers.UseConstantInsteadOfField,
                     DiagnosticIdentifiers.UseReadOnlyAutoProperty,
-                    DiagnosticIdentifiers.ReplaceCommentWithDocumentationComment,
+                    DiagnosticIdentifiers.ConvertCommentToDocumentationComment,
                     DiagnosticIdentifiers.MakeMethodExtensionMethod);
             }
         }
@@ -60,10 +63,7 @@ namespace Roslynator.CSharp.CodeFixes
                         }
                     case DiagnosticIdentifiers.RemoveRedundantOverridingMember:
                         {
-                            CodeAction codeAction = CodeAction.Create(
-                                $"Remove {CSharpFacts.GetTitle(memberDeclaration)}",
-                                cancellationToken => context.Document.RemoveMemberAsync(memberDeclaration, cancellationToken),
-                                GetEquivalenceKey(diagnostic));
+                            CodeAction codeAction = CodeActionFactory.RemoveMemberDeclaration(context.Document, memberDeclaration, equivalenceKey: GetEquivalenceKey(diagnostic));
 
                             context.RegisterCodeFix(codeAction, diagnostic);
                             break;
@@ -97,25 +97,25 @@ namespace Roslynator.CSharp.CodeFixes
                             context.RegisterCodeFix(codeAction, diagnostic);
                             break;
                         }
-                    case DiagnosticIdentifiers.ReorderModifiers:
+                    case DiagnosticIdentifiers.OrderModifiers:
                         {
                             CodeAction codeAction = CodeAction.Create(
-                                "Reorder modifiers",
-                                cancellationToken => ReorderModifiersRefactoring.RefactorAsync(context.Document, memberDeclaration, cancellationToken),
+                                "Order modifiers",
+                                ct => OrderModifiersAsync(context.Document, memberDeclaration, ct),
                                 GetEquivalenceKey(diagnostic));
 
                             context.RegisterCodeFix(codeAction, diagnostic);
                             break;
                         }
-                    case DiagnosticIdentifiers.MarkFieldAsReadOnly:
+                    case DiagnosticIdentifiers.MakeFieldReadOnly:
                         {
                             var fieldDeclaration = (FieldDeclarationSyntax)memberDeclaration;
 
                             SeparatedSyntaxList<VariableDeclaratorSyntax> declarators = fieldDeclaration.Declaration.Variables;
 
                             string title = (declarators.Count == 1)
-                                ? $"Mark '{declarators[0].Identifier.ValueText}' as read-only"
-                                : "Mark fields as read-only";
+                                ? $"Make '{declarators[0].Identifier.ValueText}' read-only"
+                                : "Make fields read-only";
 
                             ModifiersCodeFixRegistrator.AddModifier(context, diagnostic, fieldDeclaration, SyntaxKind.ReadOnlyKeyword, title: title);
                             break;
@@ -140,11 +140,11 @@ namespace Roslynator.CSharp.CodeFixes
                             context.RegisterCodeFix(codeAction, diagnostic);
                             break;
                         }
-                    case DiagnosticIdentifiers.ReplaceCommentWithDocumentationComment:
+                    case DiagnosticIdentifiers.ConvertCommentToDocumentationComment:
                         {
                             CodeAction codeAction = CodeAction.Create(
-                                ReplaceCommentWithDocumentationCommentRefactoring.Title,
-                                cancellationToken => ReplaceCommentWithDocumentationCommentRefactoring.RefactorAsync(context.Document, memberDeclaration, context.Span, cancellationToken),
+                                ConvertCommentToDocumentationCommentRefactoring.Title,
+                                cancellationToken => ConvertCommentToDocumentationCommentRefactoring.RefactorAsync(context.Document, memberDeclaration, context.Span, cancellationToken),
                                 GetEquivalenceKey(diagnostic));
 
                             context.RegisterCodeFix(codeAction, diagnostic);
@@ -171,6 +171,23 @@ namespace Roslynator.CSharp.CodeFixes
                         }
                 }
             }
+        }
+
+        private static Task<Document> OrderModifiersAsync(
+            Document document,
+            MemberDeclarationSyntax declaration,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ModifierListInfo info = SyntaxInfo.ModifierListInfo(declaration);
+
+            SyntaxTokenList modifiers = info.Modifiers;
+
+            SyntaxToken[] newModifiers = modifiers.OrderBy(f => f, ModifierComparer.Default).ToArray();
+
+            for (int i = 0; i < modifiers.Count; i++)
+                newModifiers[i] = newModifiers[i].WithTriviaFrom(modifiers[i]);
+
+            return document.ReplaceModifiersAsync(info, newModifiers, cancellationToken);
         }
     }
 }

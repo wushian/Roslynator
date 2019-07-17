@@ -5,11 +5,12 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Roslynator.CSharp.CodeFixes;
+using Roslynator.CSharp.Tests;
 using Xunit;
 
 namespace Roslynator.CSharp.Analysis.Tests
 {
-    public class RCS1146UseConditionalAccessTests : AbstractCSharpCodeFixVerifier
+    public class RCS1146UseConditionalAccessTests : AbstractCSharpFixVerifier
     {
         public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UseConditionalAccess;
 
@@ -446,6 +447,8 @@ class Foo
 
         if (x != null && x.P == null && f) { }
 
+        if (x != null && x.P is null && f) { }
+
         if (x != null && x.P == NullConst && f) { }
 
         if (x != null && x.P == s && f) { }
@@ -814,6 +817,25 @@ unsafe class C
     }
 }
 ");
+        }
+
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseConditionalAccess)]
+        public async Task TestNoDiagnostic_LanguageVersion()
+        {
+            await VerifyNoDiagnosticAsync(@"
+class C
+{
+    void M()
+    {
+        C x = null;
+
+        if (x != null)
+        {
+            x.M();
+        }
+    }
+}
+", options: CSharpCodeVerificationOptions.DefaultWithCSharp5);
         }
     }
 }

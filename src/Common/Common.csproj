@@ -5,12 +5,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>2.0.1.0</Version>
+    <Version>2.1.2.0</Version>
     <AssemblyName>Roslynator.Common</AssemblyName>
     <RootNamespace>Roslynator</RootNamespace>
     <CodeAnalysisRuleSet>..\global.ruleset</CodeAnalysisRuleSet>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Common.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Roslynator.snk</AssemblyOriginatorKeyFile>
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
 
@@ -19,7 +19,7 @@
     <Authors>Josef Pihrt</Authors>
     <Company></Company>
     <Description></Description>
-    <Copyright>Copyright (c) 2017-2018 Josef Pihrt</Copyright>
+    <Copyright>Copyright (c) 2017-2019 Josef Pihrt</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

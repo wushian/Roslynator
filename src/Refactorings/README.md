@@ -15,6 +15,7 @@
 | RR0012 | [Add identifier to parameter](../../docs/refactorings/RR0012.md) | \- |
 | RR0010 | [Add identifier to variable declaration](../../docs/refactorings/RR0010.md) | \- |
 | RR0195 | [Add member to interface](../../docs/refactorings/RR0195.md) | &#x2713; |
+| RR0059 | [Add missing cases to switch statement](../../docs/refactorings/RR0059.md) | &#x2713; |
 | RR0011 | [Add parameter name to argument](../../docs/refactorings/RR0011.md) | &#x2713; |
 | RR0208 | [Add tag to documentation comment](../../docs/refactorings/RR0208.md) | &#x2713; |
 | RR0178 | [Add type parameter](../../docs/refactorings/RR0178.md) | &#x2713; |
@@ -27,17 +28,21 @@
 | RR0186 | [Change accessibility](../../docs/refactorings/RR0186.md) | &#x2713; |
 | RR0018 | [Change explicit type to 'var'](../../docs/refactorings/RR0018.md) | &#x2713; |
 | RR0021 | [Change method return type to 'void'](../../docs/refactorings/RR0021.md) | &#x2713; |
+| RR0022 | [Change type according to expression](../../docs/refactorings/RR0022.md) | &#x2713; |
 | RR0023 | [Change 'var' to explicit type](../../docs/refactorings/RR0023.md) | &#x2713; |
 | RR0024 | [Check expression for null](../../docs/refactorings/RR0024.md) | &#x2713; |
 | RR0025 | [Check parameter for null](../../docs/refactorings/RR0025.md) | &#x2713; |
 | RR0026 | [Collapse to initalizer](../../docs/refactorings/RR0026.md) | &#x2713; |
 | RR0027 | [Comment out member](../../docs/refactorings/RR0027.md) | &#x2713; |
 | RR0028 | [Comment out statement](../../docs/refactorings/RR0028.md) | &#x2713; |
+| RR0192 | [Convert comment to documentation comment](../../docs/refactorings/RR0192.md) | &#x2713; |
+| RR0211 | [Convert statements to if-else](../../docs/refactorings/RR0211.md) | &#x2713; |
 | RR0029 | [Copy documentation comment from base member](../../docs/refactorings/RR0029.md) | &#x2713; |
 | RR0030 | [Duplicate argument](../../docs/refactorings/RR0030.md) | &#x2713; |
 | RR0031 | [Duplicate member](../../docs/refactorings/RR0031.md) | &#x2713; |
 | RR0032 | [Duplicate parameter](../../docs/refactorings/RR0032.md) | &#x2713; |
 | RR0033 | [Duplicate statement](../../docs/refactorings/RR0033.md) | &#x2713; |
+| RR0212 | [Duplicate switch section](../../docs/refactorings/RR0212.md) | &#x2713; |
 | RR0035 | [Expand coalesce expression](../../docs/refactorings/RR0035.md) | &#x2713; |
 | RR0034 | [Expand compound assignment operator](../../docs/refactorings/RR0034.md) | &#x2713; |
 | RR0036 | [Expand event](../../docs/refactorings/RR0036.md) | &#x2713; |
@@ -65,7 +70,7 @@
 | RR0057 | [Generate enum values](../../docs/refactorings/RR0057.md) | &#x2713; |
 | RR0058 | [Generate event invoking method](../../docs/refactorings/RR0058.md) | &#x2713; |
 | RR0204 | [Generate property for DebuggerDisplay attribute](../../docs/refactorings/RR0204.md) | &#x2713; |
-| RR0059 | [Generate switch sections](../../docs/refactorings/RR0059.md) | &#x2713; |
+| RR0210 | [Implement custom enumerator](../../docs/refactorings/RR0210.md) | &#x2713; |
 | RR0179 | [Implement IEquatable\<T>](../../docs/refactorings/RR0179.md) | &#x2713; |
 | RR0197 | [Initialize field from constructor](../../docs/refactorings/RR0197.md) | &#x2713; |
 | RR0060 | [Initialize local with default value](../../docs/refactorings/RR0060.md) | &#x2713; |
@@ -87,6 +92,7 @@
 | RR0189 | [Invert if](../../docs/refactorings/RR0189.md) | &#x2713; |
 | RR0162 | [Invert if-else](../../docs/refactorings/RR0162.md) | &#x2713; |
 | RR0081 | [Invert is expression](../../docs/refactorings/RR0081.md) | &#x2713; |
+| RR0116 | [Invert LINQ method call](../../docs/refactorings/RR0116.md) | &#x2713; |
 | RR0082 | [Invert operator](../../docs/refactorings/RR0082.md) | &#x2713; |
 | RR0134 | [Invert prefix/postfix unary operator](../../docs/refactorings/RR0134.md) | &#x2713; |
 | RR0078 | [Join string expressions](../../docs/refactorings/RR0078.md) | &#x2713; |
@@ -98,7 +104,7 @@
 | RR0196 | [Merge if with parent if](../../docs/refactorings/RR0196.md) | &#x2713; |
 | RR0077 | [Merge local declarations](../../docs/refactorings/RR0077.md) | &#x2713; |
 | RR0202 | [Move unsafe context to containing declaration](../../docs/refactorings/RR0202.md) | &#x2713; |
-| RR0083 | [Notify property changed](../../docs/refactorings/RR0083.md) | &#x2713; |
+| RR0083 | [Notify when property change](../../docs/refactorings/RR0083.md) | &#x2713; |
 | RR0084 | [Parenthesize expression](../../docs/refactorings/RR0084.md) | &#x2713; |
 | RR0085 | [Promote local to parameter](../../docs/refactorings/RR0085.md) | &#x2713; |
 | RR0086 | [Remove all comments](../../docs/refactorings/RR0086.md) | &#x2713; |
@@ -135,10 +141,8 @@
 | RR0115 | [Rename property according to type name](../../docs/refactorings/RR0115.md) | &#x2713; |
 | RR0143 | [Replace (yield) return statement with if-else](../../docs/refactorings/RR0143.md) | &#x2713; |
 | RR0120 | [Replace ?: with if-else](../../docs/refactorings/RR0120.md) | &#x2713; |
-| RR0116 | [Replace Any with All (or All with Any)](../../docs/refactorings/RR0116.md) | &#x2713; |
 | RR0117 | [Replace as expression with cast expression](../../docs/refactorings/RR0117.md) | &#x2713; |
 | RR0118 | [Replace cast expression with as expression](../../docs/refactorings/RR0118.md) | &#x2713; |
-| RR0192 | [Replace comment with documentation comment](../../docs/refactorings/RR0192.md) | &#x2713; |
 | RR0119 | [Replace conditional expression with expression](../../docs/refactorings/RR0119.md) | &#x2713; |
 | RR0121 | [Replace constant with field](../../docs/refactorings/RR0121.md) | &#x2713; |
 | RR0123 | [Replace do statement with while statement](../../docs/refactorings/RR0123.md) | &#x2713; |
@@ -183,7 +187,7 @@
 | RR0159 | [Swap binary operands](../../docs/refactorings/RR0159.md) | &#x2713; |
 | RR0161 | [Swap member declarations](../../docs/refactorings/RR0161.md) | &#x2713; |
 | RR0200 | [Uncomment multi-line comment](../../docs/refactorings/RR0200.md) | &#x2713; |
-| RR0163 | [UncommentSingleLineComment](../../docs/refactorings/RR0163.md) | &#x2713; |
+| RR0163 | [Uncomment single-line comment](../../docs/refactorings/RR0163.md) | &#x2713; |
 | RR0168 | [Use "" instead of string.Empty](../../docs/refactorings/RR0168.md) | &#x2713; |
 | RR0164 | [Use bitwise operation instead of calling 'HasFlag'](../../docs/refactorings/RR0164.md) | &#x2713; |
 | RR0191 | [Use C# 6.0 dictionary initializer](../../docs/refactorings/RR0191.md) | &#x2713; |
@@ -198,7 +202,6 @@
 | RR0182 | [Use StringBuilder instead of concatenation](../../docs/refactorings/RR0182.md) | &#x2713; |
 | RR0174 | [Wrap in #if directive](../../docs/refactorings/RR0174.md) | &#x2713; |
 | RR0172 | [Wrap in condition](../../docs/refactorings/RR0172.md) | &#x2713; |
-| RR0173 | [Wrap in else clause](../../docs/refactorings/RR0173.md) | &#x2713; |
 | RR0175 | [Wrap in region](../../docs/refactorings/RR0175.md) | &#x2713; |
 | RR0176 | [Wrap in try-catch](../../docs/refactorings/RR0176.md) | &#x2713; |
 | RR0177 | [Wrap in using statement](../../docs/refactorings/RR0177.md) | &#x2713; |

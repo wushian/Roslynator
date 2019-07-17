@@ -6,48 +6,56 @@ Generates documentation files from specified assemblies.
 ## Synopsis
 
 ```
-roslynator generate-doc
--a|--assemblies
+roslynator generate-doc <PROJECT|SOLUTION>
 -h|--heading
 -o|--output
--r|--references
 [--additional-xml-documentation]
 [--depth]
+[--file-log]
+[--file-log-verbosity]
 [--ignored-member-parts]
 [--ignored-names]
 [--ignored-namespace-parts]
+[--ignored-projects]
 [--ignored-root-parts]
 [--ignored-type-parts]
 [--include-all-derived-types]
+[--include-containing-namespace]
 [--include-ienumerable]
 [--include-inherited-interface-members]
+[--include-system-namespace]
 [--inheritance-style]
+[--language]
 [--max-derived-types]
-[--no-class-hierarchy]
+[--msbuild-path]
 [--no-delete]
 [--no-format-base-list]
 [--no-format-constraints]
 [--no-mark-obsolete]
 [--no-precedence-for-system]
 [--omit-attribute-arguments]
-[--omit-containing-namespace-parts]
 [--omit-inherited-attributes]
 [--omit-member-constant-value]
 [--omit-member-implements]
 [--omit-member-inherited-from]
 [--omit-member-overrides]
 [--preferred-culture]
+[--projects]
+[-p|--properties]
 [--scroll-to-content]
+[-v|--verbosity]
 [--visibility]
 ```
+
+## Arguments
+
+**`PROJECT|SOLUTION`**
+
+The project or solution to analyze.
 
 ## Options
 
 ### Required Options
-
-**`-a|--assemblies`** `<ASSEMBLIES>`
-
-Defines one or more assemblies that should be used as a source for the documentation.
 
 **`-h|--heading`** `<ROOT_FILE_HEADING>`
 
@@ -56,10 +64,6 @@ Defines a heading of the root documentation file.
 **`-o|--output`** `<OUTPUT_DIRECTORY>`
 
 Defines a path for the output directory.
-
-**`-r|--references`** `<ASSEMBLY_REFERENCE | ASSEMBLY_REFERENCES_FILE>`
-
-Defines one or more paths to assembly or a file that contains a list of all assemblies. Each assembly must be on separate line.
 
 ### Optional Options
 
@@ -83,7 +87,11 @@ Defines a list of metadata names that should be excluded from a documentation. N
 
 Defines parts of a namespace documentation that should be excluded.
 
-**`[--ignored-root-parts]`** `{content namespaces classes static-classes structs interfaces enums delegates other}`
+**`--ignored-projects`** <PROJECT_NAME>
+
+Defines projects that should be skipped.
+
+**`[--ignored-root-parts]`** `{content namespaces class-hierarchy types other}`
 
 Defines parts of a root documentation that should be excluded.
 
@@ -95,6 +103,10 @@ Defines parts of a type documentation that should be excluded.
 
 Indicates whether all derived types should be included in the list of derived types. By default only types that directly inherits from a specified type are displayed.
 
+**`[--include-containing-namespace]`** `{class-hierarchy containing-type parameter return-type base-type attribute derived-type implemented-interface implemented-member exception see-also all}`
+
+Defines parts of a documentation that should include containing namespace.
+
 **`[--include-ienumerable]`**
 
 Indicates whether interface `System.Collections.IEnumerable` should be included in a documentation if a type also implements interface `System.Collections.Generic.IEnumerable<T>`.
@@ -103,17 +115,25 @@ Indicates whether interface `System.Collections.IEnumerable` should be included 
 
 Indicates whether inherited interface members should be displayed in a list of members.
 
+**`[--include-system-namespace]`**
+
+Indicates whether namespace should be included when a type is directly contained in namespace 'System'.
+
 **`[--inheritance-style]`** `{horizontal|vertical}`
 
 Defines a style of a type inheritance. Default value is `horizontal`.
+
+**`--language`** `{cs[harp]|v[isual-]b[asic])}`
+
+Defines project language.
 
 **`[--max-derived-types]`** <MAX_DERIVED_TYPES>
 
 Defines maximum number derived types that should be displayed. Default value is `5`.
 
-**`[--no-class-hierarchy]`**
+**`--msbuild-path`** <MSBUILD_PATH>
 
-Indicates whether classes should be displayed as a list instead of hierarchy tree.
+Defines a path to MSBuild. This option must be specified if there are multiple locations of MSBuild (usually multiple installations of Visual Studio).
 
 **`[--no-delete]`**
 
@@ -139,12 +159,6 @@ Indicates whether symbols contained in `System` namespace should be ordered as a
 
 Indicates whether attribute arguments should be omitted when displaying an attribute.
 
-**`[--omit-containing-namespace-parts]`** `{root containing-type return-type base-type attribute derived-type implemented-interface implemented-member exception see-also all}`
-
-Defines parts that that should by displayed without containing namespace.
-
-Indicates whether a containing namespace should be omitted when displaying type name.
-
 **`[--omit-inherited-attributes]`**
 
 Indicates whether inherited attributes should be omitted.
@@ -169,9 +183,21 @@ Indicates whether an overridden member should be omitted.
 
 Defines culture that should be used when searching for xml documentation files.
 
+**`--projects`** <PROJECT_NAME>
+
+Defines projects that should be analyzed.
+
+**`-p|--properties`** `<NAME=VALUE>`
+
+Defines one or more MSBuild properties.
+
 **`[--scroll-to-content]`**
 
 Indicates whether a link should lead to the top of the documentation content.
+
+**`-v|--verbosity`** `{q[uiet]|m[inimal]|n[ormal]|d[etailed]|diag[nostic]}`
+
+Defines the amount of information to display in the log.
 
 **`[--visibility]`** `{public|internal|private}`
 

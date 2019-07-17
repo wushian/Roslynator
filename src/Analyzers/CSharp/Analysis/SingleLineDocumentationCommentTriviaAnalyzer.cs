@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Roslynator.CSharp.Syntax;
+using static Roslynator.DiagnosticHelpers;
 
 namespace Roslynator.CSharp.Analysis
 {
@@ -19,7 +20,8 @@ namespace Roslynator.CSharp.Analysis
             DiagnosticDescriptors.AddSummaryElementToDocumentationComment,
             DiagnosticDescriptors.AddParamElementToDocumentationComment,
             DiagnosticDescriptors.AddTypeParamElementToDocumentationComment,
-            DiagnosticDescriptors.UnusedElementInDocumentationComment);
+            DiagnosticDescriptors.UnusedElementInDocumentationComment,
+            DiagnosticDescriptors.OrderElementsInDocumentationComment);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
@@ -68,39 +70,39 @@ namespace Roslynator.CSharp.Analysis
 
                 if (info.Success)
                 {
-                    switch (info.GetElementKind())
+                    switch (info.GetTag())
                     {
-                        case XmlElementKind.Include:
-                        case XmlElementKind.Exclude:
+                        case XmlTag.Include:
+                        case XmlTag.Exclude:
                             {
                                 if (isFirst)
                                     containsIncludeOrExclude = true;
 
                                 break;
                             }
-                        case XmlElementKind.InheritDoc:
+                        case XmlTag.InheritDoc:
                             {
                                 containsInheritDoc = true;
                                 break;
                             }
-                        case XmlElementKind.Content:
+                        case XmlTag.Content:
                             {
                                 containsContentElement = true;
                                 break;
                             }
-                        case XmlElementKind.Summary:
+                        case XmlTag.Summary:
                             {
                                 if (info.IsContentEmptyOrWhitespace)
-                                    context.ReportDiagnosticIfNotSuppressed(DiagnosticDescriptors.AddSummaryToDocumentationComment, info.Element);
+                                    ReportDiagnosticIfNotSuppressed(context, DiagnosticDescriptors.AddSummaryToDocumentationComment, info.Element);
 
                                 containsSummaryElement = true;
                                 break;
                             }
-                        case XmlElementKind.Code:
-                        case XmlElementKind.Example:
-                        case XmlElementKind.Remarks:
-                        case XmlElementKind.Returns:
-                        case XmlElementKind.Value:
+                        case XmlTag.Code:
+                        case XmlTag.Example:
+                        case XmlTag.Remarks:
+                        case XmlTag.Returns:
+                        case XmlTag.Value:
                             {
                                 if (info.IsContentEmptyOrWhitespace)
                                     ReportUnusedElement(context, info.Element, i, content);
@@ -129,19 +131,21 @@ namespace Roslynator.CSharp.Analysis
             if (!containsSummaryElement
                 && !containsContentElement)
             {
-                context.ReportDiagnosticIfNotSuppressed(DiagnosticDescriptors.AddSummaryElementToDocumentationComment, documentationComment);
+                ReportDiagnosticIfNotSuppressed(context, DiagnosticDescriptors.AddSummaryElementToDocumentationComment, documentationComment);
             }
 
             SyntaxNode parent = documentationComment.ParentTrivia.Token.Parent;
 
             bool unusedElement = !context.IsAnalyzerSuppressed(DiagnosticDescriptors.UnusedElementInDocumentationComment);
+            bool orderParams = !context.IsAnalyzerSuppressed(DiagnosticDescriptors.OrderElementsInDocumentationComment);
             bool addParam = !context.IsAnalyzerSuppressed(DiagnosticDescriptors.AddParamElementToDocumentationComment);
             bool addTypeParam = !context.IsAnalyzerSuppressed(DiagnosticDescriptors.AddTypeParamElementToDocumentationComment);
 
             if (addParam
+                || orderParams
                 || unusedElement)
             {
-                SeparatedSyntaxList<ParameterSyntax> parameters = ParameterListInfo.Create(parent).Parameters;
+                SeparatedSyntaxList<ParameterSyntax> parameters = CSharpUtility.GetParameters((CSharpFacts.HasParameterList(parent.Kind())) ? parent : parent.Parent);
 
                 if (addParam
                     && parameters.Any())
@@ -150,22 +154,23 @@ namespace Roslynator.CSharp.Analysis
                     {
                         if (IsMissing(documentationComment, parameter))
                         {
-                            context.ReportDiagnostic(DiagnosticDescriptors.AddParamElementToDocumentationComment, documentationComment);
+                            ReportDiagnostic(context, DiagnosticDescriptors.AddParamElementToDocumentationComment, documentationComment);
                             break;
                         }
                     }
                 }
 
-                if (unusedElement)
+                if (orderParams || unusedElement)
                 {
-                    Analyze(context, content, parameters, XmlElementKind.Param, (nodes, name) => nodes.IndexOf(name));
+                    Analyze(context, documentationComment.Content, parameters, XmlTag.Param, (nodes, name) => nodes.IndexOf(name));
                 }
             }
 
             if (addTypeParam
+                || orderParams
                 || unusedElement)
             {
-                SeparatedSyntaxList<TypeParameterSyntax> typeParameters = TypeParameterListInfo.Create(parent).Parameters;
+                SeparatedSyntaxList<TypeParameterSyntax> typeParameters = CSharpUtility.GetTypeParameters((CSharpFacts.HasTypeParameterList(parent.Kind())) ? parent : parent.Parent);
 
                 if (addTypeParam
                     && typeParameters.Any())
@@ -174,15 +179,15 @@ namespace Roslynator.CSharp.Analysis
                     {
                         if (IsMissing(documentationComment, typeParameter))
                         {
-                            context.ReportDiagnostic(DiagnosticDescriptors.AddTypeParamElementToDocumentationComment, documentationComment);
+                            ReportDiagnostic(context, DiagnosticDescriptors.AddTypeParamElementToDocumentationComment, documentationComment);
                             break;
                         }
                     }
                 }
 
-                if (unusedElement)
+                if (orderParams || unusedElement)
                 {
-                    Analyze(context, content, typeParameters, XmlElementKind.TypeParam, (nodes, name) => nodes.IndexOf(name));
+                    Analyze(context, documentationComment.Content, typeParameters, XmlTag.TypeParam, (nodes, name) => nodes.IndexOf(name));
                 }
             }
         }
@@ -195,7 +200,7 @@ namespace Roslynator.CSharp.Analysis
 
                 if (elementInfo.Success
                     && !elementInfo.IsEmptyElement
-                    && elementInfo.IsElementKind(XmlElementKind.Param))
+                    && elementInfo.HasTag(XmlTag.Param))
                 {
                     var element = (XmlElementSyntax)elementInfo.Element;
 
@@ -220,7 +225,7 @@ namespace Roslynator.CSharp.Analysis
 
                 if (elementInfo.Success
                     && !elementInfo.IsEmptyElement
-                    && elementInfo.IsElementKind(XmlElementKind.TypeParam))
+                    && elementInfo.HasTag(XmlTag.TypeParam))
                 {
                     var element = (XmlElementSyntax)elementInfo.Element;
 
@@ -241,9 +246,13 @@ namespace Roslynator.CSharp.Analysis
             SyntaxNodeAnalysisContext context,
             SyntaxList<XmlNodeSyntax> xmlNodes,
             SeparatedSyntaxList<TNode> nodes,
-            XmlElementKind kind,
+            XmlTag tag,
             Func<SeparatedSyntaxList<TNode>, string, int> indexOf) where TNode : SyntaxNode
         {
+            XmlNodeSyntax firstElement = null;
+
+            int firstIndex = -1;
+
             for (int i = 0; i < xmlNodes.Count; i++)
             {
                 XmlElementInfo elementInfo = SyntaxInfo.XmlElementInfo(xmlNodes[i]);
@@ -251,20 +260,41 @@ namespace Roslynator.CSharp.Analysis
                 if (!elementInfo.Success)
                     continue;
 
-                if (!elementInfo.IsElementKind(kind))
+                if (!elementInfo.HasTag(tag))
+                {
+                    firstIndex = -1;
                     continue;
+                }
 
-                var element = (XmlElementSyntax)elementInfo.Element;
+                XmlNodeSyntax element = elementInfo.Element;
 
-                string name = element.GetAttributeValue("name");
+                string name = (element.IsKind(SyntaxKind.XmlElement))
+                    ? ((XmlElementSyntax)element).GetAttributeValue("name")
+                    : ((XmlEmptyElementSyntax)element).GetAttributeValue("name");
 
                 if (name == null)
+                {
+                    firstIndex = -1;
                     continue;
+                }
 
                 int index = indexOf(nodes, name);
 
                 if (index == -1)
+                {
                     ReportUnusedElement(context, element, i, xmlNodes);
+                }
+                else if (index < firstIndex)
+                {
+                    ReportDiagnosticIfNotSuppressed(context, DiagnosticDescriptors.OrderElementsInDocumentationComment, firstElement);
+                    return;
+                }
+                else
+                {
+                    firstElement = element;
+                }
+
+                firstIndex = index;
             }
         }
 
@@ -277,7 +307,7 @@ namespace Roslynator.CSharp.Analysis
             if (context.IsAnalyzerSuppressed(DiagnosticDescriptors.UnusedElementInDocumentationComment))
                 return;
 
-            context.ReportDiagnostic(DiagnosticDescriptors.UnusedElementInDocumentationComment, xmlNode);
+            ReportDiagnostic(context, DiagnosticDescriptors.UnusedElementInDocumentationComment, xmlNode);
 
             if (index > 0
                 && xmlNodes[index - 1] is XmlTextSyntax xmlText)
@@ -291,7 +321,7 @@ namespace Roslynator.CSharp.Analysis
                         SyntaxTrivia trivia = tokens[0].LeadingTrivia.SingleOrDefault(shouldThrow: false);
 
                         if (trivia.IsKind(SyntaxKind.DocumentationCommentExteriorTrivia))
-                            context.ReportDiagnostic(DiagnosticDescriptors.UnusedElementInDocumentationCommentFadeOut, trivia);
+                            ReportDiagnostic(context, DiagnosticDescriptors.UnusedElementInDocumentationCommentFadeOut, trivia);
                     }
                 }
                 else if (tokens.Count == 2)
@@ -302,7 +332,7 @@ namespace Roslynator.CSharp.Analysis
                         SyntaxTrivia trivia = tokens[1].LeadingTrivia.SingleOrDefault(shouldThrow: false);
 
                         if (trivia.IsKind(SyntaxKind.DocumentationCommentExteriorTrivia))
-                            context.ReportDiagnostic(DiagnosticDescriptors.UnusedElementInDocumentationCommentFadeOut, trivia);
+                            ReportDiagnostic(context, DiagnosticDescriptors.UnusedElementInDocumentationCommentFadeOut, trivia);
                     }
                 }
             }

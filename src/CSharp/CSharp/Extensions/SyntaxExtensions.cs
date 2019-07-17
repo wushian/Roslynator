@@ -138,6 +138,12 @@ namespace Roslynator.CSharp
         #endregion BaseArgumentListSyntax
 
         #region BinaryExpressionSyntax
+        /// <summary>
+        /// Returns <see cref="ExpressionChain"/> that enables to enumerate expressions of a binary expression.
+        /// </summary>
+        /// <param name="binaryExpression"></param>
+        /// <param name="span"></param>
+        /// <returns></returns>
         public static ExpressionChain AsChain(this BinaryExpressionSyntax binaryExpression, TextSpan? span = null)
         {
             return new ExpressionChain(binaryExpression, span);
@@ -207,26 +213,6 @@ namespace Roslynator.CSharp
             return TextSpan.FromBounds(
                 classDeclaration.OpenBraceToken.SpanStart,
                 classDeclaration.CloseBraceToken.Span.End);
-        }
-
-        /// <summary>
-        /// Creates a new class declaration with the specified attribute lists added.
-        /// </summary>
-        /// <param name="classDeclaration"></param>
-        /// <param name="keepDocumentationCommentOnTop">If the declaration has no attribute lists and has a documentation comment the specified attribute lists will be inserted after the documentation comment.</param>
-        /// <param name="attributeLists"></param>
-        /// <returns></returns>
-        public static ClassDeclarationSyntax AddAttributeLists(
-            this ClassDeclarationSyntax classDeclaration,
-            bool keepDocumentationCommentOnTop,
-            params AttributeListSyntax[] attributeLists)
-        {
-            return AddAttributeLists(
-                classDeclaration,
-                keepDocumentationCommentOnTop,
-                attributeLists,
-                withAttributeLists: (f, g) => f.WithAttributeLists(g),
-                addAttributeLists: (f, g) => f.AddAttributeLists(g));
         }
         #endregion ClassDeclarationSyntax
 
@@ -428,8 +414,12 @@ namespace Roslynator.CSharp
         #endregion DestructorDeclarationSyntax
 
         #region DirectiveTriviaSyntax
-        //TODO: make public
-        internal static DirectiveTriviaSyntax GetNextRelatedDirective(this DirectiveTriviaSyntax directiveTrivia)
+        /// <summary>
+        /// Returns the next related directive.
+        /// </summary>
+        /// <param name="directiveTrivia"></param>
+        /// <returns></returns>
+        public static DirectiveTriviaSyntax GetNextRelatedDirective(this DirectiveTriviaSyntax directiveTrivia)
         {
             DirectiveTriviaSyntax d = directiveTrivia;
 
@@ -531,15 +521,6 @@ namespace Roslynator.CSharp
 
             return null;
         }
-
-        internal static bool IsIfElseDirective(this DirectiveTriviaSyntax directiveTrivia)
-        {
-            return directiveTrivia.IsKind(
-                SyntaxKind.IfDirectiveTrivia,
-                SyntaxKind.ElseDirectiveTrivia,
-                SyntaxKind.ElifDirectiveTrivia,
-                SyntaxKind.EndIfDirectiveTrivia);
-        }
         #endregion DirectiveTriviaSyntax
 
         #region DocumentationCommentTriviaSyntax
@@ -590,7 +571,7 @@ namespace Roslynator.CSharp
             }
         }
 
-        internal static IEnumerable<XmlElementSyntax> Elements(this DocumentationCommentTriviaSyntax documentationComment, XmlElementKind elementKind)
+        internal static IEnumerable<XmlElementSyntax> Elements(this DocumentationCommentTriviaSyntax documentationComment, XmlTag tag)
         {
             foreach (XmlNodeSyntax node in documentationComment.Content)
             {
@@ -598,7 +579,7 @@ namespace Roslynator.CSharp
                 {
                     var xmlElement = (XmlElementSyntax)node;
 
-                    if (xmlElement.IsElementKind(elementKind))
+                    if (xmlElement.HasTag(tag))
                         yield return xmlElement;
                 }
             }
@@ -920,7 +901,12 @@ namespace Roslynator.CSharp
             return new IfStatementCascade(ifStatement);
         }
 
-        internal static IfStatementCascadeInfo GetCascadeInfo(this IfStatementSyntax ifStatement)
+        /// <summary>
+        /// Returns <see cref="IfStatementCascadeInfo"/> that summarizes information about if-else cascade.
+        /// </summary>
+        /// <param name="ifStatement"></param>
+        /// <returns></returns>
+        public static IfStatementCascadeInfo GetCascadeInfo(this IfStatementSyntax ifStatement)
         {
             if (ifStatement == null)
                 throw new ArgumentNullException(nameof(ifStatement));
@@ -1062,26 +1048,6 @@ namespace Roslynator.CSharp
                 throw new ArgumentNullException(nameof(interfaceDeclaration));
 
             return interfaceDeclaration.WithMembers(List(members));
-        }
-
-        /// <summary>
-        /// Creates a new interface declaration with the specified attribute lists added.
-        /// </summary>
-        /// <param name="interfaceDeclaration"></param>
-        /// <param name="keepDocumentationCommentOnTop">If the declaration has no attribute lists and has a documentation comment the specified attribute lists will be inserted after the documentation comment.</param>
-        /// <param name="attributeLists"></param>
-        /// <returns></returns>
-        public static InterfaceDeclarationSyntax AddAttributeLists(
-            this InterfaceDeclarationSyntax interfaceDeclaration,
-            bool keepDocumentationCommentOnTop,
-            params AttributeListSyntax[] attributeLists)
-        {
-            return AddAttributeLists(
-                interfaceDeclaration,
-                keepDocumentationCommentOnTop,
-                attributeLists,
-                withAttributeLists: (f, g) => f.WithAttributeLists(g),
-                addAttributeLists: (f, g) => f.AddAttributeLists(g));
         }
         #endregion InterfaceDeclarationSyntax
 
@@ -1501,18 +1467,6 @@ namespace Roslynator.CSharp
         {
             return parameter?.Modifiers.Contains(SyntaxKind.ParamsKeyword) == true;
         }
-
-        internal static SeparatedSyntaxList<ParameterSyntax> GetContainingList(this ParameterSyntax parameter)
-        {
-            if (parameter?.Parent is ParameterListSyntax parameterList)
-            {
-                return parameterList.Parameters;
-            }
-            else
-            {
-                return default(SeparatedSyntaxList<ParameterSyntax>);
-            }
-        }
         #endregion ParameterSyntax
 
         #region PropertyDeclarationSyntax
@@ -1780,7 +1734,6 @@ namespace Roslynator.CSharp
             return ReplaceRange(list, index, count, Empty.ReadOnlyList<TNode>());
         }
 
-        //TODO: make public
         internal static SeparatedSyntaxList<TNode> TrimTrivia<TNode>(this SeparatedSyntaxList<TNode> list) where TNode : SyntaxNode
         {
             int count = list.Count;
@@ -1908,15 +1861,6 @@ namespace Roslynator.CSharp
             return statements.Any();
         }
 
-        //TODO: make public GetContainingList(StatementSyntax)
-        internal static SyntaxList<StatementSyntax> GetContainingList(this StatementSyntax statement)
-        {
-            if (!TryGetContainingList(statement, out SyntaxList<StatementSyntax> list))
-                throw new ArgumentException("Statement is not contained in a list.", nameof(statement));
-
-            return list;
-        }
-
         internal static StatementSyntax SingleNonBlockStatementOrDefault(this StatementSyntax statement, bool recursive = false)
         {
             return (statement.Kind() == SyntaxKind.Block)
@@ -2015,26 +1959,6 @@ namespace Roslynator.CSharp
             return TextSpan.FromBounds(
                 structDeclaration.OpenBraceToken.SpanStart,
                 structDeclaration.CloseBraceToken.Span.End);
-        }
-
-        /// <summary>
-        /// Creates a new struct declaration with the specified attribute lists added.
-        /// </summary>
-        /// <param name="structDeclaration"></param>
-        /// <param name="keepDocumentationCommentOnTop">If the declaration has no attribute lists and has a documentation comment the specified attribute lists will be inserted after the documentation comment.</param>
-        /// <param name="attributeLists"></param>
-        /// <returns></returns>
-        public static StructDeclarationSyntax AddAttributeLists(
-            this StructDeclarationSyntax structDeclaration,
-            bool keepDocumentationCommentOnTop,
-            params AttributeListSyntax[] attributeLists)
-        {
-            return AddAttributeLists(
-                structDeclaration,
-                keepDocumentationCommentOnTop,
-                attributeLists,
-                withAttributeLists: (f, g) => f.WithAttributeLists(g),
-                addAttributeLists: (f, g) => f.AddAttributeLists(g));
         }
         #endregion StructDeclarationSyntax
 
@@ -2342,7 +2266,6 @@ namespace Roslynator.CSharp
             return null;
         }
 
-        //TODO: make public
         internal static SyntaxList<TNode> TrimTrivia<TNode>(this SyntaxList<TNode> list) where TNode : SyntaxNode
         {
             int count = list.Count;
@@ -2380,16 +2303,6 @@ namespace Roslynator.CSharp
                     }
                 }
             }
-        }
-
-        internal static IEnumerable<DirectiveTriviaSyntax> DescendantRegionDirectives(this SyntaxNode node)
-        {
-            return DescendantPreprocessorDirectives(node, predicate: f => f.IsKind(SyntaxKind.RegionDirectiveTrivia, SyntaxKind.EndRegionDirectiveTrivia));
-        }
-
-        internal static IEnumerable<DirectiveTriviaSyntax> DescendantRegionDirectives(this SyntaxNode node, TextSpan span)
-        {
-            return DescendantPreprocessorDirectives(node, span, predicate: f => f.IsKind(SyntaxKind.RegionDirectiveTrivia, SyntaxKind.EndRegionDirectiveTrivia));
         }
 
         /// <summary>
@@ -2710,29 +2623,19 @@ namespace Roslynator.CSharp
             if (node == null)
                 throw new ArgumentNullException(nameof(node));
 
-            SyntaxTriviaList leadingTrivia = node.GetLeadingTrivia();
+            SyntaxTriviaList trivia = node.GetLeadingTrivia();
 
-            int count = leadingTrivia.Count;
+            int count = trivia.Count;
 
-            if (count == 0)
-                return node;
-
-            for (int i = 0; i < count; i++)
+            if (count > 0)
             {
-                if (!leadingTrivia[i].IsWhitespaceOrEndOfLineTrivia())
-                {
-                    if (i == 0)
-                    {
-                        return node;
-                    }
-                    else
-                    {
-                        return node.WithLeadingTrivia(leadingTrivia.Skip(i));
-                    }
-                }
+                SyntaxTriviaList newTrivia = trivia.TrimStart();
+
+                if (trivia.Count != newTrivia.Count)
+                    return node.WithLeadingTrivia(newTrivia);
             }
 
-            return node.WithoutLeadingTrivia();
+            return node;
         }
 
         /// <summary>
@@ -2748,29 +2651,19 @@ namespace Roslynator.CSharp
             if (node == null)
                 throw new ArgumentNullException(nameof(node));
 
-            SyntaxTriviaList trailingTrivia = node.GetTrailingTrivia();
+            SyntaxTriviaList trivia = node.GetTrailingTrivia();
 
-            int count = trailingTrivia.Count;
+            int count = trivia.Count;
 
-            if (count == 0)
-                return node;
-
-            for (int i = count - 1; i >= 0; i--)
+            if (count > 0)
             {
-                if (!trailingTrivia[i].IsWhitespaceOrEndOfLineTrivia())
-                {
-                    if (i == count - 1)
-                    {
-                        return node;
-                    }
-                    else
-                    {
-                        return node.WithTrailingTrivia(trailingTrivia.Take(i + 1));
-                    }
-                }
+                SyntaxTriviaList newTrivia = trivia.TrimEnd();
+
+                if (trivia.Count != newTrivia.Count)
+                    return node.WithTrailingTrivia(newTrivia);
             }
 
-            return node.WithoutTrailingTrivia();
+            return node;
         }
 
         /// <summary>
@@ -2958,7 +2851,7 @@ namespace Roslynator.CSharp
 
         internal static TRoot RemoveNode<TRoot>(this TRoot root, SyntaxNode node) where TRoot : SyntaxNode
         {
-            return SyntaxRemover.RemoveNode(root, node);
+            return SyntaxRefactorings.RemoveNode(root, node);
         }
 
         internal static TNode RemoveStatement<TNode>(this TNode node, StatementSyntax statement) where TNode : SyntaxNode
@@ -2984,14 +2877,6 @@ namespace Roslynator.CSharp
                 .RemoveModifier(modifierKind2);
         }
 
-        internal static TNode RemoveModifiers<TNode>(this TNode node, SyntaxKind modifierKind1, SyntaxKind modifierKind2, SyntaxKind modifierKind3) where TNode : SyntaxNode
-        {
-            return node
-                .RemoveModifier(modifierKind1)
-                .RemoveModifier(modifierKind2)
-                .RemoveModifier(modifierKind3);
-        }
-
         internal static TNode RemoveModifier<TNode>(this TNode node, SyntaxToken modifier) where TNode : SyntaxNode
         {
             return ModifierList.Remove(node, modifier);
@@ -3000,11 +2885,6 @@ namespace Roslynator.CSharp
         internal static TNode InsertModifier<TNode>(this TNode node, SyntaxKind modifierKind, IComparer<SyntaxKind> comparer = null) where TNode : SyntaxNode
         {
             return ModifierList.Insert(node, modifierKind, comparer);
-        }
-
-        internal static TNode InsertModifier<TNode>(this TNode node, SyntaxToken modifier, IComparer<SyntaxToken> comparer = null) where TNode : SyntaxNode
-        {
-            return ModifierList.Insert(node, modifier, comparer);
         }
 
         /// <summary>
@@ -3019,7 +2899,7 @@ namespace Roslynator.CSharp
             if (node == null)
                 throw new ArgumentNullException(nameof(node));
 
-            return SyntaxRemover.RemoveTrivia(node, span);
+            return SyntaxRefactorings.RemoveTrivia(node, span);
         }
 
         /// <summary>
@@ -3034,7 +2914,7 @@ namespace Roslynator.CSharp
             if (node == null)
                 throw new ArgumentNullException(nameof(node));
 
-            return SyntaxRemover.RemoveWhitespace(node, span);
+            return SyntaxRefactorings.RemoveWhitespace(node, span);
         }
 
         /// <summary>
@@ -3170,7 +3050,6 @@ namespace Roslynator.CSharp
             return ContainsUnbalancedIfElseDirectives(node, node.FullSpan);
         }
 
-        //TODO: make public
         internal static bool ContainsUnbalancedIfElseDirectives(this SyntaxNode node, TextSpan span)
         {
             if (node == null)
@@ -3181,14 +3060,14 @@ namespace Roslynator.CSharp
 
             if (node.ContainsDirectives)
             {
-                DirectiveTriviaSyntax first = node.GetFirstDirective(span, IsIfElseDirective);
+                DirectiveTriviaSyntax first = node.GetFirstDirective(span, f => CSharpFacts.IsIfElseDirective(f.Kind()));
 
                 if (first != null)
                 {
                     if (!first.IsKind(SyntaxKind.IfDirectiveTrivia))
                         return true;
 
-                    DirectiveTriviaSyntax last = node.GetLastDirective(span, IsIfElseDirective);
+                    DirectiveTriviaSyntax last = node.GetLastDirective(span, f => CSharpFacts.IsIfElseDirective(f.Kind()));
 
                     if (last == first)
                         return true;
@@ -3215,8 +3094,14 @@ namespace Roslynator.CSharp
             return false;
         }
 
-        //TODO: make public
-        internal static DirectiveTriviaSyntax GetFirstDirective(this SyntaxNode node, TextSpan span, Func<DirectiveTriviaSyntax, bool> predicate = null)
+        /// <summary>
+        /// Gets the first directive of the tree rooted by this node.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="span"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public static DirectiveTriviaSyntax GetFirstDirective(this SyntaxNode node, TextSpan span, Func<DirectiveTriviaSyntax, bool> predicate = null)
         {
             DirectiveTriviaSyntax directive = node.GetFirstDirective(predicate);
 
@@ -3364,29 +3249,19 @@ namespace Roslynator.CSharp
         /// <returns></returns>
         public static SyntaxToken TrimLeadingTrivia(this SyntaxToken token)
         {
-            SyntaxTriviaList leadingTrivia = token.LeadingTrivia;
+            SyntaxTriviaList trivia = token.LeadingTrivia;
 
-            int count = leadingTrivia.Count;
+            int count = trivia.Count;
 
-            if (count == 0)
-                return token;
-
-            for (int i = 0; i < count; i++)
+            if (count > 0)
             {
-                if (!leadingTrivia[i].IsWhitespaceOrEndOfLineTrivia())
-                {
-                    if (i == 0)
-                    {
-                        return token;
-                    }
-                    else
-                    {
-                        return token.WithLeadingTrivia(leadingTrivia.Skip(i));
-                    }
-                }
+                SyntaxTriviaList newTrivia = trivia.TrimStart();
+
+                if (trivia.Count != newTrivia.Count)
+                    return token.WithLeadingTrivia(newTrivia);
             }
 
-            return token.WithoutLeadingTrivia();
+            return token;
         }
 
         /// <summary>
@@ -3398,29 +3273,19 @@ namespace Roslynator.CSharp
         /// <returns></returns>
         public static SyntaxToken TrimTrailingTrivia(this SyntaxToken token)
         {
-            SyntaxTriviaList trailingTrivia = token.TrailingTrivia;
+            SyntaxTriviaList trivia = token.TrailingTrivia;
 
-            int count = trailingTrivia.Count;
+            int count = trivia.Count;
 
-            if (count == 0)
-                return token;
-
-            for (int i = count - 1; i >= 0; i--)
+            if (count > 0)
             {
-                if (!trailingTrivia[i].IsWhitespaceOrEndOfLineTrivia())
-                {
-                    if (i == count - 1)
-                    {
-                        return token;
-                    }
-                    else
-                    {
-                        return token.WithTrailingTrivia(trailingTrivia.Take(i + 1));
-                    }
-                }
+                SyntaxTriviaList newTrivia = trivia.TrimEnd();
+
+                if (trivia.Count != newTrivia.Count)
+                    return token.WithTrailingTrivia(newTrivia);
             }
 
-            return token.WithoutTrailingTrivia();
+            return token;
         }
 
         /// <summary>
@@ -3670,20 +3535,6 @@ namespace Roslynator.CSharp
             }
 
             return default(SyntaxToken);
-        }
-
-        internal static SyntaxTokenList Replace(this SyntaxTokenList tokens, SyntaxKind kind, SyntaxToken newToken)
-        {
-            int i = 0;
-            foreach (SyntaxToken token in tokens)
-            {
-                if (token.Kind() == kind)
-                    return tokens.ReplaceAt(i, newToken.WithTriviaFrom(token));
-
-                i++;
-            }
-
-            return tokens;
         }
 
         internal static SyntaxTokenList Replace(this SyntaxTokenList tokens, SyntaxKind kind, SyntaxKind newKind)
@@ -3967,7 +3818,7 @@ namespace Roslynator.CSharp
         }
 
         /// <summary>
-        /// Returns true if the list of either empty or contains only whitespace.
+        /// Returns true if the list of either empty or contains only whitespace (<see cref="SyntaxKind.WhitespaceTrivia"/> or <see cref="SyntaxKind.EndOfLineTrivia"/>).
         /// </summary>
         /// <param name="triviaList"></param>
         /// <returns></returns>
@@ -4067,6 +3918,52 @@ namespace Roslynator.CSharp
                     yield return en.Current;
             }
         }
+
+        internal static SyntaxTriviaList TrimStart(this SyntaxTriviaList trivia)
+        {
+            SyntaxTriviaList.Enumerator en = trivia.GetEnumerator();
+
+            if (en.MoveNext())
+            {
+                if (!en.Current.IsWhitespaceOrEndOfLineTrivia())
+                    return trivia;
+
+                int count = 1;
+
+                while (en.MoveNext())
+                {
+                    if (!en.Current.IsWhitespaceOrEndOfLineTrivia())
+                        return trivia.RemoveRange(0, count);
+
+                    count++;
+                }
+            }
+
+            return SyntaxTriviaList.Empty;
+        }
+
+        internal static SyntaxTriviaList TrimEnd(this SyntaxTriviaList trivia)
+        {
+            SyntaxTriviaList.Reversed.Enumerator en = trivia.Reverse().GetEnumerator();
+
+            if (en.MoveNext())
+            {
+                if (!en.Current.IsWhitespaceOrEndOfLineTrivia())
+                    return trivia;
+
+                int count = 1;
+
+                while (en.MoveNext())
+                {
+                    if (!en.Current.IsWhitespaceOrEndOfLineTrivia())
+                        return trivia.RemoveRange(trivia.Count - count, count);
+
+                    count++;
+                }
+            }
+
+            return SyntaxTriviaList.Empty;
+        }
         #endregion SyntaxTriviaList
 
         #region TypeDeclarationSyntax
@@ -4090,80 +3987,7 @@ namespace Roslynator.CSharp
                     }
             }
         }
-
-        private static T AddAttributeLists<T>(
-            this T typeDeclaration,
-            bool keepDocumentationCommentOnTop,
-            AttributeListSyntax[] attributeLists,
-            Func<T, SyntaxList<AttributeListSyntax>, T> withAttributeLists,
-            Func<T, AttributeListSyntax[], T> addAttributeLists) where T : TypeDeclarationSyntax
-        {
-            if (attributeLists == null)
-                throw new ArgumentNullException(nameof(attributeLists));
-
-            if (typeDeclaration == null)
-                throw new ArgumentNullException(nameof(typeDeclaration));
-
-            if (keepDocumentationCommentOnTop
-                && !typeDeclaration.AttributeLists.Any()
-                && attributeLists.Length > 0)
-            {
-                SyntaxTriviaList leadingTrivia = typeDeclaration.GetLeadingTrivia();
-
-                for (int i = 0; i < leadingTrivia.Count; i++)
-                {
-                    if (leadingTrivia[i].IsDocumentationCommentTrivia())
-                    {
-                        attributeLists[0] = attributeLists[0].PrependToLeadingTrivia(leadingTrivia.Take(i + 1));
-
-                        typeDeclaration = typeDeclaration.WithLeadingTrivia(leadingTrivia.Skip(i + 1));
-
-                        return withAttributeLists(typeDeclaration, List(attributeLists));
-                    }
-                }
-            }
-
-            return addAttributeLists(typeDeclaration, attributeLists);
-        }
         #endregion TypeDeclarationSyntax
-
-        #region TypeParameterConstraintClauseSyntax
-        internal static SyntaxList<TypeParameterConstraintClauseSyntax> GetContainingList(this TypeParameterConstraintClauseSyntax constraintClause)
-        {
-            SyntaxNode parent = constraintClause.Parent;
-
-            switch (parent?.Kind())
-            {
-                case SyntaxKind.ClassDeclaration:
-                    return ((ClassDeclarationSyntax)parent).ConstraintClauses;
-                case SyntaxKind.DelegateDeclaration:
-                    return ((DelegateDeclarationSyntax)parent).ConstraintClauses;
-                case SyntaxKind.InterfaceDeclaration:
-                    return ((InterfaceDeclarationSyntax)parent).ConstraintClauses;
-                case SyntaxKind.LocalFunctionStatement:
-                    return ((LocalFunctionStatementSyntax)parent).ConstraintClauses;
-                case SyntaxKind.MethodDeclaration:
-                    return ((MethodDeclarationSyntax)parent).ConstraintClauses;
-                case SyntaxKind.StructDeclaration:
-                    return ((StructDeclarationSyntax)parent).ConstraintClauses;
-            }
-
-            return default(SyntaxList<TypeParameterConstraintClauseSyntax>);
-        }
-        #endregion TypeParameterConstraintClauseSyntax
-
-        #region TypeParameterListSyntax
-        internal static TypeParameterSyntax GetTypeParameterByName(this TypeParameterListSyntax typeParameterList, string name)
-        {
-            foreach (TypeParameterSyntax typeParameter in typeParameterList.Parameters)
-            {
-                if (string.Equals(typeParameter.Identifier.ValueText, name, StringComparison.Ordinal))
-                    return typeParameter;
-            }
-
-            return null;
-        }
-        #endregion TypeParameterListSyntax
 
         #region TypeSyntax
         /// <summary>
@@ -4224,14 +4048,14 @@ namespace Roslynator.CSharp
         #endregion WhileStatementSyntax
 
         #region XmlElementSyntax
-        internal static bool IsElementKind(this XmlElementSyntax xmlElement, XmlElementKind elementKind)
+        internal static bool HasTag(this XmlElementSyntax xmlElement, XmlTag tag)
         {
-            return GetElementKind(xmlElement) == elementKind;
+            return GetTag(xmlElement) == tag;
         }
 
-        internal static XmlElementKind GetElementKind(this XmlElementSyntax xmlElement)
+        internal static XmlTag GetTag(this XmlElementSyntax xmlElement)
         {
-            return XmlElementNameKindMapper.GetKindOrDefault(xmlElement.StartTag?.Name?.LocalName.ValueText);
+            return XmlTagMapper.GetTagOrDefault(xmlElement.StartTag?.Name?.LocalName.ValueText);
         }
 
         internal static bool IsLocalName(this XmlElementSyntax xmlElement, string localName, StringComparison comparison = StringComparison.Ordinal)
@@ -4267,14 +4091,35 @@ namespace Roslynator.CSharp
         #endregion XmlElementSyntax
 
         #region XmlEmptyElementSyntax
-        internal static bool IsElementKind(this XmlEmptyElementSyntax xmlElement, XmlElementKind elementKind)
+        internal static string GetAttributeValue(this XmlEmptyElementSyntax element, string attributeName)
         {
-            return GetElementKind(xmlElement) == elementKind;
+            foreach (XmlAttributeSyntax attribute in element.Attributes)
+            {
+                if (attribute.IsKind(SyntaxKind.XmlNameAttribute))
+                {
+                    var nameAttribute = (XmlNameAttributeSyntax)attribute;
+
+                    if (nameAttribute.Name?.LocalName.ValueText == attributeName)
+                    {
+                        IdentifierNameSyntax identifierName = nameAttribute.Identifier;
+
+                        if (identifierName != null)
+                            return identifierName.Identifier.ValueText;
+                    }
+                }
+            }
+
+            return null;
         }
 
-        internal static XmlElementKind GetElementKind(this XmlEmptyElementSyntax xmlElement)
+        internal static bool HasTag(this XmlEmptyElementSyntax xmlElement, XmlTag tag)
         {
-            return XmlElementNameKindMapper.GetKindOrDefault(xmlElement.Name?.LocalName.ValueText);
+            return GetTag(xmlElement) == tag;
+        }
+
+        internal static XmlTag GetTag(this XmlEmptyElementSyntax xmlElement)
+        {
+            return XmlTagMapper.GetTagOrDefault(xmlElement.Name?.LocalName.ValueText);
         }
 
         internal static bool IsLocalName(this XmlEmptyElementSyntax xmlEmptyElement, string localName, StringComparison comparison = StringComparison.Ordinal)

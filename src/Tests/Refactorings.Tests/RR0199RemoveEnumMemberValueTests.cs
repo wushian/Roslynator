@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Roslynator.CSharp.Refactorings.Tests
 {
-    public class RR0199RemoveEnumMemberValueTests : AbstractCSharpCodeRefactoringVerifier
+    public class RR0199RemoveEnumMemberValueTests : AbstractCSharpRefactoringVerifier
     {
         public override string RefactoringId { get; } = RefactoringIdentifiers.RemoveEnumMemberValue;
 
@@ -47,6 +47,68 @@ enum E
 {
     A = 0,
     B,
+
+    C,
+
+    D
+}
+", equivalenceKey: RefactoringId);
+        }
+
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.RemoveEnumMemberValue)]
+        public async Task Test_AllMembers()
+        {
+            await VerifyRefactoringAsync(@"
+enum [||]E
+{
+    A = 1,
+    B = 2,
+
+    C,
+
+    D = 4
+}
+", @"
+enum E
+{
+    A,
+    B,
+
+    C,
+
+    D
+}
+", equivalenceKey: RefactoringId);
+        }
+
+        [Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.RemoveEnumMemberValue)]
+        public async Task Test_AllMembers_Flags()
+        {
+            await VerifyRefactoringAsync(@"
+using System;
+
+[Flags]
+enum [||]E
+{
+    None = 0,
+    A = 1,
+    B = 2,
+    AB = A | B,
+
+    C,
+
+    D = 4
+}
+", @"
+using System;
+
+[Flags]
+enum E
+{
+    None,
+    A,
+    B,
+    AB = A | B,
 
     C,
 

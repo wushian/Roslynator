@@ -48,7 +48,8 @@ namespace Roslynator.CSharp.Refactorings
                     }
                 }
             }
-            else if (context.IsRefactoringEnabled(RefactoringIdentifiers.InvertIf))
+            else if (context.IsRefactoringEnabled(RefactoringIdentifiers.InvertIf)
+                && ifStatement.IsTopmostIf())
             {
                 InvertIfAnalysis analysis = InvertIfAnalysis.Create(ifStatement, statement);
 
@@ -86,7 +87,7 @@ namespace Roslynator.CSharp.Refactorings
             IfStatementSyntax newIfStatement = ifStatement.Update(
                 ifKeyword: ifStatement.IfKeyword,
                 openParenToken: ifStatement.OpenParenToken,
-                condition: Inverter.LogicallyNegate(ifStatement.Condition, semanticModel, cancellationToken),
+                condition: SyntaxInverter.LogicallyInvert(ifStatement.Condition, semanticModel, cancellationToken),
                 closeParenToken: ifStatement.CloseParenToken,
                 statement: whenFalse.WithTriviaFrom(whenTrue),
                 @else: elseClause.WithStatement(whenTrue.WithTriviaFrom(whenFalse)));
@@ -203,7 +204,7 @@ namespace Roslynator.CSharp.Refactorings
                 IfStatementSyntax newIfStatement = ifStatement.Update(
                     ifKeyword: ifStatement.IfKeyword,
                     openParenToken: ifStatement.OpenParenToken,
-                    condition: Inverter.LogicallyNegate(ifStatement.Condition, semanticModel, cancellationToken),
+                    condition: SyntaxInverter.LogicallyInvert(ifStatement.Condition, semanticModel, cancellationToken),
                     closeParenToken: ifStatement.CloseParenToken,
                     statement: newStatement,
                     @else: elseClause);
