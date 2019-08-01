@@ -143,5 +143,17 @@ namespace Roslynator.CodeAnalysis.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.SpecifyExportCodeFixProviderAttributeName}", 
             customTags:         Array.Empty<string>());
 
+        /// <summary>RCS9012</summary>
+        public static readonly DiagnosticDescriptor UsePropertySyntaxNodeRawKind = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.UsePropertySyntaxNodeRawKind, 
+            title:              "Use property SyntaxNode.RawKind.", 
+            messageFormat:      "Use property SyntaxNode.RawKind.", 
+            category:           DiagnosticCategories.Performance, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: true, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UsePropertySyntaxNodeRawKind}", 
+            customTags:         Array.Empty<string>());
+
     }
 }

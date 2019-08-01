@@ -19,5 +19,6 @@ namespace Roslynator.CodeAnalysis.CSharp
         public const string UnknownLanguageName = "RCS9009";
         public const string SpecifyExportCodeRefactoringProviderAttributeName = "RCS9010";
         public const string SpecifyExportCodeFixProviderAttributeName = "RCS9011";
+        public const string UsePropertySyntaxNodeRawKind = "RCS9012";
     }
 }

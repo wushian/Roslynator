@@ -25,6 +25,7 @@ namespace Roslynator.CodeAnalysis.CSharp
             get
             {
                 return ImmutableArray.Create(
+                    DiagnosticIdentifiers.UsePropertySyntaxNodeRawKind,
                     DiagnosticIdentifiers.CallAnyInsteadOfAccessingCount,
                     DiagnosticIdentifiers.UnnecessaryNullCheck);
             }
@@ -42,6 +43,16 @@ namespace Roslynator.CodeAnalysis.CSharp
 
             switch (diagnostic.Id)
             {
+                case DiagnosticIdentifiers.UsePropertySyntaxNodeRawKind:
+                    {
+                        CodeAction codeAction = CodeAction.Create(
+                            "Use property 'RawKind'",
+                            ct => UsePropertySyntaxNodeRawKindAsync(document, binaryExpression, ct),
+                            GetEquivalenceKey(diagnostic));
+
+                        context.RegisterCodeFix(codeAction, diagnostic);
+                        break;
+                    }
                 case DiagnosticIdentifiers.CallAnyInsteadOfAccessingCount:
                     {
                         CodeAction codeAction = CodeAction.Create(
@@ -68,6 +79,34 @@ namespace Roslynator.CodeAnalysis.CSharp
                         break;
                     }
             }
+        }
+
+        private static Task<Document> UsePropertySyntaxNodeRawKindAsync(
+            Document document,
+            BinaryExpressionSyntax equalsExpression,
+            CancellationToken cancellationToken)
+        {
+            BinaryExpressionInfo equalsExpressionInfo = SyntaxInfo.BinaryExpressionInfo(equalsExpression);
+
+            BinaryExpressionSyntax newEqualsExpression = equalsExpression.Update(
+                CreateNewExpression(equalsExpressionInfo.Left),
+                equalsExpression.OperatorToken,
+                CreateNewExpression(equalsExpressionInfo.Right));
+
+            return document.ReplaceNodeAsync(equalsExpression, newEqualsExpression, cancellationToken);
+        }
+
+        private static ExpressionSyntax CreateNewExpression(ExpressionSyntax expression)
+        {
+            SimpleMemberInvocationExpressionInfo invocationInfo = SyntaxInfo.SimpleMemberInvocationExpressionInfo(expression);
+
+            MemberAccessExpressionSyntax memberAccessExpression = invocationInfo.MemberAccessExpression;
+
+            IdentifierNameSyntax newName = IdentifierName("RawKind")
+                .WithTriviaFrom(memberAccessExpression.Name)
+                .AppendToTrailingTrivia(invocationInfo.ArgumentList.GetTrailingTrivia());
+
+            return memberAccessExpression.WithName(newName);
         }
 
         private static Task<Document> CallAnyInsteadOfUsingCountAsync(

@@ -81,7 +81,7 @@ namespace Roslynator.CodeGeneration
         private static ImmutableArray<AnalyzerMetadata> LoadAnalyzers(string directoryPath)
         {
             IEnumerable<string> analyzers = Directory.EnumerateFiles(directoryPath, "*Analyzers.xml", SearchOption.TopDirectoryOnly)
-                .Concat(Directory.EnumerateFiles(directoryPath, "Analyzers.*.xml", SearchOption.TopDirectoryOnly)
+                .Concat(Directory.EnumerateFiles(directoryPath, "*Analyzers.*.xml", SearchOption.TopDirectoryOnly)
                     .Where(filePath => !filePath.EndsWith("Analyzers.Template.xml")));
 
             return analyzers.SelectMany(MetadataFile.ReadAnalyzers).ToImmutableArray();
