@@ -18,6 +18,7 @@ namespace Roslynator.CodeGeneration
         public string RootDirectoryPath { get; }
 
         private ImmutableArray<AnalyzerMetadata> _analyzers;
+        private ImmutableArray<AnalyzerMetadata> _codeAnalysisAnalyzers;
         private ImmutableArray<AnalyzerMetadata> _formattingAnalyzers;
         private ImmutableArray<RefactoringMetadata> _refactorings;
         private ImmutableArray<CodeFixMetadata> _codeFixes;
@@ -34,6 +35,17 @@ namespace Roslynator.CodeGeneration
             }
         }
 
+        public ImmutableArray<AnalyzerMetadata> CodeAnalysisAnalyzers
+        {
+            get
+            {
+                if (_codeAnalysisAnalyzers.IsDefault)
+                    _codeAnalysisAnalyzers = LoadAnalyzers(GetPath("CodeAnalysis.Analyzers"));
+
+                return _codeAnalysisAnalyzers;
+            }
+        }
+
         public ImmutableArray<AnalyzerMetadata> FormattingAnalyzers
         {
             get
@@ -44,7 +56,7 @@ namespace Roslynator.CodeGeneration
                 return _formattingAnalyzers;
             }
         }
-
+        
         public ImmutableArray<RefactoringMetadata> Refactorings
         {
             get

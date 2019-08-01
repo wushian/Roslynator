@@ -123,13 +123,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestFramework.CSharp", "Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestFramework.VisualBasic", "Tests\TestFramework.VisualBasic\TestFramework.VisualBasic.csproj", "{CAAD056C-08A2-4132-9652-1BBBDC5D6C22}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeAnalysis.Analyzers", "CodeAnalysis.Analyzers\CodeAnalysis.Analyzers.csproj", "{22F97324-2BD5-4350-A34F-2E33CD31A78D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeAnalysis.Analyzers.CodeFixes", "CodeAnalysis.Analyzers.CodeFixes\CodeAnalysis.Analyzers.CodeFixes.csproj", "{9396A0E9-D9F6-4946-A4B9-A0A8BB94683C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeAnalysis.Analyzers.Tests", "Tests\CodeAnalysis.Analyzers.Tests\CodeAnalysis.Analyzers.Tests.csproj", "{DE627E05-BB01-4A64-BD7D-E2BC5B853E0D}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Formatting.Analyzers", "Formatting.Analyzers\Formatting.Analyzers.csproj", "{22F97324-2BD5-4350-A34F-2E33CD31A78D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Formatting.Analyzers.CodeFixes", "Formatting.Analyzers.CodeFixes\Formatting.Analyzers.CodeFixes.csproj", "{9396A0E9-D9F6-4946-A4B9-A0A8BB94683C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCodeGenerator", "Tools\TestCodeGenerator\TestCodeGenerator.csproj", "{41F5F74A-7D16-4B6B-81E6-D222A4485FC4}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Formatting.Analyzers.Tests", "Tests\Formatting.Analyzers.Tests\Formatting.Analyzers.Tests.csproj", "{DE627E05-BB01-4A64-BD7D-E2BC5B853E0D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCodeGenerator", "Tools\TestCodeGenerator\TestCodeGenerator.csproj", "{41F5F74A-7D16-4B6B-81E6-D222A4485FC4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

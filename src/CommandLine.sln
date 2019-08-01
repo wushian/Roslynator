@@ -52,6 +52,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisualBasic.Workspaces", "VisualBasic.Workspaces\VisualBasic.Workspaces.csproj", "{DF0AE2F5-2FCD-49AB-8B6E-CEA7A4F0AB3F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeAnalysis.Analyzers", "CodeAnalysis.Analyzers\CodeAnalysis.Analyzers.csproj", "{DD41BB93-B9AF-4DC9-ACBE-1431892F6F12}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeAnalysis.Analyzers.CodeFixes", "CodeAnalysis.Analyzers.CodeFixes\CodeAnalysis.Analyzers.CodeFixes.csproj", "{A379B425-6C22-46A8-A030-94027CA969B7}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Formatting.Analyzers", "Formatting.Analyzers\Formatting.Analyzers.csproj", "{DD41BB93-B9AF-4DC9-ACBE-1431892F6F12}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Formatting.Analyzers.CodeFixes", "Formatting.Analyzers.CodeFixes\Formatting.Analyzers.CodeFixes.csproj", "{A379B425-6C22-46A8-A030-94027CA969B7}"

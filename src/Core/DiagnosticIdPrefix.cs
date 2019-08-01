@@ -108,6 +108,10 @@ namespace Roslynator
                         {
                             return SA;
                         }
+                        else if (HasPrefix(SX))
+                        {
+                            return SX;
+                        }
 
                         break;
                     }
