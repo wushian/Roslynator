@@ -83,28 +83,24 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             {
                 SyntaxTrivia endOfLine = SyntaxTriviaAnalysis.GetEndOfLine(declaration);
 
-                switch (declaration.Kind())
+                switch (declaration)
                 {
-                    case SyntaxKind.ClassDeclaration:
+                    case ClassDeclarationSyntax classDeclaration:
                         {
-                            var classDeclaration = (ClassDeclarationSyntax)declaration;
-
                             return classDeclaration
                                 .WithOpenBraceToken(classDeclaration.OpenBraceToken.WithoutTrailingTrivia())
                                 .WithCloseBraceToken(classDeclaration.CloseBraceToken.WithLeadingTrivia(endOfLine));
                         }
-                    case SyntaxKind.StructDeclaration:
-                        {
-                            var structDeclaration = (StructDeclarationSyntax)declaration;
 
+                    case StructDeclarationSyntax structDeclaration:
+                        {
                             return structDeclaration
                                 .WithOpenBraceToken(structDeclaration.OpenBraceToken.WithoutTrailingTrivia())
                                 .WithCloseBraceToken(structDeclaration.CloseBraceToken.WithLeadingTrivia(endOfLine));
                         }
-                    case SyntaxKind.InterfaceDeclaration:
-                        {
-                            var interfaceDeclaration = (InterfaceDeclarationSyntax)declaration;
 
+                    case InterfaceDeclarationSyntax interfaceDeclaration:
+                        {
                             return interfaceDeclaration
                                 .WithOpenBraceToken(interfaceDeclaration.OpenBraceToken.WithoutTrailingTrivia())
                                 .WithCloseBraceToken(interfaceDeclaration.CloseBraceToken.WithLeadingTrivia(endOfLine));

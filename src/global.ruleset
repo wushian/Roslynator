@@ -353,31 +353,31 @@
     <Rule Id="RCS1189" Action="Info" />
   </Rules>
   <Rules AnalyzerId="Roslynator.Formatting.Analyzers" RuleNamespace="Roslynator.Formatting.Analyzers">
-    <Rule Id="ROS0001" Action="Info" />
-    <Rule Id="ROS0002" Action="Info" />
-    <Rule Id="ROS0003" Action="Info" />
-    <Rule Id="ROS0007" Action="Info" />
-    <Rule Id="ROS0008" Action="Info" />
-    <Rule Id="ROS0009" Action="Info" />
-    <Rule Id="ROS0013" Action="Info" />
-    <Rule Id="ROS0014" Action="Info" />
-    <Rule Id="ROS0016" Action="Info" />
-    <Rule Id="ROS0017" Action="Info" />
-    <Rule Id="ROS1023" Action="Info" />
-    <Rule Id="ROS1025" Action="Info" />
-    <Rule Id="ROS1026" Action="Info" />
-    <Rule Id="ROS1027" Action="Info" />
-    <Rule Id="ROS1028" Action="Info" />
-    <Rule Id="ROS1029" Action="Info" />
-    <Rule Id="ROS1030" Action="Info" />
-    <Rule Id="ROS1057" Action="Info" />
-    <Rule Id="ROS1076" Action="Info" />
-    <Rule Id="ROS1087" Action="Info" />
-    <Rule Id="ROS1088" Action="Info" />
-    <Rule Id="ROS1092" Action="Info" />
-    <Rule Id="ROS1153" Action="Info" />
-    <Rule Id="ROS1184" Action="Info" />
-    <Rule Id="ROS1185" Action="Info" />
+    <Rule Id="RCS0001" Action="Info" />
+    <Rule Id="RCS0002" Action="Info" />
+    <Rule Id="RCS0003" Action="Info" />
+    <Rule Id="RCS0007" Action="Info" />
+    <Rule Id="RCS0008" Action="Info" />
+    <Rule Id="RCS0009" Action="Info" />
+    <Rule Id="RCS0013" Action="Info" />
+    <Rule Id="RCS0014" Action="Info" />
+    <Rule Id="RCS0016" Action="Info" />
+    <Rule Id="RCS0017" Action="Info" />
+    <Rule Id="RCS1023" Action="Info" />
+    <Rule Id="RCS1025" Action="Info" />
+    <Rule Id="RCS1026" Action="Info" />
+    <Rule Id="RCS1027" Action="Info" />
+    <Rule Id="RCS1028" Action="Info" />
+    <Rule Id="RCS1029" Action="Info" />
+    <Rule Id="RCS1030" Action="Info" />
+    <Rule Id="RCS1057" Action="Info" />
+    <Rule Id="RCS1076" Action="Info" />
+    <Rule Id="RCS1087" Action="Info" />
+    <Rule Id="RCS1088" Action="Info" />
+    <Rule Id="RCS1092" Action="Info" />
+    <Rule Id="RCS1153" Action="Info" />
+    <Rule Id="RCS1184" Action="Info" />
+    <Rule Id="RCS1185" Action="Info" />
   </Rules>
   <Rules AnalyzerId="SonarAnalyzer.CSharp" RuleNamespace="SonarAnalyzer.CSharp">
     <Rule Id="S101" Action="None" />

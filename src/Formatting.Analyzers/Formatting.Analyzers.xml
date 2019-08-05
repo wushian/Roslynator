@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Analyzers>
   <!--<Analyzer Identifier="">
-    <Id>ROS</Id>
+    <Id>RCS</Id>
     <Title></Title>
     <MessageFormat></MessageFormat>
     <Category>Formatting</Category>
@@ -17,7 +17,7 @@
     </Samples>
   </Analyzer>-->
   <Analyzer Identifier="RemoveNewLinesFromAccessorListOfAutoProperty"> <!--FormatAccessorList-->
-    <Id>ROS0001</Id>
+    <Id>RCS0001</Id>
     <Title>Remove newlines from accessor list of auto-property.</Title>
     <MessageFormat>Remove newlines from accessor list of auto-property.</MessageFormat>
     <Category>Formatting</Category>
@@ -37,7 +37,7 @@
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddNewLinesToAccessorListOfFullProperty"> <!--FormatAccessorList-->
-    <Id>ROS0002</Id>
+    <Id>RCS0002</Id>
     <Title>Add newlines to accessor list of full property.</Title>
     <MessageFormat>Add newlines to accessor list of full property.</MessageFormat>
     <Category>Formatting</Category>
@@ -57,7 +57,7 @@
     </Samples>
   </Analyzer>
   <Analyzer Identifier="RemoveNewLinesFromAccessor"> <!--FormatAccessorList-->
-    <Id>ROS0003</Id>
+    <Id>RCS0003</Id>
     <Title>Remove newlines from accessor with single-line expression.</Title>
     <MessageFormat>Remove newlines from accessor with single-line expression.</MessageFormat>
     <Category>Formatting</Category>
@@ -87,7 +87,7 @@
     </Samples>
   </Analyzer>
   <Analyzer Identifier="PlaceBinaryOperatorAfterOperand">
-    <Id>ROS0004</Id>
+    <Id>RCS0004</Id>
     <Title>Place binary operator after operand.</Title>
     <MessageFormat>Place binary operator after operand.</MessageFormat>
     <Category>Formatting</Category>
@@ -111,7 +111,7 @@
     </Samples>
   </Analyzer>
   <Analyzer Identifier="PlaceConditionalOperatorAfterExpression">
-    <Id>ROS0005</Id>
+    <Id>RCS0005</Id>
     <Title>Place conditional operator after expression.</Title>
     <MessageFormat>Place conditional operator after expression.</MessageFormat>
     <Category>Formatting</Category>
@@ -131,7 +131,7 @@
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddEmptyLineAfterRegionAndBeforeEndRegion">
-    <Id>ROS0006</Id>
+    <Id>RCS0006</Id>
     <Title>Add empty line after #region and before #endregion.</Title>
     <MessageFormat>Add empty line {0}.</MessageFormat>
     <Category>Formatting</Category>
@@ -163,7 +163,7 @@
     </Samples>
   </Analyzer>
   <Analyzer Identifier="RemoveNewLineBetweenIfKeywordAndElseKeyword">
-    <Id>ROS0007</Id>
+    <Id>RCS0007</Id>
     <Title>Remove newline between 'if' keyword and 'else' keyword.</Title>
     <MessageFormat>Remove newline between 'if' keyword and 'else' keyword.</MessageFormat>
     <Category>Formatting</Category>
@@ -194,7 +194,7 @@ else if (y)
     </Samples>
   </Analyzer>
   <Analyzer Identifier="RemoveNewLineBeforeWhileKeywordOfDoStatement">
-    <Id>ROS0008</Id>
+    <Id>RCS0008</Id>
     <Title>Remove newline before 'while' keyword of do statement.</Title>
     <MessageFormat>Remove newline before 'while' keyword of do statement.</MessageFormat>
     <Category>Formatting</Category>
@@ -217,7 +217,7 @@ while (x);]]></Before>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddEmptyLineBeforeAndAfterUsingDirectiveList">
-    <Id>ROS0009</Id>
+    <Id>RCS0009</Id>
     <Title>Add empty line before and after using directive list.</Title>
     <MessageFormat>>Add empty line before and after using directive list.</MessageFormat>
     <Category>Formatting</Category>
@@ -245,7 +245,7 @@ namespace N
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddEmptyLineBetweenSwitchSections">
-    <Id>ROS0010</Id>
+    <Id>RCS0010</Id>
     <Title>Add empty line between switch sections.</Title>
     <MessageFormat>Add empty line between switch sections.</MessageFormat>
     <Category>Formatting</Category>
@@ -261,7 +261,7 @@ namespace N
     </Samples>
   </Analyzer>
   <Analyzer Identifier="PlaceExpressionBodyArrowAtEndOfLine">
-    <Id>ROS0011</Id>
+    <Id>RCS0011</Id>
     <Title>Place expression-body arrow at the end of line.</Title>
     <MessageFormat>Place expression-body arrow at the end of line.</MessageFormat>
     <Category>Formatting</Category>
@@ -279,7 +279,7 @@ namespace N
     </Samples>
   </Analyzer>
   <Analyzer Identifier="PlaceExpressionBodyArrowBeforeExpression">
-    <Id>ROS0012</Id>
+    <Id>RCS0012</Id>
     <Title>Place expression-body arrow after expression.</Title>
     <MessageFormat>Place expression-body arrow after expression.</MessageFormat>
     <Category>Formatting</Category>
@@ -297,7 +297,7 @@ namespace N
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddNewLineBeforeTypeParameterConstraint">
-    <Id>ROS0013</Id>
+    <Id>RCS0013</Id>
     <Title>Add newline before type parameter constraint.</Title>
     <MessageFormat>Add newline before type parameter constraint.</MessageFormat>
     <Category>Formatting</Category>
@@ -319,7 +319,7 @@ namespace N
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddNewLineBeforeConstructorInitializer">
-    <Id>ROS0014</Id>
+    <Id>RCS0014</Id>
     <Title>Add newline before constructor initializer.</Title>
     <MessageFormat>Add newline before constructor initializer.</MessageFormat>
     <Category>Formatting</Category>
@@ -342,7 +342,7 @@ namespace N
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddEmptyLineBetweenSinglelineDeclarations">
-    <Id>ROS0015</Id>
+    <Id>RCS0015</Id>
     <Title>Add empty line between single-line declarations.</Title>
     <MessageFormat>Add empty line between single-line declarations.</MessageFormat>
     <Category>Formatting</Category>
@@ -362,7 +362,7 @@ object P2 { get; }]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddEmptyLineBetweenDeclarationAndDocumentationComment">
-    <Id>ROS0016</Id>
+    <Id>RCS0016</Id>
     <Title>Add empty line between declarations and documentation comment.</Title>
     <MessageFormat>Add empty line between declarations and documentation comment.</MessageFormat>
     <Category>Formatting</Category>
@@ -387,7 +387,7 @@ object P2 { get; }]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind">
-    <Id>ROS0017</Id>
+    <Id>RCS0017</Id>
     <Title>Add empty line between singl-line declarations of different kind.</Title>
     <MessageFormat>Add empty line between singl-line declarations of different kind.</MessageFormat>
     <Category>Formatting</Category>
@@ -406,7 +406,7 @@ object this[int index] { get; }]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind">
-    <Id>ROS0018</Id>
+    <Id>RCS0018</Id>
     <Title>Remove empty between single-line declarations of same kind.</Title>
     <MessageFormat>Remove empty between single-line declarations of same kind.</MessageFormat>
     <Category>Formatting</Category>
@@ -426,7 +426,7 @@ object P2 { get; }]]></After>
     </Samples>
     </Samples>
   </Analyzer>  <Analyzer Identifier="AddNewLineToEmptyBlock"> <!--FormatEmptyBlock-->
-    <Id>ROS1023</Id>
+    <Id>RCS1023</Id>
     <Title>Add newline to empty block.</Title>
     <MessageFormat>Add newline to empty block.</MessageFormat>
     <Category>Formatting</Category>
@@ -445,7 +445,7 @@ object P2 { get; }]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddNewLineBeforeEnumMember">
-    <Id>ROS1025</Id>
+    <Id>RCS1025</Id>
     <Title>Add newline before enum member.</Title>
     <MessageFormat>Add newline before enum member.</MessageFormat>
     <Category>Formatting</Category>
@@ -466,7 +466,7 @@ object P2 { get; }]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddNewLineBeforeStatement">
-    <Id>ROS1026</Id>
+    <Id>RCS1026</Id>
     <Title>Add newline before statement.</Title>
     <MessageFormat>Add newline before statement.</MessageFormat>
     <Category>Formatting</Category>
@@ -483,7 +483,7 @@ Bar();]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddNewLineBeforeEmbeddedStatement">
-    <Id>ROS1027</Id>
+    <Id>RCS1027</Id>
     <Title>Add newline before embedded statement.</Title>
     <MessageFormat>Add newline before embedded statement.</MessageFormat>
     <Category>Formatting</Category>
@@ -500,7 +500,7 @@ Bar();]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddNewLineAfterSwitchLabel">
-    <Id>ROS1028</Id>
+    <Id>RCS1028</Id>
     <Title>Add newline after switch label.</Title>
     <MessageFormat>Add newline after switch label.</MessageFormat>
     <Category>Formatting</Category>
@@ -526,7 +526,7 @@ Bar();]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="PlaceBinaryOperatorBeforeOperand"> <!--FormatBinaryOperatorOnNextLine-->
-    <Id>ROS1029</Id>
+    <Id>RCS1029</Id>
     <Title>Place operator before operand.</Title>
     <MessageFormat>Place operator before operand.</MessageFormat>
     <Category>Formatting</Category>
@@ -550,7 +550,7 @@ Bar();]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddEmptyLineAfterEmbeddedStatement">
-    <Id>ROS1030</Id>
+    <Id>RCS1030</Id>
     <Title>Add empty line after embedded statement.</Title>
     <MessageFormat>Add empty line after embedded statement.</MessageFormat>
     <Category>Formatting</Category>
@@ -571,7 +571,7 @@ Bar();]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddEmptyLineBetweenDeclarations">
-    <Id>ROS1057</Id>
+    <Id>RCS1057</Id>
     <Title>Add empty line between declarations.</Title>
     <MessageFormat>Add empty line between declarations.</MessageFormat>
     <Category>Formatting</Category>
@@ -650,7 +650,7 @@ enum Bar
     <Remarks>This analyzer does not enforce an empty line between two single-line declaration.</Remarks>
   </Analyzer>
   <Analyzer Identifier="AddNewLineToEmptyTypeDeclaration"> <!--FormatDeclarationBraces-->
-    <Id>ROS1076</Id>
+    <Id>RCS1076</Id>
     <Title>Add newline to empty type declaration.</Title>
     <MessageFormat>Add newline to empty type declaration.</MessageFormat>
     <Category>Formatting</Category>
@@ -670,7 +670,7 @@ enum Bar
     </Samples>
   </Analyzer>
   <Analyzer Identifier="UseLinefeedAsNewLine">
-    <Id>ROS1086</Id>
+    <Id>RCS1086</Id>
     <Title>Use linefeed as newline.</Title>
     <MessageFormat>Use linefeed as newline.</MessageFormat>
     <Category>Formatting</Category>
@@ -680,7 +680,7 @@ enum Bar
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
   </Analyzer>
   <Analyzer Identifier="UseCarriageReturnAndLinefeedAsNewLine">
-    <Id>ROS1087</Id>
+    <Id>RCS1087</Id>
     <Title>Use carriage return + linefeed as newline.</Title>
     <MessageFormat>Use carriage return + linefeed as newline.</MessageFormat>
     <Category>Formatting</Category>
@@ -690,7 +690,7 @@ enum Bar
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
   </Analyzer>
   <Analyzer Identifier="UseSpacesInsteadOfTab">
-    <Id>ROS1088</Id>
+    <Id>RCS1088</Id>
     <Title>Use spaces instead of tab.</Title>
     <MessageFormat>Use spaces instead of tab.</MessageFormat>
     <Category>Formatting</Category>
@@ -700,7 +700,7 @@ enum Bar
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
   </Analyzer>
   <Analyzer Identifier="AddEmptyLineBeforeClosingBraceOfDoStatement"> <!--AddEmptyLineBeforeWhileInDoStatement-->
-    <Id>ROS1092</Id>
+    <Id>RCS1092</Id>
     <Title>Add empty line before closing brace of 'do' statement.</Title>
     <MessageFormat>Add empty line before closing brace of 'do' statement.</MessageFormat>
     <Category>Formatting</Category>
@@ -723,7 +723,7 @@ enum Bar
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddEmptyLineAfterClosingBraceOfBlock"> <!--AddEmptyLineAfterClosingBrace-->
-    <Id>ROS1153</Id>
+    <Id>RCS1153</Id>
     <Title>Add empty line after closing brace of block.</Title>
     <MessageFormat>Add empty line after closing brace of block.</MessageFormat>
     <Category>Formatting</Category>
@@ -746,7 +746,7 @@ Foo();]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="PlaceConditionalOperatorBeforeExpression"> <!--FormatConditionalExpression-->
-    <Id>ROS1184</Id>
+    <Id>RCS1184</Id>
     <Title>Place conditional operator before expression.</Title>
     <MessageFormat>Place conditional operator before expression.</MessageFormat>
     <Category>Formatting</Category>
@@ -766,7 +766,7 @@ Foo();]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddNewLinesToBlock"> <!--FormatSingleLineBlock-->
-    <Id>ROS1185</Id>
+    <Id>RCS1185</Id>
     <Title>Add newlines to block.</Title>
     <MessageFormat>Add newlines to block.</MessageFormat>
     <Category>Formatting</Category>

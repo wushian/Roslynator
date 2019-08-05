@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Analyzers>
-  <Analyzer Identifier="" IsDevelopment="true">
-    <Id>R0S</Id>
+  <Analyzer Identifier="">
+    <Id>RCS</Id>
     <Title></Title>
     <MessageFormat></MessageFormat>
     <Category>Formatting</Category>

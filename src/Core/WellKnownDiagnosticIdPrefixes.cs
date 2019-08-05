@@ -15,7 +15,6 @@ namespace Roslynator
         public const string RCS = nameof(RCS);
         public const string RECS = nameof(RECS);
         public const string REVB = nameof(REVB);
-        public const string ROS = nameof(ROS);
         public const string RS = nameof(RS);
 
         /// <summary>
