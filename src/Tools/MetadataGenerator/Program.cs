@@ -53,8 +53,6 @@ namespace Roslynator.CodeGeneration
             WriteAnalyzersReadMe(@"Formatting.Analyzers\README.md", formattingAnalyzers);
 
             WriteAnalyzersByCategory(@"Analyzers\AnalyzersByCategory.md", analyzers);
-
-            WriteAnalyzersByCategory(@"Formatting.Analyzers\AnalyzersByCategory.md", formattingAnalyzers);
 #if !DEBUG
             VisualStudioInstance instance = MSBuildLocator.QueryVisualStudioInstances().First(f => f.Version.Major == 15);
 
@@ -98,7 +96,7 @@ namespace Roslynator.CodeGeneration
                     MarkdownGenerator.CreateAnalyzerMarkdown(analyzer, new (string, string)[] { ("Roslynator.Formatting.Analyzers", "https://www.nuget.org/packages/Roslynator.Formatting.Analyzers") }),
                     fileMustExists: false);
             }
-            
+
             foreach (AnalyzerMetadata analyzer in analyzers)
             {
                 WriteAllText(

@@ -425,8 +425,9 @@ object P2 { get; }]]></After>
       </Sample>
     </Samples>
     </Samples>
-  </Analyzer>  <Analyzer Identifier="AddNewLineToEmptyBlock"> <!--FormatEmptyBlock-->
-    <Id>RCS1023</Id>
+  </Analyzer> 
+  <Analyzer Identifier="AddNewLineToEmptyBlock"> <!--FormatEmptyBlock-->
+    <Id>RCS0023</Id>
     <Title>Add newline to empty block.</Title>
     <MessageFormat>Add newline to empty block.</MessageFormat>
     <Category>Formatting</Category>
@@ -445,7 +446,7 @@ object P2 { get; }]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddNewLineBeforeEnumMember">
-    <Id>RCS1025</Id>
+    <Id>RCS0025</Id>
     <Title>Add newline before enum member.</Title>
     <MessageFormat>Add newline before enum member.</MessageFormat>
     <Category>Formatting</Category>
@@ -466,7 +467,7 @@ object P2 { get; }]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddNewLineBeforeStatement">
-    <Id>RCS1026</Id>
+    <Id>RCS0026</Id>
     <Title>Add newline before statement.</Title>
     <MessageFormat>Add newline before statement.</MessageFormat>
     <Category>Formatting</Category>
@@ -483,7 +484,7 @@ Bar();]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddNewLineBeforeEmbeddedStatement">
-    <Id>RCS1027</Id>
+    <Id>RCS0027</Id>
     <Title>Add newline before embedded statement.</Title>
     <MessageFormat>Add newline before embedded statement.</MessageFormat>
     <Category>Formatting</Category>
@@ -500,7 +501,7 @@ Bar();]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddNewLineAfterSwitchLabel">
-    <Id>RCS1028</Id>
+    <Id>RCS0028</Id>
     <Title>Add newline after switch label.</Title>
     <MessageFormat>Add newline after switch label.</MessageFormat>
     <Category>Formatting</Category>
@@ -526,7 +527,7 @@ Bar();]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="PlaceBinaryOperatorBeforeOperand"> <!--FormatBinaryOperatorOnNextLine-->
-    <Id>RCS1029</Id>
+    <Id>RCS0029</Id>
     <Title>Place operator before operand.</Title>
     <MessageFormat>Place operator before operand.</MessageFormat>
     <Category>Formatting</Category>
@@ -550,7 +551,7 @@ Bar();]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddEmptyLineAfterEmbeddedStatement">
-    <Id>RCS1030</Id>
+    <Id>RCS0030</Id>
     <Title>Add empty line after embedded statement.</Title>
     <MessageFormat>Add empty line after embedded statement.</MessageFormat>
     <Category>Formatting</Category>
@@ -571,7 +572,7 @@ Bar();]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddEmptyLineBetweenDeclarations">
-    <Id>RCS1057</Id>
+    <Id>RCS0057</Id>
     <Title>Add empty line between declarations.</Title>
     <MessageFormat>Add empty line between declarations.</MessageFormat>
     <Category>Formatting</Category>
@@ -650,7 +651,7 @@ enum Bar
     <Remarks>This analyzer does not enforce an empty line between two single-line declaration.</Remarks>
   </Analyzer>
   <Analyzer Identifier="AddNewLineToEmptyTypeDeclaration"> <!--FormatDeclarationBraces-->
-    <Id>RCS1076</Id>
+    <Id>RCS0076</Id>
     <Title>Add newline to empty type declaration.</Title>
     <MessageFormat>Add newline to empty type declaration.</MessageFormat>
     <Category>Formatting</Category>
@@ -670,7 +671,7 @@ enum Bar
     </Samples>
   </Analyzer>
   <Analyzer Identifier="UseLinefeedAsNewLine">
-    <Id>RCS1086</Id>
+    <Id>RCS0086</Id>
     <Title>Use linefeed as newline.</Title>
     <MessageFormat>Use linefeed as newline.</MessageFormat>
     <Category>Formatting</Category>
@@ -680,7 +681,7 @@ enum Bar
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
   </Analyzer>
   <Analyzer Identifier="UseCarriageReturnAndLinefeedAsNewLine">
-    <Id>RCS1087</Id>
+    <Id>RCS0087</Id>
     <Title>Use carriage return + linefeed as newline.</Title>
     <MessageFormat>Use carriage return + linefeed as newline.</MessageFormat>
     <Category>Formatting</Category>
@@ -690,7 +691,7 @@ enum Bar
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
   </Analyzer>
   <Analyzer Identifier="UseSpacesInsteadOfTab">
-    <Id>RCS1088</Id>
+    <Id>RCS0088</Id>
     <Title>Use spaces instead of tab.</Title>
     <MessageFormat>Use spaces instead of tab.</MessageFormat>
     <Category>Formatting</Category>
@@ -700,7 +701,7 @@ enum Bar
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
   </Analyzer>
   <Analyzer Identifier="AddEmptyLineBeforeClosingBraceOfDoStatement"> <!--AddEmptyLineBeforeWhileInDoStatement-->
-    <Id>RCS1092</Id>
+    <Id>RCS0092</Id>
     <Title>Add empty line before closing brace of 'do' statement.</Title>
     <MessageFormat>Add empty line before closing brace of 'do' statement.</MessageFormat>
     <Category>Formatting</Category>
@@ -723,7 +724,7 @@ enum Bar
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddEmptyLineAfterClosingBraceOfBlock"> <!--AddEmptyLineAfterClosingBrace-->
-    <Id>RCS1153</Id>
+    <Id>RCS0153</Id>
     <Title>Add empty line after closing brace of block.</Title>
     <MessageFormat>Add empty line after closing brace of block.</MessageFormat>
     <Category>Formatting</Category>
@@ -746,7 +747,7 @@ Foo();]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="PlaceConditionalOperatorBeforeExpression"> <!--FormatConditionalExpression-->
-    <Id>RCS1184</Id>
+    <Id>RCS0184</Id>
     <Title>Place conditional operator before expression.</Title>
     <MessageFormat>Place conditional operator before expression.</MessageFormat>
     <Category>Formatting</Category>
@@ -766,7 +767,7 @@ Foo();]]></After>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddNewLinesToBlock"> <!--FormatSingleLineBlock-->
-    <Id>RCS1185</Id>
+    <Id>RCS0185</Id>
     <Title>Add newlines to block.</Title>
     <MessageFormat>Add newlines to block.</MessageFormat>
     <Category>Formatting</Category>
