@@ -6,7 +6,7 @@ For further information please with Roslynator [repo](https://github.com/JosefPi
 
 ## Configuration
 
-To make this extension working it is necessary to add following configuration to `%USERPROFILE%\.omnisharp\omnisharp.json`:
+IMPORTANT!!! To make this extension working it is necessary to add following configuration to `%USERPROFILE%\.omnisharp\omnisharp.json`:
 
 ```json
 {
@@ -25,6 +25,56 @@ To make this extension working it is necessary to add following configuration to
 Replace `%USERPROFILE%` with an actual path (such as `C:/Users/User`).
 
 After each update of the extension it is necessary to update paths to libraries (i.e. replace version in the path with a new version).
+
+## How to Change Default Configuration of Analyzers
+
+Create file at `%LOCALAPPDATA%\JosefPihrt\Roslynator\VisualStudioCode\roslynator.ruleset` with following content:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="roslynator.ruleset" ToolsVersion="16.0">
+  <!-- Specify default action that should be applied to all analyzers except those explicitly specified. -->
+  <!-- <IncludeAll Action="None,Hidden,Info,Warning,Error" /> -->
+  <!-- Specify zero or more paths to other rulesets that should be included. -->
+  <!-- <Include Path="" Action="Default,None,Hidden,Info,Warning,Error" /> -->
+  <Rules AnalyzerId="Roslynator.CSharp.Analyzers" RuleNamespace="Roslynator.CSharp.Analyzers">
+    <!-- <Rule Id="RCSxxxx" Action="None,Hidden,Info,Warning,Error" /> -->
+  </Rules>
+</RuleSet>
+```
+
+This rule set can be used to:
+
+ 1) Enable/disable analyzer(s) by DEFAULT.
+ 2) Change DEFAULT severity (action) of the analyzer(s).
+ 
+## How to Disable Refactorings and Fixes
+
+Create file at `%LOCALAPPDATA%\JosefPihrt\Roslynator\VisualStudioCode\roslynator.config`.
+
+Add following content to the file:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<Roslynator>
+  <Settings>
+    <General>
+      <!-- <PrefixFieldIdentifierWithUnderscore>true</PrefixFieldIdentifierWithUnderscore> -->
+    </General>
+    <Refactorings>
+      <!-- <Refactoring Id="RRxxxx" IsEnabled="false" /> -->
+  </Refactorings>
+    <CodeFixes>
+      <!-- <CodeFix Id="CSxxxx.RCFxxxx" IsEnabled="false" /> -->
+      <!-- <CodeFix Id="CSxxxx" IsEnabled="false" /> -->
+      <!-- <CodeFix Id="RCFxxxx" IsEnabled="false" /> -->
+  </CodeFixes>
+  </Settings>
+</Roslynator>
+```
+
+Configuration is applied once when libraries are loaded.
+Therefore, it may be neccessary to restart IDE for changes to take effect.
 
 ## Requirements
 
