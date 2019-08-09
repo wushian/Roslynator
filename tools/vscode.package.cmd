@@ -2,22 +2,32 @@
 
 cd ..\src\VisualStudioCode\package
 
-del /S /Q roslyn
+del /S /Q roslyn\*.dll
 
-copy /Y ..\..\VisualStudio\bin\Release\Roslynator.Core.dll roslyn\common
-copy /Y ..\..\VisualStudio\bin\Release\Roslynator.Common.dll roslyn\common
-copy /Y ..\..\VisualStudio\bin\Release\Roslynator.CSharp.dll roslyn\common
-copy /Y ..\..\VisualStudio\bin\Release\Roslynator.Workspaces.Core.dll roslyn\common
-copy /Y ..\..\VisualStudio\bin\Release\Roslynator.Workspaces.Common.dll roslyn\common
-copy /Y ..\..\VisualStudio\bin\Release\Roslynator.CSharp.Workspaces.dll roslyn\common
-copy /Y ..\..\VisualStudio\bin\Release\Roslynator.CSharp.Analyzers.dll roslyn\analyzers
-copy /Y ..\..\VisualStudio\bin\Release\Roslynator.CSharp.Analyzers.CodeFixes.dll roslyn\analyzers
-copy /Y ..\..\VisualStudio\bin\Release\Roslynator.CSharp.Refactorings.dll roslyn\refactorings
-copy /Y ..\..\VisualStudio\bin\Release\Roslynator.CSharp.CodeFixes.dll roslyn\fixes
+cd roslyn
 
+copy /Y ..\..\..\VisualStudio\bin\Release\Roslynator.Core.dll common
+copy /Y ..\..\..\VisualStudio\bin\Release\Roslynator.Common.dll common
+copy /Y ..\..\..\VisualStudio\bin\Release\Roslynator.CSharp.dll common
+copy /Y ..\..\..\VisualStudio\bin\Release\Roslynator.Workspaces.Core.dll common
+copy /Y ..\..\..\VisualStudio\bin\Release\Roslynator.Workspaces.Common.dll common
+copy /Y ..\..\..\VisualStudio\bin\Release\Roslynator.CSharp.Workspaces.dll common
+
+copy /Y ..\..\..\VisualStudio\bin\Release\Roslynator.CSharp.Analyzers.dll analyzers
+copy /Y ..\..\..\VisualStudio\bin\Release\Roslynator.CSharp.Analyzers.CodeFixes.dll analyzers
+
+copy /Y ..\..\..\VisualStudio\bin\Release\Roslynator.CSharp.Refactorings.dll refactorings
+
+copy /Y ..\..\..\VisualStudio\bin\Release\Roslynator.CSharp.CodeFixes.dll fixes
+
+cd ..
+
+echo Package is being created
 vsce package
+echo Package successfully created
 
 del /S /Q roslyn
 
 echo OK
+
 pause

@@ -4,7 +4,19 @@ namespace Roslynator
 {
     public sealed class RefactoringSettings : CodeAnalysisSettings<string>
     {
-        public static RefactoringSettings Current { get; } = new RefactoringSettings();
+        public static RefactoringSettings Current { get; } = LoadSettings();
+
+        private static RefactoringSettings LoadSettings()
+        {
+            var settings = new RefactoringSettings();
+
+            //TODO: vscode
+#if VSCODE
+#endif
+            VisualStudioCode.CopyConfiguration(VisualStudioCode.Configuration, settings);
+
+            return settings;
+        }
 
         public bool PrefixFieldIdentifierWithUnderscore { get; set; }
 

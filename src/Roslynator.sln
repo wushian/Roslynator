@@ -131,6 +131,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCodeGenerator", "Tools\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeAnalysis.Analyzers.Tests", "Tests\CodeAnalysis.Analyzers.Tests\CodeAnalysis.Analyzers.Tests.csproj", "{DE627E05-BB01-4A64-BD7D-E2BC5B853E0D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VisualStudioCode", "VisualStudioCode", "{08A640DF-4DEF-4A8A-BCA8-750884630D20}"
+	ProjectSection(SolutionItems) = preProject
+		VisualStudioCode\CHANGELOG.md = VisualStudioCode\CHANGELOG.md
+		VisualStudioCode\LICENSE.txt = VisualStudioCode\LICENSE.txt
+		VisualStudioCode\package.json = VisualStudioCode\package.json
+		VisualStudioCode\README.md = VisualStudioCode\README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

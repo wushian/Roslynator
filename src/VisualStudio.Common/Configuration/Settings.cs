@@ -118,7 +118,7 @@ namespace Roslynator.Configuration
                     {
                         settings.CodeFixes[id] = isEnabled;
                     }
-                    else if (id.StartsWith(CodeFixIdentifiers.Prefix, StringComparison.Ordinal))
+                    else if (id.StartsWith(CodeFixIdentifier.CodeFixIdPrefix, StringComparison.Ordinal))
                     {
                         foreach (string compilerDiagnosticId in CodeFixMap.GetCompilerDiagnosticIds(id))
                         {

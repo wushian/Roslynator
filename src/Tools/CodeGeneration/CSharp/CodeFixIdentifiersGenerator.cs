@@ -30,7 +30,7 @@ namespace Roslynator.CodeGeneration.CSharp
                                    Modifiers.Public_Const(),
                                    PredefinedStringType(),
                                    f.Identifier,
-                                   AddExpression(IdentifierName("Prefix"), StringLiteralExpression(f.Id.Substring(CodeFixIdentifiers.Prefix.Length))));
+                                   AddExpression(SimpleMemberAccessExpression(IdentifierName("CodeFixIdentifier"), IdentifierName("CodeFixIdPrefix")), StringLiteralExpression(f.Id.Substring(CodeFixIdentifier.CodeFixIdPrefix.Length))));
                             })
                             .ToSyntaxList<MemberDeclarationSyntax>())));
         }
