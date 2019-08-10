@@ -6,7 +6,7 @@ For further information please with Roslynator [repo](https://github.com/JosefPi
 
 ## Configuration
 
-To make this extension working it is necessary to add following configuration to `%USERPROFILE%\.omnisharp\omnisharp.json`:
+To make this extension working it is necessary to add following configuration to **%USERPROFILE%\.omnisharp\omnisharp.json**:
 
 ```json
 {
@@ -22,7 +22,7 @@ To make this extension working it is necessary to add following configuration to
 }
 ```
 
-Replace `%USERPROFILE%` with an actual path (such as `C:/Users/User`).
+Replace **%USERPROFILE%** with an actual path (such as **C:/Users/User**).
 
 After each update of the extension it is necessary to update paths to libraries (i.e. replace version in the path with a new version).
 
@@ -30,7 +30,7 @@ After each update of the extension it is necessary to update paths to libraries 
 
 Standard rule sets are used to configure analyzers on a project-wide basis.
 
-If you want to configure analyzers on a user-wide basis you have to create file at `%LOCALAPPDATA%\JosefPihrt\Roslynator\VisualStudioCode\roslynator.ruleset` with following content:
+If you want to configure analyzers on a user-wide basis you have to create file at **%LOCALAPPDATA%\JosefPihrt\Roslynator\VisualStudioCode\roslynator.ruleset** with following content:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -51,7 +51,7 @@ This rule set can be used to:
  
 ## Disable Refactorings or Fixes
 
-Create file at `%LOCALAPPDATA%\JosefPihrt\Roslynator\VisualStudioCode\roslynator.config` with following content:
+Create file at **%LOCALAPPDATA%\JosefPihrt\Roslynator\VisualStudioCode\roslynator.config** with following content:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -72,9 +72,7 @@ Create file at `%LOCALAPPDATA%\JosefPihrt\Roslynator\VisualStudioCode\roslynator
 </Roslynator>
 ```
 
-Full list of refactorings identifiers can be found [here](https://github.com/JosefPihrt/Roslynator/blob/master/src/Refactorings/README.md).
-
-Full list of fixes identifiers can be found [here](https://github.com/JosefPihrt/Roslynator/blob/master/src/CodeFixes/README.md).
+Full list of refactorings identifiers can be found [here](https://github.com/JosefPihrt/Roslynator/blob/master/src/Refactorings/README.md). Full list of fixes identifiers can be found [here](https://github.com/JosefPihrt/Roslynator/blob/master/src/CodeFixes/README.md).
 
 Configuration for analyzers/refactorings/fixes is applied once when libraries are loaded.
 Therefore, it may be neccessary to restart IDE for changes to take effect.
