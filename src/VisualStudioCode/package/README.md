@@ -6,19 +6,19 @@ For further information please with Roslynator [repo](https://github.com/JosefPi
 
 ## Configuration
 
-IMPORTANT!!! To make this extension working it is necessary to add following configuration to `%USERPROFILE%\.omnisharp\omnisharp.json`:
+To make this extension working it is necessary to add following configuration to `%USERPROFILE%\.omnisharp\omnisharp.json`:
 
 ```json
 {
-    "RoslynExtensionsOptions": {
-        "EnableAnalyzersSupport": true,
-        "LocationPaths": [
-            "%USERPROFILE%/.vscode/extensions/josefpihrt-vscode.roslynator-2.1.3/roslyn/common",
-            "%USERPROFILE%/.vscode/extensions/josefpihrt-vscode.roslynator-2.1.3/roslyn/analyzers",
-            "%USERPROFILE%/.vscode/extensions/josefpihrt-vscode.roslynator-2.1.3/roslyn/refactorings",
-            "%USERPROFILE%/.vscode/extensions/josefpihrt-vscode.roslynator-2.1.3/roslyn/fixes"
-        ]
-    }
+  "RoslynExtensionsOptions": {
+    "EnableAnalyzersSupport": true,
+    "LocationPaths": [
+      "%USERPROFILE%/.vscode/extensions/josefpihrt-vscode.roslynator-2.1.3/roslyn/common",
+      "%USERPROFILE%/.vscode/extensions/josefpihrt-vscode.roslynator-2.1.3/roslyn/analyzers",
+      "%USERPROFILE%/.vscode/extensions/josefpihrt-vscode.roslynator-2.1.3/roslyn/refactorings",
+      "%USERPROFILE%/.vscode/extensions/josefpihrt-vscode.roslynator-2.1.3/roslyn/fixes"
+    ]
+  }
 }
 ```
 
@@ -26,18 +26,19 @@ Replace `%USERPROFILE%` with an actual path (such as `C:/Users/User`).
 
 After each update of the extension it is necessary to update paths to libraries (i.e. replace version in the path with a new version).
 
-## How to Change Default Configuration of Analyzers
+## Change Default Configuration of Analyzers
 
-Create file at `%LOCALAPPDATA%\JosefPihrt\Roslynator\VisualStudioCode\roslynator.ruleset` with following content:
+Standard rule sets are used to configure analyzers on a project-wide basis.
+
+If you want to configure analyzers on a user-wide basis you have to create file at `%LOCALAPPDATA%\JosefPihrt\Roslynator\VisualStudioCode\roslynator.ruleset` with following content:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="roslynator.ruleset" ToolsVersion="16.0">
   <!-- Specify default action that should be applied to all analyzers except those explicitly specified. -->
   <!-- <IncludeAll Action="None,Hidden,Info,Warning,Error" /> -->
-  <!-- Specify zero or more paths to other rulesets that should be included. -->
-  <!-- <Include Path="" Action="Default,None,Hidden,Info,Warning,Error" /> -->
   <Rules AnalyzerId="Roslynator.CSharp.Analyzers" RuleNamespace="Roslynator.CSharp.Analyzers">
+    <!-- Specify default action that should be applied to a specified analyzer. -->
     <!-- <Rule Id="RCSxxxx" Action="None,Hidden,Info,Warning,Error" /> -->
   </Rules>
 </RuleSet>
@@ -45,14 +46,12 @@ Create file at `%LOCALAPPDATA%\JosefPihrt\Roslynator\VisualStudioCode\roslynator
 
 This rule set can be used to:
 
- 1) Enable/disable analyzer(s) by DEFAULT.
- 2) Change DEFAULT severity (action) of the analyzer(s).
+1. Enable/disable analyzer(s) by DEFAULT.
+2. Change DEFAULT severity (action) of the analyzer(s).
  
-## How to Disable Refactorings and Fixes
+## Disable Refactorings or Fixes
 
-Create file at `%LOCALAPPDATA%\JosefPihrt\Roslynator\VisualStudioCode\roslynator.config`.
-
-Add following content to the file:
+Create file at `%LOCALAPPDATA%\JosefPihrt\Roslynator\VisualStudioCode\roslynator.config` with following content:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -73,7 +72,11 @@ Add following content to the file:
 </Roslynator>
 ```
 
-Configuration is applied once when libraries are loaded.
+Full list of refactorings identifiers can be found [here](https://github.com/JosefPihrt/Roslynator/blob/master/src/Refactorings/README.md).
+
+Full list of fixes identifiers can be found [here](https://github.com/JosefPihrt/Roslynator/blob/master/src/CodeFixes/README.md).
+
+Configuration for analyzers/refactorings/fixes is applied once when libraries are loaded.
 Therefore, it may be neccessary to restart IDE for changes to take effect.
 
 ## Requirements

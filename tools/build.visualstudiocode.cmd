@@ -1,12 +1,27 @@
 @echo off
 
 set _msbuildPath="C:\Program Files\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild"
+set _properties=Configuration=Release,Deterministic=true,TreatWarningsAsErrors=true,WarningsNotAsErrors=1591,DefineConstants=VSCODE
+set _version=2.1.3.0
 
 dotnet restore --force "..\src\VisualStudioCode.sln"
 
+%_msbuildPath% "..\src\Tools\Tools.sln" ^
+ /t:Clean,Build ^
+ /p:%_properties% ^
+ /v:normal ^
+ /m
+
+if errorlevel 1 (
+ pause
+ exit
+)
+
+dotnet "..\src\Tools\VersionUpdater\bin\Release\netcoreapp2.0\VersionUpdater.dll" "%_version%"
+
 %_msbuildPath% "..\src\VisualStudioCode.sln" ^
  /t:Clean,Build ^
- /p:Configuration=Release,Deterministic=true,TreatWarningsAsErrors=true,WarningsNotAsErrors=1591,DefineConstants=VSCODE ^
+ /p:%_properties% ^
  /v:normal ^
  /m
 

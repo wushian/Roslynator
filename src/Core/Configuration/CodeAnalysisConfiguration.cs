@@ -68,18 +68,11 @@ namespace Roslynator.Configuration
                         {
                             return Load(path);
                         }
-                        catch (Exception ex)
+                        catch (Exception ex) when (ex is IOException
+                            || ex is UnauthorizedAccessException
+                            || ex is XmlException)
                         {
-                            if (ex is IOException
-                                || ex is UnauthorizedAccessException
-                                || ex is XmlException)
-                            {
-                                Debug.Fail(ex.ToString());
-                            }
-                            else
-                            {
-                                throw;
-                            }
+                            Debug.Fail(ex.ToString());
                         }
                     }
                 }
@@ -256,6 +249,16 @@ namespace Roslynator.Configuration
                             path = attribute.Value.Trim();
 
                             path = Environment.ExpandEnvironmentVariables(path);
+
+                            try
+                            {
+                                path = Path.GetFullPath(path);
+                            }
+                            catch (ArgumentException ex)
+                            {
+                                Debug.Fail(ex.ToString());
+                                path = null;
+                            }
                         }
                         else
                         {
