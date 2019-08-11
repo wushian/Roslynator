@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using Roslynator.CodeFixes;
 using Roslynator.CSharp;
 
 namespace Roslynator.Configuration
