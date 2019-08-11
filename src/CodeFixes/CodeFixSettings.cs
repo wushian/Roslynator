@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Roslynator.Configuration;
 
 namespace Roslynator
 {
@@ -13,8 +14,8 @@ namespace Roslynator
         private static CodeFixSettings Load()
         {
             var settings = new CodeFixSettings();
-#if VSCODE
-            foreach (KeyValuePair<string, bool> kvp in VisualStudioCode.Configuration.CodeFixes)
+
+            foreach (KeyValuePair<string, bool> kvp in CodeAnalysisConfiguration.Default.CodeFixes)
             {
                 string id = kvp.Key;
                 bool isEnabled = kvp.Value;
@@ -42,15 +43,15 @@ namespace Roslynator
                     Debug.Fail(id);
                 }
             }
-#endif
+
             return settings;
         }
-#if VSCODE
+
         private void Set(string compilerDiagnosticId, string codeFixId, bool isEnabled)
         {
             Set(new CodeFixIdentifier(compilerDiagnosticId, codeFixId), isEnabled);
         }
-#endif
+
         public bool IsEnabled(string compilerDiagnosticId, string codeFixId)
         {
             return IsEnabled(new CodeFixIdentifier(compilerDiagnosticId, codeFixId));

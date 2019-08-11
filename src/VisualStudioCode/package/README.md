@@ -26,7 +26,7 @@ Replace **%USERPROFILE%** with an actual path (such as **C:/Users/User**).
 
 After each update of the extension it is necessary to update paths to libraries (i.e. replace version in the path with a new version).
 
-## Change Default Configuration of Analyzers
+## Configuration of Analyzers
 
 Standard rule sets are used to configure analyzers on a project-wide basis.
 
@@ -49,7 +49,7 @@ This rule set can be used to:
 1. Enable/disable analyzer(s) by DEFAULT.
 2. Change DEFAULT severity (action) of the analyzer(s).
  
-## Disable Refactorings or Fixes
+## Configuration of Refactorings and Fixes
 
 Create file at **%LOCALAPPDATA%\JosefPihrt\Roslynator\VisualStudioCode\roslynator.config** with following content:
 

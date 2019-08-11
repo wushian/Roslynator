@@ -15,18 +15,18 @@ namespace Roslynator.Configuration
     {
         public const string ConfigFileName = "roslynator.config";
 
-        private static CodeAnalysisConfiguration _current;
+        private static CodeAnalysisConfiguration _default;
 
-        public static CodeAnalysisConfiguration Default { get; } = new CodeAnalysisConfiguration();
+        public static CodeAnalysisConfiguration Empty { get; } = new CodeAnalysisConfiguration();
 
-        public static CodeAnalysisConfiguration Current
+        public static CodeAnalysisConfiguration Default
         {
             get
             {
-                if (_current == null)
-                    Interlocked.CompareExchange(ref _current, LoadConfigurationFromFile(), null);
+                if (_default == null)
+                    Interlocked.CompareExchange(ref _default, LoadDefaultConfiguration(), null);
 
-                return _current;
+                return _default;
             }
         }
 
@@ -34,7 +34,7 @@ namespace Roslynator.Configuration
             IEnumerable<KeyValuePair<string, bool>> codeFixes = null,
             IEnumerable<KeyValuePair<string, bool>> refactorings = null,
             IEnumerable<string> ruleSets = null,
-            bool prefixFieldIdentifierWithUnderscore = true)
+            bool prefixFieldIdentifierWithUnderscore = false)
         {
             CodeFixes = codeFixes?.ToImmutableDictionary() ?? ImmutableDictionary<string, bool>.Empty;
             Refactorings = refactorings?.ToImmutableDictionary() ?? ImmutableDictionary<string, bool>.Empty;
@@ -50,7 +50,7 @@ namespace Roslynator.Configuration
 
         public bool PrefixFieldIdentifierWithUnderscore { get; set; }
 
-        private static CodeAnalysisConfiguration LoadConfigurationFromFile()
+        private static CodeAnalysisConfiguration LoadDefaultConfiguration()
         {
             string path = typeof(CodeAnalysisConfiguration).Assembly.Location;
 
@@ -78,10 +78,52 @@ namespace Roslynator.Configuration
                 }
             }
 
-            return Default;
+            return Empty;
         }
 
         public static CodeAnalysisConfiguration Load(string uri)
+        {
+            Builder builder = null;
+
+            Queue<string> includes = null;
+
+            Load(uri, ref builder, ref includes);
+
+            if (includes != null)
+            {
+                var loadedIncludes = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { uri };
+
+                do
+                {
+                    string include = includes.Dequeue();
+
+                    if (!loadedIncludes.Contains(include)
+                        && File.Exists(include))
+                    {
+                        try
+                        {
+                            Load(include, ref builder, ref includes);
+                        }
+                        catch (Exception ex) when (ex is IOException
+                            || ex is UnauthorizedAccessException
+                            || ex is XmlException)
+                        {
+                            Debug.Fail(ex.ToString());
+                        }
+                    }
+
+                    loadedIncludes.Add(include);
+
+                } while (includes.Count > 0);
+            }
+
+            return builder?.ToImmutable() ?? Empty;
+        }
+
+        private static void Load(
+            string uri,
+            ref Builder builder,
+            ref Queue<string> includes)
         {
             XDocument doc = XDocument.Load(uri);
 
@@ -89,15 +131,35 @@ namespace Roslynator.Configuration
 
             Debug.Assert(root?.HasName("Roslynator") == true, root?.Name.LocalName);
 
-            Builder builder = default;
-
             if (root?.HasName("Roslynator") == true)
             {
                 foreach (XElement element in root.Elements())
                 {
                     if (element.HasName("Settings"))
                     {
-                        builder = LoadSettings(element);
+                        if (builder == null)
+                            builder = new Builder();
+
+                        LoadSettings(element, builder);
+                    }
+                    else if (element.HasName("Include"))
+                    {
+                        foreach (XAttribute attribute in element.Attributes())
+                        {
+                            if (attribute.HasName("Path"))
+                            {
+                                string path = LoadPath(attribute);
+
+                                if (path != null)
+                                {
+                                    (includes ?? (includes = new Queue<string>())).Enqueue(path);
+                                }
+                            }
+                            else
+                            {
+                                Debug.Fail(attribute.Name.LocalName);
+                            }
+                        }
                     }
                     else
                     {
@@ -105,14 +167,10 @@ namespace Roslynator.Configuration
                     }
                 }
             }
-
-            return builder?.ToImmutable() ?? Default;
         }
 
-        private static Builder LoadSettings(XElement element)
+        private static void LoadSettings(XElement element, Builder builder)
         {
-            var builder = new Builder();
-
             foreach (XElement e in element.Elements())
             {
                 if (e.HasName("General"))
@@ -136,8 +194,6 @@ namespace Roslynator.Configuration
                     Debug.Fail(e.Name.LocalName);
                 }
             }
-
-            return builder;
         }
 
         private static void LoadGeneral(XElement element, Builder builder)
@@ -246,19 +302,7 @@ namespace Roslynator.Configuration
                     {
                         if (attribute.HasName("Path"))
                         {
-                            path = attribute.Value.Trim();
-
-                            path = Environment.ExpandEnvironmentVariables(path);
-
-                            try
-                            {
-                                path = Path.GetFullPath(path);
-                            }
-                            catch (ArgumentException ex)
-                            {
-                                Debug.Fail(ex.ToString());
-                                path = null;
-                            }
+                            path = LoadPath(attribute);
                         }
                         else
                         {
@@ -275,6 +319,24 @@ namespace Roslynator.Configuration
                 {
                     Debug.Fail(e.Name.LocalName);
                 }
+            }
+        }
+
+        private static string LoadPath(XAttribute attribute)
+        {
+            string path = attribute.Value.Trim();
+
+            path = Environment.ExpandEnvironmentVariables(path);
+
+            try
+            {
+                return Path.GetFullPath(path);
+            }
+            catch (ArgumentException ex)
+            {
+                Debug.Fail(ex.ToString());
+
+                return null;
             }
         }
 
@@ -299,7 +361,7 @@ namespace Roslynator.Configuration
                 get { return _ruleSets ?? (_ruleSets = ImmutableArray.CreateBuilder<string>()); }
             }
 
-            public bool PrefixFieldIdentifierWithUnderscore { get; set; } = Default.PrefixFieldIdentifierWithUnderscore;
+            public bool PrefixFieldIdentifierWithUnderscore { get; set; } = Empty.PrefixFieldIdentifierWithUnderscore;
 
             public CodeAnalysisConfiguration ToImmutable()
             {

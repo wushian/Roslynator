@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Collections.Generic;
+using Roslynator.Configuration;
 
 namespace Roslynator
 {
@@ -11,14 +12,14 @@ namespace Roslynator
         private static RefactoringSettings LoadSettings()
         {
             var settings = new RefactoringSettings();
-#if VSCODE
-            foreach (KeyValuePair<string, bool> kvp in VisualStudioCode.Configuration.Refactorings)
+
+            foreach (KeyValuePair<string, bool> kvp in CodeAnalysisConfiguration.Default.Refactorings)
             {
                 settings.Set(kvp.Key, kvp.Value);
             }
 
-            settings.PrefixFieldIdentifierWithUnderscore = VisualStudioCode.Configuration.PrefixFieldIdentifierWithUnderscore;
-#endif
+            settings.PrefixFieldIdentifierWithUnderscore = CodeAnalysisConfiguration.Default.PrefixFieldIdentifierWithUnderscore;
+
             return settings;
         }
 
