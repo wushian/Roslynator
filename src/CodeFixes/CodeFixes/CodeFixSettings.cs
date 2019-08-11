@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Roslynator.Configuration;
 
-namespace Roslynator
+namespace Roslynator.CodeFixes
 {
     public sealed class CodeFixSettings : CodeAnalysisSettings<CodeFixIdentifier>
     {
