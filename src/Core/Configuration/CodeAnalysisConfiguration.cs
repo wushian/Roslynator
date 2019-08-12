@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
@@ -31,16 +33,20 @@ namespace Roslynator.Configuration
         }
 
         public CodeAnalysisConfiguration(
+            IEnumerable<string> includes = null,
             IEnumerable<KeyValuePair<string, bool>> codeFixes = null,
             IEnumerable<KeyValuePair<string, bool>> refactorings = null,
             IEnumerable<string> ruleSets = null,
             bool prefixFieldIdentifierWithUnderscore = false)
         {
+            Includes = includes?.ToImmutableArray() ?? ImmutableArray<string>.Empty;
             CodeFixes = codeFixes?.ToImmutableDictionary() ?? ImmutableDictionary<string, bool>.Empty;
             Refactorings = refactorings?.ToImmutableDictionary() ?? ImmutableDictionary<string, bool>.Empty;
             RuleSets = ruleSets?.ToImmutableArray() ?? ImmutableArray<string>.Empty;
             PrefixFieldIdentifierWithUnderscore = prefixFieldIdentifierWithUnderscore;
         }
+
+        public ImmutableArray<string> Includes { get; }
 
         public ImmutableDictionary<string, bool> CodeFixes { get; }
 
@@ -49,6 +55,16 @@ namespace Roslynator.Configuration
         public ImmutableArray<string> RuleSets { get; }
 
         public bool PrefixFieldIdentifierWithUnderscore { get; set; }
+
+        internal IEnumerable<KeyValuePair<string, bool>> GetRefactorings()
+        {
+            return Refactorings.Select(f => f);
+        }
+
+        internal IEnumerable<KeyValuePair<string, bool>> GetCodeFixes()
+        {
+            return CodeFixes.Select(f => f);
+        }
 
         private static CodeAnalysisConfiguration LoadDefaultConfiguration()
         {
@@ -85,24 +101,26 @@ namespace Roslynator.Configuration
         {
             Builder builder = null;
 
-            Queue<string> includes = null;
+            Queue<string> queue = null;
 
-            Load(uri, ref builder, ref includes);
+            Load(uri, ref builder, ref queue);
 
-            if (includes != null)
+            ImmutableArray<string> includes = queue?.ToImmutableArray() ?? ImmutableArray<string>.Empty;
+
+            if (queue != null)
             {
                 var loadedIncludes = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { uri };
 
                 do
                 {
-                    string include = includes.Dequeue();
+                    string include = queue.Dequeue();
 
                     if (!loadedIncludes.Contains(include)
                         && File.Exists(include))
                     {
                         try
                         {
-                            Load(include, ref builder, ref includes);
+                            Load(include, ref builder, ref queue);
                         }
                         catch (Exception ex) when (ex is IOException
                             || ex is UnauthorizedAccessException
@@ -114,10 +132,18 @@ namespace Roslynator.Configuration
 
                     loadedIncludes.Add(include);
 
-                } while (includes.Count > 0);
+                } while (queue.Count > 0);
             }
 
-            return builder?.ToImmutable() ?? Empty;
+            if (builder == null)
+                return Empty;
+
+            return new CodeAnalysisConfiguration(
+                includes: includes,
+                codeFixes: builder.CodeFixes?.ToImmutable() ?? ImmutableDictionary<string, bool>.Empty,
+                refactorings: builder.Refactorings?.ToImmutable() ?? ImmutableDictionary<string, bool>.Empty,
+                ruleSets: builder.RuleSets?.ToImmutable() ?? ImmutableArray<string>.Empty,
+                prefixFieldIdentifierWithUnderscore: builder.PrefixFieldIdentifierWithUnderscore);
         }
 
         private static void Load(
@@ -340,6 +366,26 @@ namespace Roslynator.Configuration
             }
         }
 
+        public CodeAnalysisConfiguration WithRefactorings(IEnumerable<KeyValuePair<string, bool>> refactorings)
+        {
+            return new CodeAnalysisConfiguration(
+                includes: Includes,
+                codeFixes: CodeFixes,
+                refactorings: refactorings.ToImmutableDictionary(),
+                ruleSets: RuleSets,
+                prefixFieldIdentifierWithUnderscore: PrefixFieldIdentifierWithUnderscore);
+        }
+
+        public CodeAnalysisConfiguration WithCodeFixes(IEnumerable<KeyValuePair<string, bool>> codeFixes)
+        {
+            return new CodeAnalysisConfiguration(
+                includes: Includes,
+                codeFixes: codeFixes.ToImmutableDictionary(),
+                refactorings: Refactorings,
+                ruleSets: RuleSets,
+                prefixFieldIdentifierWithUnderscore: PrefixFieldIdentifierWithUnderscore);
+        }
+
         private class Builder
         {
             private ImmutableDictionary<string, bool>.Builder _codeFixes;
@@ -362,15 +408,6 @@ namespace Roslynator.Configuration
             }
 
             public bool PrefixFieldIdentifierWithUnderscore { get; set; } = Empty.PrefixFieldIdentifierWithUnderscore;
-
-            public CodeAnalysisConfiguration ToImmutable()
-            {
-                return new CodeAnalysisConfiguration(
-                    codeFixes: CodeFixes?.ToImmutable() ?? ImmutableDictionary<string, bool>.Empty,
-                    refactorings: Refactorings?.ToImmutable() ?? ImmutableDictionary<string, bool>.Empty,
-                    ruleSets: RuleSets?.ToImmutable() ?? ImmutableArray<string>.Empty,
-                    prefixFieldIdentifierWithUnderscore: PrefixFieldIdentifierWithUnderscore);
-            }
         }
     }
 }

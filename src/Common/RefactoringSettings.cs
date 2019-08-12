@@ -13,12 +13,7 @@ namespace Roslynator
         {
             var settings = new RefactoringSettings();
 
-            foreach (KeyValuePair<string, bool> kvp in CodeAnalysisConfiguration.Default.Refactorings)
-            {
-                settings.Set(kvp.Key, kvp.Value);
-            }
-
-            settings.PrefixFieldIdentifierWithUnderscore = CodeAnalysisConfiguration.Default.PrefixFieldIdentifierWithUnderscore;
+            settings.Reset();
 
             return settings;
         }
@@ -27,8 +22,14 @@ namespace Roslynator
 
         public override void Reset()
         {
-            PrefixFieldIdentifierWithUnderscore = false;
             Disabled.Clear();
+
+            foreach (KeyValuePair<string, bool> kvp in CodeAnalysisConfiguration.Default.Refactorings)
+            {
+                Set(kvp.Key, kvp.Value);
+            }
+
+            PrefixFieldIdentifierWithUnderscore = CodeAnalysisConfiguration.Default.PrefixFieldIdentifierWithUnderscore;
         }
     }
 }

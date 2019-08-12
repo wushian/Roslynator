@@ -71,7 +71,7 @@ namespace Roslynator.VisualStudio
             var dialog = new SaveFileDialog()
             {
                 Filter = "All Files  (*.*)|*.*|Config Files (*.config)|*.config",
-                FileName = Path.GetFileName(Settings.ConfigFileName),
+                FileName = Path.GetFileName(CodeAnalysisConfiguration.ConfigFileName),
                 DefaultExt = "config",
                 AddExtension = true,
                 CheckPathExists = true,
@@ -113,14 +113,14 @@ namespace Roslynator.VisualStudio
                 disabledCodeFixes = package.CodeFixesOptionsPage.GetDisabledItems();
             }
 
-            var settings = new Settings(
+            var configuration = new CodeAnalysisConfiguration(
                 refactorings: disabledRefactorings.Select(f => new KeyValuePair<string, bool>(f, false)),
                 codeFixes: disabledCodeFixes.Select(f => new KeyValuePair<string, bool>(f, false)),
                 prefixFieldIdentifierWithUnderscore: PrefixFieldIdentifierWithUnderscore);
 
             try
             {
-                settings.Save(dialog.FileName);
+                CodeAnalysisConfigurationHelpers.Save(dialog.FileName, configuration);
             }
             catch (Exception ex) when (ex is IOException
                     || ex is UnauthorizedAccessException)
@@ -141,11 +141,11 @@ namespace Roslynator.VisualStudio
             if (dialog.ShowDialog() != true)
                 return;
 
-            Settings settings = null;
+            CodeAnalysisConfiguration configuration = null;
 
             try
             {
-                settings = Settings.Load(dialog.FileName);
+                configuration = CodeAnalysisConfiguration.Load(dialog.FileName);
             }
             catch (Exception ex) when (ex is IOException
                     || ex is UnauthorizedAccessException
@@ -160,12 +160,12 @@ namespace Roslynator.VisualStudio
             package.RefactoringsOptionsPage.Load();
             package.CodeFixesOptionsPage.Load();
 
-            PrefixFieldIdentifierWithUnderscore = settings.PrefixFieldIdentifierWithUnderscore;
+            PrefixFieldIdentifierWithUnderscore = configuration.PrefixFieldIdentifierWithUnderscore;
 
-            Update(package.RefactoringsOptionsPage, settings.Refactorings);
-            Update(package.CodeFixesOptionsPage, settings.CodeFixes);
+            Update(package.RefactoringsOptionsPage, configuration.GetRefactorings());
+            Update(package.CodeFixesOptionsPage, configuration.GetCodeFixes());
 
-            void Update(BaseOptionsPage optionsPage, Dictionary<string, bool> dic)
+            void Update(BaseOptionsPage optionsPage, IEnumerable<KeyValuePair<string, bool>> dic)
             {
                 var disabledIds = new HashSet<string>(dic.Where(f => !f.Value).Select(f => f.Key));
 

@@ -1,10 +1,11 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Security;
 using System.Threading;
+using System.Xml;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Events;
@@ -89,9 +90,9 @@ namespace Roslynator.VisualStudio
             codeFixesOptionsPage.CheckNewItemsDisabledByDefault();
             refactoringsOptionsPage.CheckNewItemsDisabledByDefault();
 
-            SettingsManager.Instance.UpdateVisualStudioSettings(generalOptionsPage);
-            SettingsManager.Instance.UpdateVisualStudioSettings(refactoringsOptionsPage);
-            SettingsManager.Instance.UpdateVisualStudioSettings(codeFixesOptionsPage);
+            SettingsManager.Instance.Propagate(generalOptionsPage);
+            SettingsManager.Instance.Propagate(refactoringsOptionsPage);
+            SettingsManager.Instance.Propagate(codeFixesOptionsPage);
         }
 
         private void AfterOpenSolution(object sender = null, OpenSolutionEventArgs e = null)
@@ -103,7 +104,7 @@ namespace Roslynator.VisualStudio
                 && !string.IsNullOrEmpty(solutionFileName))
             {
                 SolutionDirectoryPath = Path.GetDirectoryName(solutionFileName);
-                ConfigFilePath = Path.Combine(SolutionDirectoryPath, Settings.ConfigFileName);
+                ConfigFilePath = Path.Combine(SolutionDirectoryPath, CodeAnalysisConfiguration.ConfigFileName);
             }
 
             UpdateSettings();
@@ -126,26 +127,23 @@ namespace Roslynator.VisualStudio
         private void UpdateSettings()
         {
             SettingsManager.Instance.ConfigFileSettings = LoadConfigFileSettings();
-            SettingsManager.Instance.ApplyTo(RefactoringSettings.Current);
-            SettingsManager.Instance.ApplyTo(CodeFixSettings.Current);
+            SettingsManager.Instance.Propagate(RefactoringSettings.Current);
+            SettingsManager.Instance.Propagate(CodeFixSettings.Current);
 
-            Settings LoadConfigFileSettings()
+            CodeAnalysisConfiguration LoadConfigFileSettings()
             {
                 if (!File.Exists(ConfigFilePath))
                     return null;
 
                 try
                 {
-                    return Settings.Load(ConfigFilePath);
+                    return CodeAnalysisConfiguration.Load(ConfigFilePath);
                 }
-                catch (IOException)
+                catch (Exception ex) when (ex is IOException
+                    || ex is UnauthorizedAccessException
+                    || ex is XmlException)
                 {
-                }
-                catch (UnauthorizedAccessException)
-                {
-                }
-                catch (SecurityException)
-                {
+                    Debug.Fail(ex.ToString());
                 }
 
                 return null;
@@ -157,7 +155,7 @@ namespace Roslynator.VisualStudio
             if (!Directory.Exists(SolutionDirectoryPath))
                 return;
 
-            _watcher = new FileSystemWatcher(SolutionDirectoryPath, Settings.ConfigFileName)
+            _watcher = new FileSystemWatcher(SolutionDirectoryPath, CodeAnalysisConfiguration.ConfigFileName)
             {
                 EnableRaisingEvents = true,
                 IncludeSubdirectories = false,

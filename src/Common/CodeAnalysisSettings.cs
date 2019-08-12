@@ -90,7 +90,7 @@ namespace Roslynator
             }
         }
 
-        public void Set(Dictionary<T, bool> values)
+        public void Set(IEnumerable<KeyValuePair<T, bool>> values)
         {
             foreach (KeyValuePair<T, bool> kvp in values)
                 Set(kvp.Key, kvp.Value);

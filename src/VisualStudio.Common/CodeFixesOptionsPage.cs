@@ -7,8 +7,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Roslynator.CodeFixes;
-using Roslynator.Configuration;
-using Roslynator.CSharp;
 
 namespace Roslynator.VisualStudio
 {
@@ -62,8 +60,8 @@ namespace Roslynator.VisualStudio
 
             if (e.ApplyBehavior == ApplyKind.Apply)
             {
-                SettingsManager.Instance.UpdateVisualStudioSettings(this);
-                SettingsManager.Instance.ApplyTo(CodeFixSettings.Current);
+                SettingsManager.Instance.Propagate(this);
+                SettingsManager.Instance.Propagate(CodeFixSettings.Current);
             }
         }
 

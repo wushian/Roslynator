@@ -3,7 +3,6 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using Roslynator.Configuration;
 
 namespace Roslynator.VisualStudio
 {
@@ -36,8 +35,8 @@ namespace Roslynator.VisualStudio
 
             if (e.ApplyBehavior == ApplyKind.Apply)
             {
-                SettingsManager.Instance.UpdateVisualStudioSettings(this);
-                SettingsManager.Instance.ApplyTo(RefactoringSettings.Current);
+                SettingsManager.Instance.Propagate(this);
+                SettingsManager.Instance.Propagate(RefactoringSettings.Current);
             }
         }
     }

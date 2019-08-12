@@ -15,6 +15,15 @@ namespace Roslynator.CodeFixes
         {
             var settings = new CodeFixSettings();
 
+            settings.Reset();
+
+            return settings;
+        }
+
+        public override void Reset()
+        {
+            Disabled.Clear();
+
             foreach (KeyValuePair<string, bool> kvp in CodeAnalysisConfiguration.Default.CodeFixes)
             {
                 string id = kvp.Key;
@@ -22,20 +31,20 @@ namespace Roslynator.CodeFixes
 
                 if (CodeFixIdentifier.TryParse(id, out CodeFixIdentifier codeFixIdentifier))
                 {
-                    settings.Set(codeFixIdentifier, isEnabled);
+                    Set(codeFixIdentifier, isEnabled);
                 }
                 else if (id.StartsWith(CodeFixIdentifier.CodeFixIdPrefix, StringComparison.Ordinal))
                 {
                     foreach (string compilerDiagnosticId in CodeFixMap.GetCompilerDiagnosticIds(id))
                     {
-                        settings.Set(compilerDiagnosticId, id, isEnabled);
+                        Set(compilerDiagnosticId, id, isEnabled);
                     }
                 }
                 else if (id.StartsWith("CS", StringComparison.Ordinal))
                 {
                     foreach (string codeFixId in CodeFixMap.GetCodeFixIds(id))
                     {
-                        settings.Set(id, codeFixId, isEnabled);
+                        Set(id, codeFixId, isEnabled);
                     }
                 }
                 else
@@ -43,8 +52,6 @@ namespace Roslynator.CodeFixes
                     Debug.Fail(id);
                 }
             }
-
-            return settings;
         }
 
         private void Set(string compilerDiagnosticId, string codeFixId, bool isEnabled)
