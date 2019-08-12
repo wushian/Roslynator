@@ -26,7 +26,7 @@ namespace Roslynator.Configuration
             get
             {
                 if (_default == null)
-                    Interlocked.CompareExchange(ref _default, LoadDefaultConfiguration(), null);
+                    Interlocked.CompareExchange(ref _default, LoadDefaultConfiguration() ?? Empty, null);
 
                 return _default;
             }
@@ -54,7 +54,7 @@ namespace Roslynator.Configuration
 
         public ImmutableArray<string> RuleSets { get; }
 
-        public bool PrefixFieldIdentifierWithUnderscore { get; set; }
+        public bool PrefixFieldIdentifierWithUnderscore { get; }
 
         internal IEnumerable<KeyValuePair<string, bool>> GetRefactorings()
         {
@@ -80,21 +80,27 @@ namespace Roslynator.Configuration
 
                     if (File.Exists(path))
                     {
-                        try
-                        {
-                            return Load(path);
-                        }
-                        catch (Exception ex) when (ex is IOException
-                            || ex is UnauthorizedAccessException
-                            || ex is XmlException)
-                        {
-                            Debug.Fail(ex.ToString());
-                        }
+                        return LoadAndCatchIfThrows(path, ex => Debug.Fail(ex.ToString()));
                     }
                 }
             }
 
-            return Empty;
+            return null;
+        }
+
+        internal static CodeAnalysisConfiguration LoadAndCatchIfThrows(string uri, Action<Exception> exceptionHandler = null)
+        {
+            try
+            {
+                return Load(uri);
+            }
+            catch (Exception ex) when (ex is IOException
+                || ex is UnauthorizedAccessException
+                || ex is XmlException)
+            {
+                exceptionHandler?.Invoke(ex);
+                return null;
+            }
         }
 
         public static CodeAnalysisConfiguration Load(string uri)
@@ -366,6 +372,16 @@ namespace Roslynator.Configuration
             }
         }
 
+        public CodeAnalysisConfiguration WithPrefixFieldIdentifierWithUnderscore(bool prefixFieldIdentifierWithUnderscore)
+        {
+            return new CodeAnalysisConfiguration(
+                includes: Includes,
+                codeFixes: CodeFixes,
+                refactorings: Refactorings,
+                ruleSets: RuleSets,
+                prefixFieldIdentifierWithUnderscore: prefixFieldIdentifierWithUnderscore);
+        }
+
         public CodeAnalysisConfiguration WithRefactorings(IEnumerable<KeyValuePair<string, bool>> refactorings)
         {
             return new CodeAnalysisConfiguration(
@@ -384,6 +400,57 @@ namespace Roslynator.Configuration
                 refactorings: Refactorings,
                 ruleSets: RuleSets,
                 prefixFieldIdentifierWithUnderscore: PrefixFieldIdentifierWithUnderscore);
+        }
+
+        internal void Save(string path)
+        {
+            var settings = new XElement("Settings",
+                new XElement("General",
+                    new XElement("PrefixFieldIdentifierWithUnderscore", PrefixFieldIdentifierWithUnderscore)));
+
+            if (Refactorings.Any(f => !f.Value))
+            {
+                settings.Add(
+                    new XElement("Refactorings",
+                        Refactorings
+                            .Where(f => !f.Value)
+                            .OrderBy(f => f.Key)
+                            .Select(f => new XElement("Refactoring", new XAttribute("Id", f.Key), new XAttribute("IsEnabled", f.Value)))
+                    ));
+            }
+
+            if (CodeFixes.Any(f => !f.Value))
+            {
+                settings.Add(
+                    new XElement("CodeFixes",
+                        CodeFixes
+                            .Where(f => !f.Value)
+                            .OrderBy(f => f.Key)
+                            .Select(f => new XElement("CodeFix", new XAttribute("Id", f.Key), new XAttribute("IsEnabled", f.Value)))
+                    ));
+            }
+
+            if (RuleSets.Any())
+            {
+                settings.Add(
+                    new XElement("RuleSets",
+                        RuleSets.Select(f => new XElement("RuleSet", new XAttribute("Path", f)))));
+            }
+
+            var doc = new XDocument(new XElement("Roslynator", settings));
+
+            var xmlWriterSettings = new XmlWriterSettings()
+            {
+                OmitXmlDeclaration = false,
+                NewLineChars = Environment.NewLine,
+                IndentChars = "  ",
+                Indent = true,
+            };
+
+            using (var fileStream = new FileStream(path, FileMode.Create))
+            using (var streamWriter = new StreamWriter(fileStream, Encoding.UTF8))
+            using (XmlWriter xmlWriter = XmlWriter.Create(streamWriter, xmlWriterSettings))
+                doc.WriteTo(xmlWriter);
         }
 
         private class Builder

@@ -31,5 +31,22 @@ namespace Roslynator
 
             PrefixFieldIdentifierWithUnderscore = CodeAnalysisConfiguration.Default.PrefixFieldIdentifierWithUnderscore;
         }
+
+        internal void Reset(CodeAnalysisConfiguration configuration1, CodeAnalysisConfiguration configuration2)
+        {
+            Reset();
+
+            SetValues(configuration1);
+            SetValues(configuration2);
+
+            void SetValues(CodeAnalysisConfiguration configuration)
+            {
+                if (configuration != null)
+                {
+                    PrefixFieldIdentifierWithUnderscore = configuration.PrefixFieldIdentifierWithUnderscore;
+                    Set(configuration.Refactorings);
+                }
+            }
+        }
     }
 }

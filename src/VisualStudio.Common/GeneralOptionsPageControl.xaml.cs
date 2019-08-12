@@ -9,7 +9,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
-using System.Xml;
 using Microsoft.Win32;
 using Roslynator.Configuration;
 
@@ -120,7 +119,7 @@ namespace Roslynator.VisualStudio
 
             try
             {
-                CodeAnalysisConfigurationHelpers.Save(dialog.FileName, configuration);
+                configuration.Save(dialog.FileName);
             }
             catch (Exception ex) when (ex is IOException
                     || ex is UnauthorizedAccessException)
@@ -141,19 +140,7 @@ namespace Roslynator.VisualStudio
             if (dialog.ShowDialog() != true)
                 return;
 
-            CodeAnalysisConfiguration configuration = null;
-
-            try
-            {
-                configuration = CodeAnalysisConfiguration.Load(dialog.FileName);
-            }
-            catch (Exception ex) when (ex is IOException
-                    || ex is UnauthorizedAccessException
-                    || ex is XmlException)
-            {
-                ShowErrorMessage(ex);
-                return;
-            }
+            CodeAnalysisConfiguration configuration = CodeAnalysisConfiguration.LoadAndCatchIfThrows(dialog.FileName, ShowErrorMessage);
 
             AbstractPackage package = AbstractPackage.Instance;
 

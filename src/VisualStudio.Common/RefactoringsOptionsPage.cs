@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace Roslynator.VisualStudio
@@ -35,9 +37,17 @@ namespace Roslynator.VisualStudio
 
             if (e.ApplyBehavior == ApplyKind.Apply)
             {
-                SettingsManager.Instance.Propagate(this);
-                SettingsManager.Instance.Propagate(RefactoringSettings.Current);
+                ApplyTo(Settings.Instance);
+                Settings.Instance.ApplyTo(RefactoringSettings.Current);
             }
+        }
+
+        internal void ApplyTo(Settings settings)
+        {
+            IEnumerable<KeyValuePair<string, bool>> refactorings = GetDisabledItems()
+                .Select(f => new KeyValuePair<string, bool>(f, false));
+
+            settings.VisualStudio = settings.VisualStudio.WithRefactorings(refactorings);
         }
     }
 }

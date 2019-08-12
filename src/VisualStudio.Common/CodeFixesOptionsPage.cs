@@ -60,8 +60,8 @@ namespace Roslynator.VisualStudio
 
             if (e.ApplyBehavior == ApplyKind.Apply)
             {
-                SettingsManager.Instance.Propagate(this);
-                SettingsManager.Instance.Propagate(CodeFixSettings.Current);
+                ApplyTo(Settings.Instance);
+                Settings.Instance.ApplyTo(CodeFixSettings.Current);
             }
         }
 
@@ -69,6 +69,14 @@ namespace Roslynator.VisualStudio
         {
             foreach (BaseModel model in Control.Items)
                 SetIsEnabled(model.Id, model.Enabled);
+        }
+
+        internal void ApplyTo(Settings settings)
+        {
+            IEnumerable<KeyValuePair<string, bool>> codeFixes = GetDisabledItems()
+                .Select(f => new KeyValuePair<string, bool>(f, false));
+
+            settings.VisualStudio = settings.VisualStudio.WithCodeFixes(codeFixes);
         }
 
         protected override void Fill(ICollection<BaseModel> items)

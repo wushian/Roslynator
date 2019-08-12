@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Xml;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Events;
@@ -87,12 +88,21 @@ namespace Roslynator.VisualStudio
                 generalOptionsPage.SaveSettingsToStorage();
             }
 
-            codeFixesOptionsPage.CheckNewItemsDisabledByDefault();
-            refactoringsOptionsPage.CheckNewItemsDisabledByDefault();
+            IEnumerable<string> disabledRefactorings = CodeAnalysisConfiguration.Default.GetRefactorings()
+                .Where(f => !f.Value)
+                .Select(f => f.Key);
 
-            SettingsManager.Instance.Propagate(generalOptionsPage);
-            SettingsManager.Instance.Propagate(refactoringsOptionsPage);
-            SettingsManager.Instance.Propagate(codeFixesOptionsPage);
+            refactoringsOptionsPage.CheckNewItemsDisabledByDefault(disabledRefactorings);
+
+            IEnumerable<string> disabledCodeFixes = CodeAnalysisConfiguration.Default.GetCodeFixes()
+                .Where(f => !f.Value)
+                .Select(f => f.Key);
+
+            codeFixesOptionsPage.CheckNewItemsDisabledByDefault(disabledCodeFixes);
+
+            generalOptionsPage.ApplyTo(Settings.Instance);
+            refactoringsOptionsPage.ApplyTo(Settings.Instance);
+            codeFixesOptionsPage.ApplyTo(Settings.Instance);
         }
 
         private void AfterOpenSolution(object sender = null, OpenSolutionEventArgs e = null)
@@ -126,24 +136,15 @@ namespace Roslynator.VisualStudio
 
         private void UpdateSettings()
         {
-            SettingsManager.Instance.ConfigFileSettings = LoadConfigFileSettings();
-            SettingsManager.Instance.Propagate(RefactoringSettings.Current);
-            SettingsManager.Instance.Propagate(CodeFixSettings.Current);
+            Settings.Instance.ConfigFile = LoadConfigFileSettings();
+            Settings.Instance.ApplyTo(RefactoringSettings.Current);
+            Settings.Instance.ApplyTo(CodeFixSettings.Current);
 
             CodeAnalysisConfiguration LoadConfigFileSettings()
             {
-                if (!File.Exists(ConfigFilePath))
-                    return null;
-
-                try
+                if (File.Exists(ConfigFilePath))
                 {
-                    return CodeAnalysisConfiguration.Load(ConfigFilePath);
-                }
-                catch (Exception ex) when (ex is IOException
-                    || ex is UnauthorizedAccessException
-                    || ex is XmlException)
-                {
-                    Debug.Fail(ex.ToString());
+                    return CodeAnalysisConfiguration.LoadAndCatchIfThrows(ConfigFilePath, ex => Debug.Fail(ex.ToString()));
                 }
 
                 return null;
