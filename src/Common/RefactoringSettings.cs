@@ -44,7 +44,11 @@ namespace Roslynator
                 if (configuration != null)
                 {
                     PrefixFieldIdentifierWithUnderscore = configuration.PrefixFieldIdentifierWithUnderscore;
-                    Set(configuration.Refactorings);
+
+                    foreach (KeyValuePair<string, bool> kvp in configuration.Refactorings)
+                    {
+                        Set(kvp.Key, kvp.Value);
+                    }
                 }
             }
         }

@@ -69,8 +69,8 @@ namespace Roslynator
                         ruleSet = RuleSet.LoadEffectiveRuleSetFromFile(path);
                     }
                     catch (Exception ex) when (ex is IOException
-                            || ex is UnauthorizedAccessException
-                            || ex.GetType().FullName == "Microsoft.CodeAnalysis.InvalidRuleSetException")
+                        || ex is UnauthorizedAccessException
+                        || ex.GetType().FullName == "Microsoft.CodeAnalysis.InvalidRuleSetException")
                     {
 #if DEBUG
                         sw.WriteLine($"{DateTime.Now.ToString()} {ex}");

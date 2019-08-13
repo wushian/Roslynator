@@ -86,7 +86,7 @@ namespace Roslynator.CodeFixes
             {
                 if (configuration != null)
                 {
-                    foreach (KeyValuePair<string, bool> kvp in configuration.GetCodeFixes())
+                    foreach (KeyValuePair<string, bool> kvp in configuration.CodeFixes)
                     {
                         if (CodeFixIdentifier.TryParse(kvp.Key, out CodeFixIdentifier codeFixIdentifier))
                         {

@@ -56,14 +56,22 @@ namespace Roslynator.Configuration
 
         public bool PrefixFieldIdentifierWithUnderscore { get; }
 
-        internal IEnumerable<KeyValuePair<string, bool>> GetRefactorings()
+        internal IEnumerable<string> GetDisabledRefactorings()
         {
-            return Refactorings.Select(f => f);
+            foreach (KeyValuePair<string, bool> kvp in Refactorings)
+            {
+                if (!kvp.Value)
+                    yield return kvp.Key;
+            }
         }
 
-        internal IEnumerable<KeyValuePair<string, bool>> GetCodeFixes()
+        internal IEnumerable<string> GetDisabledCodeFixes()
         {
-            return CodeFixes.Select(f => f);
+            foreach (KeyValuePair<string, bool> kvp in CodeFixes)
+            {
+                if (!kvp.Value)
+                    yield return kvp.Key;
+            }
         }
 
         private static CodeAnalysisConfiguration LoadDefaultConfiguration()

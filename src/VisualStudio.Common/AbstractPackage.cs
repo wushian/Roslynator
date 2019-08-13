@@ -88,17 +88,8 @@ namespace Roslynator.VisualStudio
                 generalOptionsPage.SaveSettingsToStorage();
             }
 
-            IEnumerable<string> disabledRefactorings = CodeAnalysisConfiguration.Default.GetRefactorings()
-                .Where(f => !f.Value)
-                .Select(f => f.Key);
-
-            refactoringsOptionsPage.CheckNewItemsDisabledByDefault(disabledRefactorings);
-
-            IEnumerable<string> disabledCodeFixes = CodeAnalysisConfiguration.Default.GetCodeFixes()
-                .Where(f => !f.Value)
-                .Select(f => f.Key);
-
-            codeFixesOptionsPage.CheckNewItemsDisabledByDefault(disabledCodeFixes);
+            refactoringsOptionsPage.CheckNewItemsDisabledByDefault(CodeAnalysisConfiguration.Default.GetDisabledRefactorings());
+            codeFixesOptionsPage.CheckNewItemsDisabledByDefault(CodeAnalysisConfiguration.Default.GetDisabledCodeFixes());
 
             generalOptionsPage.ApplyTo(Settings.Instance);
             refactoringsOptionsPage.ApplyTo(Settings.Instance);

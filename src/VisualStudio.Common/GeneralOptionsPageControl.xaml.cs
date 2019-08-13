@@ -149,13 +149,11 @@ namespace Roslynator.VisualStudio
 
             PrefixFieldIdentifierWithUnderscore = configuration.PrefixFieldIdentifierWithUnderscore;
 
-            Update(package.RefactoringsOptionsPage, configuration.GetRefactorings());
-            Update(package.CodeFixesOptionsPage, configuration.GetCodeFixes());
+            Update(package.RefactoringsOptionsPage, configuration.GetDisabledRefactorings().ToHashSet());
+            Update(package.CodeFixesOptionsPage, configuration.GetDisabledCodeFixes().ToHashSet());
 
-            void Update(BaseOptionsPage optionsPage, IEnumerable<KeyValuePair<string, bool>> dic)
+            void Update(BaseOptionsPage optionsPage, HashSet<string> disabledIds)
             {
-                var disabledIds = new HashSet<string>(dic.Where(f => !f.Value).Select(f => f.Key));
-
                 foreach (BaseModel model in optionsPage.Control.Items)
                 {
                     model.Enabled = !disabledIds.Contains(model.Id);
