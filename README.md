@@ -14,7 +14,7 @@ A collection of 500+ [analyzers](src/Analyzers/README.md), [refactorings](src/Re
 
 ### New Features
 
-* [Roslynator for Visual Studio Code](#roslynator-for-visual-studio-code)
+* [Roslynator for Visual Studio Code](#extensions-for-visual-studio-code)
 * [Fix all diagnostics in a solution](docs/HowToFixAllDiagnostics.md)
 * [Generate API documentation](docs/HowToGenerateDocumentation.md)
 
