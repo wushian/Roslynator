@@ -62,12 +62,12 @@ Create file at **%LOCALAPPDATA%\JosefPihrt\Roslynator\VisualStudioCode\roslynato
     </General>
     <Refactorings>
       <!-- <Refactoring Id="RRxxxx" IsEnabled="false" /> -->
-  </Refactorings>
+    </Refactorings>
     <CodeFixes>
       <!-- <CodeFix Id="CSxxxx.RCFxxxx" IsEnabled="false" /> -->
       <!-- <CodeFix Id="CSxxxx" IsEnabled="false" /> -->
       <!-- <CodeFix Id="RCFxxxx" IsEnabled="false" /> -->
-  </CodeFixes>
+    </CodeFixes>
   </Settings>
 </Roslynator>
 ```
