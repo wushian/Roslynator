@@ -14,6 +14,20 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 {
     internal static class CodeFixHelpers
     {
+        public static Task<Document> AddNewLineBeforeAsync(
+            Document document,
+            SyntaxToken token,
+            CancellationToken cancellationToken = default)
+        {
+            SyntaxTrivia indentation = token.Parent.GetIndentation(cancellationToken);
+
+            return AddNewLineBeforeAsync(
+                document,
+                token,
+                indentation.ToString(),
+                cancellationToken);
+        }
+
         public static Task<Document> AddNewLineBeforeAndIncreaseIndentationAsync(
             Document document,
             SyntaxToken token,
@@ -32,13 +46,24 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             SyntaxTrivia indentation,
             CancellationToken cancellationToken = default)
         {
-            SyntaxTrivia endOfLine = SyntaxTriviaAnalysis.GetEndOfLine(token);
-
             SyntaxTrivia singleIndentation = token.SyntaxTree.GetFirstIndentation(cancellationToken);
 
+            return AddNewLineBeforeAsync(
+                document,
+                token,
+                indentation.ToString() + singleIndentation.ToString(),
+                cancellationToken);
+        }
+
+        public static Task<Document> AddNewLineBeforeAsync(
+            Document document,
+            SyntaxToken token,
+            string indentation,
+            CancellationToken cancellationToken = default)
+        {
             var textChange = new TextChange(
                 TextSpan.FromBounds(token.GetPreviousToken().Span.End, token.SpanStart),
-                endOfLine.ToString() + indentation.ToString() + singleIndentation.ToString());
+                SyntaxTriviaAnalysis.GetEndOfLine(token).ToString() + indentation);
 
             return document.WithTextChangeAsync(textChange, cancellationToken);
         }

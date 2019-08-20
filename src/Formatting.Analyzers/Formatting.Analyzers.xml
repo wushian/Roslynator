@@ -425,7 +425,34 @@ object P2 { get; }]]></After>
       </Sample>
     </Samples>
     </Samples>
-  </Analyzer> 
+  </Analyzer>
+  <Analyzer Identifier="AddNewLineAfterAttributeList">
+    <Id>RCS0019</Id>
+    <Title>Add newline after attribute list.</Title>
+    <MessageFormat>Add newline after attribute list.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[enum Foo
+{
+    A,
+    [Obsolete] B, // [|Id|]
+    C,
+}]]></Before>
+        <After><![CDATA[enum Foo
+{
+    A,
+    [Obsolete]
+    B,
+    C,
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
   <Analyzer Identifier="AddNewLineToEmptyBlock"> <!--FormatEmptyBlock-->
     <Id>RCS0023</Id>
     <Title>Add newline to empty block.</Title>

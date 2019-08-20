@@ -29,7 +29,8 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                     DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression,
                     DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression,
                     DiagnosticIdentifiers.PlaceExpressionBodyArrowAtEndOfLine,
-                    DiagnosticIdentifiers.PlaceExpressionBodyArrowBeforeExpression);
+                    DiagnosticIdentifiers.PlaceExpressionBodyArrowBeforeExpression,
+                    DiagnosticIdentifiers.AddNewLineAfterAttributeList);
             }
         }
 
@@ -136,6 +137,16 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
                                 return document.WithTextChangeAsync(textChange, ct);
                             },
+                            GetEquivalenceKey(diagnostic));
+
+                        context.RegisterCodeFix(codeAction, diagnostic);
+                        break;
+                    }
+                case DiagnosticIdentifiers.AddNewLineAfterAttributeList:
+                    {
+                        CodeAction codeAction = CodeAction.Create(
+                            "Add newline",
+                            ct => CodeFixHelpers.AddNewLineBeforeAsync(document, token, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);

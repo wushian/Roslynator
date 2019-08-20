@@ -225,7 +225,19 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS1023</summary>
+        /// <summary>RCS0019</summary>
+        public static readonly DiagnosticDescriptor AddNewLineAfterAttributeList = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineAfterAttributeList, 
+            title:              "Add newline after attribute list.", 
+            messageFormat:      "Add newline after attribute list.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineAfterAttributeList}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS0023</summary>
         public static readonly DiagnosticDescriptor AddNewLineToEmptyBlock = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.AddNewLineToEmptyBlock, 
             title:              "Add newline to empty block.", 
@@ -237,7 +249,7 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineToEmptyBlock}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS1025</summary>
+        /// <summary>RCS0025</summary>
         public static readonly DiagnosticDescriptor AddNewLineBeforeEnumMember = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.AddNewLineBeforeEnumMember, 
             title:              "Add newline before enum member.", 
@@ -249,7 +261,7 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeEnumMember}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS1026</summary>
+        /// <summary>RCS0026</summary>
         public static readonly DiagnosticDescriptor AddNewLineBeforeStatement = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.AddNewLineBeforeStatement, 
             title:              "Add newline before statement.", 
@@ -261,7 +273,7 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeStatement}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS1027</summary>
+        /// <summary>RCS0027</summary>
         public static readonly DiagnosticDescriptor AddNewLineBeforeEmbeddedStatement = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement, 
             title:              "Add newline before embedded statement.", 
@@ -273,7 +285,7 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeEmbeddedStatement}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS1028</summary>
+        /// <summary>RCS0028</summary>
         public static readonly DiagnosticDescriptor AddNewLineAfterSwitchLabel = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.AddNewLineAfterSwitchLabel, 
             title:              "Add newline after switch label.", 
@@ -285,7 +297,7 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineAfterSwitchLabel}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS1029</summary>
+        /// <summary>RCS0029</summary>
         public static readonly DiagnosticDescriptor PlaceBinaryOperatorBeforeOperand = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.PlaceBinaryOperatorBeforeOperand, 
             title:              "Place operator before operand.", 
@@ -297,7 +309,7 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.PlaceBinaryOperatorBeforeOperand}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS1030</summary>
+        /// <summary>RCS0030</summary>
         public static readonly DiagnosticDescriptor AddEmptyLineAfterEmbeddedStatement = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.AddEmptyLineAfterEmbeddedStatement, 
             title:              "Add empty line after embedded statement.", 
@@ -309,7 +321,7 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineAfterEmbeddedStatement}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS1057</summary>
+        /// <summary>RCS0057</summary>
         public static readonly DiagnosticDescriptor AddEmptyLineBetweenDeclarations = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.AddEmptyLineBetweenDeclarations, 
             title:              "Add empty line between declarations.", 
@@ -321,7 +333,7 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBetweenDeclarations}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS1076</summary>
+        /// <summary>RCS0076</summary>
         public static readonly DiagnosticDescriptor AddNewLineToEmptyTypeDeclaration = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.AddNewLineToEmptyTypeDeclaration, 
             title:              "Add newline to empty type declaration.", 
@@ -333,7 +345,7 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineToEmptyTypeDeclaration}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS1086</summary>
+        /// <summary>RCS0086</summary>
         public static readonly DiagnosticDescriptor UseLinefeedAsNewLine = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.UseLinefeedAsNewLine, 
             title:              "Use linefeed as newline.", 
@@ -345,7 +357,7 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseLinefeedAsNewLine}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS1087</summary>
+        /// <summary>RCS0087</summary>
         public static readonly DiagnosticDescriptor UseCarriageReturnAndLinefeedAsNewLine = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.UseCarriageReturnAndLinefeedAsNewLine, 
             title:              "Use carriage return + linefeed as newline.", 
@@ -357,7 +369,7 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseCarriageReturnAndLinefeedAsNewLine}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS1088</summary>
+        /// <summary>RCS0088</summary>
         public static readonly DiagnosticDescriptor UseSpacesInsteadOfTab = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.UseSpacesInsteadOfTab, 
             title:              "Use spaces instead of tab.", 
@@ -369,7 +381,7 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.UseSpacesInsteadOfTab}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS1092</summary>
+        /// <summary>RCS0092</summary>
         public static readonly DiagnosticDescriptor AddEmptyLineBeforeClosingBraceOfDoStatement = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.AddEmptyLineBeforeClosingBraceOfDoStatement, 
             title:              "Add empty line before closing brace of 'do' statement.", 
@@ -381,7 +393,7 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBeforeClosingBraceOfDoStatement}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS1153</summary>
+        /// <summary>RCS0153</summary>
         public static readonly DiagnosticDescriptor AddEmptyLineAfterClosingBraceOfBlock = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock, 
             title:              "Add empty line after closing brace of block.", 
@@ -393,7 +405,7 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS1184</summary>
+        /// <summary>RCS0184</summary>
         public static readonly DiagnosticDescriptor PlaceConditionalOperatorBeforeExpression = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression, 
             title:              "Place conditional operator before expression.", 
@@ -405,7 +417,7 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS1185</summary>
+        /// <summary>RCS0185</summary>
         public static readonly DiagnosticDescriptor AddNewLinesToBlock = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.AddNewLinesToBlock, 
             title:              "Add newlines to block.", 
