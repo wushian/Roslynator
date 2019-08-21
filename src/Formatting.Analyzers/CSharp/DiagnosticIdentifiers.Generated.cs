@@ -13,10 +13,10 @@ namespace Roslynator.Formatting.CSharp
         public const string RemoveNewLinesFromAccessor = "RCS0003";
         public const string PlaceBinaryOperatorAfterOperand = "RCS0004";
         public const string PlaceConditionalOperatorAfterExpression = "RCS0005";
-        public const string AddEmptyLineAfterRegionAndBeforeEndRegion = "RCS0006";
-        public const string RemoveNewLineBetweenIfKeywordAndElseKeyword = "RCS0007";
-        public const string RemoveNewLineBeforeWhileKeywordOfDoStatement = "RCS0008";
-        public const string AddEmptyLineBeforeAndAfterUsingDirectiveList = "RCS0009";
+        public const string AddEmptyLineAfterRegion = "RCS0006";
+        public const string AddEmptyLineBeforeEndRegion = "RCS0007";
+        public const string RemoveNewLineBetweenIfKeywordAndElseKeyword = "RCS0008";
+        public const string RemoveNewLineBeforeWhileKeywordOfDoStatement = "RCS0009";
         public const string AddEmptyLineBetweenSwitchSections = "RCS0010";
         public const string PlaceExpressionBodyArrowAtEndOfLine = "RCS0011";
         public const string PlaceExpressionBodyArrowBeforeExpression = "RCS0012";
@@ -27,6 +27,8 @@ namespace Roslynator.Formatting.CSharp
         public const string AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind = "RCS0017";
         public const string RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind = "RCS0018";
         public const string AddNewLineAfterAttributeList = "RCS0019";
+        public const string AddEmptyLineBeforeUsingDirectiveList = "RCS0020";
+        public const string AddEmptyLineAfterUsingDirectiveList = "RCS0021";
         public const string AddNewLineToEmptyBlock = "RCS0023";
         public const string AddNewLineBeforeEnumMember = "RCS0025";
         public const string AddNewLineBeforeStatement = "RCS0026";
@@ -43,5 +45,7 @@ namespace Roslynator.Formatting.CSharp
         public const string AddEmptyLineAfterClosingBraceOfBlock = "RCS0153";
         public const string PlaceConditionalOperatorBeforeExpression = "RCS0184";
         public const string AddNewLinesToBlock = "RCS0185";
+
+        public static string AddEmptyLineAfterRegionAndBeforeEndRegion { get; internal set; }
     }
 }

@@ -9,21 +9,22 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class AddEmptyLineAfterRegionAndBeforeEndRegionTests : AbstractCSharpFixVerifier
+    public class AddEmptyLineBeforeEndRegionTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddEmptyLineAfterRegionAndBeforeEndRegion;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddEmptyLineBeforeEndRegion;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new AddEmptyLineAfterRegionAndBeforeEndRegionAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new AddEmptyLineBeforeEndRegionAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new DirectiveTriviaCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterRegionAndBeforeEndRegion)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBeforeEndRegion)]
         public async Task Test()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
 {
-    #region Methods[||]
+    #region Methods
+
     void M()
     {
     }
@@ -43,13 +44,14 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterRegionAndBeforeEndRegion)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBeforeEndRegion)]
         public async Task Test_NoIndentation()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
 {
-#region Methods[||]
+#region Methods
+
 void M()
 {
 }
@@ -69,13 +71,14 @@ void M()
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterRegionAndBeforeEndRegion)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBeforeEndRegion)]
         public async Task Test_Comment()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
 {
-    #region Methods[||]
+    #region Methods
+
     // x
     void M()
     {
@@ -99,13 +102,14 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterRegionAndBeforeEndRegion)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBeforeEndRegion)]
         public async Task Test_DocumentationComment()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
 {
-    #region Methods[||]
+    #region Methods
+
     /// <summary>
     /// 
     /// </summary>
@@ -131,14 +135,13 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterRegionAndBeforeEndRegion)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBeforeEndRegion)]
         public async Task TestNoDiagnostic()
         {
             await VerifyNoDiagnosticAsync(@"
 class C
 {
     #region Methods
-
     void M()
     {
     }
@@ -148,7 +151,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterRegionAndBeforeEndRegion)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBeforeEndRegion)]
         public async Task TestNoDiagnostic_EmptyRegion()
         {
             await VerifyNoDiagnosticAsync(@"
@@ -160,14 +163,13 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterRegionAndBeforeEndRegion)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBeforeEndRegion)]
         public async Task TestNoDiagnostic_Comment()
         {
             await VerifyNoDiagnosticAsync(@"
 class C
 {
     #region Methods
-
     // x
     void M()
     {
@@ -179,14 +181,13 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterRegionAndBeforeEndRegion)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBeforeEndRegion)]
         public async Task TestNoDiagnostic_DocumentationComment()
         {
             await VerifyNoDiagnosticAsync(@"
 class C
 {
     #region Methods
-
     /// <summary>
     /// 
     /// </summary>

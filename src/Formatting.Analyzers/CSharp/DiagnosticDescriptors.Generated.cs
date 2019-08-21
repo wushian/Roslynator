@@ -70,18 +70,30 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0006</summary>
-        public static readonly DiagnosticDescriptor AddEmptyLineAfterRegionAndBeforeEndRegion = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddEmptyLineAfterRegionAndBeforeEndRegion, 
-            title:              "Add empty line after #region and before #endregion.", 
-            messageFormat:      "Add empty line {0}.", 
+        public static readonly DiagnosticDescriptor AddEmptyLineAfterRegion = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineAfterRegion, 
+            title:              "Add empty line after #region.", 
+            messageFormat:      "Add empty after #region.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineAfterRegionAndBeforeEndRegion}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineAfterRegion}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0007</summary>
+        public static readonly DiagnosticDescriptor AddEmptyLineBeforeEndRegion = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineBeforeEndRegion, 
+            title:              "Add empty line before #endregion.", 
+            messageFormat:      "Add empty line before #endregion.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBeforeEndRegion}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS0008</summary>
         public static readonly DiagnosticDescriptor RemoveNewLineBetweenIfKeywordAndElseKeyword = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.RemoveNewLineBetweenIfKeywordAndElseKeyword, 
             title:              "Remove newline between 'if' keyword and 'else' keyword.", 
@@ -93,7 +105,7 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveNewLineBetweenIfKeywordAndElseKeyword}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS0008</summary>
+        /// <summary>RCS0009</summary>
         public static readonly DiagnosticDescriptor RemoveNewLineBeforeWhileKeywordOfDoStatement = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.RemoveNewLineBeforeWhileKeywordOfDoStatement, 
             title:              "Remove newline before 'while' keyword of do statement.", 
@@ -103,18 +115,6 @@ namespace Roslynator.Formatting.CSharp
             isEnabledByDefault: false, 
             description:        null, 
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveNewLineBeforeWhileKeywordOfDoStatement}", 
-            customTags:         Array.Empty<string>());
-
-        /// <summary>RCS0009</summary>
-        public static readonly DiagnosticDescriptor AddEmptyLineBeforeAndAfterUsingDirectiveList = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddEmptyLineBeforeAndAfterUsingDirectiveList, 
-            title:              "Add empty line before and after using directive list.", 
-            messageFormat:      ">Add empty line before and after using directive list.", 
-            category:           DiagnosticCategories.Formatting, 
-            defaultSeverity:    DiagnosticSeverity.Info, 
-            isEnabledByDefault: false, 
-            description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBeforeAndAfterUsingDirectiveList}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0010</summary>
@@ -235,6 +235,30 @@ namespace Roslynator.Formatting.CSharp
             isEnabledByDefault: false, 
             description:        null, 
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineAfterAttributeList}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS0020</summary>
+        public static readonly DiagnosticDescriptor AddEmptyLineBeforeUsingDirectiveList = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineBeforeUsingDirectiveList, 
+            title:              "Add empty line before using directive list.", 
+            messageFormat:      ">Add empty line before using directive list.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBeforeUsingDirectiveList}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS0021</summary>
+        public static readonly DiagnosticDescriptor AddEmptyLineAfterUsingDirectiveList = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineAfterUsingDirectiveList, 
+            title:              "Add empty line after using directive list.", 
+            messageFormat:      ">Add empty line after using directive list.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineAfterUsingDirectiveList}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0023</summary>

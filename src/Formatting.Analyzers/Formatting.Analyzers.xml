@@ -130,10 +130,10 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddEmptyLineAfterRegionAndBeforeEndRegion">
+  <Analyzer Identifier="AddEmptyLineAfterRegion">
     <Id>RCS0006</Id>
-    <Title>Add empty line after #region and before #endregion.</Title>
-    <MessageFormat>Add empty line {0}.</MessageFormat>
+    <Title>Add empty line after #region.</Title>
+    <MessageFormat>Add empty after #region.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -143,10 +143,11 @@
       <Sample>
         <Before><![CDATA[class C
 {
-    #region Methods
+    #region Methods // [|Id|]
     void M()
     {
     }
+    
     #endregion
 }]]></Before>
         <After><![CDATA[class C
@@ -162,8 +163,45 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="RemoveNewLineBetweenIfKeywordAndElseKeyword">
+  <Analyzer Identifier="AddEmptyLineBeforeEndRegion">
     <Id>RCS0007</Id>
+    <Title>Add empty line before #endregion.</Title>
+    <MessageFormat>Add empty line before #endregion.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before>
+          <![CDATA[class C
+{
+    #region Methods
+    
+    void M()
+    {
+    }
+    #endregion // [|Id|]
+}]]>
+        </Before>
+        <After>
+          <![CDATA[class C
+{
+    #region Methods
+
+    void M()
+    {
+    }
+    
+    #endregion
+}]]>
+        </After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="RemoveNewLineBetweenIfKeywordAndElseKeyword">
+    <Id>RCS0008</Id>
     <Title>Remove newline between 'if' keyword and 'else' keyword.</Title>
     <MessageFormat>Remove newline between 'if' keyword and 'else' keyword.</MessageFormat>
     <Category>Formatting</Category>
@@ -194,7 +232,7 @@ else if (y)
     </Samples>
   </Analyzer>
   <Analyzer Identifier="RemoveNewLineBeforeWhileKeywordOfDoStatement">
-    <Id>RCS0008</Id>
+    <Id>RCS0009</Id>
     <Title>Remove newline before 'while' keyword of do statement.</Title>
     <MessageFormat>Remove newline before 'while' keyword of do statement.</MessageFormat>
     <Category>Formatting</Category>
@@ -213,34 +251,6 @@ while (x);]]></Before>
 {
     Foo();
 } while (x);]]></After>
-      </Sample>
-    </Samples>
-  </Analyzer>
-  <Analyzer Identifier="AddEmptyLineBeforeAndAfterUsingDirectiveList">
-    <Id>RCS0009</Id>
-    <Title>Add empty line before and after using directive list.</Title>
-    <MessageFormat>>Add empty line before and after using directive list.</MessageFormat>
-    <Category>Formatting</Category>
-    <DefaultSeverity>Info</DefaultSeverity>
-    <IsEnabledByDefault>false</IsEnabledByDefault>
-    <SupportsFadeOut>false</SupportsFadeOut>
-    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
-    <Samples>
-      <Sample>
-        <Before><![CDATA[// Copyright ...
-using System; // [|Id|]
-using System.Linq; // [|Id|]
-namespace N
-{
-}]]></Before>
-        <After><![CDATA[// Copyright ...
-
-using System;
-using System.Linq;
-
-namespace N
-{
-}]]></After>
       </Sample>
     </Samples>
   </Analyzer>
@@ -307,7 +317,7 @@ namespace N
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
     <Samples>
       <Sample>
-        <Before><![CDATA[class Foo<T1, T2> where T1 : struct where T2 : struct
+        <Before><![CDATA[class Foo<T1, T2> where T1 : struct where T2 : struct // [|Id|]
 {
 }]]></Before>
         <After><![CDATA[class Foo<T1, T2>
@@ -449,6 +459,64 @@ object P2 { get; }]]></After>
     [Obsolete]
     B,
     C,
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="AddEmptyLineBeforeUsingDirectiveList">
+    <Id>RCS0020</Id>
+    <Title>Add empty line before using directive list.</Title>
+    <MessageFormat>>Add empty line before using directive list.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[// Copyright ...
+using System; // [|Id|]
+using System.Linq;
+
+namespace N
+{
+}]]></Before>
+        <After><![CDATA[// Copyright ...
+
+using System;
+using System.Linq;
+
+namespace N
+{
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="AddEmptyLineAfterUsingDirectiveList">
+    <Id>RCS0021</Id>
+    <Title>Add empty line after using directive list.</Title>
+    <MessageFormat>>Add empty line after using directive list.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[// Copyright ...
+
+using System;
+using System.Linq; // [|Id|]
+namespace N
+{
+}]]></Before>
+        <After><![CDATA[// Copyright ...
+
+using System;
+using System.Linq;
+
+namespace N
+{
 }]]></After>
       </Sample>
     </Samples>

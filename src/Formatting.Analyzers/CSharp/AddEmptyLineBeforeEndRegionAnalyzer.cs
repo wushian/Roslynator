@@ -10,61 +10,18 @@ using Roslynator.CSharp;
 namespace Roslynator.Formatting.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    internal class AddEmptyLineAfterRegionAndBeforeEndRegionAnalyzer : BaseDiagnosticAnalyzer
+    internal class AddEmptyLineBeforeEndRegionAnalyzer : BaseDiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(DiagnosticDescriptors.AddEmptyLineAfterRegionAndBeforeEndRegion); }
+            get { return ImmutableArray.Create(DiagnosticDescriptors.AddEmptyLineBeforeEndRegion); }
         }
 
         public override void Initialize(AnalysisContext context)
         {
             base.Initialize(context);
 
-            context.RegisterSyntaxNodeAction(AnalyzeRegionDirectiveTrivia, SyntaxKind.RegionDirectiveTrivia);
             context.RegisterSyntaxNodeAction(AnalyzeEndRegionDirectiveTrivia, SyntaxKind.EndRegionDirectiveTrivia);
-        }
-
-        private static void AnalyzeRegionDirectiveTrivia(SyntaxNodeAnalysisContext context)
-        {
-            var regionDirective = (RegionDirectiveTriviaSyntax)context.Node;
-
-            if (IsFollowedWithEmptyLineOrEndRegionDirective())
-                return;
-
-            context.ReportDiagnostic(
-                DiagnosticDescriptors.AddEmptyLineAfterRegionAndBeforeEndRegion,
-                Location.Create(regionDirective.SyntaxTree, regionDirective.EndOfDirectiveToken.Span),
-                "after #region");
-
-            bool IsFollowedWithEmptyLineOrEndRegionDirective()
-            {
-                SyntaxTrivia parentTrivia = regionDirective.ParentTrivia;
-
-                SyntaxTriviaList.Enumerator en = parentTrivia.Token.LeadingTrivia.GetEnumerator();
-
-                while (en.MoveNext())
-                {
-                    if (en.Current == parentTrivia)
-                    {
-                        if (!en.MoveNext())
-                            return false;
-
-                        if (en.Current.IsWhitespaceTrivia()
-                            && !en.MoveNext())
-                        {
-                            return false;
-                        }
-
-                        if (en.Current.IsKind(SyntaxKind.EndRegionDirectiveTrivia))
-                            return true;
-
-                        return en.Current.IsEndOfLineTrivia();
-                    }
-                }
-
-                return false;
-            }
         }
 
         private static void AnalyzeEndRegionDirectiveTrivia(SyntaxNodeAnalysisContext context)
@@ -75,9 +32,8 @@ namespace Roslynator.Formatting.CSharp
                 return;
 
             context.ReportDiagnostic(
-                DiagnosticDescriptors.AddEmptyLineAfterRegionAndBeforeEndRegion,
-                Location.Create(endRegionDirective.SyntaxTree, endRegionDirective.Span.WithLength(0)),
-                "before #endregion");
+                DiagnosticDescriptors.AddEmptyLineBeforeEndRegion,
+                Location.Create(endRegionDirective.SyntaxTree, endRegionDirective.Span.WithLength(0)));
 
             bool IsPrecededWithEmptyLineOrRegionDirective()
             {

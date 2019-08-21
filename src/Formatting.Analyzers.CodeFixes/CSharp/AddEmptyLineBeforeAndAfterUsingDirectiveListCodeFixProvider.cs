@@ -18,9 +18,16 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
     [Shared]
     public class AddEmptyLineBeforeAndAfterUsingDirectiveListCodeFixProvider : BaseCodeFixProvider
     {
+        private const string Title = "Add empty line";
+
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(DiagnosticIdentifiers.AddEmptyLineBeforeAndAfterUsingDirectiveList); }
+            get
+            {
+                return ImmutableArray.Create(
+                    DiagnosticIdentifiers.AddEmptyLineBeforeUsingDirectiveList,
+                    DiagnosticIdentifiers.AddEmptyLineAfterUsingDirectiveList);
+            }
         }
 
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
@@ -47,7 +54,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                         if (context.Span.Start == usingDirective.SpanStart)
                         {
                             CodeAction codeAction = CodeAction.Create(
-                                "Add empty line",
+                                Title,
                                 ct => AddEmptyLineBeforeUsingDirectiveAsync(document, usingDirective, ct),
                                 GetEquivalenceKey(diagnostic));
 
@@ -56,7 +63,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                         else
                         {
                             CodeAction codeAction = CodeAction.Create(
-                                "Add empty line",
+                                Title,
                                 ct => AddEmptyLineAfterUsingDirectiveAsync(document, usingDirective, ct),
                                 GetEquivalenceKey(diagnostic));
 
@@ -68,7 +75,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 case RegionDirectiveTriviaSyntax regionDirective:
                     {
                         CodeAction codeAction = CodeAction.Create(
-                            "Add empty line",
+                            Title,
                             ct => CodeFixHelpers.AddEmptyLineBeforeDirectiveAsync(document, regionDirective, ct),
                             GetEquivalenceKey(diagnostic));
 
@@ -78,7 +85,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 case EndRegionDirectiveTriviaSyntax endRegionDirective:
                     {
                         CodeAction codeAction = CodeAction.Create(
-                            "Add empty line",
+                            Title,
                             ct => CodeFixHelpers.AddEmptyLineAfterDirectiveAsync(document, endRegionDirective, ct),
                             GetEquivalenceKey(diagnostic));
 

@@ -20,7 +20,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(DiagnosticIdentifiers.AddEmptyLineAfterRegionAndBeforeEndRegion); }
+            get { return ImmutableArray.Create(DiagnosticIdentifiers.AddEmptyLineAfterRegion, DiagnosticIdentifiers.AddEmptyLineBeforeEndRegion); }
         }
 
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
@@ -35,7 +35,8 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             switch (diagnostic.Id)
             {
-                case DiagnosticIdentifiers.AddEmptyLineAfterRegionAndBeforeEndRegion:
+                case DiagnosticIdentifiers.AddEmptyLineAfterRegion:
+                case DiagnosticIdentifiers.AddEmptyLineBeforeEndRegion:
                     {
                         CodeAction codeAction = CodeAction.Create(
                             "Add empty line",
