@@ -35,7 +35,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             Diagnostic diagnostic = context.Diagnostics[0];
 
             CodeAction codeAction = CodeAction.Create(
-                "Add newline",
+                CodeFixTitles.AddNewLine,
                 ct => AddNewLineBeforeEnumMemberAsync(document, enumDeclaration, ct),
                 GetEquivalenceKey(diagnostic));
 

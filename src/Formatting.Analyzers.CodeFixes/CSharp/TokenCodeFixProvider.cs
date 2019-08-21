@@ -49,7 +49,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 case DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock:
                     {
                         CodeAction codeAction = CodeAction.Create(
-                            "Add empty line",
+                            CodeFixTitles.AddEmptyLine,
                             ct => AddEmptyLineAsync(document, token, ct),
                             GetEquivalenceKey(diagnostic));
 
@@ -145,7 +145,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 case DiagnosticIdentifiers.AddNewLineAfterAttributeList:
                     {
                         CodeAction codeAction = CodeAction.Create(
-                            "Add newline",
+                            CodeFixTitles.AddNewLine,
                             ct => CodeFixHelpers.AddNewLineBeforeAsync(document, token, ct),
                             GetEquivalenceKey(diagnostic));
 

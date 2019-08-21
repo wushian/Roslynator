@@ -9,7 +9,7 @@ namespace Roslynator.Formatting.CSharp
     public static partial class DiagnosticIdentifiers
     {
         public const string RemoveNewLinesFromAccessorListOfAutoProperty = "RCS0001";
-        public const string AddNewLinesToAccessorListOfFullProperty = "RCS0002";
+        public const string AddNewLineBeforeAccessorOfFullProperty = "RCS0002";
         public const string RemoveNewLinesFromAccessor = "RCS0003";
         public const string PlaceBinaryOperatorAfterOperand = "RCS0004";
         public const string PlaceConditionalOperatorAfterExpression = "RCS0005";
@@ -29,7 +29,7 @@ namespace Roslynator.Formatting.CSharp
         public const string AddNewLineAfterAttributeList = "RCS0019";
         public const string AddEmptyLineBeforeUsingDirectiveList = "RCS0020";
         public const string AddEmptyLineAfterUsingDirectiveList = "RCS0021";
-        public const string AddNewLineToEmptyBlock = "RCS0023";
+        public const string AddNewLineBeforeClosingBraceOfBlock = "RCS0023";
         public const string AddNewLineBeforeEnumMember = "RCS0025";
         public const string AddNewLineBeforeStatement = "RCS0026";
         public const string AddNewLineBeforeEmbeddedStatement = "RCS0027";
@@ -37,7 +37,7 @@ namespace Roslynator.Formatting.CSharp
         public const string PlaceBinaryOperatorBeforeOperand = "RCS0029";
         public const string AddEmptyLineAfterEmbeddedStatement = "RCS0030";
         public const string AddEmptyLineBetweenDeclarations = "RCS0057";
-        public const string AddNewLineToEmptyTypeDeclaration = "RCS0076";
+        public const string AddNewLineBeforeClosingBraceOfTypeDeclaration = "RCS0076";
         public const string UseLinefeedAsNewLine = "RCS0086";
         public const string UseCarriageReturnAndLinefeedAsNewLine = "RCS0087";
         public const string UseSpacesInsteadOfTab = "RCS0088";
@@ -45,7 +45,5 @@ namespace Roslynator.Formatting.CSharp
         public const string AddEmptyLineAfterClosingBraceOfBlock = "RCS0153";
         public const string PlaceConditionalOperatorBeforeExpression = "RCS0184";
         public const string AddNewLinesToBlock = "RCS0185";
-
-        public static string AddEmptyLineAfterRegionAndBeforeEndRegion { get; internal set; }
     }
 }

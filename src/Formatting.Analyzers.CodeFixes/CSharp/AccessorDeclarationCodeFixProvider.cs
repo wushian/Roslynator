@@ -19,7 +19,12 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(DiagnosticIdentifiers.RemoveNewLinesFromAccessor); }
+            get
+            {
+                return ImmutableArray.Create(
+                    DiagnosticIdentifiers.RemoveNewLinesFromAccessor,
+                    DiagnosticIdentifiers.AddNewLineBeforeAccessorOfFullProperty);
+            }
         }
 
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
@@ -32,12 +37,29 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             Document document = context.Document;
             Diagnostic diagnostic = context.Diagnostics[0];
 
-            CodeAction codeAction = CodeAction.Create(
-                "Remove newlines from accessor",
-                ct => RemoveNewLinesFromAccessorAsync(document, accessorDeclaration, ct),
-                GetEquivalenceKey(diagnostic));
+            switch (diagnostic.Id)
+            {
+                case DiagnosticIdentifiers.RemoveNewLinesFromAccessor:
+                    {
+                        CodeAction codeAction = CodeAction.Create(
+                            "Remove newlines from accessor",
+                            ct => RemoveNewLinesFromAccessorAsync(document, accessorDeclaration, ct),
+                            GetEquivalenceKey(diagnostic));
 
-            context.RegisterCodeFix(codeAction, diagnostic);
+                        context.RegisterCodeFix(codeAction, diagnostic);
+                        break;
+                    }
+                case DiagnosticIdentifiers.AddNewLineBeforeAccessorOfFullProperty:
+                    {
+                        CodeAction codeAction = CodeAction.Create(
+                            CodeFixTitles.AddNewLine,
+                            ct => AddNewLineBeforeAccessorOfFullPropertyAsync(accessorDeclaration, document, ct),
+                            GetEquivalenceKey(diagnostic));
+
+                        context.RegisterCodeFix(codeAction, diagnostic);
+                        break;
+                    }
+            }
         }
 
         private static Task<Document> RemoveNewLinesFromAccessorAsync(
@@ -50,6 +72,22 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 .WithFormatterAnnotation();
 
             return document.ReplaceNodeAsync(accessorDeclaration, newAccessorDeclaration, cancellationToken);
+        }
+
+        private static Task<Document> AddNewLineBeforeAccessorOfFullPropertyAsync(
+            AccessorDeclarationSyntax accessorDeclaration,
+            Document document,
+            CancellationToken cancellationToken)
+        {
+            AccessorDeclarationSyntax newAccessorDeclaration = accessorDeclaration.AppendEndOfLineToLeadingTrivia();
+
+            var accessorList = (AccessorListSyntax)accessorDeclaration.Parent;
+
+            AccessorListSyntax newAccessorList = accessorList
+                .WithAccessors(accessorList.Accessors.Replace(accessorDeclaration, newAccessorDeclaration))
+                .WithFormatterAnnotation();
+
+            return document.ReplaceNodeAsync(accessorList, newAccessorList, cancellationToken);
         }
     }
 }

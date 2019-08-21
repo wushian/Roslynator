@@ -37,7 +37,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 case DiagnosticIdentifiers.RemoveNewLineBeforeWhileKeywordOfDoStatement:
                     {
                         CodeAction codeAction = CodeAction.Create(
-                            "Remove newline",
+                            CodeFixTitles.RemoveNewLine,
                             ct => RemoveNewLineBeforeWhileKeywordOfDoStatementAsync(document, doStatement, ct),
                             GetEquivalenceKey(diagnostic));
 

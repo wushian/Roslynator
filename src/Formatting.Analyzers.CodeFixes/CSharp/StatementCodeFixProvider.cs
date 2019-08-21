@@ -48,7 +48,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 case DiagnosticIdentifiers.AddNewLineAfterSwitchLabel:
                     {
                         CodeAction codeAction = CodeAction.Create(
-                            "Add newline",
+                            CodeFixTitles.AddNewLine,
                             ct => AddNewLineBeforeStatementAsync(document, statement, ct),
                             GetEquivalenceKey(diagnostic));
 
@@ -58,7 +58,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 case DiagnosticIdentifiers.AddEmptyLineAfterEmbeddedStatement:
                     {
                         CodeAction codeAction = CodeAction.Create(
-                            "Add empty line",
+                            CodeFixTitles.AddEmptyLine,
                             ct => AddEmptyLineAfterEmbeddedStatementAsync(document, statement, ct),
                             GetEquivalenceKey(diagnostic));
 
@@ -68,7 +68,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 case DiagnosticIdentifiers.AddEmptyLineBeforeClosingBraceOfDoStatement:
                     {
                         CodeAction codeAction = CodeAction.Create(
-                            "Add empty line",
+                            CodeFixTitles.AddEmptyLine,
                             ct => AddEmptyLineBeforeWhileInDoStatementAsync(document, statement, ct),
                             GetEquivalenceKey(diagnostic));
 

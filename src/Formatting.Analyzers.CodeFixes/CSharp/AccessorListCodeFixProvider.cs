@@ -21,12 +21,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get
-            {
-                return ImmutableArray.Create(
-                    DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty,
-                    DiagnosticIdentifiers.AddNewLinesToAccessorListOfFullProperty);
-            }
+            get { return ImmutableArray.Create(DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty); }
         }
 
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
@@ -41,16 +36,6 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             switch (diagnostic.Id)
             {
-                case DiagnosticIdentifiers.AddNewLinesToAccessorListOfFullProperty:
-                    {
-                        CodeAction codeAction = CodeAction.Create(
-                            "Add newlines to accessor list",
-                            ct => AddNewLinesToAccessorListAsync(document, accessorList, ct),
-                            GetEquivalenceKey(diagnostic));
-
-                        context.RegisterCodeFix(codeAction, diagnostic);
-                        break;
-                    }
                 case DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty:
                     {
                         CodeAction codeAction = CodeAction.Create(
@@ -62,30 +47,6 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                         break;
                     }
             }
-        }
-
-        private static Task<Document> AddNewLinesToAccessorListAsync(
-            Document document,
-            AccessorListSyntax accessorList,
-            CancellationToken cancellationToken)
-        {
-            AccessorListSyntax newAccessorList = accessorList
-                .RemoveWhitespace()
-                .WithCloseBraceToken(accessorList.CloseBraceToken.AppendEndOfLineToLeadingTrivia());
-
-            SyntaxList<AccessorDeclarationSyntax> accessors = newAccessorList.Accessors;
-
-            if (accessors.Count > 1)
-            {
-                AccessorDeclarationSyntax accessor = accessors[0];
-
-                if (accessorList.SyntaxTree.IsSingleLineSpan(accessor.GetTrailingTrivia().Span, cancellationToken))
-                    newAccessorList = newAccessorList.ReplaceNode(accessor, accessor.AppendEndOfLineToTrailingTrivia());
-            }
-
-            newAccessorList = newAccessorList.WithFormatterAnnotation();
-
-            return document.ReplaceNodeAsync(accessorList, newAccessorList, cancellationToken);
         }
 
         private static Task<Document> RemoveNewLinesFromAccessorListAsync(

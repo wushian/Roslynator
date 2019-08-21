@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -20,7 +21,7 @@ namespace Roslynator.Formatting.CSharp
             {
                 return ImmutableArray.Create(
                     DiagnosticDescriptors.RemoveNewLinesFromAccessorListOfAutoProperty,
-                    DiagnosticDescriptors.AddNewLinesToAccessorListOfFullProperty,
+                    DiagnosticDescriptors.AddNewLineBeforeAccessorOfFullProperty,
                     DiagnosticDescriptors.RemoveNewLinesFromAccessor);
             }
         }
@@ -40,14 +41,30 @@ namespace Roslynator.Formatting.CSharp
 
             if (accessors.Any(f => f.BodyOrExpressionBody() != null))
             {
-                if (accessorList.IsSingleLine(includeExteriorTrivia: false))
+                if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.AddNewLineBeforeAccessorOfFullProperty))
                 {
-                    if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.AddNewLinesToAccessorListOfFullProperty))
+                    SyntaxToken token = accessorList.OpenBraceToken;
+
+                    foreach (AccessorDeclarationSyntax accessor in accessors)
                     {
-                        context.ReportDiagnostic(DiagnosticDescriptors.AddNewLinesToAccessorListOfFullProperty, accessorList);
+                        if (accessor.BodyOrExpressionBody() != null
+                            && accessor.SyntaxTree.IsSingleLineSpan(TextSpan.FromBounds(token.Span.End, accessor.SpanStart)))
+                        {
+                            context.ReportDiagnostic(
+                                DiagnosticDescriptors.AddNewLineBeforeAccessorOfFullProperty,
+                                Location.Create(accessor.SyntaxTree, new TextSpan(accessor.SpanStart, 0)));
+
+                            break;
+                        }
+
+                        token = accessor.Body?.CloseBraceToken ?? accessor.SemicolonToken;
+
+                        Debug.Assert(token.Equals(accessor.GetLastToken()));
                     }
                 }
-                else if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveNewLinesFromAccessor))
+
+                if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveNewLinesFromAccessor)
+                    && !accessorList.IsSingleLine(includeExteriorTrivia: false))
                 {
                     foreach (AccessorDeclarationSyntax accessor in accessors)
                     {

@@ -47,7 +47,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 case DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind:
                     {
                         CodeAction codeAction = CodeAction.Create(
-                            "Add empty line",
+                            CodeFixTitles.AddEmptyLine,
                             ct =>
                             {
                                 SyntaxToken token = trivia.Token;
@@ -63,7 +63,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 case DiagnosticIdentifiers.RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind:
                     {
                         CodeAction codeAction = CodeAction.Create(
-                            "Remove empty line",
+                            CodeFixTitles.RemoveEmptyLine,
                             ct => RemoveEmptyLineAsync(document, trivia, ct),
                             GetEquivalenceKey(diagnostic));
 

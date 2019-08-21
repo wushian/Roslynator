@@ -39,7 +39,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 case DiagnosticIdentifiers.AddEmptyLineBeforeEndRegion:
                     {
                         CodeAction codeAction = CodeAction.Create(
-                            "Add empty line",
+                            CodeFixTitles.AddEmptyLine,
                             ct => AddEmptyLineAfterRegionAndBeforeEndRegionAsync(document, directiveTrivia, ct),
                             GetEquivalenceKey(diagnostic));
 

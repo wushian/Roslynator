@@ -36,10 +36,10 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLinesToAccessorListOfFullProperty"> <!--FormatAccessorList-->
+  <Analyzer Identifier="AddNewLineBeforeAccessorOfFullProperty"> <!-- RCS1024 -->
     <Id>RCS0002</Id>
-    <Title>Add newlines to accessor list of full property.</Title>
-    <MessageFormat>Add newlines to accessor list of full property.</MessageFormat>
+    <Title>Add newline before accessor of full property.</Title>
+    <MessageFormat>Add newline before accessor of full property.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -339,14 +339,14 @@ while (x);]]></Before>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
     <Samples>
       <Sample>
-        <Before><![CDATA[Foo(string id, string name) : base(id) // [|Id|]
+        <Before><![CDATA[Foo(object p1, object p2) : base(p1) // [|Id|]
 {
-    Name = name;
+    P2 = p2;
 }]]></Before>
-        <After><![CDATA[Foo(string id, string name)
-    : base(id)
+        <After><![CDATA[Foo(object p1, object p2)
+    : base(p1)
 {
-    Name = name;
+    P2 = p2;
 }]]></After>
       </Sample>
     </Samples>
@@ -521,10 +521,10 @@ namespace N
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLineToEmptyBlock"> <!--FormatEmptyBlock-->
+  <Analyzer Identifier="AddNewLineBeforeClosingBraceOfBlock"> <!-- RCS1023 -->
     <Id>RCS0023</Id>
-    <Title>Add newline to empty block.</Title>
-    <MessageFormat>Add newline to empty block.</MessageFormat>
+    <Title>Add newline before closing brace of block.</Title>
+    <MessageFormat>Add newline before closing brace of block.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -540,7 +540,7 @@ namespace N
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLineBeforeEnumMember">
+  <Analyzer Identifier="AddNewLineBeforeEnumMember"> <!-- RCS1025 -->
     <Id>RCS0025</Id>
     <Title>Add newline before enum member.</Title>
     <MessageFormat>Add newline before enum member.</MessageFormat>
@@ -561,7 +561,7 @@ namespace N
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLineBeforeStatement">
+  <Analyzer Identifier="AddNewLineBeforeStatement"> <!-- RCS1026 -->
     <Id>RCS0026</Id>
     <Title>Add newline before statement.</Title>
     <MessageFormat>Add newline before statement.</MessageFormat>
@@ -578,7 +578,7 @@ Bar();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLineBeforeEmbeddedStatement">
+  <Analyzer Identifier="AddNewLineBeforeEmbeddedStatement"> <!-- RCS1027 -->
     <Id>RCS0027</Id>
     <Title>Add newline before embedded statement.</Title>
     <MessageFormat>Add newline before embedded statement.</MessageFormat>
@@ -595,7 +595,7 @@ Bar();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLineAfterSwitchLabel">
+  <Analyzer Identifier="AddNewLineAfterSwitchLabel"> <!-- RCS1028 -->
     <Id>RCS0028</Id>
     <Title>Add newline after switch label.</Title>
     <MessageFormat>Add newline after switch label.</MessageFormat>
@@ -608,15 +608,15 @@ Bar();]]></After>
       <Sample>
         <Before><![CDATA[switch (x)
 {
-    case "a": return Foo(); // [|Id|]
-    case "b": return Bar();
+    case "a": return A(); // [|Id|]
+    case "b": return B();
 }]]></Before>
         <After><![CDATA[switch (x)
 {
     case "a":
-        return Foo();
+        return A();
     case "b":
-        return Bar();
+        return B();
 }]]></After>
       </Sample>
     </Samples>
@@ -745,10 +745,10 @@ enum Bar
     </Samples>
     <Remarks>This analyzer does not enforce an empty line between two single-line declaration.</Remarks>
   </Analyzer>
-  <Analyzer Identifier="AddNewLineToEmptyTypeDeclaration"> <!--FormatDeclarationBraces-->
+  <Analyzer Identifier="AddNewLineBeforeClosingBraceOfTypeDeclaration"> <!-- RCS1076 -->
     <Id>RCS0076</Id>
-    <Title>Add newline to empty type declaration.</Title>
-    <MessageFormat>Add newline to empty type declaration.</MessageFormat>
+    <Title>Add newline before closing brace of type declaration.</Title>
+    <MessageFormat>Add newline before closing brace of type declaration.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>

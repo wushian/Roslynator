@@ -9,62 +9,47 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class AddNewLineToEmptyBlockTests : AbstractCSharpFixVerifier
+    public class AddNewLineBeforeClosingBraceOfTypeDeclarationTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewLineToEmptyBlock;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewLineBeforeClosingBraceOfTypeDeclaration;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewLineToEmptyBlockAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewLineBeforeClosingBraceOfTypeDeclarationAnalyzer();
 
-        public override CodeFixProvider FixProvider { get; } = new BlockCodeFixProvider();
+        public override CodeFixProvider FixProvider { get; } = new MemberDeclarationCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineToEmptyBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfTypeDeclaration)]
         public async Task Test()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
-{
-    void M()
-    {[||]}
-}
+{[||]}
 ", @"
 class C
 {
-    void M()
-    {
-    }
 }
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineToEmptyBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfTypeDeclaration)]
         public async Task Test_WithWhitespace()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
-{
-    void M()
-    { [||]}
-}
+{ [||]}
 ", @"
 class C
 {
-    void M()
-    {
-    }
 }
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineToEmptyBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfTypeDeclaration)]
         public async Task TestNoDiagnostic_EmptyLine()
         {
             await VerifyNoDiagnosticAsync(@"
 class C
 {
-    void M()
-    {
 
-    }
 }
 ");
         }

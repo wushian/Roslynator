@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Roslynator.CSharp;
 using Roslynator.Formatting.CSharp;
@@ -23,7 +22,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             get
             {
                 return ImmutableArray.Create(
-                    DiagnosticIdentifiers.AddNewLineToEmptyTypeDeclaration,
+                    DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfTypeDeclaration,
                     DiagnosticIdentifiers.AddNewLineBeforeConstructorInitializer);
             }
         }
@@ -40,11 +39,11 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             switch (diagnostic.Id)
             {
-                case DiagnosticIdentifiers.AddNewLineToEmptyTypeDeclaration:
+                case DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfTypeDeclaration:
                     {
                         CodeAction codeAction = CodeAction.Create(
-                            "Add newline",
-                            ct => AddNewLineBeforeClosingBraceOfEmptyTypeDeclarationAsync(document, memberDeclaration, ct),
+                            CodeFixTitles.AddNewLine,
+                            ct => AddNewLineBeforeClosingBraceOfTypeDeclarationAsync(document, memberDeclaration, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
@@ -53,7 +52,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 case DiagnosticIdentifiers.AddNewLineBeforeConstructorInitializer:
                     {
                         CodeAction codeAction = CodeAction.Create(
-                            "Add newline",
+                            CodeFixTitles.AddNewLine,
                             ct =>
                             {
                                 return CodeFixHelpers.AddNewLineBeforeAndIncreaseIndentationAsync(
@@ -70,7 +69,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             }
         }
 
-        private static Task<Document> AddNewLineBeforeClosingBraceOfEmptyTypeDeclarationAsync(
+        private static Task<Document> AddNewLineBeforeClosingBraceOfTypeDeclarationAsync(
             Document document,
             MemberDeclarationSyntax declaration,
             CancellationToken cancellationToken)

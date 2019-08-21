@@ -33,7 +33,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             Diagnostic diagnostic = context.Diagnostics[0];
 
             CodeAction codeAction = CodeAction.Create(
-                "Add newline",
+                CodeFixTitles.AddNewLine,
                 ct => AddEmptyLineBetweenSwitchSectionsAsync(document, switchSection, ct),
                 GetEquivalenceKey(diagnostic));
 

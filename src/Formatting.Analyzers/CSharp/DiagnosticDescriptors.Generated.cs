@@ -22,15 +22,15 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0002</summary>
-        public static readonly DiagnosticDescriptor AddNewLinesToAccessorListOfFullProperty = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddNewLinesToAccessorListOfFullProperty, 
-            title:              "Add newlines to accessor list of full property.", 
-            messageFormat:      "Add newlines to accessor list of full property.", 
+        public static readonly DiagnosticDescriptor AddNewLineBeforeAccessorOfFullProperty = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineBeforeAccessorOfFullProperty, 
+            title:              "Add newline before accessor of full property.", 
+            messageFormat:      "Add newline before accessor of full property.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLinesToAccessorListOfFullProperty}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeAccessorOfFullProperty}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0003</summary>
@@ -262,15 +262,15 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0023</summary>
-        public static readonly DiagnosticDescriptor AddNewLineToEmptyBlock = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddNewLineToEmptyBlock, 
-            title:              "Add newline to empty block.", 
-            messageFormat:      "Add newline to empty block.", 
+        public static readonly DiagnosticDescriptor AddNewLineBeforeClosingBraceOfBlock = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfBlock, 
+            title:              "Add newline before closing brace of block.", 
+            messageFormat:      "Add newline before closing brace of block.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineToEmptyBlock}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfBlock}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0025</summary>
@@ -358,15 +358,15 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0076</summary>
-        public static readonly DiagnosticDescriptor AddNewLineToEmptyTypeDeclaration = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddNewLineToEmptyTypeDeclaration, 
-            title:              "Add newline to empty type declaration.", 
-            messageFormat:      "Add newline to empty type declaration.", 
+        public static readonly DiagnosticDescriptor AddNewLineBeforeClosingBraceOfTypeDeclaration = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfTypeDeclaration, 
+            title:              "Add newline before closing brace of type declaration.", 
+            messageFormat:      "Add newline before closing brace of type declaration.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineToEmptyTypeDeclaration}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfTypeDeclaration}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0086</summary>
