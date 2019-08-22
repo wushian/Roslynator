@@ -54,37 +54,15 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             AccessorListSyntax accessorList,
             CancellationToken cancellationToken)
         {
-            switch (accessorList.Parent)
-            {
-                case PropertyDeclarationSyntax propertyDeclaration:
-                    {
-                        TextSpan span = TextSpan.FromBounds(
-                            propertyDeclaration.Identifier.Span.End,
-                            accessorList.CloseBraceToken.SpanStart);
+            TextSpan span = TextSpan.FromBounds(
+                accessorList.GetFirstToken().GetPreviousToken().Span.End,
+                accessorList.CloseBraceToken.SpanStart);
 
-                        PropertyDeclarationSyntax newNode = propertyDeclaration
-                            .RemoveWhitespace(span)
-                            .WithFormatterAnnotation();
+            SyntaxNode newNode = accessorList.Parent
+                .RemoveWhitespace(span)
+                .WithFormatterAnnotation();
 
-                        return document.ReplaceNodeAsync(propertyDeclaration, newNode, cancellationToken);
-                    }
-                case IndexerDeclarationSyntax indexerDeclaration:
-                    {
-                        TextSpan span = TextSpan.FromBounds(
-                            indexerDeclaration.ParameterList.CloseBracketToken.Span.End,
-                            accessorList.CloseBraceToken.SpanStart);
-
-                        IndexerDeclarationSyntax newNode = indexerDeclaration
-                            .RemoveWhitespace(span)
-                            .WithFormatterAnnotation();
-
-                        return document.ReplaceNodeAsync(indexerDeclaration, newNode, cancellationToken);
-                    }
-                default:
-                    {
-                        throw new InvalidOperationException();
-                    }
-            }
+            return document.ReplaceNodeAsync(accessorList.Parent, newNode, cancellationToken);
         }
     }
 }

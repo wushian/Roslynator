@@ -37,7 +37,7 @@ namespace Roslynator.Formatting.CSharp
             if (whenTrue.IsMissing)
                 return;
 
-            if (SyntaxTriviaAnalysis.IsTokenPlacedBeforeExpression(condition, conditionalExpression.QuestionToken, whenTrue))
+            if (SyntaxTriviaAnalysis.IsTokenPrecededWithNewLineAndNotFollowedWithNewLine(condition, conditionalExpression.QuestionToken, whenTrue))
             {
                 ReportDiagnostic(context, conditionalExpression.QuestionToken);
             }
@@ -46,7 +46,7 @@ namespace Roslynator.Formatting.CSharp
                 ExpressionSyntax whenFalse = conditionalExpression.WhenFalse;
 
                 if (!whenFalse.IsMissing
-                    && SyntaxTriviaAnalysis.IsTokenPlacedBeforeExpression(whenTrue, conditionalExpression.ColonToken, whenFalse))
+                    && SyntaxTriviaAnalysis.IsTokenPrecededWithNewLineAndNotFollowedWithNewLine(whenTrue, conditionalExpression.ColonToken, whenFalse))
                 {
                     ReportDiagnostic(context, conditionalExpression.ColonToken);
                 }

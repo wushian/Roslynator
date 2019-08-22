@@ -62,7 +62,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                         {
                             CodeAction codeAction = CodeAction.Create(
                                 CodeFixTitles.AddEmptyLine,
-                                ct => AddEmptyLineAfterUsingDirectiveAsync(document, usingDirective, ct),
+                                ct => CodeFixHelpers.AppendEndOfLineAsync(document, usingDirective, ct),
                                 GetEquivalenceKey(diagnostic));
 
                             context.RegisterCodeFix(codeAction, diagnostic);
@@ -111,16 +111,6 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             SyntaxTriviaList newLeadingTrivia = leadingTrivia.Insert(index, SyntaxTriviaAnalysis.GetEndOfLine(usingDirective));
 
             UsingDirectiveSyntax newUsingDirective = usingDirective.WithLeadingTrivia(newLeadingTrivia);
-
-            return document.ReplaceNodeAsync(usingDirective, newUsingDirective, cancellationToken);
-        }
-
-        private static Task<Document> AddEmptyLineAfterUsingDirectiveAsync(
-            Document document,
-            UsingDirectiveSyntax usingDirective,
-            CancellationToken cancellationToken)
-        {
-            UsingDirectiveSyntax newUsingDirective = usingDirective.AppendEndOfLineToTrailingTrivia();
 
             return document.ReplaceNodeAsync(usingDirective, newUsingDirective, cancellationToken);
         }

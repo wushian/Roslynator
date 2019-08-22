@@ -9,40 +9,40 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class PlaceExpressionBodyArrowAtEndOfLineTests : AbstractCSharpFixVerifier
+    public class AddNewLineBeforeExpressionBodyArrowInsteadOfAfterItTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.PlaceExpressionBodyArrowAtEndOfLine;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewLineBeforeExpressionBodyArrowInsteadOfAfterIt;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new PlaceExpressionBodyArrowAtEndOfLineAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewLineBeforeExpressionBodyArrowInsteadOfAfterItAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new SyntaxTokenCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceExpressionBodyArrowAtEndOfLine)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeExpressionBodyArrowInsteadOfAfterIt)]
         public async Task Test()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
 {
-    string M()
-        [|=>|] null;
+    string M() [|=>|]
+        null;
 }
 ", @"
 class C
 {
-    string M() =>
-        null;
+    string M()
+        => null;
 }
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceExpressionBodyArrowAtEndOfLine)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeExpressionBodyArrowInsteadOfAfterIt)]
         public async Task TestNoDiagnostic_Comment()
         {
             await VerifyNoDiagnosticAsync(@"
 class C
 {
-    string M() // x
-        => null;
+    string M() => // x
+        null;
 }
 ");
         }

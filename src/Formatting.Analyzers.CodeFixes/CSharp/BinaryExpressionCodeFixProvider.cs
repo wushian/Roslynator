@@ -2,14 +2,12 @@
 
 using System.Collections.Immutable;
 using System.Composition;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Roslynator.Formatting.CSharp;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Roslynator.Formatting.CodeFixes.CSharp
 {
@@ -43,7 +41,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                     {
                         CodeAction codeAction = CodeAction.Create(
                             $"Add newline before '{binaryExpression.OperatorToken.ToString()}' instead of after it",
-                            ct => AddNewLineBeforeBinaryOperatorInsteadOfAfterItAsync(document, binaryExpression, ct),
+                            ct => CodeFixHelpers.AddNewLineBeforeInsteadOfAfterAsync(document, binaryExpression.Left, binaryExpression.OperatorToken, binaryExpression.Right, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
@@ -53,45 +51,13 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                     {
                         CodeAction codeAction = CodeAction.Create(
                             $"Add newline after '{binaryExpression.OperatorToken.ToString()}' instead of before it",
-                            ct => AddNewLineAfterBinaryOperatorInsteadOfBeforeItAsync(document, binaryExpression, ct),
+                            ct => CodeFixHelpers.AddNewLineAfterInsteadOfBeforeAsync(document, binaryExpression.Left, binaryExpression.OperatorToken, binaryExpression.Right, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
                         break;
                     }
             }
-        }
-
-        private static Task<Document> AddNewLineBeforeBinaryOperatorInsteadOfAfterItAsync(
-            Document document,
-            BinaryExpressionSyntax binaryExpression,
-            CancellationToken cancellationToken)
-        {
-            var (left, token, right) = CodeFixHelpers.PlaceTokenBeforeExpression(binaryExpression.Left, binaryExpression.OperatorToken, binaryExpression.Right);
-
-            BinaryExpressionSyntax newBinaryExpression = BinaryExpression(
-                binaryExpression.Kind(),
-                left,
-                token,
-                right);
-
-            return document.ReplaceNodeAsync(binaryExpression, newBinaryExpression, cancellationToken);
-        }
-
-        private static Task<Document> AddNewLineAfterBinaryOperatorInsteadOfBeforeItAsync(
-            Document document,
-            BinaryExpressionSyntax binaryExpression,
-            CancellationToken cancellationToken)
-        {
-            var (left, token, right) = CodeFixHelpers.PlaceTokenAfterExpression(binaryExpression.Left, binaryExpression.OperatorToken, binaryExpression.Right);
-
-            BinaryExpressionSyntax newBinaryExpression = BinaryExpression(
-                binaryExpression.Kind(),
-                left,
-                token,
-                right);
-
-            return document.ReplaceNodeAsync(binaryExpression, newBinaryExpression, cancellationToken);
         }
     }
 }

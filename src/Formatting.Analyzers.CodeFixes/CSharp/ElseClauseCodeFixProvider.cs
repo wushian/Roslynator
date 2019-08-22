@@ -36,6 +36,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             {
                 case DiagnosticIdentifiers.RemoveNewLineBetweenIfKeywordAndElseKeyword:
                     {
+                        //TODO: x removenewline
                         CodeAction codeAction = CodeAction.Create(
                             CodeFixTitles.RemoveNewLine,
                             ct => RemoveNewLineBetweenIfKeywordAndElseKeywordAsync(document, elseClause, ct),
@@ -52,13 +53,11 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             ElseClauseSyntax elseClause,
             CancellationToken cancellationToken)
         {
-            var ifStatement = (IfStatementSyntax)elseClause.Statement;
-
-            ElseClauseSyntax newElseCaluse = elseClause.Update(
+            ElseClauseSyntax newElseClause = elseClause.Update(
                 elseClause.ElseKeyword.WithTrailingTrivia(Space),
                 elseClause.Statement.WithoutLeadingTrivia());
 
-            return document.ReplaceNodeAsync(elseClause, newElseCaluse, cancellationToken);
+            return document.ReplaceNodeAsync(elseClause, newElseClause, cancellationToken);
         }
     }
 }

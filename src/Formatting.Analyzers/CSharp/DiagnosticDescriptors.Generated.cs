@@ -130,27 +130,27 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0011</summary>
-        public static readonly DiagnosticDescriptor PlaceExpressionBodyArrowAtEndOfLine = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.PlaceExpressionBodyArrowAtEndOfLine, 
-            title:              "Place expression-body arrow at the end of line.", 
-            messageFormat:      "Place expression-body arrow at the end of line.", 
+        public static readonly DiagnosticDescriptor AddNewLineAfterExpressionBodyArrowInsteadOfBeforeIt = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineAfterExpressionBodyArrowInsteadOfBeforeIt, 
+            title:              "Add newline after expression-body arrow instead of before it.", 
+            messageFormat:      "Add newline after expression-body arrow instead of before it.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.PlaceExpressionBodyArrowAtEndOfLine}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineAfterExpressionBodyArrowInsteadOfBeforeIt}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0012</summary>
-        public static readonly DiagnosticDescriptor PlaceExpressionBodyArrowBeforeExpression = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.PlaceExpressionBodyArrowBeforeExpression, 
-            title:              "Place expression-body arrow after expression.", 
-            messageFormat:      "Place expression-body arrow after expression.", 
+        public static readonly DiagnosticDescriptor AddNewLineBeforeExpressionBodyArrowInsteadOfAfterIt = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineBeforeExpressionBodyArrowInsteadOfAfterIt, 
+            title:              "Add newline before expression-body arrow instead of after it.", 
+            messageFormat:      "Add newline before expression-body arrow instead of after it.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.PlaceExpressionBodyArrowBeforeExpression}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeExpressionBodyArrowInsteadOfAfterIt}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0013</summary>

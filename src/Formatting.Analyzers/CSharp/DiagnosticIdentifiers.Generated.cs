@@ -18,8 +18,8 @@ namespace Roslynator.Formatting.CSharp
         public const string RemoveNewLineBetweenIfKeywordAndElseKeyword = "RCS0008";
         public const string RemoveNewLineBetweenClosingBraceAndWhileKeyword = "RCS0009";
         public const string AddEmptyLineBetweenSwitchSections = "RCS0010";
-        public const string PlaceExpressionBodyArrowAtEndOfLine = "RCS0011";
-        public const string PlaceExpressionBodyArrowBeforeExpression = "RCS0012";
+        public const string AddNewLineAfterExpressionBodyArrowInsteadOfBeforeIt = "RCS0011";
+        public const string AddNewLineBeforeExpressionBodyArrowInsteadOfAfterIt = "RCS0012";
         public const string AddNewLineBeforeTypeParameterConstraint = "RCS0013";
         public const string AddNewLineBeforeConstructorInitializer = "RCS0014";
         public const string AddEmptyLineBetweenSingleLineDeclarations = "RCS0015";

@@ -2,13 +2,11 @@
 
 using System.Collections.Immutable;
 using System.Composition;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Roslynator.CSharp;
 using Roslynator.Formatting.CSharp;
 
 namespace Roslynator.Formatting.CodeFixes.CSharp
@@ -34,20 +32,10 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             CodeAction codeAction = CodeAction.Create(
                 CodeFixTitles.AddNewLine,
-                ct => AddEmptyLineBetweenSwitchSectionsAsync(document, switchSection, ct),
+                ct => CodeFixHelpers.AppendEndOfLineAsync(document, switchSection, ct),
                 GetEquivalenceKey(diagnostic));
 
             context.RegisterCodeFix(codeAction, diagnostic);
-        }
-
-        private static Task<Document> AddEmptyLineBetweenSwitchSectionsAsync(
-            Document document,
-            SwitchSectionSyntax switchSection,
-            CancellationToken cancellationToken)
-        {
-            SwitchSectionSyntax newSwitchSection = switchSection.AppendEndOfLineToTrailingTrivia();
-
-            return document.ReplaceNodeAsync(switchSection, newSwitchSection, cancellationToken);
         }
     }
 }

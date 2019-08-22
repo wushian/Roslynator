@@ -9,11 +9,11 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Roslynator.Formatting.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    internal class PlaceExpressionBodyArrowAtEndOfLineAnalyzer : BaseDiagnosticAnalyzer
+    internal class AddNewLineBeforeExpressionBodyArrowInsteadOfAfterItAnalyzer : BaseDiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(DiagnosticDescriptors.PlaceExpressionBodyArrowAtEndOfLine); }
+            get { return ImmutableArray.Create(DiagnosticDescriptors.AddNewLineBeforeExpressionBodyArrowInsteadOfAfterIt); }
         }
 
         public override void Initialize(AnalysisContext context)
@@ -31,19 +31,19 @@ namespace Roslynator.Formatting.CSharp
 
             SyntaxToken previousToken = arrowToken.GetPreviousToken();
 
-            if (!SyntaxTriviaAnalysis.IsOptionalWhitespaceThenEndOfLineTrivia(previousToken.TrailingTrivia))
+            if (!SyntaxTriviaAnalysis.IsEmptyOrSingleWhitespaceTrivia(previousToken.TrailingTrivia))
                 return;
 
-            if (!SyntaxTriviaAnalysis.IsEmptyOrSingleWhitespaceTrivia(arrowToken.LeadingTrivia))
+            if (arrowToken.LeadingTrivia.Any())
                 return;
 
-            if (!SyntaxTriviaAnalysis.IsEmptyOrSingleWhitespaceTrivia(arrowToken.TrailingTrivia))
+            if (!SyntaxTriviaAnalysis.IsOptionalWhitespaceThenEndOfLineTrivia(arrowToken.TrailingTrivia))
                 return;
 
-            if (arrowExpressionClause.Expression.GetLeadingTrivia().Any())
+            if (!SyntaxTriviaAnalysis.IsEmptyOrSingleWhitespaceTrivia(arrowExpressionClause.Expression.GetLeadingTrivia()))
                 return;
 
-            context.ReportDiagnostic(DiagnosticDescriptors.PlaceExpressionBodyArrowAtEndOfLine, arrowToken);
+            context.ReportDiagnostic(DiagnosticDescriptors.AddNewLineBeforeExpressionBodyArrowInsteadOfAfterIt, arrowToken);
         }
     }
 }

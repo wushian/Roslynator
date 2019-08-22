@@ -12,10 +12,20 @@ using Roslynator.Formatting.CSharp;
 
 namespace Roslynator.Formatting.CodeFixes.CSharp
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(UseSpacesInsteadOfTabCodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ReplaceTabWithSpacesCodeFixProvider))]
     [Shared]
-    public class UseSpacesInsteadOfTabCodeFixProvider : BaseCodeFixProvider
+    public class ReplaceTabWithSpacesCodeFixProvider : BaseCodeFixProvider
     {
+        public ReplaceTabWithSpacesCodeFixProvider()
+        {
+            TwoSpacesEquivalenceKey = GetEquivalenceKey(DiagnosticIdentifiers.UseSpacesInsteadOfTab, "TwoSpaces");
+            FourSpacesEquivalenceKey = GetEquivalenceKey(DiagnosticIdentifiers.UseSpacesInsteadOfTab, "FourSpaces");
+        }
+
+        internal string TwoSpacesEquivalenceKey { get; }
+
+        internal string FourSpacesEquivalenceKey { get; }
+
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
             get { return ImmutableArray.Create(DiagnosticIdentifiers.UseSpacesInsteadOfTab); }
@@ -27,9 +37,16 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             Diagnostic diagnostic = context.Diagnostics[0];
 
             CodeAction codeAction = CodeAction.Create(
-                "Use spaces instead of tab",
-                ct => UseSpacesInsteadOfTabAsync(document, context.Span, ct),
-                GetEquivalenceKey(diagnostic));
+                "Replace tab with 2 spaces",
+                ct => UseSpacesInsteadOfTabAsync(document, context.Span, 2, ct),
+                TwoSpacesEquivalenceKey);
+
+            context.RegisterCodeFix(codeAction, diagnostic);
+
+            codeAction = CodeAction.Create(
+                "Replace tab with 4 spaces",
+                ct => UseSpacesInsteadOfTabAsync(document, context.Span, 4, ct),
+                FourSpacesEquivalenceKey);
 
             context.RegisterCodeFix(codeAction, diagnostic);
 
@@ -39,15 +56,12 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
         private static async Task<Document> UseSpacesInsteadOfTabAsync(
             Document document,
             TextSpan span,
+            int numberOfSpaces,
             CancellationToken cancellationToken = default)
         {
-            SourceText sourceText = await document.GetTextAsync(cancellationToken).ConfigureAwait(false);
+            var textChange = new TextChange(span, new string(' ', span.Length * numberOfSpaces));
 
-            var textChange = new TextChange(span, new string(' ', span.Length * 4));
-
-            SourceText newSourceText = sourceText.WithChanges(textChange);
-
-            return document.WithText(newSourceText);
+            return await document.WithTextChangeAsync(textChange, cancellationToken).ConfigureAwait(false);
         }
     }
 }

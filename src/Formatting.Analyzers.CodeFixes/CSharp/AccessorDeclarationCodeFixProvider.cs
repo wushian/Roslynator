@@ -42,7 +42,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 case DiagnosticIdentifiers.RemoveNewLinesFromAccessorWithSingleLineExpression:
                     {
                         CodeAction codeAction = CodeAction.Create(
-                            "Remove newlines from accessor",
+                            CodeFixTitles.RemoveNewLines,
                             ct => RemoveNewLinesFromAccessorWithSingleLineExpressionAsync(document, accessorDeclaration, ct),
                             GetEquivalenceKey(diagnostic));
 

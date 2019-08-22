@@ -59,7 +59,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                     {
                         CodeAction codeAction = CodeAction.Create(
                             CodeFixTitles.AddEmptyLine,
-                            ct => AddEmptyLineAfterEmbeddedStatementAsync(document, statement, ct),
+                            ct => CodeFixHelpers.AppendEndOfLineAsync(document, statement, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
@@ -69,7 +69,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                     {
                         CodeAction codeAction = CodeAction.Create(
                             CodeFixTitles.AddEmptyLine,
-                            ct => AddEmptyLineBeforeWhileInDoStatementAsync(document, statement, ct),
+                            ct => CodeFixHelpers.AppendEndOfLineAsync(document, statement, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
@@ -109,34 +109,6 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             {
                 return await document.ReplaceNodeAsync(statement, newStatement, cancellationToken).ConfigureAwait(false);
             }
-        }
-
-        private static Task<Document> AddEmptyLineAfterEmbeddedStatementAsync(
-            Document document,
-            StatementSyntax statement,
-            CancellationToken cancellationToken)
-        {
-            StatementSyntax newNode = statement
-                .AppendEndOfLineToTrailingTrivia()
-                .WithFormatterAnnotation();
-
-            return document.ReplaceNodeAsync(statement, newNode, cancellationToken);
-        }
-
-        private static Task<Document> AddEmptyLineBeforeWhileInDoStatementAsync(
-            Document document,
-            StatementSyntax statement,
-            CancellationToken cancellationToken = default)
-        {
-            SyntaxTriviaList trailingTrivia = statement.GetTrailingTrivia();
-
-            int index = trailingTrivia.IndexOf(SyntaxKind.EndOfLineTrivia);
-
-            SyntaxTriviaList newTrailingTrivia = trailingTrivia.Insert(index, trailingTrivia[index]);
-
-            StatementSyntax newStatement = statement.WithTrailingTrivia(newTrailingTrivia);
-
-            return document.ReplaceNodeAsync(statement, newStatement, cancellationToken);
         }
     }
 }

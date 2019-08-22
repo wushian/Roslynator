@@ -287,10 +287,10 @@ while (x);]]></Before>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="PlaceExpressionBodyArrowAtEndOfLine">
+  <Analyzer Identifier="AddNewLineAfterExpressionBodyArrowInsteadOfBeforeIt">
     <Id>RCS0011</Id>
-    <Title>Place expression-body arrow at the end of line.</Title>
-    <MessageFormat>Place expression-body arrow at the end of line.</MessageFormat>
+    <Title>Add newline after expression-body arrow instead of before it.</Title>
+    <MessageFormat>Add newline after expression-body arrow instead of before it.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -305,10 +305,10 @@ while (x);]]></Before>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="PlaceExpressionBodyArrowBeforeExpression">
+  <Analyzer Identifier="AddNewLineBeforeExpressionBodyArrowInsteadOfAfterIt">
     <Id>RCS0012</Id>
-    <Title>Place expression-body arrow after expression.</Title>
-    <MessageFormat>Place expression-body arrow after expression.</MessageFormat>
+    <Title>Add newline before expression-body arrow instead of after it.</Title>
+    <MessageFormat>Add newline before expression-body arrow instead of after it.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>

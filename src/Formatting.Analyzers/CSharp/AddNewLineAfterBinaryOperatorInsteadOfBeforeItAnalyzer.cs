@@ -59,7 +59,7 @@ namespace Roslynator.Formatting.CSharp
             if (right.IsMissing)
                 return;
 
-            if (!SyntaxTriviaAnalysis.IsTokenPlacedBeforeExpression(left, binaryExpression.OperatorToken, right))
+            if (!SyntaxTriviaAnalysis.IsTokenPrecededWithNewLineAndNotFollowedWithNewLine(left, binaryExpression.OperatorToken, right))
                 return;
 
             if (CSharpUtility.IsStringConcatenation(binaryExpression, context.SemanticModel, context.CancellationToken))

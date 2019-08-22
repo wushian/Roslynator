@@ -304,8 +304,8 @@ class C
         unsafe
         {
             fixed (char* p = """")
-            M();[||]
-        M();
+                M();[||]
+            M();
         }
     }
 }

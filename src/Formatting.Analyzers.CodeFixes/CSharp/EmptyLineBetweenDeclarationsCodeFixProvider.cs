@@ -2,12 +2,10 @@
 
 using System.Collections.Immutable;
 using System.Composition;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Roslynator.CSharp;
 using Roslynator.Formatting.CSharp;
 
 namespace Roslynator.Formatting.CodeFixes.CSharp
@@ -48,13 +46,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                     {
                         CodeAction codeAction = CodeAction.Create(
                             CodeFixTitles.AddEmptyLine,
-                            ct =>
-                            {
-                                SyntaxToken token = trivia.Token;
-                                SyntaxToken newToken = token.AppendEndOfLineToTrailingTrivia();
-
-                                return document.ReplaceTokenAsync(token, newToken, ct);
-                            },
+                            ct => CodeFixHelpers.AppendEndOfLineAsync(document, trivia.Token, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
@@ -64,51 +56,13 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                     {
                         CodeAction codeAction = CodeAction.Create(
                             CodeFixTitles.RemoveEmptyLine,
-                            ct => RemoveEmptyLineAsync(document, trivia, ct),
+                            ct => CodeFixHelpers.RemoveEmptyLinesBeforeAsync(document, trivia.Token, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
                         break;
                     }
             }
-        }
-
-        private static Task<Document> RemoveEmptyLineAsync(
-            Document document,
-            SyntaxTrivia trivia,
-            CancellationToken cancellationToken)
-        {
-            SyntaxToken token = trivia.Token;
-            SyntaxTriviaList leadingTrivia = token.LeadingTrivia;
-
-            int count = 0;
-
-            SyntaxTriviaList.Enumerator en = leadingTrivia.GetEnumerator();
-            while (en.MoveNext())
-            {
-                if (en.Current.IsWhitespaceTrivia())
-                {
-                    if (!en.MoveNext())
-                        break;
-
-                    if (!en.Current.IsEndOfLineTrivia())
-                        break;
-
-                    count += 2;
-                }
-                else if (en.Current.IsEndOfLineTrivia())
-                {
-                    count++;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            SyntaxToken newToken = token.WithLeadingTrivia(leadingTrivia.RemoveRange(0, count));
-
-            return document.ReplaceTokenAsync(token, newToken, cancellationToken);
         }
     }
 }

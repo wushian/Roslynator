@@ -11,14 +11,19 @@ namespace Roslynator.Formatting.CSharp.Tests
 {
     public class UseSpacesInsteadOfTabTests : AbstractCSharpFixVerifier
     {
+        private readonly ReplaceTabWithSpacesCodeFixProvider _fixProvider = new ReplaceTabWithSpacesCodeFixProvider();
+
         public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.UseSpacesInsteadOfTab;
 
         public override DiagnosticAnalyzer Analyzer { get; } = new UseSpacesInsteadOfTabAnalyzer();
 
-        public override CodeFixProvider FixProvider { get; } = new UseSpacesInsteadOfTabCodeFixProvider();
+        public override CodeFixProvider FixProvider
+        {
+            get { return _fixProvider; }
+        }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseSpacesInsteadOfTab)]
-        public async Task Test()
+        public async Task Test_FourSpaces()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
@@ -36,7 +41,7 @@ class C
         M();
     }
 }
-");
+", equivalenceKey: _fixProvider.FourSpacesEquivalenceKey);
         }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseSpacesInsteadOfTab)]

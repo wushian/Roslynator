@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -8,6 +9,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Roslynator.CSharp;
 using Roslynator.Formatting.CSharp;
+using Roslynator.Text;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Roslynator.Formatting.CodeFixes.CSharp
@@ -22,6 +24,16 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             SyntaxToken newToken = token.AppendEndOfLineToTrailingTrivia();
 
             return document.ReplaceTokenAsync(token, newToken, cancellationToken);
+        }
+
+        public static Task<Document> AppendEndOfLineAsync(
+            Document document,
+            SyntaxNode node,
+            CancellationToken cancellationToken)
+        {
+            SyntaxNode newNode = node.AppendEndOfLineToTrailingTrivia();
+
+            return document.ReplaceNodeAsync(node, newNode, cancellationToken);
         }
 
         public static Task<Document> AddNewLineBeforeAsync(
@@ -78,7 +90,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             return document.WithTextChangeAsync(textChange, cancellationToken);
         }
 
-        public static (ExpressionSyntax left, SyntaxToken token, ExpressionSyntax right) PlaceTokenBeforeExpression(
+        public static (ExpressionSyntax left, SyntaxToken token, ExpressionSyntax right) AddNewLineBeforeTokenInsteadOfAfterIt(
             ExpressionSyntax left,
             SyntaxToken token,
             ExpressionSyntax right)
@@ -92,7 +104,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 right.WithoutLeadingTrivia());
         }
 
-        public static (ExpressionSyntax left, SyntaxToken token, ExpressionSyntax right) PlaceTokenAfterExpression(
+        public static (ExpressionSyntax left, SyntaxToken token, ExpressionSyntax right) AddNewLineAfterTokenInsteadOfBeforeIt(
             ExpressionSyntax left,
             SyntaxToken token,
             ExpressionSyntax right)
@@ -144,6 +156,110 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             SyntaxTriviaList newLeadingTrivia = leadingTrivia.Insert(index + 1, SyntaxTriviaAnalysis.GetEndOfLine(token));
 
             SyntaxToken newToken = token.WithLeadingTrivia(newLeadingTrivia);
+
+            return document.ReplaceTokenAsync(token, newToken, cancellationToken);
+        }
+
+        public static Task<Document> AddNewLineAfterInsteadOfBeforeAsync(
+            Document document,
+            SyntaxNodeOrToken left,
+            SyntaxNodeOrToken middle,
+            SyntaxNodeOrToken right,
+            CancellationToken cancellationToken)
+        {
+            StringBuilder sb = StringBuilderCache.GetInstance();
+
+            sb.Append(" ");
+            sb.Append(middle.ToString());
+
+            SyntaxTriviaList trailingTrivia = left.GetTrailingTrivia();
+
+            if (SyntaxTriviaAnalysis.IsOptionalWhitespaceThenEndOfLineTrivia(trailingTrivia))
+            {
+                sb.Append(SyntaxTriviaAnalysis.GetEndOfLine(left).ToString());
+            }
+            else
+            {
+                sb.Append(trailingTrivia.ToString());
+            }
+
+            sb.Append(middle.GetLeadingTrivia().ToString());
+
+            string newText = StringBuilderCache.GetStringAndFree(sb);
+
+            var textChange = new TextChange(
+                TextSpan.FromBounds(left.Span.End, right.SpanStart),
+                newText);
+
+            return document.WithTextChangeAsync(textChange, cancellationToken);
+        }
+
+        public static Task<Document> AddNewLineBeforeInsteadOfAfterAsync(
+            Document document,
+            SyntaxNodeOrToken left,
+            SyntaxNodeOrToken middle,
+            SyntaxNodeOrToken right,
+            CancellationToken cancellationToken)
+        {
+            StringBuilder sb = StringBuilderCache.GetInstance();
+
+            SyntaxTriviaList trailingTrivia = middle.GetTrailingTrivia();
+
+            if (SyntaxTriviaAnalysis.IsOptionalWhitespaceThenEndOfLineTrivia(trailingTrivia))
+            {
+                sb.Append(SyntaxTriviaAnalysis.GetEndOfLine(middle).ToString());
+            }
+            else
+            {
+                sb.Append(trailingTrivia.ToString());
+            }
+
+            sb.Append(right.GetLeadingTrivia().ToString());
+            sb.Append(middle.ToString());
+            sb.Append(" ");
+
+            string newText = StringBuilderCache.GetStringAndFree(sb);
+
+            var textChange = new TextChange(
+                TextSpan.FromBounds(left.Span.End, right.SpanStart),
+                newText);
+
+            return document.WithTextChangeAsync(textChange, cancellationToken);
+        }
+
+        public static Task<Document> RemoveEmptyLinesBeforeAsync(
+            Document document,
+            SyntaxToken token,
+            CancellationToken cancellationToken)
+        {
+            SyntaxTriviaList leadingTrivia = token.LeadingTrivia;
+
+            int count = 0;
+
+            SyntaxTriviaList.Enumerator en = leadingTrivia.GetEnumerator();
+            while (en.MoveNext())
+            {
+                if (en.Current.IsWhitespaceTrivia())
+                {
+                    if (!en.MoveNext())
+                        break;
+
+                    if (!en.Current.IsEndOfLineTrivia())
+                        break;
+
+                    count += 2;
+                }
+                else if (en.Current.IsEndOfLineTrivia())
+                {
+                    count++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            SyntaxToken newToken = token.WithLeadingTrivia(leadingTrivia.RemoveRange(0, count));
 
             return document.ReplaceTokenAsync(token, newToken, cancellationToken);
         }

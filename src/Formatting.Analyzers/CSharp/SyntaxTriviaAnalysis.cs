@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -15,6 +16,22 @@ namespace Roslynator.Formatting.CSharp
 
             return count == 0
                 || (count == 1 && triviaList[0].IsWhitespaceTrivia());
+        }
+
+        public static SyntaxTrivia GetEndOfLine(SyntaxNodeOrToken nodeOrToken)
+        {
+            if (nodeOrToken.IsNode)
+            {
+                return GetEndOfLine(nodeOrToken.AsNode());
+            }
+            else if (nodeOrToken.IsToken)
+            {
+                return GetEndOfLine(nodeOrToken.AsToken());
+            }
+            else
+            {
+                throw new ArgumentException("", nameof(nodeOrToken));
+            }
         }
 
         public static SyntaxTrivia GetEndOfLine(SyntaxNode node)
@@ -81,7 +98,7 @@ namespace Roslynator.Formatting.CSharp
             return default;
         }
 
-        public static bool IsTokenPlacedBeforeExpression(
+        public static bool IsTokenPrecededWithNewLineAndNotFollowedWithNewLine(
             ExpressionSyntax left,
             SyntaxToken token,
             ExpressionSyntax right)
@@ -92,7 +109,7 @@ namespace Roslynator.Formatting.CSharp
                 && !right.GetLeadingTrivia().Any();
         }
 
-        public static bool IsTokenPlacedAfterExpression(
+        public static bool IsTokenFollowedWithNewLineAndNotPrecededWithNewLine(
             ExpressionSyntax left,
             SyntaxToken token,
             ExpressionSyntax right)
