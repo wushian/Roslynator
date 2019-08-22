@@ -34,39 +34,39 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0003</summary>
-        public static readonly DiagnosticDescriptor RemoveNewLinesFromAccessor = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.RemoveNewLinesFromAccessor, 
+        public static readonly DiagnosticDescriptor RemoveNewLinesFromAccessorWithSingleLineExpression = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.RemoveNewLinesFromAccessorWithSingleLineExpression, 
             title:              "Remove newlines from accessor with single-line expression.", 
             messageFormat:      "Remove newlines from accessor with single-line expression.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveNewLinesFromAccessor}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveNewLinesFromAccessorWithSingleLineExpression}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0004</summary>
-        public static readonly DiagnosticDescriptor PlaceBinaryOperatorAfterOperand = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.PlaceBinaryOperatorAfterOperand, 
-            title:              "Place binary operator after operand.", 
-            messageFormat:      "Place binary operator after operand.", 
+        public static readonly DiagnosticDescriptor AddNewLineAfterBinaryOperatorInsteadOfBeforeIt = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineAfterBinaryOperatorInsteadOfBeforeIt, 
+            title:              "Add newline after binary operator instead of before it.", 
+            messageFormat:      "Add newline after binary operator instead of before it.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.PlaceBinaryOperatorAfterOperand}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineAfterBinaryOperatorInsteadOfBeforeIt}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0005</summary>
-        public static readonly DiagnosticDescriptor PlaceConditionalOperatorAfterExpression = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression, 
-            title:              "Place conditional operator after expression.", 
-            messageFormat:      "Place conditional operator after expression.", 
+        public static readonly DiagnosticDescriptor AddNewLineAfterConditionalOperatorInsteadOfBeforeIt = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineAfterConditionalOperatorInsteadOfBeforeIt, 
+            title:              "Add newline after conditional operator instead of before it.", 
+            messageFormat:      "Add newline after conditional operator instead of before it.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineAfterConditionalOperatorInsteadOfBeforeIt}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0006</summary>
@@ -106,15 +106,15 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0009</summary>
-        public static readonly DiagnosticDescriptor RemoveNewLineBeforeWhileKeywordOfDoStatement = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.RemoveNewLineBeforeWhileKeywordOfDoStatement, 
-            title:              "Remove newline before 'while' keyword of do statement.", 
-            messageFormat:      "Remove newline before 'while' keyword of do statement.", 
+        public static readonly DiagnosticDescriptor RemoveNewLineBetweenClosingBraceAndWhileKeyword = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.RemoveNewLineBetweenClosingBraceAndWhileKeyword, 
+            title:              "Remove newline between closing brace and 'while' keyword.", 
+            messageFormat:      "Remove newline between closing brace and 'while' keyword.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveNewLineBeforeWhileKeywordOfDoStatement}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveNewLineBetweenClosingBraceAndWhileKeyword}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0010</summary>
@@ -178,22 +178,22 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0015</summary>
-        public static readonly DiagnosticDescriptor AddEmptyLineBetweenSinglelineDeclarations = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarations, 
+        public static readonly DiagnosticDescriptor AddEmptyLineBetweenSingleLineDeclarations = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineBetweenSingleLineDeclarations, 
             title:              "Add empty line between single-line declarations.", 
             messageFormat:      "Add empty line between single-line declarations.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarations}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBetweenSingleLineDeclarations}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0016</summary>
         public static readonly DiagnosticDescriptor AddEmptyLineBetweenDeclarationAndDocumentationComment = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.AddEmptyLineBetweenDeclarationAndDocumentationComment, 
-            title:              "Add empty line between declarations and documentation comment.", 
-            messageFormat:      "Add empty line between declarations and documentation comment.", 
+            title:              "Add empty line between declaration and documentation comment.", 
+            messageFormat:      "Add empty line between declaration and documentation comment.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
@@ -202,27 +202,27 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0017</summary>
-        public static readonly DiagnosticDescriptor AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind, 
-            title:              "Add empty line between singl-line declarations of different kind.", 
-            messageFormat:      "Add empty line between singl-line declarations of different kind.", 
+        public static readonly DiagnosticDescriptor AddEmptyLineBetweenSingleLineDeclarationsOfDifferentKind = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineBetweenSingleLineDeclarationsOfDifferentKind, 
+            title:              "Add empty line between single-line declarations of different kind.", 
+            messageFormat:      "Add empty line between single-line declarations of different kind.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBetweenSingleLineDeclarationsOfDifferentKind}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0018</summary>
-        public static readonly DiagnosticDescriptor RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind, 
-            title:              "Remove empty between single-line declarations of same kind.", 
-            messageFormat:      "Remove empty between single-line declarations of same kind.", 
+        public static readonly DiagnosticDescriptor RemoveEmptyLineBetweenSingleLineDeclarationsOfSameKind = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.RemoveEmptyLineBetweenSingleLineDeclarationsOfSameKind, 
+            title:              "Remove empty line between single-line declarations of same kind.", 
+            messageFormat:      "Remove empty line between single-line declarations of same kind.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveEmptyLineBetweenSingleLineDeclarationsOfSameKind}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0019</summary>
@@ -322,15 +322,15 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0029</summary>
-        public static readonly DiagnosticDescriptor PlaceBinaryOperatorBeforeOperand = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.PlaceBinaryOperatorBeforeOperand, 
-            title:              "Place operator before operand.", 
-            messageFormat:      "Place operator before operand.", 
+        public static readonly DiagnosticDescriptor AddNewLineBeforeBinaryOperatorInsteadOfAfterIt = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineBeforeBinaryOperatorInsteadOfAfterIt, 
+            title:              "Add newline before binary operator instead of after it.", 
+            messageFormat:      "Add newline before binary operator instead of after it.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.PlaceBinaryOperatorBeforeOperand}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeBinaryOperatorInsteadOfAfterIt}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0030</summary>
@@ -430,15 +430,15 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0184</summary>
-        public static readonly DiagnosticDescriptor PlaceConditionalOperatorBeforeExpression = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression, 
-            title:              "Place conditional operator before expression.", 
-            messageFormat:      "Place conditional operator before expression.", 
+        public static readonly DiagnosticDescriptor AddNewLineBeforeConditionalOperatorInsteadOfAfterIt = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineBeforeConditionalOperatorInsteadOfAfterIt, 
+            title:              "Add newline before conditional operator instead of after it.", 
+            messageFormat:      "Add newline before conditional operator instead of after it.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeConditionalOperatorInsteadOfAfterIt}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0185</summary>

@@ -11,11 +11,11 @@ using Roslynator.CSharp;
 namespace Roslynator.Formatting.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    internal class RemoveNewLineBeforeWhileKeywordOfDoStatementAnalyzer : BaseDiagnosticAnalyzer
+    internal class RemoveNewLineBetweenClosingBraceAndWhileKeywordAnalyzer : BaseDiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(DiagnosticDescriptors.RemoveNewLineBeforeWhileKeywordOfDoStatement); }
+            get { return ImmutableArray.Create(DiagnosticDescriptors.RemoveNewLineBetweenClosingBraceAndWhileKeyword); }
         }
 
         public override void Initialize(AnalysisContext context)
@@ -41,7 +41,7 @@ namespace Roslynator.Formatting.CSharp
                 return;
 
             context.ReportDiagnostic(
-                DiagnosticDescriptors.RemoveNewLineBeforeWhileKeywordOfDoStatement,
+                DiagnosticDescriptors.RemoveNewLineBetweenClosingBraceAndWhileKeyword,
                 Location.Create(doStatement.SyntaxTree, new TextSpan(statement.Span.End, 0)));
         }
     }

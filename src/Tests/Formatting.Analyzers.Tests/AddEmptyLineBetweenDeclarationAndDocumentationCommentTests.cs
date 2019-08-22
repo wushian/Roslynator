@@ -18,7 +18,7 @@ namespace Roslynator.Formatting.CSharp.Tests
         public override CodeFixProvider FixProvider { get; } = new EmptyLineBetweenDeclarationsCodeFixProvider();
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenDeclarationAndDocumentationComment)]
-        public async Task Test_MemberDeclaration_Singleline()
+        public async Task Test_MemberDeclaration_SingleLine()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
@@ -76,7 +76,7 @@ class C
         }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenDeclarationAndDocumentationComment)]
-        public async Task Test_EnumMemberDeclaration_Singleline()
+        public async Task Test_EnumMemberDeclaration_SingleLine()
         {
             await VerifyDiagnosticAndFixAsync(@"
 enum E

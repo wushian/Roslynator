@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class PlaceConditionalOperatorAfterExpressionTests : AbstractCSharpFixVerifier
+    public class AddNewLineAfterConditionalOperatorInsteadOfBeforeItTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.PlaceConditionalOperatorAfterExpression;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewLineAfterConditionalOperatorInsteadOfBeforeIt;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new PlaceConditionalOperatorAfterExpressionAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewLineAfterConditionalOperatorInsteadOfBeforeItAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new SyntaxTokenCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineAfterConditionalOperatorInsteadOfBeforeIt)]
         public async Task Test()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -47,7 +47,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineAfterConditionalOperatorInsteadOfBeforeIt)]
         public async Task Test_QuestionToken()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -77,7 +77,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineAfterConditionalOperatorInsteadOfBeforeIt)]
         public async Task Test_ColonToken()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -107,7 +107,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineAfterConditionalOperatorInsteadOfBeforeIt)]
         public async Task TestNoDiagnostic()
         {
             await VerifyNoDiagnosticAsync(@"

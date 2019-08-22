@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class RemoveNewLineBeforeWhileKeywordOfDoStatementTests : AbstractCSharpFixVerifier
+    public class RemoveNewLineBetweenClosingBraceAndWhileKeywordTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.RemoveNewLineBeforeWhileKeywordOfDoStatement;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.RemoveNewLineBetweenClosingBraceAndWhileKeyword;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new RemoveNewLineBeforeWhileKeywordOfDoStatementAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new RemoveNewLineBetweenClosingBraceAndWhileKeywordAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new DoStatementCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLineBeforeWhileKeywordOfDoStatement)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLineBetweenClosingBraceAndWhileKeyword)]
         public async Task Test()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -50,7 +50,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLineBeforeWhileKeywordOfDoStatement)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLineBetweenClosingBraceAndWhileKeyword)]
         public async Task Test_EmptyLine()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -84,7 +84,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLineBeforeWhileKeywordOfDoStatement)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLineBetweenClosingBraceAndWhileKeyword)]
         public async Task TestNoDiagnostic()
         {
             await VerifyNoDiagnosticAsync(@"
@@ -103,7 +103,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLineBeforeWhileKeywordOfDoStatement)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLineBetweenClosingBraceAndWhileKeyword)]
         public async Task TestNoDiagnostic_EmbeddedStatement()
         {
             await VerifyNoDiagnosticAsync(@"

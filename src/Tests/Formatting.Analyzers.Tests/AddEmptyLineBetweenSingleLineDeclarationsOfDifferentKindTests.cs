@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKindTests : AbstractCSharpFixVerifier
+    public class AddEmptyLineBetweenSingleLineDeclarationsOfDifferentKindTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddEmptyLineBetweenSingleLineDeclarationsOfDifferentKind;
 
         public override DiagnosticAnalyzer Analyzer { get; } = new EmptyLineBetweenDeclarationsAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new EmptyLineBetweenDeclarationsCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenSingleLineDeclarationsOfDifferentKind)]
         public async Task Test_MemberDeclaration_PropertyAndIndexer()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -36,7 +36,7 @@ abstract class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenSingleLineDeclarationsOfDifferentKind)]
         public async Task Test_ConstAndField()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -55,7 +55,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenSingleLineDeclarationsOfDifferentKind)]
         public async Task TestNoDiagnostic_MultilineMethod()
         {
             await VerifyNoDiagnosticAsync(@"
@@ -69,7 +69,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenSingleLineDeclarationsOfDifferentKind)]
         public async Task TestNoDiagnostic_Properties()
         {
             await VerifyNoDiagnosticAsync(@"
@@ -81,7 +81,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenSingleLineDeclarationsOfDifferentKind)]
         public async Task TestNoDiagnostic_Event2()
         {
             await VerifyNoDiagnosticAsync(@"

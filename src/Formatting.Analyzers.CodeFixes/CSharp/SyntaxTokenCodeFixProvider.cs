@@ -26,8 +26,8 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             {
                 return ImmutableArray.Create(
                     DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement,
-                    DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression,
-                    DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression,
+                    DiagnosticIdentifiers.AddNewLineBeforeConditionalOperatorInsteadOfAfterIt,
+                    DiagnosticIdentifiers.AddNewLineAfterConditionalOperatorInsteadOfBeforeIt,
                     DiagnosticIdentifiers.PlaceExpressionBodyArrowAtEndOfLine,
                     DiagnosticIdentifiers.PlaceExpressionBodyArrowBeforeExpression,
                     DiagnosticIdentifiers.AddNewLineAfterAttributeList);
@@ -56,7 +56,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                         context.RegisterCodeFix(codeAction, diagnostic);
                         break;
                     }
-                case DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression:
+                case DiagnosticIdentifiers.AddNewLineBeforeConditionalOperatorInsteadOfAfterIt:
                     {
                         var conditionalExpression = (ConditionalExpressionSyntax)token.Parent;
 
@@ -74,13 +74,13 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
                         CodeAction codeAction = CodeAction.Create(
                             title,
-                            ct => PlaceConditionalOperatorBeforeExpressionAsync(document, conditionalExpression, ct),
+                            ct => AddNewLineBeforeConditionalOperatorInsteadOfAfterItAsync(document, conditionalExpression, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
                         break;
                     }
-                case DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression:
+                case DiagnosticIdentifiers.AddNewLineAfterConditionalOperatorInsteadOfBeforeIt:
                     {
                         var conditionalExpression = (ConditionalExpressionSyntax)token.Parent;
 
@@ -98,7 +98,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
                         CodeAction codeAction = CodeAction.Create(
                             title,
-                            ct => PlaceConditionalOperatorAfterExpressionAsync(document, conditionalExpression, ct),
+                            ct => AddNewLineAfterConditionalOperatorInsteadOfBeforeItAsync(document, conditionalExpression, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
@@ -155,7 +155,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             }
         }
 
-        private static Task<Document> PlaceConditionalOperatorBeforeExpressionAsync(
+        private static Task<Document> AddNewLineBeforeConditionalOperatorInsteadOfAfterItAsync(
             Document document,
             ConditionalExpressionSyntax conditionalExpression,
             CancellationToken cancellationToken)
@@ -200,7 +200,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             return document.ReplaceNodeAsync(conditionalExpression, newConditionalExpression, cancellationToken);
         }
 
-        private static Task<Document> PlaceConditionalOperatorAfterExpressionAsync(
+        private static Task<Document> AddNewLineAfterConditionalOperatorInsteadOfBeforeItAsync(
             Document document,
             ConditionalExpressionSyntax conditionalExpression,
             CancellationToken cancellationToken)

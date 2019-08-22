@@ -9,11 +9,11 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Roslynator.Formatting.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    internal class PlaceConditionalOperatorAfterExpressionAnalyzer : BaseDiagnosticAnalyzer
+    internal class AddNewLineBeforeConditionalOperatorInsteadOfAfterItAnalyzer : BaseDiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(DiagnosticDescriptors.PlaceConditionalOperatorAfterExpression); }
+            get { return ImmutableArray.Create(DiagnosticDescriptors.AddNewLineBeforeConditionalOperatorInsteadOfAfterIt); }
         }
 
         public override void Initialize(AnalysisContext context)
@@ -37,7 +37,7 @@ namespace Roslynator.Formatting.CSharp
             if (whenTrue.IsMissing)
                 return;
 
-            if (SyntaxTriviaAnalysis.IsTokenPlacedBeforeExpression(condition, conditionalExpression.QuestionToken, whenTrue))
+            if (SyntaxTriviaAnalysis.IsTokenPlacedAfterExpression(condition, conditionalExpression.QuestionToken, whenTrue))
             {
                 ReportDiagnostic(context, conditionalExpression.QuestionToken);
             }
@@ -46,7 +46,7 @@ namespace Roslynator.Formatting.CSharp
                 ExpressionSyntax whenFalse = conditionalExpression.WhenFalse;
 
                 if (!whenFalse.IsMissing
-                    && SyntaxTriviaAnalysis.IsTokenPlacedBeforeExpression(whenTrue, conditionalExpression.ColonToken, whenFalse))
+                    && SyntaxTriviaAnalysis.IsTokenPlacedAfterExpression(whenTrue, conditionalExpression.ColonToken, whenFalse))
                 {
                     ReportDiagnostic(context, conditionalExpression.ColonToken);
                 }
@@ -56,7 +56,7 @@ namespace Roslynator.Formatting.CSharp
         private static void ReportDiagnostic(SyntaxNodeAnalysisContext context, SyntaxToken token)
         {
             context.ReportDiagnostic(
-                DiagnosticDescriptors.PlaceConditionalOperatorAfterExpression,
+                DiagnosticDescriptors.AddNewLineBeforeConditionalOperatorInsteadOfAfterIt,
                 Location.Create(token.SyntaxTree, token.Span.WithLength(0)));
         }
     }

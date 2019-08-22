@@ -20,10 +20,10 @@ namespace Roslynator.Formatting.CSharp
             {
                 return ImmutableArray.Create(
                     DiagnosticDescriptors.AddEmptyLineBetweenDeclarations,
-                    DiagnosticDescriptors.AddEmptyLineBetweenSinglelineDeclarations,
+                    DiagnosticDescriptors.AddEmptyLineBetweenSingleLineDeclarations,
                     DiagnosticDescriptors.AddEmptyLineBetweenDeclarationAndDocumentationComment,
-                    DiagnosticDescriptors.AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind,
-                    DiagnosticDescriptors.RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind);
+                    DiagnosticDescriptors.AddEmptyLineBetweenSingleLineDeclarationsOfDifferentKind,
+                    DiagnosticDescriptors.RemoveEmptyLineBetweenSingleLineDeclarationsOfSameKind);
             }
         }
 
@@ -72,14 +72,14 @@ namespace Roslynator.Formatting.CSharp
             CancellationToken cancellationToken = context.CancellationToken;
             MemberDeclarationSyntax member = null;
             MemberDeclarationSyntax previousMember = members[0];
-            bool? isSingleline = null;
-            bool? isPreviousSingleline = null;
+            bool? isSingleLine = null;
+            bool? isPreviousSingleLine = null;
             bool shouldReportDocumentationComment = !context.IsAnalyzerSuppressed(DiagnosticDescriptors.AddEmptyLineBetweenDeclarationAndDocumentationComment);
 
-            for (int i = 1; i < count; i++, previousMember = member, isPreviousSingleline = isSingleline)
+            for (int i = 1; i < count; i++, previousMember = member, isPreviousSingleLine = isSingleLine)
             {
                 member = members[i];
-                isSingleline = null;
+                isSingleLine = null;
                 SyntaxTriviaList trailingTrivia = previousMember.GetTrailingTrivia();
 
                 if (!SyntaxTriviaAnalysis.IsOptionalWhitespaceThenOptionalSingleLineCommentThenEndOfLineTrivia(trailingTrivia))
@@ -101,20 +101,20 @@ namespace Roslynator.Formatting.CSharp
                     continue;
                 }
 
-                if ((isSingleline ?? (isSingleline = tree.IsSingleLineSpan(member.Span, cancellationToken)).Value)
-                    && (isPreviousSingleline ?? tree.IsSingleLineSpan(members[i - 1].Span, cancellationToken)))
+                if ((isSingleLine ?? (isSingleLine = tree.IsSingleLineSpan(member.Span, cancellationToken)).Value)
+                    && (isPreviousSingleLine ?? tree.IsSingleLineSpan(members[i - 1].Span, cancellationToken)))
                 {
                     if (emptyLine)
                     {
                         if (MemberKindEquals(previousMember, member))
-                            ReportDiagnostic(context, DiagnosticDescriptors.RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind, leadingTrivia[0]);
+                            ReportDiagnostic(context, DiagnosticDescriptors.RemoveEmptyLineBetweenSingleLineDeclarationsOfSameKind, leadingTrivia[0]);
                     }
                     else if (emptyOrWhitespaceTrivia)
                     {
-                        ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenSinglelineDeclarations, trailingTrivia.Last());
+                        ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenSingleLineDeclarations, trailingTrivia.Last());
 
                         if (!MemberKindEquals(previousMember, member))
-                            ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind, trailingTrivia.Last());
+                            ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenSingleLineDeclarationsOfDifferentKind, trailingTrivia.Last());
                     }
                 }
                 else if (emptyOrWhitespaceTrivia)
@@ -166,13 +166,13 @@ namespace Roslynator.Formatting.CSharp
             CancellationToken cancellationToken = context.CancellationToken;
             EnumMemberDeclarationSyntax member = null;
             EnumMemberDeclarationSyntax previousMember = members[0];
-            bool? isSingleline = null;
-            bool? isPreviousSingleline = null;
+            bool? isSingleLine = null;
+            bool? isPreviousSingleLine = null;
 
-            for (int i = 1; i < count; i++, previousMember = member, isPreviousSingleline = isSingleline)
+            for (int i = 1; i < count; i++, previousMember = member, isPreviousSingleLine = isSingleLine)
             {
                 member = members[i];
-                isSingleline = null;
+                isSingleLine = null;
                 SyntaxToken commaToken = members.GetSeparator(i - 1);
                 SyntaxTriviaList trailingTrivia = commaToken.TrailingTrivia;
 
@@ -195,16 +195,16 @@ namespace Roslynator.Formatting.CSharp
                     continue;
                 }
 
-                if ((isSingleline ?? (isSingleline = tree.IsSingleLineSpan(member.Span, cancellationToken)).Value)
-                    && (isPreviousSingleline ?? tree.IsSingleLineSpan(members[i - 1].Span, cancellationToken)))
+                if ((isSingleLine ?? (isSingleLine = tree.IsSingleLineSpan(member.Span, cancellationToken)).Value)
+                    && (isPreviousSingleLine ?? tree.IsSingleLineSpan(members[i - 1].Span, cancellationToken)))
                 {
                     if (emptyLine)
                     {
-                        ReportDiagnostic(context, DiagnosticDescriptors.RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind, leadingTrivia[0]);
+                        ReportDiagnostic(context, DiagnosticDescriptors.RemoveEmptyLineBetweenSingleLineDeclarationsOfSameKind, leadingTrivia[0]);
                     }
                     else if (emptyOrWhitespaceTrivia)
                     {
-                        ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenSinglelineDeclarations, trailingTrivia.Last());
+                        ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenSingleLineDeclarations, trailingTrivia.Last());
                     }
                 }
                 else if (emptyOrWhitespaceTrivia)

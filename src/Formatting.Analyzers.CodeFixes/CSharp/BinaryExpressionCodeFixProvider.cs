@@ -22,8 +22,8 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             get
             {
                 return ImmutableArray.Create(
-                    DiagnosticIdentifiers.PlaceBinaryOperatorBeforeOperand,
-                    DiagnosticIdentifiers.PlaceBinaryOperatorAfterOperand);
+                    DiagnosticIdentifiers.AddNewLineBeforeBinaryOperatorInsteadOfAfterIt,
+                    DiagnosticIdentifiers.AddNewLineAfterBinaryOperatorInsteadOfBeforeIt);
             }
         }
 
@@ -39,21 +39,21 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             switch (diagnostic.Id)
             {
-                case DiagnosticIdentifiers.PlaceBinaryOperatorBeforeOperand:
+                case DiagnosticIdentifiers.AddNewLineBeforeBinaryOperatorInsteadOfAfterIt:
                     {
                         CodeAction codeAction = CodeAction.Create(
-                            $"Place '{binaryExpression.OperatorToken.ToString()}' before operand",
-                            ct => PlaceBinaryOperatorBeforeOperandAsync(document, binaryExpression, ct),
+                            $"Add newline before '{binaryExpression.OperatorToken.ToString()}' instead of after it",
+                            ct => AddNewLineBeforeBinaryOperatorInsteadOfAfterItAsync(document, binaryExpression, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
                         break;
                     }
-                case DiagnosticIdentifiers.PlaceBinaryOperatorAfterOperand:
+                case DiagnosticIdentifiers.AddNewLineAfterBinaryOperatorInsteadOfBeforeIt:
                     {
                         CodeAction codeAction = CodeAction.Create(
-                            $"Place '{binaryExpression.OperatorToken.ToString()}' after operand",
-                            ct => PlaceBinaryOperatorAfterOperandAsync(document, binaryExpression, ct),
+                            $"Add newline after '{binaryExpression.OperatorToken.ToString()}' instead of before it",
+                            ct => AddNewLineAfterBinaryOperatorInsteadOfBeforeItAsync(document, binaryExpression, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
@@ -62,7 +62,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             }
         }
 
-        private static Task<Document> PlaceBinaryOperatorBeforeOperandAsync(
+        private static Task<Document> AddNewLineBeforeBinaryOperatorInsteadOfAfterItAsync(
             Document document,
             BinaryExpressionSyntax binaryExpression,
             CancellationToken cancellationToken)
@@ -78,7 +78,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             return document.ReplaceNodeAsync(binaryExpression, newBinaryExpression, cancellationToken);
         }
 
-        private static Task<Document> PlaceBinaryOperatorAfterOperandAsync(
+        private static Task<Document> AddNewLineAfterBinaryOperatorInsteadOfBeforeItAsync(
             Document document,
             BinaryExpressionSyntax binaryExpression,
             CancellationToken cancellationToken)

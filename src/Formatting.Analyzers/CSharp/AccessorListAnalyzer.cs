@@ -22,7 +22,7 @@ namespace Roslynator.Formatting.CSharp
                 return ImmutableArray.Create(
                     DiagnosticDescriptors.RemoveNewLinesFromAccessorListOfAutoProperty,
                     DiagnosticDescriptors.AddNewLineBeforeAccessorOfFullProperty,
-                    DiagnosticDescriptors.RemoveNewLinesFromAccessor);
+                    DiagnosticDescriptors.RemoveNewLinesFromAccessorWithSingleLineExpression);
             }
         }
 
@@ -63,13 +63,13 @@ namespace Roslynator.Formatting.CSharp
                     }
                 }
 
-                if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveNewLinesFromAccessor)
+                if (!context.IsAnalyzerSuppressed(DiagnosticDescriptors.RemoveNewLinesFromAccessorWithSingleLineExpression)
                     && !accessorList.IsSingleLine(includeExteriorTrivia: false))
                 {
                     foreach (AccessorDeclarationSyntax accessor in accessors)
                     {
                         if (CanRemoveNewLinesFromAccessor(accessor))
-                            context.ReportDiagnostic(DiagnosticDescriptors.RemoveNewLinesFromAccessor, accessor);
+                            context.ReportDiagnostic(DiagnosticDescriptors.RemoveNewLinesFromAccessorWithSingleLineExpression, accessor);
                     }
                 }
             }

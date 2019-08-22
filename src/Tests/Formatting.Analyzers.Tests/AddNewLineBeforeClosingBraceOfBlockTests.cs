@@ -136,7 +136,7 @@ class C
         }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfBlock)]
-        public async Task TestNoDiagnostic_SinglelineAccessorList()
+        public async Task TestNoDiagnostic_SingleLineAccessorList()
         {
             await VerifyNoDiagnosticAsync(@"
 using System;

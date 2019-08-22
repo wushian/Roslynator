@@ -19,7 +19,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(DiagnosticIdentifiers.RemoveNewLineBeforeWhileKeywordOfDoStatement); }
+            get { return ImmutableArray.Create(DiagnosticIdentifiers.RemoveNewLineBetweenClosingBraceAndWhileKeyword); }
         }
 
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
@@ -34,11 +34,11 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             switch (diagnostic.Id)
             {
-                case DiagnosticIdentifiers.RemoveNewLineBeforeWhileKeywordOfDoStatement:
+                case DiagnosticIdentifiers.RemoveNewLineBetweenClosingBraceAndWhileKeyword:
                     {
                         CodeAction codeAction = CodeAction.Create(
                             CodeFixTitles.RemoveNewLine,
-                            ct => RemoveNewLineBeforeWhileKeywordOfDoStatementAsync(document, doStatement, ct),
+                            ct => RemoveNewLineBetweenClosingBraceAndWhileKeywordAsync(document, doStatement, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
@@ -47,7 +47,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             }
         }
 
-        private static Task<Document> RemoveNewLineBeforeWhileKeywordOfDoStatementAsync(
+        private static Task<Document> RemoveNewLineBetweenClosingBraceAndWhileKeywordAsync(
             Document document,
             DoStatementSyntax doStatement,
             CancellationToken cancellationToken)

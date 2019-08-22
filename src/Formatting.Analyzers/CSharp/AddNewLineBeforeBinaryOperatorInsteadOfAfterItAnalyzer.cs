@@ -10,11 +10,11 @@ using Roslynator.CSharp;
 namespace Roslynator.Formatting.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    internal class PlaceBinaryOperatorBeforeOperandAnalyzer : BaseDiagnosticAnalyzer
+    internal class AddNewLineBeforeBinaryOperatorInsteadOfAfterItAnalyzer : BaseDiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(DiagnosticDescriptors.PlaceBinaryOperatorBeforeOperand); }
+            get { return ImmutableArray.Create(DiagnosticDescriptors.AddNewLineBeforeBinaryOperatorInsteadOfAfterIt); }
         }
 
         public override void Initialize(AnalysisContext context)
@@ -66,7 +66,7 @@ namespace Roslynator.Formatting.CSharp
                 return;
 
             context.ReportDiagnostic(
-                DiagnosticDescriptors.PlaceBinaryOperatorBeforeOperand,
+                DiagnosticDescriptors.AddNewLineBeforeBinaryOperatorInsteadOfAfterIt,
                 Location.Create(binaryExpression.SyntaxTree, binaryExpression.OperatorToken.Span.WithLength(0)));
         }
     }

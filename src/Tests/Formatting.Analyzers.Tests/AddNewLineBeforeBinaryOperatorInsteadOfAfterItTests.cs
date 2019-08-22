@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class PlaceBinaryOperatorAfterOperandTests : AbstractCSharpFixVerifier
+    public class AddNewLineBeforeBinaryOperatorInsteadOfAfterItTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.PlaceBinaryOperatorAfterOperand;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewLineBeforeBinaryOperatorInsteadOfAfterIt;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new PlaceBinaryOperatorAfterOperandAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewLineBeforeBinaryOperatorInsteadOfAfterItAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new BinaryExpressionCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceBinaryOperatorAfterOperand)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeBinaryOperatorInsteadOfAfterIt)]
         public async Task Test()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -29,9 +29,9 @@ class C
         bool y = false;
         bool z = false;
 
-        if (x
-            [||]&& y
-            [||]&& z)
+        if (x [||]&&
+            y [||]&&
+            z)
         {
         }
     }
@@ -45,9 +45,9 @@ class C
         bool y = false;
         bool z = false;
 
-        if (x &&
-            y &&
-            z)
+        if (x
+            && y
+            && z)
         {
         }
     }
@@ -55,7 +55,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceBinaryOperatorAfterOperand)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeBinaryOperatorInsteadOfAfterIt)]
         public async Task TestNoDiagnostic()
         {
             await VerifyNoDiagnosticAsync(@"
@@ -67,9 +67,9 @@ class C
         bool y = false;
         bool z = false;
 
-        if (x &&
-            y &&
-            z)
+        if (x
+            && y
+            && z)
         {
         }
     }
@@ -77,8 +77,8 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceBinaryOperatorAfterOperand)]
-        public async Task TestNoDiagnostic_Singleline()
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeBinaryOperatorInsteadOfAfterIt)]
+        public async Task TestNoDiagnostic_SingleLine()
         {
             await VerifyNoDiagnosticAsync(@"
 class C

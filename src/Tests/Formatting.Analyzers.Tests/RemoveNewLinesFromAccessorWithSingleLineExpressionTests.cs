@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class RemoveNewLinesFromAccessorTests : AbstractCSharpFixVerifier
+    public class RemoveNewLinesFromAccessorWithSingleLineExpressionTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.RemoveNewLinesFromAccessor;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.RemoveNewLinesFromAccessorWithSingleLineExpression;
 
         public override DiagnosticAnalyzer Analyzer { get; } = new AccessorListAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new AccessorDeclarationCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLinesFromAccessor)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLinesFromAccessorWithSingleLineExpression)]
         public async Task Test_Getter_Setter()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -51,7 +51,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLinesFromAccessor)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLinesFromAccessorWithSingleLineExpression)]
         public async Task Test_Getter()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -82,7 +82,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLinesFromAccessor)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLinesFromAccessorWithSingleLineExpression)]
         public async Task Test_Setter()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -113,7 +113,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLinesFromAccessor)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLinesFromAccessorWithSingleLineExpression)]
         public async Task TestNoDiagnostic_FullProperty()
         {
             await VerifyNoDiagnosticAsync(@"
@@ -130,7 +130,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLinesFromAccessor)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLinesFromAccessorWithSingleLineExpression)]
         public async Task TestNoDiagnostic_AutoProperty()
         {
             await VerifyNoDiagnosticAsync(@"

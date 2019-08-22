@@ -16,7 +16,7 @@
       </Sample>
     </Samples>
   </Analyzer>-->
-  <Analyzer Identifier="RemoveNewLinesFromAccessorListOfAutoProperty"> <!--FormatAccessorList-->
+  <Analyzer Identifier="RemoveNewLinesFromAccessorListOfAutoProperty"> <!-- RCS1024 -->
     <Id>RCS0001</Id>
     <Title>Remove newlines from accessor list of auto-property.</Title>
     <MessageFormat>Remove newlines from accessor list of auto-property.</MessageFormat>
@@ -56,7 +56,7 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="RemoveNewLinesFromAccessor"> <!--FormatAccessorList-->
+  <Analyzer Identifier="RemoveNewLinesFromAccessorWithSingleLineExpression"> <!-- RCS1024 -->
     <Id>RCS0003</Id>
     <Title>Remove newlines from accessor with single-line expression.</Title>
     <MessageFormat>Remove newlines from accessor with single-line expression.</MessageFormat>
@@ -86,10 +86,10 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="PlaceBinaryOperatorAfterOperand">
+  <Analyzer Identifier="AddNewLineAfterBinaryOperatorInsteadOfBeforeIt">
     <Id>RCS0004</Id>
-    <Title>Place binary operator after operand.</Title>
-    <MessageFormat>Place binary operator after operand.</MessageFormat>
+    <Title>Add newline after binary operator instead of before it.</Title>
+    <MessageFormat>Add newline after binary operator instead of before it.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -110,10 +110,10 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="PlaceConditionalOperatorAfterExpression">
+  <Analyzer Identifier="AddNewLineAfterConditionalOperatorInsteadOfBeforeIt">
     <Id>RCS0005</Id>
-    <Title>Place conditional operator after expression.</Title>
-    <MessageFormat>Place conditional operator after expression.</MessageFormat>
+    <Title>Add newline after conditional operator instead of before it.</Title>
+    <MessageFormat>Add newline after conditional operator instead of before it.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -231,10 +231,10 @@ else if (y)
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="RemoveNewLineBeforeWhileKeywordOfDoStatement">
+  <Analyzer Identifier="RemoveNewLineBetweenClosingBraceAndWhileKeyword">
     <Id>RCS0009</Id>
-    <Title>Remove newline before 'while' keyword of do statement.</Title>
-    <MessageFormat>Remove newline before 'while' keyword of do statement.</MessageFormat>
+    <Title>Remove newline between closing brace and 'while' keyword.</Title>
+    <MessageFormat>Remove newline between closing brace and 'while' keyword.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -265,8 +265,25 @@ while (x);]]></Before>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
     <Samples>
       <Sample>
-        <Before><![CDATA[]]></Before>
-        <After><![CDATA[]]></After>
+        <Before>
+          <![CDATA[switch (x)
+{
+    case "a":
+        return A(); // [|Id|]
+    case "b":
+        return B();
+}
+]]></Before>
+        <After>
+          <![CDATA[switch (x)
+{
+    case "a":
+        return A();
+
+    case "b":
+        return B();
+}
+]]></After>
       </Sample>
     </Samples>
   </Analyzer>
@@ -351,7 +368,7 @@ while (x);]]></Before>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddEmptyLineBetweenSinglelineDeclarations">
+  <Analyzer Identifier="AddEmptyLineBetweenSingleLineDeclarations">
     <Id>RCS0015</Id>
     <Title>Add empty line between single-line declarations.</Title>
     <MessageFormat>Add empty line between single-line declarations.</MessageFormat>
@@ -373,8 +390,8 @@ object P2 { get; }]]></After>
   </Analyzer>
   <Analyzer Identifier="AddEmptyLineBetweenDeclarationAndDocumentationComment">
     <Id>RCS0016</Id>
-    <Title>Add empty line between declarations and documentation comment.</Title>
-    <MessageFormat>Add empty line between declarations and documentation comment.</MessageFormat>
+    <Title>Add empty line between declaration and documentation comment.</Title>
+    <MessageFormat>Add empty line between declaration and documentation comment.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -396,10 +413,10 @@ object P2 { get; }]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind">
+  <Analyzer Identifier="AddEmptyLineBetweenSingleLineDeclarationsOfDifferentKind">
     <Id>RCS0017</Id>
-    <Title>Add empty line between singl-line declarations of different kind.</Title>
-    <MessageFormat>Add empty line between singl-line declarations of different kind.</MessageFormat>
+    <Title>Add empty line between single-line declarations of different kind.</Title>
+    <MessageFormat>Add empty line between single-line declarations of different kind.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -415,10 +432,10 @@ object this[int index] { get; }]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind">
+  <Analyzer Identifier="RemoveEmptyLineBetweenSingleLineDeclarationsOfSameKind">
     <Id>RCS0018</Id>
-    <Title>Remove empty between single-line declarations of same kind.</Title>
-    <MessageFormat>Remove empty between single-line declarations of same kind.</MessageFormat>
+    <Title>Remove empty line between single-line declarations of same kind.</Title>
+    <MessageFormat>Remove empty line between single-line declarations of same kind.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -621,10 +638,10 @@ Bar();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="PlaceBinaryOperatorBeforeOperand"> <!--FormatBinaryOperatorOnNextLine-->
+  <Analyzer Identifier="AddNewLineBeforeBinaryOperatorInsteadOfAfterIt"> <!-- RCS1029 -->
     <Id>RCS0029</Id>
-    <Title>Place operator before operand.</Title>
-    <MessageFormat>Place operator before operand.</MessageFormat>
+    <Title>Add newline before binary operator instead of after it.</Title>
+    <MessageFormat>Add newline before binary operator instead of after it.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -841,10 +858,10 @@ Foo();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="PlaceConditionalOperatorBeforeExpression"> <!--FormatConditionalExpression-->
+  <Analyzer Identifier="AddNewLineBeforeConditionalOperatorInsteadOfAfterIt"> <!-- RCS1184 -->
     <Id>RCS0184</Id>
-    <Title>Place conditional operator before expression.</Title>
-    <MessageFormat>Place conditional operator before expression.</MessageFormat>
+    <Title>Add newline before conditional operator instead of after it.</Title>
+    <MessageFormat>Add newline before conditional operator instead of after it.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>

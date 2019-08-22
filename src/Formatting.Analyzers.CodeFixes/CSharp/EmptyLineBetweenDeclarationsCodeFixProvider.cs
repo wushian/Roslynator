@@ -22,10 +22,10 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             {
                 return ImmutableArray.Create(
                     DiagnosticIdentifiers.AddEmptyLineBetweenDeclarations,
-                    DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarations,
+                    DiagnosticIdentifiers.AddEmptyLineBetweenSingleLineDeclarations,
                     DiagnosticIdentifiers.AddEmptyLineBetweenDeclarationAndDocumentationComment,
-                    DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind,
-                    DiagnosticIdentifiers.RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind);
+                    DiagnosticIdentifiers.AddEmptyLineBetweenSingleLineDeclarationsOfDifferentKind,
+                    DiagnosticIdentifiers.RemoveEmptyLineBetweenSingleLineDeclarationsOfSameKind);
             }
         }
 
@@ -42,9 +42,9 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             switch (diagnostic.Id)
             {
                 case DiagnosticIdentifiers.AddEmptyLineBetweenDeclarations:
-                case DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarations:
+                case DiagnosticIdentifiers.AddEmptyLineBetweenSingleLineDeclarations:
                 case DiagnosticIdentifiers.AddEmptyLineBetweenDeclarationAndDocumentationComment:
-                case DiagnosticIdentifiers.AddEmptyLineBetweenSinglelineDeclarationsOfDifferentKind:
+                case DiagnosticIdentifiers.AddEmptyLineBetweenSingleLineDeclarationsOfDifferentKind:
                     {
                         CodeAction codeAction = CodeAction.Create(
                             CodeFixTitles.AddEmptyLine,
@@ -60,7 +60,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                         context.RegisterCodeFix(codeAction, diagnostic);
                         break;
                     }
-                case DiagnosticIdentifiers.RemoveEmptyLineBetweenSinglelineDeclarationsOfSameKind:
+                case DiagnosticIdentifiers.RemoveEmptyLineBetweenSingleLineDeclarationsOfSameKind:
                     {
                         CodeAction codeAction = CodeAction.Create(
                             CodeFixTitles.RemoveEmptyLine,

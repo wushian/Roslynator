@@ -39,7 +39,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 case DiagnosticIdentifiers.RemoveNewLinesFromAccessorListOfAutoProperty:
                     {
                         CodeAction codeAction = CodeAction.Create(
-                            "Remove newlines from accessor list",
+                            CodeFixTitles.RemoveNewLines,
                             ct => RemoveNewLinesFromAccessorListAsync(document, accessorList, ct),
                             GetEquivalenceKey(diagnostic));
 

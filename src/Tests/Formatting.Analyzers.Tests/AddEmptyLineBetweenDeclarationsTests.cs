@@ -168,7 +168,7 @@ enum E
         }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenDeclarations)]
-        public async Task TestNoDiagnostic_MemberDeclaration_Singleline()
+        public async Task TestNoDiagnostic_MemberDeclaration_SingleLine()
         {
             await VerifyNoDiagnosticAsync(@"
 class C
@@ -180,7 +180,7 @@ class C
         }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenDeclarations)]
-        public async Task TestNoDiagnostic_EnumMemberDeclaration_Singleline()
+        public async Task TestNoDiagnostic_EnumMemberDeclaration_SingleLine()
         {
             await VerifyNoDiagnosticAsync(@"
 enum E
