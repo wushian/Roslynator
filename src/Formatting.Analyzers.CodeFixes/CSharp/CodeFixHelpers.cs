@@ -14,6 +14,16 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 {
     internal static class CodeFixHelpers
     {
+        public static Task<Document> AppendEndOfLineAsync(
+            Document document,
+            SyntaxToken token,
+            CancellationToken cancellationToken)
+        {
+            SyntaxToken newToken = token.AppendEndOfLineToTrailingTrivia();
+
+            return document.ReplaceTokenAsync(token, newToken, cancellationToken);
+        }
+
         public static Task<Document> AddNewLineBeforeAsync(
             Document document,
             SyntaxToken token,

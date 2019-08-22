@@ -15,7 +15,7 @@ namespace Roslynator.Formatting.CSharp.Tests
 
         public override DiagnosticAnalyzer Analyzer { get; } = new PlaceExpressionBodyArrowAtEndOfLineAnalyzer();
 
-        public override CodeFixProvider FixProvider { get; } = new TokenCodeFixProvider();
+        public override CodeFixProvider FixProvider { get; } = new SyntaxTokenCodeFixProvider();
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.PlaceExpressionBodyArrowAtEndOfLine)]
         public async Task Test()

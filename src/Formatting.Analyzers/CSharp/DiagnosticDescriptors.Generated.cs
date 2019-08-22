@@ -262,15 +262,15 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0023</summary>
-        public static readonly DiagnosticDescriptor AddNewLineBeforeClosingBraceOfBlock = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfBlock, 
-            title:              "Add newline before closing brace of block.", 
-            messageFormat:      "Add newline before closing brace of block.", 
+        public static readonly DiagnosticDescriptor AddNewLineBeforeClosingBraceOfEmptyBlock = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyBlock, 
+            title:              "Add newline before closing brace of empty block.", 
+            messageFormat:      "Add newline before closing brace of empty block.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfBlock}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyBlock}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0025</summary>
@@ -418,15 +418,15 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0153</summary>
-        public static readonly DiagnosticDescriptor AddEmptyLineAfterClosingBraceOfBlock = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock, 
-            title:              "Add empty line after closing brace of block.", 
-            messageFormat:      "Add empty line after closing brace of block.", 
+        public static readonly DiagnosticDescriptor AddEmptyLineBetweenBlockAndStatement = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement, 
+            title:              "Add empty line between block and statement.", 
+            messageFormat:      "Add empty line between block and statement.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0184</summary>
@@ -442,15 +442,15 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0185</summary>
-        public static readonly DiagnosticDescriptor AddNewLinesToBlock = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddNewLinesToBlock, 
-            title:              "Add newlines to block.", 
-            messageFormat:      "Add newlines to block.", 
+        public static readonly DiagnosticDescriptor AddNewLineBeforeClosingBraceOfBlock = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfBlock, 
+            title:              "Add newline before closing brace of block.", 
+            messageFormat:      "Add newline before closing brace of block.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLinesToBlock}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfBlock}", 
             customTags:         Array.Empty<string>());
 
     }

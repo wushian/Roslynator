@@ -521,10 +521,10 @@ namespace N
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLineBeforeClosingBraceOfBlock"> <!-- RCS1023 -->
+  <Analyzer Identifier="AddNewLineBeforeClosingBraceOfEmptyBlock"> <!-- RCS1023 -->
     <Id>RCS0023</Id>
-    <Title>Add newline before closing brace of block.</Title>
-    <MessageFormat>Add newline before closing brace of block.</MessageFormat>
+    <Title>Add newline before closing brace of empty block.</Title>
+    <MessageFormat>Add newline before closing brace of empty block.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -645,7 +645,7 @@ Bar();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddEmptyLineAfterEmbeddedStatement">
+  <Analyzer Identifier="AddEmptyLineAfterEmbeddedStatement"> <!-- RCS1030 -->
     <Id>RCS0030</Id>
     <Title>Add empty line after embedded statement.</Title>
     <MessageFormat>Add empty line after embedded statement.</MessageFormat>
@@ -666,7 +666,7 @@ Bar();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddEmptyLineBetweenDeclarations">
+  <Analyzer Identifier="AddEmptyLineBetweenDeclarations"> <!-- RCS1057 -->
     <Id>RCS0057</Id>
     <Title>Add empty line between declarations.</Title>
     <MessageFormat>Add empty line between declarations.</MessageFormat>
@@ -795,7 +795,7 @@ enum Bar
     <SupportsFadeOut>false</SupportsFadeOut>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
   </Analyzer>
-  <Analyzer Identifier="AddEmptyLineBeforeClosingBraceOfDoStatement"> <!--AddEmptyLineBeforeWhileInDoStatement-->
+  <Analyzer Identifier="AddEmptyLineBeforeClosingBraceOfDoStatement"> <!-- RCS1092 -->
     <Id>RCS0092</Id>
     <Title>Add empty line before closing brace of 'do' statement.</Title>
     <MessageFormat>Add empty line before closing brace of 'do' statement.</MessageFormat>
@@ -818,10 +818,10 @@ enum Bar
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddEmptyLineAfterClosingBraceOfBlock"> <!--AddEmptyLineAfterClosingBrace-->
+  <Analyzer Identifier="AddEmptyLineBetweenBlockAndStatement"> <!-- RCS1153 -->
     <Id>RCS0153</Id>
-    <Title>Add empty line after closing brace of block.</Title>
-    <MessageFormat>Add empty line after closing brace of block.</MessageFormat>
+    <Title>Add empty line between block and statement.</Title>
+    <MessageFormat>Add empty line between block and statement.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -861,10 +861,10 @@ Foo();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLinesToBlock"> <!--FormatSingleLineBlock-->
+  <Analyzer Identifier="AddNewLineBeforeClosingBraceOfBlock"> <!-- RCS1185 -->
     <Id>RCS0185</Id>
-    <Title>Add newlines to block.</Title>
-    <MessageFormat>Add newlines to block.</MessageFormat>
+    <Title>Add newline before closing brace of block.</Title>
+    <MessageFormat>Add newline before closing brace of block.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>

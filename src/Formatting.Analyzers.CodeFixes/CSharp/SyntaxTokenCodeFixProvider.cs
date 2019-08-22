@@ -16,16 +16,16 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Roslynator.Formatting.CodeFixes.CSharp
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(TokenCodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(SyntaxTokenCodeFixProvider))]
     [Shared]
-    public class TokenCodeFixProvider : BaseCodeFixProvider
+    public class SyntaxTokenCodeFixProvider : BaseCodeFixProvider
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
             get
             {
                 return ImmutableArray.Create(
-                    DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock,
+                    DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement,
                     DiagnosticIdentifiers.PlaceConditionalOperatorBeforeExpression,
                     DiagnosticIdentifiers.PlaceConditionalOperatorAfterExpression,
                     DiagnosticIdentifiers.PlaceExpressionBodyArrowAtEndOfLine,
@@ -46,11 +46,11 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             switch (diagnostic.Id)
             {
-                case DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock:
+                case DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement:
                     {
                         CodeAction codeAction = CodeAction.Create(
                             CodeFixTitles.AddEmptyLine,
-                            ct => AddEmptyLineAsync(document, token, ct),
+                            ct => CodeFixHelpers.AppendEndOfLineAsync(document, token, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
@@ -153,16 +153,6 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                         break;
                     }
             }
-        }
-
-        private static Task<Document> AddEmptyLineAsync(
-            Document document,
-            SyntaxToken token,
-            CancellationToken cancellationToken)
-        {
-            SyntaxToken newToken = token.AppendEndOfLineToTrailingTrivia();
-
-            return document.ReplaceTokenAsync(token, newToken, cancellationToken);
         }
 
         private static Task<Document> PlaceConditionalOperatorBeforeExpressionAsync(

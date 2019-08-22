@@ -23,7 +23,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             {
                 return ImmutableArray.Create(
                     DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfBlock,
-                    DiagnosticIdentifiers.AddNewLinesToBlock);
+                    DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyBlock);
             }
         }
 
@@ -40,20 +40,11 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             switch (diagnostic.Id)
             {
                 case DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfBlock:
+                case DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyBlock:
                     {
                         CodeAction codeAction = CodeAction.Create(
                             CodeFixTitles.AddNewLine,
                             ct => AddNewLineBeforeClosingBraceOfBlockAsync(document, block, ct),
-                            GetEquivalenceKey(diagnostic));
-
-                        context.RegisterCodeFix(codeAction, diagnostic);
-                        break;
-                    }
-                case DiagnosticIdentifiers.AddNewLinesToBlock:
-                    {
-                        CodeAction codeAction = CodeAction.Create(
-                            CodeFixTitles.AddNewLines,
-                            ct => AddNewLinesToSinglelineBlockAsync(document, block, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
@@ -68,22 +59,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             CancellationToken cancellationToken)
         {
             BlockSyntax newBlock = block
-                .WithOpenBraceToken(block.OpenBraceToken.WithoutTrailingTrivia())
-                .WithCloseBraceToken(block.CloseBraceToken.WithLeadingTrivia(SyntaxTriviaAnalysis.GetEndOfLine(block)))
-                .WithFormatterAnnotation();
-
-            return document.ReplaceNodeAsync(block, newBlock, cancellationToken);
-        }
-
-        private static Task<Document> AddNewLinesToSinglelineBlockAsync(
-            Document document,
-            BlockSyntax block,
-            CancellationToken cancellationToken)
-        {
-            SyntaxToken closeBrace = block.CloseBraceToken;
-
-            BlockSyntax newBlock = block
-                .WithCloseBraceToken(closeBrace.AppendEndOfLineToLeadingTrivia())
+                .WithCloseBraceToken(block.CloseBraceToken.AppendEndOfLineToLeadingTrivia())
                 .WithFormatterAnnotation();
 
             return document.ReplaceNodeAsync(block, newBlock, cancellationToken);

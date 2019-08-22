@@ -6,17 +6,17 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Text;
 using Roslynator.CSharp;
-using Roslynator.CSharp.Syntax;
 
 namespace Roslynator.Formatting.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    internal class AddEmptyLineAfterClosingBraceOfBlockAnalyzer : BaseDiagnosticAnalyzer
+    internal class AddEmptyLineBetweenBlockAndStatementAnalyzer : BaseDiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(DiagnosticDescriptors.AddEmptyLineAfterClosingBraceOfBlock); }
+            get { return ImmutableArray.Create(DiagnosticDescriptors.AddEmptyLineBetweenBlockAndStatement); }
         }
 
         public override void Initialize(AnalysisContext context)
@@ -32,30 +32,42 @@ namespace Roslynator.Formatting.CSharp
         {
             var block = (BlockSyntax)context.Node;
 
-            StatementSyntax blockOrStatement = block;
+            StatementSyntax blockOrStatement;
 
             switch (block.Parent.Kind())
             {
                 case SyntaxKind.Block:
                     {
+                        blockOrStatement = block;
                         break;
                     }
-                case SyntaxKind.WhileStatement:
-                case SyntaxKind.ForStatement:
+                case SyntaxKind.FixedStatement:
                 case SyntaxKind.ForEachStatement:
                 case SyntaxKind.ForEachVariableStatement:
-                case SyntaxKind.UsingStatement:
-                case SyntaxKind.FixedStatement:
+                case SyntaxKind.ForStatement:
                 case SyntaxKind.CheckedStatement:
+                case SyntaxKind.LockStatement:
                 case SyntaxKind.UncheckedStatement:
                 case SyntaxKind.UnsafeStatement:
-                case SyntaxKind.LockStatement:
-                case SyntaxKind.IfStatement:
-                case SyntaxKind.SwitchStatement:
-                case SyntaxKind.TryStatement:
+                case SyntaxKind.UsingStatement:
+                case SyntaxKind.WhileStatement:
                     {
                         blockOrStatement = (StatementSyntax)block.Parent;
                         break;
+                    }
+                case SyntaxKind.IfStatement:
+                    {
+                        var ifStatement = (IfStatementSyntax)block.Parent;
+
+                        if (ifStatement.Else == null)
+                        {
+                            blockOrStatement = ifStatement;
+                            break;
+                        }
+                        else
+                        {
+                            return;
+                        }
                     }
                 case SyntaxKind.ElseClause:
                     {
@@ -104,33 +116,20 @@ namespace Roslynator.Formatting.CSharp
 
         private static void Analyze(SyntaxNodeAnalysisContext context, SyntaxToken closeBrace, StatementSyntax blockOrStatement)
         {
-            StatementListInfo statementsInfo = SyntaxInfo.StatementListInfo(blockOrStatement);
+            StatementSyntax nextStatement = blockOrStatement.NextStatement();
 
-            if (!statementsInfo.Success)
-                return;
-
-            SyntaxList<StatementSyntax> statements = statementsInfo.Statements;
-
-            int index = statements.IndexOf(blockOrStatement);
-
-            if (index < statements.Count - 1)
+            if (nextStatement != null
+                && closeBrace.SyntaxTree.GetLineCount(TextSpan.FromBounds(closeBrace.Span.End, nextStatement.SpanStart)) == 2)
             {
-                int endLine = closeBrace.GetSpanEndLine();
+                SyntaxTrivia endOfLine = closeBrace
+                    .TrailingTrivia
+                    .FirstOrDefault(f => f.IsEndOfLineTrivia());
 
-                StatementSyntax nextStatement = statements[index + 1];
-
-                if (nextStatement.GetSpanStartLine() - endLine == 1)
+                if (endOfLine.IsEndOfLineTrivia())
                 {
-                    SyntaxTrivia trivia = closeBrace
-                        .TrailingTrivia
-                        .FirstOrDefault(f => f.IsEndOfLineTrivia());
-
-                    if (trivia.IsEndOfLineTrivia())
-                    {
-                        context.ReportDiagnostic(
-                            DiagnosticDescriptors.AddEmptyLineAfterClosingBraceOfBlock,
-                            Location.Create(trivia.SyntaxTree, trivia.Span.WithLength(0)));
-                    }
+                    context.ReportDiagnostic(
+                        DiagnosticDescriptors.AddEmptyLineBetweenBlockAndStatement,
+                        Location.Create(endOfLine.SyntaxTree, endOfLine.Span.WithLength(0)));
                 }
             }
         }

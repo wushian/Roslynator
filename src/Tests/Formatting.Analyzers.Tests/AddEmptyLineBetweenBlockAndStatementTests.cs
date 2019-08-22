@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class AddEmptyLineAfterClosingBraceOfBlockTests : AbstractCSharpFixVerifier
+    public class AddEmptyLineBetweenBlockAndStatementTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddEmptyLineAfterClosingBraceOfBlock;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddEmptyLineBetweenBlockAndStatement;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new AddEmptyLineAfterClosingBraceOfBlockAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new AddEmptyLineBetweenBlockAndStatementAnalyzer();
 
-        public override CodeFixProvider FixProvider { get; } = new TokenCodeFixProvider();
+        public override CodeFixProvider FixProvider { get; } = new SyntaxTokenCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement)]
         public async Task Test_Block()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -44,7 +44,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement)]
         public async Task Test_While()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -75,7 +75,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement)]
         public async Task Test_For()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -112,7 +112,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement)]
         public async Task Test_ForEach()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -149,7 +149,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement)]
         public async Task Test_ForEachVariable()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -186,7 +186,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement)]
         public async Task Test_Using()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -219,7 +219,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement)]
         public async Task Test_Fixed()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -248,7 +248,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement)]
         public async Task Test_Checked()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -277,7 +277,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement)]
         public async Task Test_Unchecked()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -306,7 +306,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement)]
         public async Task Test_Unsafe()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -335,7 +335,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement)]
         public async Task Test_Lock()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -364,7 +364,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement)]
         public async Task Test_If()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -393,7 +393,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement)]
         public async Task Test_Else()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -428,7 +428,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement)]
         public async Task Test_Switch()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -461,7 +461,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement)]
         public async Task Test_TryCatch()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -496,7 +496,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement)]
         public async Task Test_TryFinally()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -531,7 +531,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineBetweenBlockAndStatement)]
         public async Task TestNoDiagnostic()
         {
             await VerifyNoDiagnosticAsync(@"
