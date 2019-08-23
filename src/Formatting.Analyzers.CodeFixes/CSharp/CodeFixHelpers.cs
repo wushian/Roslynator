@@ -19,7 +19,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
         public static Task<Document> AppendEndOfLineAsync(
             Document document,
             SyntaxToken token,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             SyntaxToken newToken = token.AppendEndOfLineToTrailingTrivia();
 
@@ -29,7 +29,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
         public static Task<Document> AppendEndOfLineAsync(
             Document document,
             SyntaxNode node,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             SyntaxNode newNode = node.AppendEndOfLineToTrailingTrivia();
 
@@ -121,7 +121,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
         public static Task<Document> AddEmptyLineBeforeDirectiveAsync(
             Document document,
             DirectiveTriviaSyntax directiveTrivia,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             SyntaxTrivia parentTrivia = directiveTrivia.ParentTrivia;
             SyntaxToken token = parentTrivia.Token;
@@ -145,7 +145,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
         public static Task<Document> AddEmptyLineAfterDirectiveAsync(
             Document document,
             DirectiveTriviaSyntax directiveTrivia,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             SyntaxTrivia parentTrivia = directiveTrivia.ParentTrivia;
             SyntaxToken token = parentTrivia.Token;
@@ -165,7 +165,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             SyntaxNodeOrToken left,
             SyntaxNodeOrToken middle,
             SyntaxNodeOrToken right,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             StringBuilder sb = StringBuilderCache.GetInstance();
 
@@ -199,7 +199,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             SyntaxNodeOrToken left,
             SyntaxNodeOrToken middle,
             SyntaxNodeOrToken right,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             StringBuilder sb = StringBuilderCache.GetInstance();
 
@@ -230,7 +230,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
         public static Task<Document> RemoveEmptyLinesBeforeAsync(
             Document document,
             SyntaxToken token,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             SyntaxTriviaList leadingTrivia = token.LeadingTrivia;
 
@@ -262,6 +262,18 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             SyntaxToken newToken = token.WithLeadingTrivia(leadingTrivia.RemoveRange(0, count));
 
             return document.ReplaceTokenAsync(token, newToken, cancellationToken);
+        }
+
+        public static Task<Document> AddNewLineAfterOpeningBraceAsync(
+            Document document,
+            BlockSyntax block,
+            CancellationToken cancellationToken = default)
+        {
+            BlockSyntax newBlock = block
+                .WithOpenBraceToken(block.OpenBraceToken.AppendEndOfLineToTrailingTrivia())
+                .WithFormatterAnnotation();
+
+            return document.ReplaceNodeAsync(block, newBlock, cancellationToken);
         }
     }
 }

@@ -10,11 +10,11 @@ using Microsoft.CodeAnalysis.Text;
 namespace Roslynator.Formatting.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    internal class AddNewLineBeforeClosingBraceOfBlockAnalyzer : BaseDiagnosticAnalyzer
+    internal class AddNewLineAfterOpeningBraceOfEmptyBlockAnalyzer : BaseDiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(DiagnosticDescriptors.AddNewLineBeforeClosingBraceOfBlock); }
+            get { return ImmutableArray.Create(DiagnosticDescriptors.AddNewLineAfterOpeningBraceOfEmptyBlock); }
         }
 
         public override void Initialize(AnalysisContext context)
@@ -28,32 +28,24 @@ namespace Roslynator.Formatting.CSharp
         {
             var block = (BlockSyntax)context.Node;
 
-            //TODO: ?
+            if (block.Statements.Any())
+                return;
+
+            //TODO: AccessorDeclarationSyntax
             if (block.Parent is AccessorDeclarationSyntax)
                 return;
 
             if (block.Parent is AnonymousFunctionExpressionSyntax)
                 return;
 
-            SyntaxList<StatementSyntax> statements = block.Statements;
-
-            if (!statements.Any())
-                return;
-
             SyntaxToken openBrace = block.OpenBraceToken;
 
-            if (openBrace.IsMissing)
+            if (!block.SyntaxTree.IsSingleLineSpan(TextSpan.FromBounds(openBrace.Span.End, openBrace.GetNextToken().SpanStart)))
                 return;
 
-            SyntaxToken closeBrace = block.CloseBraceToken;
-
-            if (closeBrace.IsMissing)
-                return;
-
-            if (!block.SyntaxTree.IsSingleLineSpan(TextSpan.FromBounds(openBrace.SpanStart, closeBrace.Span.End), context.CancellationToken))
-                return;
-
-            context.ReportDiagnostic(DiagnosticDescriptors.AddNewLineBeforeClosingBraceOfBlock, block);
+            context.ReportDiagnostic(
+                DiagnosticDescriptors.AddNewLineAfterOpeningBraceOfEmptyBlock,
+                Location.Create(block.SyntaxTree, new TextSpan(openBrace.Span.End, 0)));
         }
     }
 }

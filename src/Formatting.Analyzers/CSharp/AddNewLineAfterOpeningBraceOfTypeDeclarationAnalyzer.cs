@@ -6,16 +6,15 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
-using Roslynator.CSharp;
 
 namespace Roslynator.Formatting.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    internal class AddNewLineBeforeClosingBraceOfTypeDeclarationAnalyzer : BaseDiagnosticAnalyzer
+    internal class AddNewLineAfterOpeningBraceOfTypeDeclarationAnalyzer : BaseDiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(DiagnosticDescriptors.AddNewLineBeforeClosingBraceOfTypeDeclaration); }
+            get { return ImmutableArray.Create(DiagnosticDescriptors.AddNewLineAfterOpeningBraceOfTypeDeclaration); }
         }
 
         public override void Initialize(AnalysisContext context)
@@ -31,31 +30,17 @@ namespace Roslynator.Formatting.CSharp
         {
             var typeDeclaration = (TypeDeclarationSyntax)context.Node;
 
-            if (typeDeclaration.Members.Any())
-                return;
-
             SyntaxToken openBrace = typeDeclaration.OpenBraceToken;
 
             if (openBrace.IsMissing)
                 return;
 
-            SyntaxToken closeBrace = typeDeclaration.CloseBraceToken;
-
-            if (closeBrace.IsMissing)
-                return;
-
-            if (typeDeclaration.SyntaxTree.GetLineCount(TextSpan.FromBounds(openBrace.SpanStart, closeBrace.Span.End)) != 1)
-                return;
-
-            if (!openBrace.TrailingTrivia.IsEmptyOrWhitespace())
-                return;
-
-            if (closeBrace.LeadingTrivia.Any())
+            if (!typeDeclaration.SyntaxTree.IsSingleLineSpan(TextSpan.FromBounds(openBrace.Span.End, openBrace.GetNextToken().SpanStart)))
                 return;
 
             context.ReportDiagnostic(
-                DiagnosticDescriptors.AddNewLineBeforeClosingBraceOfTypeDeclaration,
-                Location.Create(typeDeclaration.SyntaxTree, closeBrace.Span.WithLength(0)));
+                DiagnosticDescriptors.AddNewLineAfterOpeningBraceOfTypeDeclaration,
+                Location.Create(typeDeclaration.SyntaxTree, new TextSpan(openBrace.Span.End, 0)));
         }
     }
 }

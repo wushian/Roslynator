@@ -23,7 +23,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             get
             {
                 return ImmutableArray.Create(
-                    DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfTypeDeclaration,
+                    DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfTypeDeclaration,
                     DiagnosticIdentifiers.AddNewLineBeforeConstructorInitializer);
             }
         }
@@ -40,11 +40,11 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             switch (diagnostic.Id)
             {
-                case DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfTypeDeclaration:
+                case DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfTypeDeclaration:
                     {
                         CodeAction codeAction = CodeAction.Create(
                             CodeFixTitles.AddNewLine,
-                            ct => AddNewLineBeforeClosingBraceOfTypeDeclarationAsync(document, memberDeclaration, ct),
+                            ct => AddNewLineAfterOpeningBraceOfTypeDeclarationAsync(document, memberDeclaration, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
@@ -70,40 +70,32 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             }
         }
 
-        private static Task<Document> AddNewLineBeforeClosingBraceOfTypeDeclarationAsync(
+        private static Task<Document> AddNewLineAfterOpeningBraceOfTypeDeclarationAsync(
             Document document,
             MemberDeclarationSyntax declaration,
             CancellationToken cancellationToken)
         {
-            MemberDeclarationSyntax newNode = GetNewDeclaration().WithFormatterAnnotation();
+            MemberDeclarationSyntax newDeclaration = GetNewDeclaration().WithFormatterAnnotation();
 
-            return document.ReplaceNodeAsync(declaration, newNode, cancellationToken);
+            return document.ReplaceNodeAsync(declaration, newDeclaration, cancellationToken);
 
             MemberDeclarationSyntax GetNewDeclaration()
             {
-                SyntaxTrivia endOfLine = SyntaxTriviaAnalysis.GetEndOfLine(declaration);
-
                 switch (declaration)
                 {
                     case ClassDeclarationSyntax classDeclaration:
                         {
-                            return classDeclaration
-                                .WithOpenBraceToken(classDeclaration.OpenBraceToken.WithoutTrailingTrivia())
-                                .WithCloseBraceToken(classDeclaration.CloseBraceToken.WithLeadingTrivia(endOfLine));
+                            return classDeclaration.WithOpenBraceToken(classDeclaration.OpenBraceToken.AppendEndOfLineToTrailingTrivia());
                         }
 
                     case StructDeclarationSyntax structDeclaration:
                         {
-                            return structDeclaration
-                                .WithOpenBraceToken(structDeclaration.OpenBraceToken.WithoutTrailingTrivia())
-                                .WithCloseBraceToken(structDeclaration.CloseBraceToken.WithLeadingTrivia(endOfLine));
+                            return structDeclaration.WithOpenBraceToken(structDeclaration.OpenBraceToken.AppendEndOfLineToTrailingTrivia());
                         }
 
                     case InterfaceDeclarationSyntax interfaceDeclaration:
                         {
-                            return interfaceDeclaration
-                                .WithOpenBraceToken(interfaceDeclaration.OpenBraceToken.WithoutTrailingTrivia())
-                                .WithCloseBraceToken(interfaceDeclaration.CloseBraceToken.WithLeadingTrivia(endOfLine));
+                            return interfaceDeclaration.WithOpenBraceToken(interfaceDeclaration.OpenBraceToken.AppendEndOfLineToTrailingTrivia());
                         }
                     default:
                         {

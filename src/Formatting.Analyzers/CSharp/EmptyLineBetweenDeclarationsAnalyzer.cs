@@ -37,7 +37,7 @@ namespace Roslynator.Formatting.CSharp
             context.RegisterSyntaxNodeAction(AnalyzeTypeDeclaration, SyntaxKind.StructDeclaration);
             context.RegisterSyntaxNodeAction(AnalyzeTypeDeclaration, SyntaxKind.InterfaceDeclaration);
             context.RegisterSyntaxNodeAction(AnalyzeEnumDeclaration, SyntaxKind.EnumDeclaration);
-            //TODO: AnalyzeAccessorDeclaration
+            //TODO: EmptyLineBetweenDeclarations AccessorDeclarationSyntax?
         }
 
         private static void AnalyzeCompilationUnit(SyntaxNodeAnalysisContext context)
@@ -70,11 +70,10 @@ namespace Roslynator.Formatting.CSharp
 
             SyntaxTree tree = context.Node.SyntaxTree;
             CancellationToken cancellationToken = context.CancellationToken;
-            MemberDeclarationSyntax member = null;
+            MemberDeclarationSyntax member;
             MemberDeclarationSyntax previousMember = members[0];
-            bool? isSingleLine = null;
+            bool? isSingleLine;
             bool? isPreviousSingleLine = null;
-            bool shouldReportDocumentationComment = !context.IsAnalyzerSuppressed(DiagnosticDescriptors.AddEmptyLineBetweenDeclarationAndDocumentationComment);
 
             for (int i = 1; i < count; i++, previousMember = member, isPreviousSingleLine = isSingleLine)
             {
@@ -164,12 +163,11 @@ namespace Roslynator.Formatting.CSharp
 
             SyntaxTree tree = enumDeclaration.SyntaxTree;
             CancellationToken cancellationToken = context.CancellationToken;
-            EnumMemberDeclarationSyntax member = null;
-            EnumMemberDeclarationSyntax previousMember = members[0];
-            bool? isSingleLine = null;
+            EnumMemberDeclarationSyntax member;
+            bool? isSingleLine;
             bool? isPreviousSingleLine = null;
 
-            for (int i = 1; i < count; i++, previousMember = member, isPreviousSingleLine = isSingleLine)
+            for (int i = 1; i < count; i++, isPreviousSingleLine = isSingleLine)
             {
                 member = members[i];
                 isSingleLine = null;

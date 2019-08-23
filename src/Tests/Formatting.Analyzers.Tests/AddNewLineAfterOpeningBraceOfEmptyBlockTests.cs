@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class AddNewLineBeforeClosingBraceOfEmptyBlockTests : AbstractCSharpFixVerifier
+    public class AddNewLineAfterOpeningBraceOfEmptyBlockTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewLineBeforeClosingBraceOfEmptyBlock;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewLineAfterOpeningBraceOfEmptyBlock;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewLineBeforeClosingBraceOfEmptyBlockAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewLineAfterOpeningBraceOfEmptyBlockAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new BlockCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfEmptyBlock)]
         public async Task Test()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -36,14 +36,14 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfEmptyBlock)]
         public async Task Test_WithWhitespace()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
 {
     void M()
-    { [||]}
+    {[||] }
 }
 ", @"
 class C
@@ -55,7 +55,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfEmptyBlock)]
         public async Task TestNoDiagnostic_EmptyLine()
         {
             await VerifyNoDiagnosticAsync(@"

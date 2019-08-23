@@ -16,7 +16,7 @@
       </Sample>
     </Samples>
   </Analyzer>-->
-  <Analyzer Identifier="RemoveNewLinesFromAccessorListOfAutoProperty"> <!-- RCS1024 -->
+  <Analyzer Identifier="RemoveNewLinesFromAccessorListOfAutoProperty"> <!-- part of RCS1024 -->
     <Id>RCS0001</Id>
     <Title>Remove newlines from accessor list of auto-property.</Title>
     <MessageFormat>Remove newlines from accessor list of auto-property.</MessageFormat>
@@ -36,7 +36,7 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLineBeforeAccessorOfFullProperty"> <!-- RCS1024 -->
+  <Analyzer Identifier="AddNewLineBeforeAccessorOfFullProperty"> <!-- part of RCS1024 -->
     <Id>RCS0002</Id>
     <Title>Add newline before accessor of full property.</Title>
     <MessageFormat>Add newline before accessor of full property.</MessageFormat>
@@ -56,7 +56,7 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="RemoveNewLinesFromAccessorWithSingleLineExpression"> <!-- RCS1024 -->
+  <Analyzer Identifier="RemoveNewLinesFromAccessorWithSingleLineExpression"> <!-- part of RCS1024 -->
     <Id>RCS0003</Id>
     <Title>Remove newlines from accessor with single-line expression.</Title>
     <MessageFormat>Remove newlines from accessor with single-line expression.</MessageFormat>
@@ -538,10 +538,10 @@ namespace N
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLineBeforeClosingBraceOfEmptyBlock"> <!-- RCS1023 -->
+  <Analyzer Identifier="AddNewLineAfterOpeningBraceOfEmptyBlock"> <!-- RCS1023 -->
     <Id>RCS0023</Id>
-    <Title>Add newline before closing brace of empty block.</Title>
-    <MessageFormat>Add newline before closing brace of empty block.</MessageFormat>
+    <Title>Add newline after opening brace of empty block.</Title>
+    <MessageFormat>Add newline after opening brace of empty block.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -760,12 +760,12 @@ enum Bar
 }]]></After>
       </Sample>
     </Samples>
-    <Remarks>This analyzer does not enforce an empty line between two single-line declaration.</Remarks>
+    <Remarks>This rule does not enforce an empty line between two single-line declaration.</Remarks>
   </Analyzer>
-  <Analyzer Identifier="AddNewLineBeforeClosingBraceOfTypeDeclaration"> <!-- RCS1076 -->
+  <Analyzer Identifier="AddNewLineAfterOpeningBraceOfTypeDeclaration"> <!-- RCS1076 -->
     <Id>RCS0076</Id>
-    <Title>Add newline before closing brace of type declaration.</Title>
-    <MessageFormat>Add newline before closing brace of type declaration.</MessageFormat>
+    <Title>Add newline after opening brace of type declaration.</Title>
+    <MessageFormat>Add newline after opening brace of type declaration.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -782,7 +782,7 @@ enum Bar
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="UseLinefeedAsNewLine">
+  <Analyzer Identifier="UseLinefeedAsNewLine"> <!-- RCS1086 -->
     <Id>RCS0086</Id>
     <Title>Use linefeed as newline.</Title>
     <MessageFormat>Use linefeed as newline.</MessageFormat>
@@ -792,7 +792,7 @@ enum Bar
     <SupportsFadeOut>false</SupportsFadeOut>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
   </Analyzer>
-  <Analyzer Identifier="UseCarriageReturnAndLinefeedAsNewLine">
+  <Analyzer Identifier="UseCarriageReturnAndLinefeedAsNewLine"> <!-- RCS1087 -->
     <Id>RCS0087</Id>
     <Title>Use carriage return + linefeed as newline.</Title>
     <MessageFormat>Use carriage return + linefeed as newline.</MessageFormat>
@@ -802,7 +802,7 @@ enum Bar
     <SupportsFadeOut>false</SupportsFadeOut>
     <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
   </Analyzer>
-  <Analyzer Identifier="UseSpacesInsteadOfTab">
+  <Analyzer Identifier="UseSpacesInsteadOfTab"> <!-- RCS1088 -->
     <Id>RCS0088</Id>
     <Title>Use spaces instead of tab.</Title>
     <MessageFormat>Use spaces instead of tab.</MessageFormat>
@@ -878,10 +878,10 @@ Foo();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddNewLineBeforeClosingBraceOfBlock"> <!-- RCS1185 -->
+  <Analyzer Identifier="AddNewLineAfterOpeningBraceOfBlock"> <!-- RCS1185 -->
     <Id>RCS0185</Id>
-    <Title>Add newline before closing brace of block.</Title>
-    <MessageFormat>Add newline before closing brace of block.</MessageFormat>
+    <Title>Add newline after opening brace of block.</Title>
+    <MessageFormat>Add newline after opening brace of block.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -893,6 +893,31 @@ Foo();]]></After>
         <After><![CDATA[void Foo()
 {
     Bar();
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="AddNewLineAfterOpeningBraceOfAccessor">
+    <Id>RCS0022</Id>
+    <Title>Add newline after opening brace of accessor.</Title>
+    <MessageFormat>Add newline after opening brace of accessor.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[string Foo
+{
+    get { return _foo; } // [|Id|]
+}]]></Before>
+        <After><![CDATA[string Foo
+{
+    get
+    {
+        return _foo;
+    }
 }]]></After>
       </Sample>
     </Samples>

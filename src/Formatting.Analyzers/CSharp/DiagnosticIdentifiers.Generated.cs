@@ -29,7 +29,8 @@ namespace Roslynator.Formatting.CSharp
         public const string AddNewLineAfterAttributeList = "RCS0019";
         public const string AddEmptyLineBeforeUsingDirectiveList = "RCS0020";
         public const string AddEmptyLineAfterUsingDirectiveList = "RCS0021";
-        public const string AddNewLineBeforeClosingBraceOfEmptyBlock = "RCS0023";
+        public const string AddNewLineAfterOpeningBraceOfAccessor = "RCS0022";
+        public const string AddNewLineAfterOpeningBraceOfEmptyBlock = "RCS0023";
         public const string AddNewLineBeforeEnumMember = "RCS0025";
         public const string AddNewLineBeforeStatement = "RCS0026";
         public const string AddNewLineBeforeEmbeddedStatement = "RCS0027";
@@ -37,13 +38,13 @@ namespace Roslynator.Formatting.CSharp
         public const string AddNewLineBeforeBinaryOperatorInsteadOfAfterIt = "RCS0029";
         public const string AddEmptyLineAfterEmbeddedStatement = "RCS0030";
         public const string AddEmptyLineBetweenDeclarations = "RCS0057";
-        public const string AddNewLineBeforeClosingBraceOfTypeDeclaration = "RCS0076";
+        public const string AddNewLineAfterOpeningBraceOfTypeDeclaration = "RCS0076";
         public const string UseLinefeedAsNewLine = "RCS0086";
         public const string UseCarriageReturnAndLinefeedAsNewLine = "RCS0087";
         public const string UseSpacesInsteadOfTab = "RCS0088";
         public const string AddEmptyLineBeforeClosingBraceOfDoStatement = "RCS0092";
         public const string AddEmptyLineBetweenBlockAndStatement = "RCS0153";
         public const string AddNewLineBeforeConditionalOperatorInsteadOfAfterIt = "RCS0184";
-        public const string AddNewLineBeforeClosingBraceOfBlock = "RCS0185";
+        public const string AddNewLineAfterOpeningBraceOfBlock = "RCS0185";
     }
 }

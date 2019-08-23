@@ -2,13 +2,11 @@
 
 using System.Collections.Immutable;
 using System.Composition;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Roslynator.CSharp;
 using Roslynator.Formatting.CSharp;
 
 namespace Roslynator.Formatting.CodeFixes.CSharp
@@ -22,8 +20,9 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             get
             {
                 return ImmutableArray.Create(
-                    DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfBlock,
-                    DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyBlock);
+                    DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfBlock,
+                    DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfEmptyBlock,
+                    DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfAccessor);
             }
         }
 
@@ -39,30 +38,19 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             switch (diagnostic.Id)
             {
-                case DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfBlock:
-                case DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyBlock:
+                case DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfBlock:
+                case DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfEmptyBlock:
+                case DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfAccessor:
                     {
                         CodeAction codeAction = CodeAction.Create(
                             CodeFixTitles.AddNewLine,
-                            ct => AddNewLineBeforeClosingBraceOfBlockAsync(document, block, ct),
+                            ct => CodeFixHelpers.AddNewLineAfterOpeningBraceAsync(document, block, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
                         break;
                     }
             }
-        }
-
-        private static Task<Document> AddNewLineBeforeClosingBraceOfBlockAsync(
-            Document document,
-            BlockSyntax block,
-            CancellationToken cancellationToken)
-        {
-            BlockSyntax newBlock = block
-                .WithCloseBraceToken(block.CloseBraceToken.AppendEndOfLineToLeadingTrivia())
-                .WithFormatterAnnotation();
-
-            return document.ReplaceNodeAsync(block, newBlock, cancellationToken);
         }
     }
 }

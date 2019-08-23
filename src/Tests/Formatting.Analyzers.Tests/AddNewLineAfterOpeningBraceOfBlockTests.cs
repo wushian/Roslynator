@@ -9,21 +9,21 @@ using Xunit;
 
 namespace Roslynator.Formatting.CSharp.Tests
 {
-    public class AddNewLineBeforeClosingBraceOfBlockTests : AbstractCSharpFixVerifier
+    public class AddNewLineAfterOpeningBraceOfBlockTests : AbstractCSharpFixVerifier
     {
-        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewLineBeforeClosingBraceOfBlock;
+        public override DiagnosticDescriptor Descriptor { get; } = DiagnosticDescriptors.AddNewLineAfterOpeningBraceOfBlock;
 
-        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewLineBeforeClosingBraceOfBlockAnalyzer();
+        public override DiagnosticAnalyzer Analyzer { get; } = new AddNewLineAfterOpeningBraceOfBlockAnalyzer();
 
         public override CodeFixProvider FixProvider { get; } = new BlockCodeFixProvider();
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfBlock)]
         public async Task Test_Constructor()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
 {
-    public C() [|{ M(); }|]
+    public C() {[||] M(); }
 
     public void M()
     {
@@ -44,13 +44,13 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfBlock)]
         public async Task Test_Destructor()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
 {
-    ~C() [|{ M(); }|]
+    ~C() {[||] M(); }
 
     public void M()
     {
@@ -71,7 +71,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfBlock)]
         public async Task Test_Method()
         {
             await VerifyDiagnosticAndFixAsync(@"
@@ -79,7 +79,7 @@ using System;
 
 class C
 {
-    public void M(object p = null) [|{ if (p == null) [|{ throw new ArgumentNullException(nameof(p)); }|] }|]
+    public void M(object p = null) {[||] if (p == null) {[||] throw new ArgumentNullException(nameof(p)); } }
 }
 ", @"
 using System;
@@ -97,13 +97,13 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfBlock)]
         public async Task Test_ExplicitOperator()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
 {
-    public static explicit operator C(string value) [|{ return new C(); }|]
+    public static explicit operator C(string value) {[||] return new C(); }
 }
 ", @"
 class C
@@ -116,13 +116,13 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfBlock)]
         public async Task Test_Operator()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
 {
-    public static C operator !(C value) [|{ return new C(); }|]
+    public static C operator !(C value) {[||] return new C(); }
 }
 ", @"
 class C
@@ -135,7 +135,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfBlock)]
         public async Task TestNoDiagnostic_SingleLineAccessorList()
         {
             await VerifyNoDiagnosticAsync(@"
@@ -160,7 +160,7 @@ class C
 ");
         }
 
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfBlock)]
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfBlock)]
         public async Task TestNoDiagnostic()
         {
             await VerifyNoDiagnosticAsync(@"

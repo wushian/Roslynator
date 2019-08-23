@@ -261,16 +261,28 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineAfterUsingDirectiveList}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS0023</summary>
-        public static readonly DiagnosticDescriptor AddNewLineBeforeClosingBraceOfEmptyBlock = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyBlock, 
-            title:              "Add newline before closing brace of empty block.", 
-            messageFormat:      "Add newline before closing brace of empty block.", 
+        /// <summary>RCS0022</summary>
+        public static readonly DiagnosticDescriptor AddNewLineAfterOpeningBraceOfAccessor = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfAccessor, 
+            title:              "Add newline after opening brace of accessor.", 
+            messageFormat:      "Add newline after opening brace of accessor.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfEmptyBlock}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfAccessor}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS0023</summary>
+        public static readonly DiagnosticDescriptor AddNewLineAfterOpeningBraceOfEmptyBlock = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfEmptyBlock, 
+            title:              "Add newline after opening brace of empty block.", 
+            messageFormat:      "Add newline after opening brace of empty block.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfEmptyBlock}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0025</summary>
@@ -358,15 +370,15 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0076</summary>
-        public static readonly DiagnosticDescriptor AddNewLineBeforeClosingBraceOfTypeDeclaration = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfTypeDeclaration, 
-            title:              "Add newline before closing brace of type declaration.", 
-            messageFormat:      "Add newline before closing brace of type declaration.", 
+        public static readonly DiagnosticDescriptor AddNewLineAfterOpeningBraceOfTypeDeclaration = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfTypeDeclaration, 
+            title:              "Add newline after opening brace of type declaration.", 
+            messageFormat:      "Add newline after opening brace of type declaration.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfTypeDeclaration}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfTypeDeclaration}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0086</summary>
@@ -442,15 +454,15 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0185</summary>
-        public static readonly DiagnosticDescriptor AddNewLineBeforeClosingBraceOfBlock = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfBlock, 
-            title:              "Add newline before closing brace of block.", 
-            messageFormat:      "Add newline before closing brace of block.", 
+        public static readonly DiagnosticDescriptor AddNewLineAfterOpeningBraceOfBlock = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfBlock, 
+            title:              "Add newline after opening brace of block.", 
+            messageFormat:      "Add newline after opening brace of block.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineBeforeClosingBraceOfBlock}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfBlock}", 
             customTags:         Array.Empty<string>());
 
     }

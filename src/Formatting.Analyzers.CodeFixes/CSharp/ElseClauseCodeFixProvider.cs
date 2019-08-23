@@ -36,7 +36,6 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             {
                 case DiagnosticIdentifiers.RemoveNewLineBetweenIfKeywordAndElseKeyword:
                     {
-                        //TODO: x removenewline
                         CodeAction codeAction = CodeAction.Create(
                             CodeFixTitles.RemoveNewLine,
                             ct => RemoveNewLineBetweenIfKeywordAndElseKeywordAsync(document, elseClause, ct),
