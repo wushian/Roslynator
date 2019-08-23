@@ -465,5 +465,41 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddNewLineAfterOpeningBraceOfBlock}", 
             customTags:         Array.Empty<string>());
 
+        /// <summary>RCS0315</summary>
+        public static readonly DiagnosticDescriptor AddEmptyLineBetweenSingleLineAccessors = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineBetweenSingleLineAccessors, 
+            title:              "Add empty line between single-line accessors.", 
+            messageFormat:      "Add empty line between single-line accessors.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBetweenSingleLineAccessors}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS0318</summary>
+        public static readonly DiagnosticDescriptor RemoveEmptyLineBetweenSingleLineAccessors = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.RemoveEmptyLineBetweenSingleLineAccessors, 
+            title:              "Remove empty line between single-line accessors.", 
+            messageFormat:      "Remove empty line between single-line accessors.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveEmptyLineBetweenSingleLineAccessors}", 
+            customTags:         Array.Empty<string>());
+
+        /// <summary>RCS0357</summary>
+        public static readonly DiagnosticDescriptor AddEmptyLineBetweenAccessors = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineBetweenAccessors, 
+            title:              "Add empty line between accessors.", 
+            messageFormat:      "Add empty line between accessors.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBetweenAccessors}", 
+            customTags:         Array.Empty<string>());
+
     }
 }

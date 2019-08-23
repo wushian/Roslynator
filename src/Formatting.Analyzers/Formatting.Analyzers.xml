@@ -388,6 +388,31 @@ object P2 { get; }]]></After>
       </Sample>
     </Samples>
   </Analyzer>
+  <Analyzer Identifier="AddEmptyLineBetweenSingleLineAccessors">
+    <Id>RCS0315</Id>
+    <Title>Add empty line between single-line accessors.</Title>
+    <MessageFormat>Add empty line between single-line accessors.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[string P
+{
+    get { return _p; } // [|Id|]
+    set { _p = value; }
+}]]></Before>
+        <After><![CDATA[string P
+{
+    get { return _p; }
+    
+    set { _p = value; }
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
   <Analyzer Identifier="AddEmptyLineBetweenDeclarationAndDocumentationComment">
     <Id>RCS0016</Id>
     <Title>Add empty line between declaration and documentation comment.</Title>
@@ -451,6 +476,31 @@ object P2 { get; }]]></Before>
 object P2 { get; }]]></After>
       </Sample>
     </Samples>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="RemoveEmptyLineBetweenSingleLineAccessors">
+    <Id>RCS0318</Id>
+    <Title>Remove empty line between single-line accessors.</Title>
+    <MessageFormat>Remove empty line between single-line accessors.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[string P
+{
+    get { return _p; }
+// [|Id|]
+    set { _p = value; }
+}]]></Before>
+        <After><![CDATA[string P
+{
+    get { return _p; }
+    set { _p = value; }
+}]]></After>
+      </Sample>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="AddNewLineAfterAttributeList">
@@ -761,6 +811,44 @@ enum Bar
       </Sample>
     </Samples>
     <Remarks>This rule does not enforce an empty line between two single-line declaration.</Remarks>
+  </Analyzer>
+  <Analyzer Identifier="AddEmptyLineBetweenAccessors">
+    <Id>RCS0357</Id>
+    <Title>Add empty line between accessors.</Title>
+    <MessageFormat>Add empty line between accessors.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[string P
+{
+    get
+    {
+        return _p;
+    } // [|Id|]
+    set
+    {
+        _p = value;
+    }
+}]]></Before>
+        <After><![CDATA[string P
+{
+    get
+    {
+        return _p;
+    }
+
+    set
+    {
+        _p = value;
+    }
+}]]></After>
+      </Sample>
+    </Samples>
+    <Remarks>This rule does not enforce an empty line between two single-line accessors.</Remarks>
   </Analyzer>
   <Analyzer Identifier="AddNewLineAfterOpeningBraceOfTypeDeclaration"> <!-- RCS1076 -->
     <Id>RCS0076</Id>

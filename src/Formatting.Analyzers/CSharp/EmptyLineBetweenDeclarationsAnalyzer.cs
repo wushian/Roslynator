@@ -37,7 +37,6 @@ namespace Roslynator.Formatting.CSharp
             context.RegisterSyntaxNodeAction(AnalyzeTypeDeclaration, SyntaxKind.StructDeclaration);
             context.RegisterSyntaxNodeAction(AnalyzeTypeDeclaration, SyntaxKind.InterfaceDeclaration);
             context.RegisterSyntaxNodeAction(AnalyzeEnumDeclaration, SyntaxKind.EnumDeclaration);
-            //TODO: EmptyLineBetweenDeclarations AccessorDeclarationSyntax?
         }
 
         private static void AnalyzeCompilationUnit(SyntaxNodeAnalysisContext context)

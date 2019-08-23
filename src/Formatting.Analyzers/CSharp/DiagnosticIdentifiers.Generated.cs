@@ -46,5 +46,8 @@ namespace Roslynator.Formatting.CSharp
         public const string AddEmptyLineBetweenBlockAndStatement = "RCS0153";
         public const string AddNewLineBeforeConditionalOperatorInsteadOfAfterIt = "RCS0184";
         public const string AddNewLineAfterOpeningBraceOfBlock = "RCS0185";
+        public const string AddEmptyLineBetweenSingleLineAccessors = "RCS0315";
+        public const string RemoveEmptyLineBetweenSingleLineAccessors = "RCS0318";
+        public const string AddEmptyLineBetweenAccessors = "RCS0357";
     }
 }
