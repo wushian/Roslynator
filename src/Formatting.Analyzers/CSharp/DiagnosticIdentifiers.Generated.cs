@@ -13,8 +13,8 @@ namespace Roslynator.Formatting.CSharp
         public const string RemoveNewLinesFromAccessorWithSingleLineExpression = "RCS0003";
         public const string AddNewLineAfterBinaryOperatorInsteadOfBeforeIt = "RCS0004";
         public const string AddNewLineAfterConditionalOperatorInsteadOfBeforeIt = "RCS0005";
-        public const string AddEmptyLineAfterRegion = "RCS0006";
-        public const string AddEmptyLineBeforeEndRegion = "RCS0007";
+        public const string AddEmptyLineAfterRegionDirective = "RCS0006";
+        public const string AddEmptyLineBeforeEndRegionDirective = "RCS0007";
         public const string RemoveNewLineBetweenIfKeywordAndElseKeyword = "RCS0008";
         public const string RemoveNewLineBetweenClosingBraceAndWhileKeyword = "RCS0009";
         public const string AddEmptyLineBetweenSwitchSections = "RCS0010";

@@ -20,7 +20,12 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(DiagnosticIdentifiers.AddEmptyLineAfterRegion, DiagnosticIdentifiers.AddEmptyLineBeforeEndRegion); }
+            get
+            {
+                return ImmutableArray.Create(
+                    DiagnosticIdentifiers.AddEmptyLineAfterRegionDirective,
+                    DiagnosticIdentifiers.AddEmptyLineBeforeEndRegionDirective);
+            }
         }
 
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
@@ -35,12 +40,12 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             switch (diagnostic.Id)
             {
-                case DiagnosticIdentifiers.AddEmptyLineAfterRegion:
-                case DiagnosticIdentifiers.AddEmptyLineBeforeEndRegion:
+                case DiagnosticIdentifiers.AddEmptyLineAfterRegionDirective:
+                case DiagnosticIdentifiers.AddEmptyLineBeforeEndRegionDirective:
                     {
                         CodeAction codeAction = CodeAction.Create(
                             CodeFixTitles.AddEmptyLine,
-                            ct => AddEmptyLineAfterRegionAndBeforeEndRegionAsync(document, directiveTrivia, ct),
+                            ct => AddEmptyLineAfterRegionDirectiveAndBeforeEndRegionAsync(document, directiveTrivia, ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);
@@ -49,7 +54,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             }
         }
 
-        private static Task<Document> AddEmptyLineAfterRegionAndBeforeEndRegionAsync(
+        private static Task<Document> AddEmptyLineAfterRegionDirectiveAndBeforeEndRegionAsync(
             Document document,
             DirectiveTriviaSyntax directiveTrivia,
             CancellationToken cancellationToken)

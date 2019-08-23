@@ -130,7 +130,7 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddEmptyLineAfterRegion">
+  <Analyzer Identifier="AddEmptyLineAfterRegionDirective">
     <Id>RCS0006</Id>
     <Title>Add empty line after #region.</Title>
     <MessageFormat>Add empty after #region.</MessageFormat>
@@ -163,7 +163,7 @@
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="AddEmptyLineBeforeEndRegion">
+  <Analyzer Identifier="AddEmptyLineBeforeEndRegionDirective">
     <Id>RCS0007</Id>
     <Title>Add empty line before #endregion.</Title>
     <MessageFormat>Add empty line before #endregion.</MessageFormat>

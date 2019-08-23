@@ -70,27 +70,27 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0006</summary>
-        public static readonly DiagnosticDescriptor AddEmptyLineAfterRegion = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddEmptyLineAfterRegion, 
+        public static readonly DiagnosticDescriptor AddEmptyLineAfterRegionDirective = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineAfterRegionDirective, 
             title:              "Add empty line after #region.", 
             messageFormat:      "Add empty after #region.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineAfterRegion}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineAfterRegionDirective}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0007</summary>
-        public static readonly DiagnosticDescriptor AddEmptyLineBeforeEndRegion = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.AddEmptyLineBeforeEndRegion, 
+        public static readonly DiagnosticDescriptor AddEmptyLineBeforeEndRegionDirective = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.AddEmptyLineBeforeEndRegionDirective, 
             title:              "Add empty line before #endregion.", 
             messageFormat:      "Add empty line before #endregion.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBeforeEndRegion}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBeforeEndRegionDirective}", 
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0008</summary>
