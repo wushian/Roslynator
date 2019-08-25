@@ -1010,4 +1010,85 @@ Foo();]]></After>
       </Sample>
     </Samples>
   </Analyzer>
+  <Analyzer Identifier="RemoveEmptyLineBetweenUsingDirectivesWithSameRootNamespace">
+    <Id>RCS0400</Id>
+    <Title>Remove empty line between using directives with same root namespace.</Title>
+    <MessageFormat>Remove empty line between using directives with same root namespace.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[using System;
+// [|Id|]
+using System.Linq;
+
+namespace N
+{
+}]]></Before>
+        <After><![CDATA[using System;
+using System.Linq;
+
+namespace N
+{
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="RemoveEmptyLineBetweenUsingDirectivesWithDifferentRootNamespace">
+    <Id>RCS0401</Id>
+    <Title>Remove empty line between using directives with different root namespace.</Title>
+    <MessageFormat>Remove empty line between using directives with different root namespace.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[using System;
+// [|Id|]
+using Microsoft.CodeAnalysis;
+
+namespace N
+{
+}]]></Before>
+        <After><![CDATA[using System;
+using Microsoft.CodeAnalysis;
+
+namespace N
+{
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
+  <Analyzer Identifier="AddEmptyLineBetweenUsingDirectivesWithDifferentRootNamespace">
+    <Id>RCS0402</Id>
+    <Title>Add empty line between using directives with different root namespace.</Title>
+    <MessageFormat>Add empty line between using directives with different root namespace.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[using System; // [|Id|]
+using Microsoft.CodeAnalysis;
+
+namespace N
+{
+}]]></Before>
+        <After><![CDATA[using System;
+
+using Microsoft.CodeAnalysis;
+
+namespace N
+{
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
 </Analyzers>

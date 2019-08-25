@@ -169,5 +169,21 @@ namespace Roslynator.Formatting.CSharp
             return kind == SyntaxKind.EndOfLineTrivia
                 && !en.MoveNext();
         }
+
+        public static bool StartsWithOptionalWhitespaceThenEndOfLineTrivia(SyntaxTriviaList trivia)
+        {
+            SyntaxTriviaList.Enumerator en = trivia.GetEnumerator();
+
+            if (!en.MoveNext())
+                return false;
+
+            if (en.Current.IsWhitespaceTrivia()
+                && !en.MoveNext())
+            {
+                return false;
+            }
+
+            return en.Current.IsEndOfLineTrivia();
+        }
     }
 }

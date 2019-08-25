@@ -10,6 +10,7 @@ using Roslynator.CSharp;
 
 namespace Roslynator.Formatting.CSharp
 {
+    //TODO: sloučit s AccessorListAnalyzer
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     internal class EmptyLineBetweenAccessorsAnalyzer : BaseDiagnosticAnalyzer
     {
@@ -59,12 +60,12 @@ namespace Roslynator.Formatting.CSharp
 
             SyntaxTriviaList leadingTrivia = accessor2.GetLeadingTrivia();
 
-            bool containsEmptyLine = ContainsEmptyLine(leadingTrivia);
+            bool isEmptyLine = SyntaxTriviaAnalysis.StartsWithOptionalWhitespaceThenEndOfLineTrivia(leadingTrivia);
 
             if (accessorList.SyntaxTree.IsSingleLineSpan(accessor1.Span, context.CancellationToken)
                 && accessorList.SyntaxTree.IsSingleLineSpan(accessor2.Span, context.CancellationToken))
             {
-                if (containsEmptyLine)
+                if (isEmptyLine)
                 {
                     ReportDiagnostic(context, DiagnosticDescriptors.RemoveEmptyLineBetweenSingleLineAccessors, leadingTrivia[0]);
                 }
@@ -73,26 +74,10 @@ namespace Roslynator.Formatting.CSharp
                     ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenSingleLineAccessors, trailingTrivia.Last());
                 }
             }
-            else if (!containsEmptyLine)
+            else if (!isEmptyLine)
             {
                 ReportDiagnostic(context, DiagnosticDescriptors.AddEmptyLineBetweenAccessors, trailingTrivia.Last());
             }
-        }
-
-        private static bool ContainsEmptyLine(SyntaxTriviaList leadingTrivia)
-        {
-            SyntaxTriviaList.Enumerator en = leadingTrivia.GetEnumerator();
-
-            if (!en.MoveNext())
-                return false;
-
-            if (en.Current.IsWhitespaceTrivia()
-                && !en.MoveNext())
-            {
-                return false;
-            }
-
-            return en.Current.IsEndOfLineTrivia();
         }
 
         private static void ReportDiagnostic(

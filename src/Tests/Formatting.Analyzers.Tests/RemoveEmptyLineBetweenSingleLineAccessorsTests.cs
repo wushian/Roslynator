@@ -15,7 +15,7 @@ namespace Roslynator.Formatting.CSharp.Tests
 
         public override DiagnosticAnalyzer Analyzer { get; } = new EmptyLineBetweenAccessorsAnalyzer();
 
-        public override CodeFixProvider FixProvider { get; } = new EmptyLineBetweenAccessorsCodeFixProvider();
+        public override CodeFixProvider FixProvider { get; } = new SyntaxTriviaCodeFixProvider();
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveEmptyLineBetweenSingleLineAccessors)]
         public async Task Test_Property()

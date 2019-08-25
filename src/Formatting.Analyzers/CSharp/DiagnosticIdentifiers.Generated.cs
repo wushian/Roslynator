@@ -49,5 +49,8 @@ namespace Roslynator.Formatting.CSharp
         public const string AddEmptyLineBetweenSingleLineAccessors = "RCS0315";
         public const string RemoveEmptyLineBetweenSingleLineAccessors = "RCS0318";
         public const string AddEmptyLineBetweenAccessors = "RCS0357";
+        public const string RemoveEmptyLineBetweenUsingDirectivesWithSameRootNamespace = "RCS0400";
+        public const string RemoveEmptyLineBetweenUsingDirectivesWithDifferentRootNamespace = "RCS0401";
+        public const string AddEmptyLineBetweenUsingDirectivesWithDifferentRootNamespace = "RCS0402";
     }
 }

@@ -28,7 +28,7 @@ namespace Roslynator.Formatting.CSharp.Tests
         public override CodeVerificationOptions Options => _options;
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterUsingDirectiveList)]
-        public async Task Test_Comment_After()
+        public async Task Test_CompilationUnit_Comment_After()
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System;
@@ -51,7 +51,7 @@ namespace N
         }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterUsingDirectiveList)]
-        public async Task Test_DocumentationComment_After()
+        public async Task Test_CompilationUnit_DocumentationComment_After()
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System;
@@ -72,7 +72,7 @@ namespace N
         }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterUsingDirectiveList)]
-        public async Task Test_AssemblyAttribute_After()
+        public async Task Test_CompilationUnit_AssemblyAttribute_After()
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System;
@@ -95,7 +95,7 @@ namespace N
         }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterUsingDirectiveList)]
-        public async Task Test_CommentAndAssemblyAttribute_After()
+        public async Task Test_CompilationUnit_CommentAndAssemblyAttribute_After()
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System;
@@ -118,7 +118,7 @@ namespace N
         }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterUsingDirectiveList)]
-        public async Task Test_CommentAndEndRegionDirective_After()
+        public async Task Test_CompilationUnit_CommentAndEndRegionDirective_After()
         {
             await VerifyDiagnosticAndFixAsync(@"
 #region
@@ -141,7 +141,7 @@ namespace N
         }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterUsingDirectiveList)]
-        public async Task Test_CommentAndPragmaDirective_After()
+        public async Task Test_CompilationUnit_CommentAndPragmaDirective_After()
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System;
@@ -164,7 +164,7 @@ namespace N
         }
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterUsingDirectiveList)]
-        public async Task Test_NamespaceDeclaration_After()
+        public async Task Test_CompilationUnit_NamespaceDeclaration_After()
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System;
@@ -178,6 +178,145 @@ using System.Linq;
 
 namespace N
 {
+}
+");
+        }
+
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterUsingDirectiveList)]
+        public async Task Test_NamespaceDeclaration_Comment_After()
+        {
+            await VerifyDiagnosticAndFixAsync(@"
+namespace N
+{
+    using System;
+    using System.Linq;[||]
+    // x
+
+    class C
+    {
+    }
+}
+", @"
+namespace N
+{
+    using System;
+    using System.Linq;
+
+    // x
+
+    class C
+    {
+    }
+}
+");
+        }
+
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterUsingDirectiveList)]
+        public async Task Test_NamespaceDeclaration_DocumentationComment_After()
+        {
+            await VerifyDiagnosticAndFixAsync(@"
+namespace N
+{
+    using System;
+    using System.Linq;[||]
+    /// <summary></summary>
+    class C
+    {
+    }
+}
+", @"
+namespace N
+{
+    using System;
+    using System.Linq;
+
+    /// <summary></summary>
+    class C
+    {
+    }
+}
+");
+        }
+
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterUsingDirectiveList)]
+        public async Task Test_NamespaceDeclaration_CommentAndEndRegionDirective_After()
+        {
+            await VerifyDiagnosticAndFixAsync(@"
+namespace N
+{
+    #region
+    using System;
+    using System.Linq;
+    #endregion[||]
+    class C
+    {
+    }
+}
+", @"
+namespace N
+{
+    #region
+    using System;
+    using System.Linq;
+    #endregion
+
+    class C
+    {
+    }
+}
+");
+        }
+
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterUsingDirectiveList)]
+        public async Task Test_NamespaceDeclaration_CommentAndPragmaDirective_After()
+        {
+            await VerifyDiagnosticAndFixAsync(@"
+namespace N
+{
+    using System;
+    using System.Linq;[||]
+    #pragma warning disable x
+
+    class C
+    {
+    }
+}
+", @"
+namespace N
+{
+    using System;
+    using System.Linq;
+
+    #pragma warning disable x
+
+    class C
+    {
+    }
+}
+");
+        }
+
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.AddEmptyLineAfterUsingDirectiveList)]
+        public async Task Test_NamespaceDeclaration_ClassDeclaration_After()
+        {
+            await VerifyDiagnosticAndFixAsync(@"
+namespace N
+{
+    using System;
+    using System.Linq;[||]
+    class C
+    {
+    }
+}
+", @"
+namespace N
+{
+    using System;
+    using System.Linq;
+
+    class C
+    {
+    }
 }
 ");
         }

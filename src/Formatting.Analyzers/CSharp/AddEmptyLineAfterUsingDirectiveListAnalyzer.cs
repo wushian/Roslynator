@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Collections.Immutable;
-using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -24,6 +23,7 @@ namespace Roslynator.Formatting.CSharp
             base.Initialize(context);
 
             context.RegisterSyntaxNodeAction(AnalyzeCompilationUnit, SyntaxKind.CompilationUnit);
+            context.RegisterSyntaxNodeAction(AnalyzeNamespaceDeclaration, SyntaxKind.NamespaceDeclaration);
         }
 
         private static void AnalyzeCompilationUnit(SyntaxNodeAnalysisContext context)
@@ -35,96 +35,106 @@ namespace Roslynator.Formatting.CSharp
             if (usingDirective == null)
                 return;
 
+            SyntaxToken nextToken = compilationUnit.AttributeLists.FirstOrDefault()?.OpenBracketToken
+                ?? compilationUnit.Members.FirstOrDefault()?.GetFirstToken()
+                ?? default;
+
+            if (nextToken.IsKind(SyntaxKind.None))
+                return;
+
+            Analyze(context, usingDirective, nextToken);
+        }
+
+        private void AnalyzeNamespaceDeclaration(SyntaxNodeAnalysisContext context)
+        {
+            var namespaceDeclaration = (NamespaceDeclarationSyntax)context.Node;
+
+            UsingDirectiveSyntax usingDirective = namespaceDeclaration.Usings.LastOrDefault();
+
+            if (usingDirective == null)
+                return;
+
+            SyntaxToken nextToken = namespaceDeclaration.Members.FirstOrDefault()?.GetFirstToken() ?? default;
+
+            if (nextToken.IsKind(SyntaxKind.None))
+                return;
+
+            Analyze(context, usingDirective, nextToken);
+        }
+
+        private static void Analyze(
+            SyntaxNodeAnalysisContext context,
+            UsingDirectiveSyntax usingDirective,
+            SyntaxToken nextToken)
+        {
             SyntaxTriviaList trailingTrivia = usingDirective.GetTrailingTrivia();
 
             if (!SyntaxTriviaAnalysis.IsOptionalWhitespaceThenOptionalSingleLineCommentThenEndOfLineTrivia(triviaList: trailingTrivia))
                 return;
 
-            SyntaxToken nextToken = compilationUnit.AttributeLists.FirstOrDefault()?.OpenBracketToken
-                ?? compilationUnit.Members.FirstOrDefault()?.GetFirstToken()
-                ?? compilationUnit.EndOfFileToken;
+            SyntaxTriviaList.Enumerator en = nextToken.LeadingTrivia.GetEnumerator();
 
-            switch (nextToken.Parent.Kind())
+            if (en.MoveNext())
             {
-                case SyntaxKind.AttributeList:
-                case SyntaxKind.NamespaceDeclaration:
-                case SyntaxKind.ClassDeclaration:
-                case SyntaxKind.StructDeclaration:
-                case SyntaxKind.InterfaceDeclaration:
-                case SyntaxKind.DelegateDeclaration:
+                if (en.Current.IsWhitespaceTrivia()
+                    && !en.MoveNext())
+                {
+                    ReportDiagnostic(trailingTrivia.Last().SpanStart);
+                }
+                else
+                {
+                    switch (en.Current.Kind())
                     {
-                        SyntaxTriviaList.Enumerator en = nextToken.LeadingTrivia.GetEnumerator();
-
-                        if (en.MoveNext())
-                        {
-                            if (en.Current.IsWhitespaceTrivia()
-                                && !en.MoveNext())
+                        case SyntaxKind.SingleLineCommentTrivia:
+                        case SyntaxKind.SingleLineDocumentationCommentTrivia:
+                        case SyntaxKind.MultiLineDocumentationCommentTrivia:
                             {
                                 ReportDiagnostic(trailingTrivia.Last().SpanStart);
+                                break;
                             }
-                            else
+                        case SyntaxKind.EndRegionDirectiveTrivia:
                             {
-                                switch (en.Current.Kind())
+                                SyntaxTrivia endRegionDirective = en.Current;
+
+                                if (en.MoveNext())
                                 {
-                                    case SyntaxKind.SingleLineCommentTrivia:
-                                    case SyntaxKind.SingleLineDocumentationCommentTrivia:
-                                    case SyntaxKind.MultiLineDocumentationCommentTrivia:
-                                        {
-                                            ReportDiagnostic(trailingTrivia.Last().SpanStart);
-                                            break;
-                                        }
-                                    case SyntaxKind.EndRegionDirectiveTrivia:
-                                        {
-                                            SyntaxTrivia endRegionDirective = en.Current;
-
-                                            if (en.MoveNext())
-                                            {
-                                                if (en.Current.IsWhitespaceTrivia()
-                                                    && !en.MoveNext())
-                                                {
-                                                    ReportDiagnostic(endRegionDirective.Span.End);
-                                                }
-                                                else if (!en.Current.IsEndOfLineTrivia())
-                                                {
-                                                    ReportDiagnostic(endRegionDirective.Span.End);
-                                                }
-                                            }
-                                            else
-                                            {
-                                                ReportDiagnostic(endRegionDirective.Span.End);
-                                            }
-
-                                            break;
-                                        }
-                                    default:
-                                        {
-                                            if (en.Current.IsDirective)
-                                                ReportDiagnostic(trailingTrivia.Last().SpanStart);
-
-                                            break;
-                                        }
+                                    if (en.Current.IsWhitespaceTrivia()
+                                        && !en.MoveNext())
+                                    {
+                                        ReportDiagnostic(endRegionDirective.Span.End);
+                                    }
+                                    else if (!en.Current.IsEndOfLineTrivia())
+                                    {
+                                        ReportDiagnostic(endRegionDirective.Span.End);
+                                    }
                                 }
-                            }
-                        }
-                        else
-                        {
-                            ReportDiagnostic(trailingTrivia.Last().SpanStart);
-                        }
+                                else
+                                {
+                                    ReportDiagnostic(endRegionDirective.Span.End);
+                                }
 
-                        break;
+                                break;
+                            }
+                        default:
+                            {
+                                if (en.Current.IsDirective)
+                                    ReportDiagnostic(trailingTrivia.Last().SpanStart);
+
+                                break;
+                            }
                     }
-                default:
-                    {
-                        Debug.Fail(nextToken.Parent.Kind().ToString());
-                        break;
-                    }
+                }
+            }
+            else
+            {
+                ReportDiagnostic(trailingTrivia.Last().SpanStart);
             }
 
             void ReportDiagnostic(int position)
             {
                 context.ReportDiagnostic(
                    DiagnosticDescriptors.AddEmptyLineAfterUsingDirectiveList,
-                   Location.Create(compilationUnit.SyntaxTree, new TextSpan(position, 0)));
+                   Location.Create(usingDirective.SyntaxTree, new TextSpan(position, 0)));
             }
         }
     }
