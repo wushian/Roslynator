@@ -1091,4 +1091,30 @@ namespace N
       </Sample>
     </Samples>
   </Analyzer>
+  <Analyzer Identifier="FormatNodesInList">
+    <Id>RCS0403</Id>
+    <Title>Format nodes in a list.</Title>
+    <MessageFormat>Format nodes in a list.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[void M(object p1, // [|Id|]
+    object p2, object p3,
+    object p4) 
+{
+}]]></Before>
+        <After><![CDATA[void M(
+    object p1,
+    object p2,
+    object p3,
+    object p4) 
+{
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
 </Analyzers>

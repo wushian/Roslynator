@@ -45,7 +45,7 @@ namespace Roslynator.Formatting.CSharp
             Analyze(context, usingDirective, nextToken);
         }
 
-        private void AnalyzeNamespaceDeclaration(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeNamespaceDeclaration(SyntaxNodeAnalysisContext context)
         {
             var namespaceDeclaration = (NamespaceDeclarationSyntax)context.Node;
 

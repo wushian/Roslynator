@@ -537,5 +537,17 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.AddEmptyLineBetweenUsingDirectivesWithDifferentRootNamespace}", 
             customTags:         Array.Empty<string>());
 
+        /// <summary>RCS0403</summary>
+        public static readonly DiagnosticDescriptor FormatNodesInList = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.FormatNodesInList, 
+            title:              "Format nodes in a list.", 
+            messageFormat:      "Format nodes in a list.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.FormatNodesInList}", 
+            customTags:         Array.Empty<string>());
+
     }
 }

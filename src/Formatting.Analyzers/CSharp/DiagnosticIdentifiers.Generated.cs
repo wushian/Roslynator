@@ -52,5 +52,6 @@ namespace Roslynator.Formatting.CSharp
         public const string RemoveEmptyLineBetweenUsingDirectivesWithSameRootNamespace = "RCS0400";
         public const string RemoveEmptyLineBetweenUsingDirectivesWithDifferentRootNamespace = "RCS0401";
         public const string AddEmptyLineBetweenUsingDirectivesWithDifferentRootNamespace = "RCS0402";
+        public const string FormatNodesInList = "RCS0403";
     }
 }

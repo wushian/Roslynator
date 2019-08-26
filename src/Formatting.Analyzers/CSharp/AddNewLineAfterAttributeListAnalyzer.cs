@@ -44,7 +44,7 @@ namespace Roslynator.Formatting.CSharp
             context.RegisterSyntaxNodeAction(AnalyzeAccessorDeclaration, SyntaxKind.RemoveAccessorDeclaration);
         }
 
-        private void AnalyzeDelegateDeclaration(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeDelegateDeclaration(SyntaxNodeAnalysisContext context)
         {
             var delegateDeclaration = (DelegateDeclarationSyntax)context.Node;
 
@@ -62,7 +62,7 @@ namespace Roslynator.Formatting.CSharp
             Analyze(context, attributeList, token);
         }
 
-        private void AnalyzeEnumMemberDeclaration(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeEnumMemberDeclaration(SyntaxNodeAnalysisContext context)
         {
             var enumMemberDeclaration = (EnumMemberDeclarationSyntax)context.Node;
 
@@ -76,7 +76,7 @@ namespace Roslynator.Formatting.CSharp
             Analyze(context, attributeList, token);
         }
 
-        private void AnalyzeBaseFieldDeclaration(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeBaseFieldDeclaration(SyntaxNodeAnalysisContext context)
         {
             var baseFieldDeclaration = (BaseFieldDeclarationSyntax)context.Node;
 
@@ -105,7 +105,7 @@ namespace Roslynator.Formatting.CSharp
             Analyze(context, attributeList, token);
         }
 
-        private void AnalyzeBaseMethodDeclaration(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeBaseMethodDeclaration(SyntaxNodeAnalysisContext context)
         {
             var baseMethodDeclaration = (BaseMethodDeclarationSyntax)context.Node;
 
@@ -142,7 +142,7 @@ namespace Roslynator.Formatting.CSharp
             Analyze(context, attributeList, token);
         }
 
-        private void AnalyzeBasePropertyDeclaration(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeBasePropertyDeclaration(SyntaxNodeAnalysisContext context)
         {
             var basePropertyDeclaration = (BasePropertyDeclarationSyntax)context.Node;
 
@@ -160,7 +160,7 @@ namespace Roslynator.Formatting.CSharp
             Analyze(context, attributeList, token);
         }
 
-        private void AnalyzeBaseTypeDeclaration(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeBaseTypeDeclaration(SyntaxNodeAnalysisContext context)
         {
             var baseTypeDeclaration = (BaseTypeDeclarationSyntax)context.Node;
 
@@ -201,7 +201,7 @@ namespace Roslynator.Formatting.CSharp
             Analyze(context, attributeList, token);
         }
 
-        private void AnalyzeAccessorDeclaration(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeAccessorDeclaration(SyntaxNodeAnalysisContext context)
         {
             var accessorDeclaration = (AccessorDeclarationSyntax)context.Node;
 
