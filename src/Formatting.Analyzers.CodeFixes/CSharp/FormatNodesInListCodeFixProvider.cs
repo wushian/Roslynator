@@ -20,7 +20,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 {
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(FormatNodesInListCodeFixProvider))]
     [Shared]
-    public class FormatNodesInListCodeFixProvider : BaseCodeFixProvider
+    internal class FormatNodesInListCodeFixProvider : BaseCodeFixProvider
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {

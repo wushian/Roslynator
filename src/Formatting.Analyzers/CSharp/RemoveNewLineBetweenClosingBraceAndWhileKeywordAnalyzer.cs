@@ -34,7 +34,9 @@ namespace Roslynator.Formatting.CSharp
             if (!statement.IsKind(SyntaxKind.Block))
                 return;
 
-            if (!SyntaxTriviaAnalysis.IsOptionalWhitespaceThenEndOfLineTrivia(statement.GetTrailingTrivia()))
+            SyntaxTriviaList trailingTrivia = statement.GetTrailingTrivia();
+
+            if (!SyntaxTriviaAnalysis.IsOptionalWhitespaceThenEndOfLineTrivia(trailingTrivia))
                 return;
 
             if (!doStatement.WhileKeyword.LeadingTrivia.IsEmptyOrWhitespace())
@@ -42,7 +44,7 @@ namespace Roslynator.Formatting.CSharp
 
             context.ReportDiagnostic(
                 DiagnosticDescriptors.RemoveNewLineBetweenClosingBraceAndWhileKeyword,
-                Location.Create(doStatement.SyntaxTree, new TextSpan(statement.Span.End, 0)));
+                Location.Create(doStatement.SyntaxTree, new TextSpan(trailingTrivia.Last().SpanStart, 0)));
         }
     }
 }

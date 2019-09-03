@@ -16,7 +16,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 {
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AddEmptyLineBeforeAndAfterUsingDirectiveListCodeFixProvider))]
     [Shared]
-    public class AddEmptyLineBeforeAndAfterUsingDirectiveListCodeFixProvider : BaseCodeFixProvider
+    internal class AddEmptyLineBeforeAndAfterUsingDirectiveListCodeFixProvider : BaseCodeFixProvider
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {

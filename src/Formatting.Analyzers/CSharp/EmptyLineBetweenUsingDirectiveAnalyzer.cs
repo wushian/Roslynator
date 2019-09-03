@@ -97,7 +97,7 @@ namespace Roslynator.Formatting.CSharp
                         ReportDiagnostic(
                             context,
                             DiagnosticDescriptors.RemoveEmptyLineBetweenUsingDirectivesWithSameRootNamespace,
-                            leadingTrivia.First());
+                            leadingTrivia[0]);
                     }
                 }
                 else if (isEmptyLine)
@@ -105,7 +105,7 @@ namespace Roslynator.Formatting.CSharp
                     ReportDiagnostic(
                         context,
                         DiagnosticDescriptors.RemoveEmptyLineBetweenUsingDirectivesWithDifferentRootNamespace,
-                        leadingTrivia.First());
+                        leadingTrivia[0]);
                 }
                 else
                 {

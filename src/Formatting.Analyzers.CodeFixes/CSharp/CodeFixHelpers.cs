@@ -275,5 +275,19 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             return document.ReplaceNodeAsync(block, newBlock, cancellationToken);
         }
+
+        public static Task<Document> ReplaceTriviaBetweenAsync(
+            Document document,
+            SyntaxToken token1,
+            SyntaxToken token2,
+            string replacement = " ",
+            CancellationToken cancellationToken = default)
+        {
+            TextSpan span = TextSpan.FromBounds(token1.Span.End, token2.SpanStart);
+
+            var textChange = new TextChange(span, replacement);
+
+            return document.WithTextChangeAsync(textChange, cancellationToken);
+        }
     }
 }

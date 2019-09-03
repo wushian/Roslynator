@@ -549,5 +549,17 @@ namespace Roslynator.Formatting.CSharp
             helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.FormatNodesInList}", 
             customTags:         Array.Empty<string>());
 
+        /// <summary>RCS0403</summary>
+        public static readonly DiagnosticDescriptor RemoveNewLineBeforeBaseList = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.RemoveNewLineBeforeBaseList, 
+            title:              "Remove newline before base list.", 
+            messageFormat:      "Remove newline before base list.", 
+            category:           DiagnosticCategories.Formatting, 
+            defaultSeverity:    DiagnosticSeverity.Info, 
+            isEnabledByDefault: false, 
+            description:        null, 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.RemoveNewLineBeforeBaseList}", 
+            customTags:         Array.Empty<string>());
+
     }
 }

@@ -4,7 +4,7 @@ using Roslynator.CodeFixes;
 
 namespace Roslynator.Formatting.CodeFixes
 {
-    public abstract class BaseCodeFixProvider : AbstractCodeFixProvider
+    internal abstract class BaseCodeFixProvider : AbstractCodeFixProvider
     {
     }
 }

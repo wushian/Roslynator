@@ -12,7 +12,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 {
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(SyntaxTriviaCodeFixProvider))]
     [Shared]
-    public class SyntaxTriviaCodeFixProvider : BaseCodeFixProvider
+    internal class SyntaxTriviaCodeFixProvider : BaseCodeFixProvider
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
@@ -24,7 +24,10 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                     DiagnosticIdentifiers.AddEmptyLineBetweenUsingDirectivesWithDifferentRootNamespace,
                     DiagnosticIdentifiers.RemoveEmptyLineBetweenSingleLineAccessors,
                     DiagnosticIdentifiers.RemoveEmptyLineBetweenUsingDirectivesWithDifferentRootNamespace,
-                    DiagnosticIdentifiers.RemoveEmptyLineBetweenUsingDirectivesWithSameRootNamespace);
+                    DiagnosticIdentifiers.RemoveEmptyLineBetweenUsingDirectivesWithSameRootNamespace,
+                    DiagnosticIdentifiers.RemoveNewLineBetweenIfKeywordAndElseKeyword,
+                    DiagnosticIdentifiers.RemoveNewLineBeforeBaseList,
+                    DiagnosticIdentifiers.RemoveNewLineBetweenClosingBraceAndWhileKeyword);
             }
         }
 
@@ -59,6 +62,18 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                         CodeAction codeAction = CodeAction.Create(
                             CodeFixTitles.RemoveEmptyLine,
                             ct => CodeFixHelpers.RemoveEmptyLinesBeforeAsync(document, trivia.Token, ct),
+                            GetEquivalenceKey(diagnostic));
+
+                        context.RegisterCodeFix(codeAction, diagnostic);
+                        break;
+                    }
+                case DiagnosticIdentifiers.RemoveNewLineBeforeBaseList:
+                case DiagnosticIdentifiers.RemoveNewLineBetweenClosingBraceAndWhileKeyword:
+                case DiagnosticIdentifiers.RemoveNewLineBetweenIfKeywordAndElseKeyword:
+                    {
+                        CodeAction codeAction = CodeAction.Create(
+                            CodeFixTitles.RemoveNewLine,
+                            ct => CodeFixHelpers.ReplaceTriviaBetweenAsync(document, trivia.Token, trivia.Token.GetNextToken(), cancellationToken: ct),
                             GetEquivalenceKey(diagnostic));
 
                         context.RegisterCodeFix(codeAction, diagnostic);

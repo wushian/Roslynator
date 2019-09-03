@@ -1117,4 +1117,25 @@ namespace N
       </Sample>
     </Samples>
   </Analyzer>
+  <Analyzer Identifier="RemoveNewLineBeforeBaseList">
+    <Id>RCS0403</Id>
+    <Title>Remove newline before base list.</Title>
+    <MessageFormat>Remove newline before base list.</MessageFormat>
+    <Category>Formatting</Category>
+    <DefaultSeverity>Info</DefaultSeverity>
+    <IsEnabledByDefault>false</IsEnabledByDefault>
+    <SupportsFadeOut>false</SupportsFadeOut>
+    <SupportsFadeOutAnalyzer>false</SupportsFadeOutAnalyzer>
+    <Samples>
+      <Sample>
+        <Before><![CDATA[class Foo
+    : Bar // [|Id|]
+{
+}]]></Before>
+        <After><![CDATA[class Foo : Bar
+{
+}]]></After>
+      </Sample>
+    </Samples>
+  </Analyzer>
 </Analyzers>

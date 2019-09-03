@@ -13,7 +13,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 {
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(SwitchSectionCodeFixProvider))]
     [Shared]
-    public class SwitchSectionCodeFixProvider : BaseCodeFixProvider
+    internal class SwitchSectionCodeFixProvider : BaseCodeFixProvider
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {

@@ -15,7 +15,7 @@ namespace Roslynator.Formatting.CSharp.Tests
 
         public override DiagnosticAnalyzer Analyzer { get; } = new RemoveNewLineBetweenIfKeywordAndElseKeywordAnalyzer();
 
-        public override CodeFixProvider FixProvider { get; } = new ElseClauseCodeFixProvider();
+        public override CodeFixProvider FixProvider { get; } = new SyntaxTriviaCodeFixProvider();
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.RemoveNewLineBetweenIfKeywordAndElseKeyword)]
         public async Task Test()

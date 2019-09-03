@@ -34,7 +34,9 @@ namespace Roslynator.Formatting.CSharp
             if (!statement.IsKind(SyntaxKind.IfStatement))
                 return;
 
-            if (!SyntaxTriviaAnalysis.IsOptionalWhitespaceThenEndOfLineTrivia(elseClause.ElseKeyword.TrailingTrivia))
+            SyntaxTriviaList trailingTrivia = elseClause.ElseKeyword.TrailingTrivia;
+
+            if (!SyntaxTriviaAnalysis.IsOptionalWhitespaceThenEndOfLineTrivia(trailingTrivia))
                 return;
 
             if (!statement.GetLeadingTrivia().IsEmptyOrWhitespace())
@@ -42,7 +44,7 @@ namespace Roslynator.Formatting.CSharp
 
             context.ReportDiagnostic(
                 DiagnosticDescriptors.RemoveNewLineBetweenIfKeywordAndElseKeyword,
-                Location.Create(elseClause.SyntaxTree, new TextSpan(elseClause.ElseKeyword.Span.End, 0)));
+                Location.Create(elseClause.SyntaxTree, new TextSpan(trailingTrivia.Last().SpanStart, 0)));
         }
     }
 }
