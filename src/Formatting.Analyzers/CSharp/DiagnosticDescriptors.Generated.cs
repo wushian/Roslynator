@@ -538,18 +538,18 @@ namespace Roslynator.Formatting.CSharp
             customTags:         Array.Empty<string>());
 
         /// <summary>RCS0403</summary>
-        public static readonly DiagnosticDescriptor FormatNodesInList = new DiagnosticDescriptor(
-            id:                 DiagnosticIdentifiers.FormatNodesInList, 
-            title:              "Format nodes in a list.", 
-            messageFormat:      "Format nodes in a list.", 
+        public static readonly DiagnosticDescriptor WrapAndIndentEachNodeInList = new DiagnosticDescriptor(
+            id:                 DiagnosticIdentifiers.WrapAndIndentEachNodeInList, 
+            title:              "Wrap and indent each node in list.", 
+            messageFormat:      "Wrap and indent each node in list.", 
             category:           DiagnosticCategories.Formatting, 
             defaultSeverity:    DiagnosticSeverity.Info, 
             isEnabledByDefault: false, 
             description:        null, 
-            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.FormatNodesInList}", 
+            helpLinkUri:        $"{HelpLinkUriRoot}{DiagnosticIdentifiers.WrapAndIndentEachNodeInList}", 
             customTags:         Array.Empty<string>());
 
-        /// <summary>RCS0403</summary>
+        /// <summary>RCS0404</summary>
         public static readonly DiagnosticDescriptor RemoveNewLineBeforeBaseList = new DiagnosticDescriptor(
             id:                 DiagnosticIdentifiers.RemoveNewLineBeforeBaseList, 
             title:              "Remove newline before base list.", 

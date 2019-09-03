@@ -18,13 +18,13 @@ using Roslynator.Formatting.CSharp;
 
 namespace Roslynator.Formatting.CodeFixes.CSharp
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(FormatNodesInListCodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(WrapAndIndentEachNodeInListCodeFixProvider))]
     [Shared]
-    internal class FormatNodesInListCodeFixProvider : BaseCodeFixProvider
+    internal class WrapAndIndentEachNodeInListCodeFixProvider : BaseCodeFixProvider
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(DiagnosticIdentifiers.FormatNodesInList); }
+            get { return ImmutableArray.Create(DiagnosticIdentifiers.WrapAndIndentEachNodeInList); }
         }
 
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)

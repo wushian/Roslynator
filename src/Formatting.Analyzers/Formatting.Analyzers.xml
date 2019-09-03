@@ -1091,10 +1091,10 @@ namespace N
       </Sample>
     </Samples>
   </Analyzer>
-  <Analyzer Identifier="FormatNodesInList">
+  <Analyzer Identifier="WrapAndIndentEachNodeInList">
     <Id>RCS0403</Id>
-    <Title>Format nodes in a list.</Title>
-    <MessageFormat>Format nodes in a list.</MessageFormat>
+    <Title>Wrap and indent each node in list.</Title>
+    <MessageFormat>Wrap and indent each node in list.</MessageFormat>
     <Category>Formatting</Category>
     <DefaultSeverity>Info</DefaultSeverity>
     <IsEnabledByDefault>false</IsEnabledByDefault>
@@ -1103,22 +1103,34 @@ namespace N
     <Samples>
       <Sample>
         <Before><![CDATA[void M(object p1, // [|Id|]
-    object p2, object p3,
-    object p4) 
+    object p2
+    object p3) 
 {
 }]]></Before>
         <After><![CDATA[void M(
     object p1,
     object p2,
-    object p3,
-    object p4) 
+    object p3) 
+{
+}]]></After>
+      </Sample>
+      <Sample>
+        <Before><![CDATA[void M(
+    object p1, // [|Id|]
+    object p2, object p3) 
+{
+}]]></Before>
+        <After><![CDATA[void M(
+    object p1,
+    object p2,
+    object p3) 
 {
 }]]></After>
       </Sample>
     </Samples>
   </Analyzer>
   <Analyzer Identifier="RemoveNewLineBeforeBaseList">
-    <Id>RCS0403</Id>
+    <Id>RCS0404</Id>
     <Title>Remove newline before base list.</Title>
     <MessageFormat>Remove newline before base list.</MessageFormat>
     <Category>Formatting</Category>

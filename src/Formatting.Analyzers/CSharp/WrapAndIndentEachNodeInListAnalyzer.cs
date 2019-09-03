@@ -10,11 +10,11 @@ using Microsoft.CodeAnalysis.Text;
 namespace Roslynator.Formatting.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    internal class FormatNodesInListAnalyzer : BaseDiagnosticAnalyzer
+    internal class WrapAndIndentEachNodeInListAnalyzer : BaseDiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(DiagnosticDescriptors.FormatNodesInList); }
+            get { return ImmutableArray.Create(DiagnosticDescriptors.WrapAndIndentEachNodeInList); }
         }
 
         public override void Initialize(AnalysisContext context)
@@ -22,13 +22,13 @@ namespace Roslynator.Formatting.CSharp
             base.Initialize(context);
 
             context.RegisterSyntaxNodeAction(AnalyzeTypeArgumentList, SyntaxKind.TypeArgumentList);
-            context.RegisterSyntaxNodeAction(AnalyzeBaseArgumentList, SyntaxKind.ArgumentList);
-            context.RegisterSyntaxNodeAction(AnalyzeBaseArgumentList, SyntaxKind.BracketedArgumentList);
+            context.RegisterSyntaxNodeAction(AnalyzeArgumentList, SyntaxKind.ArgumentList);
+            context.RegisterSyntaxNodeAction(AnalyzeBracketedArgumentList, SyntaxKind.BracketedArgumentList);
             context.RegisterSyntaxNodeAction(AnalyzeAttributeList, SyntaxKind.AttributeList);
             context.RegisterSyntaxNodeAction(AnalyzeAttributeArgumentList, SyntaxKind.AttributeArgumentList);
             context.RegisterSyntaxNodeAction(AnalyzeBaseList, SyntaxKind.BaseList);
-            context.RegisterSyntaxNodeAction(AnalyzeBaseParameterList, SyntaxKind.ParameterList);
-            context.RegisterSyntaxNodeAction(AnalyzeBaseParameterList, SyntaxKind.BracketedParameterList);
+            context.RegisterSyntaxNodeAction(AnalyzeParameterList, SyntaxKind.ParameterList);
+            context.RegisterSyntaxNodeAction(AnalyzeBracketedParameterList, SyntaxKind.BracketedParameterList);
             context.RegisterSyntaxNodeAction(AnalyzeTypeParameterList, SyntaxKind.TypeParameterList);
         }
 
@@ -36,52 +36,66 @@ namespace Roslynator.Formatting.CSharp
         {
             var typeArgumentList = (TypeArgumentListSyntax)context.Node;
 
-            Analyze(context, typeArgumentList.Arguments);
+            Analyze(context, typeArgumentList.Arguments, typeArgumentList.LessThanToken);
         }
 
-        private static void AnalyzeBaseArgumentList(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeArgumentList(SyntaxNodeAnalysisContext context)
         {
-            var argumentList = (BaseArgumentListSyntax)context.Node;
+            var argumentList = (ArgumentListSyntax)context.Node;
 
-            Analyze(context, argumentList.Arguments);
+            Analyze(context, argumentList.Arguments, argumentList.OpenParenToken);
+        }
+
+        private static void AnalyzeBracketedArgumentList(SyntaxNodeAnalysisContext context)
+        {
+            var argumentList = (BracketedArgumentListSyntax)context.Node;
+
+            Analyze(context, argumentList.Arguments, argumentList.OpenBracketToken);
         }
 
         private static void AnalyzeAttributeList(SyntaxNodeAnalysisContext context)
         {
             var attributeList = (AttributeListSyntax)context.Node;
 
-            Analyze(context, attributeList.Attributes);
+            Analyze(context, attributeList.Attributes, attributeList.OpenBracketToken);
         }
 
         private static void AnalyzeAttributeArgumentList(SyntaxNodeAnalysisContext context)
         {
             var attributeArgumentList = (AttributeArgumentListSyntax)context.Node;
 
-            Analyze(context, attributeArgumentList.Arguments);
+            Analyze(context, attributeArgumentList.Arguments, attributeArgumentList.OpenParenToken);
         }
 
         private static void AnalyzeBaseList(SyntaxNodeAnalysisContext context)
         {
             var baseList = (BaseListSyntax)context.Node;
 
-            Analyze(context, baseList.Types);
+            Analyze(context, baseList.Types, baseList.ColonToken);
         }
 
-        private static void AnalyzeBaseParameterList(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeParameterList(SyntaxNodeAnalysisContext context)
         {
-            var parameterList = (BaseParameterListSyntax)context.Node;
+            var parameterList = (ParameterListSyntax)context.Node;
 
-            Analyze(context, parameterList.Parameters);
+            Analyze(context, parameterList.Parameters, parameterList.OpenParenToken);
+        }
+
+        private static void AnalyzeBracketedParameterList(SyntaxNodeAnalysisContext context)
+        {
+            var parameterList = (BracketedParameterListSyntax)context.Node;
+
+            Analyze(context, parameterList.Parameters, parameterList.OpenBracketToken);
         }
 
         private static void AnalyzeTypeParameterList(SyntaxNodeAnalysisContext context)
         {
             var typeParameterList = (TypeParameterListSyntax)context.Node;
 
-            Analyze(context, typeParameterList.Parameters);
+            Analyze(context, typeParameterList.Parameters, typeParameterList.LessThanToken);
         }
 
-        private static void Analyze<TNode>(SyntaxNodeAnalysisContext context, SeparatedSyntaxList<TNode> nodes) where TNode : SyntaxNode
+        private static void Analyze<TNode>(SyntaxNodeAnalysisContext context, SeparatedSyntaxList<TNode> nodes, SyntaxToken token) where TNode : SyntaxNode
         {
             int count = nodes.Count;
 
@@ -90,7 +104,7 @@ namespace Roslynator.Formatting.CSharp
 
             SyntaxTree syntaxTree = nodes[0].SyntaxTree;
 
-            bool isSingleLine = true;
+            bool isSingleLine = IsSingleLine(TextSpan.FromBounds(token.Span.End, nodes[0].SpanStart));
 
             for (int i = 1; i < count; i++)
             {
@@ -105,15 +119,13 @@ namespace Roslynator.Formatting.CSharp
                 {
                     if (isSingleLine2)
                     {
-                        if (i == 1)
-                        {
-                            isSingleLine = isSingleLineBetween;
-                        }
-                        else if (isSingleLineBetween != isSingleLine)
+                        if (isSingleLineBetween != isSingleLine)
                         {
                             ReportDiagnostic();
                             return;
                         }
+
+                        isSingleLine = isSingleLineBetween;
                     }
                     else if (isSingleLineBetween)
                     {
@@ -160,7 +172,7 @@ namespace Roslynator.Formatting.CSharp
             void ReportDiagnostic()
             {
                 context.ReportDiagnostic(
-                    DiagnosticDescriptors.FormatNodesInList,
+                    DiagnosticDescriptors.WrapAndIndentEachNodeInList,
                     Location.Create(syntaxTree, TextSpan.FromBounds(nodes[0].SpanStart, nodes.Last().Span.End)));
             }
         }
