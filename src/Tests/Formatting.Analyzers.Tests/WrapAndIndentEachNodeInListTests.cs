@@ -18,34 +18,7 @@ namespace Roslynator.Formatting.CSharp.Tests
         public override CodeFixProvider FixProvider { get; } = new WrapAndIndentEachNodeInListCodeFixProvider();
 
         [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.WrapAndIndentEachNodeInList)]
-        public async Task Test_FirstParameter()
-        {
-            await VerifyDiagnosticAndFixAsync(@"
-class C
-{
-    void M([|object p1,
-        object p2,
-        object p3,
-        object p4|]) 
-    {
-    }
-}
-", @"
-class C
-{
-    void M(
-        object p1,
-        object p2,
-        object p3,
-        object p4) 
-    {
-    }
-}
-");
-        }
-
-        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.WrapAndIndentEachNodeInList)]
-        public async Task Test_SecondParameter()
+        public async Task Test()
         {
             await VerifyDiagnosticAndFixAsync(@"
 class C
@@ -66,6 +39,73 @@ class C
         object p3,
         object p4) 
     {
+    }
+}
+");
+        }
+
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.WrapAndIndentEachNodeInList)]
+        public async Task TestNoDiagnostic()
+        {
+            await VerifyNoDiagnosticAsync(@"
+class C
+{
+    void M(object p1,
+        object p2,
+        object p3,
+        object p4) 
+    {
+    }
+}
+");
+        }
+
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.WrapAndIndentEachNodeInList)]
+        public async Task TestNoDiagnostic_Multiline_FirstIsMultiline()
+        {
+            await VerifyNoDiagnosticAsync(@"
+class C
+{
+    void M(
+        object p1 = 
+            default,
+        object p2 = default)
+    {
+    }
+}
+");
+        }
+
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.WrapAndIndentEachNodeInList)]
+        public async Task TestNoDiagnostic_Multiline_SecondIsMultiline()
+        {
+            await VerifyNoDiagnosticAsync(@"
+class C
+{
+    void M(
+        object p1,
+        object p2 = 
+            default)
+    {
+    }
+}
+");
+        }
+
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.WrapAndIndentEachNodeInList)]
+        public async Task TestNoDiagnostic_LastArgumentIsAnonymousFunction()
+        {
+            await VerifyNoDiagnosticAsync(@"
+using System;
+
+class C
+{
+    void M(object p1, Func<object, bool> p2)
+    {
+        M(null, f => 
+        {
+            return false;
+        });
     }
 }
 ");

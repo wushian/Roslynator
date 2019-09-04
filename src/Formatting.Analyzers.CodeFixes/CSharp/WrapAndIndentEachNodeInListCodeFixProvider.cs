@@ -61,14 +61,38 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             Diagnostic diagnostic = context.Diagnostics[0];
 
             CodeAction codeAction = CodeAction.Create(
-                "Format arguments on separate lines",
-                ct => FormatArgumentsOnSeparateLinesAsync(document, node, ct),
+                $"Wrap and indent each {GetTitle()}",
+                ct => WrapAndIndentEachNodeInListAsync(document, node, ct),
                 GetEquivalenceKey(diagnostic));
 
             context.RegisterCodeFix(codeAction, diagnostic);
+
+            string GetTitle()
+            {
+                switch (node.Kind())
+                {
+                    case SyntaxKind.TypeArgumentList:
+                        return "type argument";
+                    case SyntaxKind.ArgumentList:
+                    case SyntaxKind.BracketedArgumentList:
+                    case SyntaxKind.AttributeArgumentList:
+                        return "argument";
+                    case SyntaxKind.AttributeList:
+                        return "attribute";
+                    case SyntaxKind.BaseList:
+                        return "type";
+                    case SyntaxKind.ParameterList:
+                    case SyntaxKind.BracketedParameterList:
+                        return "parameter";
+                    case SyntaxKind.TypeParameterList:
+                        return "type parameter";
+                    default:
+                        throw new InvalidOperationException();
+                }
+            }
         }
 
-        private static Task<Document> FormatArgumentsOnSeparateLinesAsync(
+        private static Task<Document> WrapAndIndentEachNodeInListAsync(
             Document document,
             SyntaxNode node,
             CancellationToken cancellationToken)
@@ -76,25 +100,25 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
             switch (node)
             {
                 case TypeArgumentListSyntax typeArgumentList:
-                    return FormatArgumentsOnSeparateLinesAsync(document, typeArgumentList.Arguments, cancellationToken);
+                    return WrapAndIndentEachNodeInListAsync(document, typeArgumentList.Arguments, cancellationToken);
                 case BaseArgumentListSyntax argumentList:
-                    return FormatArgumentsOnSeparateLinesAsync(document, argumentList.Arguments, cancellationToken);
+                    return WrapAndIndentEachNodeInListAsync(document, argumentList.Arguments, cancellationToken);
                 case AttributeListSyntax attributeList:
-                    return FormatArgumentsOnSeparateLinesAsync(document, attributeList.Attributes, cancellationToken);
+                    return WrapAndIndentEachNodeInListAsync(document, attributeList.Attributes, cancellationToken);
                 case AttributeArgumentListSyntax attributeArgumentList:
-                    return FormatArgumentsOnSeparateLinesAsync(document, attributeArgumentList.Arguments, cancellationToken);
+                    return WrapAndIndentEachNodeInListAsync(document, attributeArgumentList.Arguments, cancellationToken);
                 case BaseListSyntax baseList:
-                    return FormatArgumentsOnSeparateLinesAsync(document, baseList.Types, cancellationToken);
+                    return WrapAndIndentEachNodeInListAsync(document, baseList.Types, cancellationToken);
                 case BaseParameterListSyntax parameterList:
-                    return FormatArgumentsOnSeparateLinesAsync(document, parameterList.Parameters, cancellationToken);
+                    return WrapAndIndentEachNodeInListAsync(document, parameterList.Parameters, cancellationToken);
                 case TypeParameterListSyntax typeParameterList:
-                    return FormatArgumentsOnSeparateLinesAsync(document, typeParameterList.Parameters, cancellationToken);
+                    return WrapAndIndentEachNodeInListAsync(document, typeParameterList.Parameters, cancellationToken);
                 default:
                     throw new InvalidOperationException();
             }
         }
 
-        private static Task<Document> FormatArgumentsOnSeparateLinesAsync<TNode>(
+        private static Task<Document> WrapAndIndentEachNodeInListAsync<TNode>(
             Document document,
             SeparatedSyntaxList<TNode> nodes,
             CancellationToken cancellationToken) where TNode : SyntaxNode
@@ -103,9 +127,7 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
 
             IEnumerable<TextChange> GetTextChanges()
             {
-                SyntaxTree syntaxTree = nodes[0].SyntaxTree;
-
-                string newText = SyntaxTriviaAnalysis.GetEndOfLine(nodes[0]).ToString() + GetIndentation().ToString();
+                string newText = SyntaxTriviaAnalysis.GetEndOfLine(nodes[0]).ToString() + GetIndentation();
 
                 yield return GetTextChange(nodes[0].GetFirstToken().GetPreviousToken(), nodes[0]);
 
@@ -118,13 +140,13 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                 {
                     TextSpan span = TextSpan.FromBounds(token.Span.End, node.SpanStart);
 
-                    return (syntaxTree.IsSingleLineSpan(span))
+                    return (node.SyntaxTree.IsSingleLineSpan(span))
                         ? new TextChange(span, newText)
                         : default;
                 }
             }
 
-            SyntaxTrivia GetIndentation()
+            string GetIndentation()
             {
                 foreach (TNode node in nodes)
                 {
@@ -138,12 +160,12 @@ namespace Roslynator.Formatting.CodeFixes.CSharp
                         if (!en.MoveNext()
                             || en.Current.IsEndOfLineTrivia())
                         {
-                            return whitespaceTrivia;
+                            return whitespaceTrivia.ToString();
                         }
                     }
                 }
 
-                return nodes[0].GetIndentation(cancellationToken);
+                return nodes[0].GetIndentation(cancellationToken).ToString() + nodes[0].SyntaxTree.GetFirstIndentation(cancellationToken);
             }
         }
     }

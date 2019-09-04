@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
+using Roslynator.CSharp;
 
 namespace Roslynator.Formatting.CSharp
 {
@@ -104,7 +105,7 @@ namespace Roslynator.Formatting.CSharp
 
             SyntaxTree syntaxTree = nodes[0].SyntaxTree;
 
-            bool isSingleLine = IsSingleLine(TextSpan.FromBounds(token.Span.End, nodes[0].SpanStart));
+            bool isSingleLine = true;
 
             for (int i = 1; i < count; i++)
             {
@@ -119,21 +120,25 @@ namespace Roslynator.Formatting.CSharp
                 {
                     if (isSingleLine2)
                     {
-                        if (isSingleLineBetween != isSingleLine)
+                        if (i > 1
+                            && isSingleLineBetween != isSingleLine)
                         {
                             ReportDiagnostic();
                             return;
                         }
-
-                        isSingleLine = isSingleLineBetween;
                     }
                     else if (isSingleLineBetween)
                     {
-                        ReportDiagnostic();
-                        return;
+                        if (i < count - 1
+                            || !(node2 is ArgumentSyntax argument)
+                            || !argument.Expression.IsKind(SyntaxKind.AnonymousMethodExpression, SyntaxKind.SimpleLambdaExpression, SyntaxKind.ParenthesizedLambdaExpression))
+                        {
+                            ReportDiagnostic();
+                            return;
+                        }
                     }
-                    else if (isSingleLineBetween
-                        || isSingleLine)
+                    else if (i > 1
+                        && isSingleLine)
                     {
                         ReportDiagnostic();
                         return;
@@ -146,8 +151,8 @@ namespace Roslynator.Formatting.CSharp
                         ReportDiagnostic();
                         return;
                     }
-                    else if (isSingleLineBetween
-                        || isSingleLine)
+                    else if (i > 1
+                        && isSingleLine)
                     {
                         ReportDiagnostic();
                         return;
@@ -161,6 +166,11 @@ namespace Roslynator.Formatting.CSharp
                 else
                 {
                     isSingleLine = false;
+                }
+
+                if (isSingleLine)
+                {
+                    isSingleLine = isSingleLine1 && isSingleLine2 && isSingleLineBetween;
                 }
             }
 
