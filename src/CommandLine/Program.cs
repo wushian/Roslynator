@@ -40,6 +40,7 @@ namespace Roslynator.CommandLine
                     SlnListCommandLineOptions,
                     ListVisualStudioCommandLineOptions,
                     GenerateSourceReferencesCommandLineOptions,
+                    ListReferencesCommandLineOptions,
 #endif
                     FixCommandLineOptions,
                     AnalyzeCommandLineOptions,
@@ -88,6 +89,7 @@ namespace Roslynator.CommandLine
                     (SlnListCommandLineOptions options) => SlnListAsync(options).Result,
                     (ListVisualStudioCommandLineOptions options) => ListVisualStudio(options),
                     (GenerateSourceReferencesCommandLineOptions options) => GenerateSourceReferencesAsync(options).Result,
+                    (ListReferencesCommandLineOptions options) => ListReferencesAsync(options).Result,
 #endif
                     (FixCommandLineOptions options) => FixAsync(options).Result,
                     (AnalyzeCommandLineOptions options) => AnalyzeAsync(options).Result,
@@ -473,6 +475,24 @@ namespace Roslynator.CommandLine
                 options,
                 depth,
                 visibility,
+                projectFilter);
+
+            CommandResult result = await command.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
+
+            return (result.Kind == CommandResultKind.Success) ? 0 : 1;
+        }
+
+        private static async Task<int> ListReferencesAsync(ListReferencesCommandLineOptions options)
+        {
+            if (!TryParseOptionValueAsEnum(options.Display, ParameterNames.Display, out MetadataReferenceDisplay display, MetadataReferenceDisplay.Path))
+                return 1;
+
+            if (!options.TryGetProjectFilter(out ProjectFilter projectFilter))
+                return 1;
+
+            var command = new ListReferencesCommand(
+                options,
+                display,
                 projectFilter);
 
             CommandResult result = await command.ExecuteAsync(options.Path, options.MSBuildPath, options.Properties);
