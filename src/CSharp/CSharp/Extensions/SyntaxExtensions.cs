@@ -539,12 +539,10 @@ namespace Roslynator.CSharp
 
             foreach (XmlNodeSyntax node in documentationComment.Content)
             {
-                if (node.IsKind(SyntaxKind.XmlElement))
+                if (node is XmlElementSyntax element
+                    && element.IsLocalName("summary", StringComparison.OrdinalIgnoreCase))
                 {
-                    var element = (XmlElementSyntax)node;
-
-                    if (element.IsLocalName("summary", StringComparison.OrdinalIgnoreCase))
-                        return element;
+                    return element;
                 }
             }
 
@@ -568,12 +566,10 @@ namespace Roslynator.CSharp
             {
                 foreach (XmlNodeSyntax node in documentationComment.Content)
                 {
-                    if (node.IsKind(SyntaxKind.XmlElement))
+                    if (node is XmlElementSyntax xmlElement
+                        && xmlElement.IsLocalName(localName))
                     {
-                        var xmlElement = (XmlElementSyntax)node;
-
-                        if (xmlElement.IsLocalName(localName))
-                            yield return xmlElement;
+                        yield return xmlElement;
                     }
                 }
             }
@@ -583,12 +579,10 @@ namespace Roslynator.CSharp
         {
             foreach (XmlNodeSyntax node in documentationComment.Content)
             {
-                if (node.IsKind(SyntaxKind.XmlElement))
+                if (node is XmlElementSyntax xmlElement
+                    && xmlElement.HasTag(tag))
                 {
-                    var xmlElement = (XmlElementSyntax)node;
-
-                    if (xmlElement.HasTag(tag))
-                        yield return xmlElement;
+                    yield return xmlElement;
                 }
             }
         }
@@ -1513,6 +1507,16 @@ namespace Roslynator.CSharp
 
             return propertyDeclaration.AccessorList?.Setter();
         }
+
+        internal static PropertyDeclarationSyntax ReplaceAccessor(
+            this PropertyDeclarationSyntax propertyDeclaration,
+            AccessorDeclarationSyntax accessor,
+            AccessorDeclarationSyntax newAccessor)
+        {
+            return propertyDeclaration.WithAccessorList(
+                propertyDeclaration.AccessorList.WithAccessors(
+                    propertyDeclaration.AccessorList.Accessors.Replace(accessor, newAccessor)));
+        }
         #endregion PropertyDeclarationSyntax
 
         #region RegionDirectiveTriviaSyntax
@@ -1620,7 +1624,7 @@ namespace Roslynator.CSharp
             if (count == 0)
                 return false;
 
-            TNode firstNode = list.First();
+            TNode firstNode = list[0];
 
             if (count == 1)
                 return IsSingleLine(firstNode, includeExteriorTrivia, trim, cancellationToken);
@@ -1648,7 +1652,7 @@ namespace Roslynator.CSharp
             if (count == 0)
                 return false;
 
-            TNode firstNode = list.First();
+            TNode firstNode = list[0];
 
             if (count == 1)
                 return IsMultiLine(firstNode, includeExteriorTrivia, trim, cancellationToken);
@@ -2068,7 +2072,7 @@ namespace Roslynator.CSharp
             if (count == 0)
                 return false;
 
-            TNode firstNode = list.First();
+            TNode firstNode = list[0];
 
             if (count == 1)
                 return IsSingleLine(firstNode, includeExteriorTrivia, trim, cancellationToken);
@@ -2096,7 +2100,7 @@ namespace Roslynator.CSharp
             if (count == 0)
                 return false;
 
-            TNode firstNode = list.First();
+            TNode firstNode = list[0];
 
             if (count == 1)
                 return IsMultiLine(firstNode, includeExteriorTrivia, trim, cancellationToken);
@@ -3936,14 +3940,10 @@ namespace Roslynator.CSharp
                 if (!en.Current.IsWhitespaceOrEndOfLineTrivia())
                     return trivia;
 
-                int count = 1;
-
-                while (en.MoveNext())
+                for (int count = 1; en.MoveNext(); count++)
                 {
                     if (!en.Current.IsWhitespaceOrEndOfLineTrivia())
                         return trivia.RemoveRange(0, count);
-
-                    count++;
                 }
             }
 
@@ -3959,14 +3959,10 @@ namespace Roslynator.CSharp
                 if (!en.Current.IsWhitespaceOrEndOfLineTrivia())
                     return trivia;
 
-                int count = 1;
-
-                while (en.MoveNext())
+                for (int count = 1; en.MoveNext(); count++)
                 {
                     if (!en.Current.IsWhitespaceOrEndOfLineTrivia())
                         return trivia.RemoveRange(trivia.Count - count, count);
-
-                    count++;
                 }
             }
 
@@ -4079,17 +4075,13 @@ namespace Roslynator.CSharp
             {
                 foreach (XmlAttributeSyntax attribute in startTag.Attributes)
                 {
-                    if (attribute.IsKind(SyntaxKind.XmlNameAttribute))
+                    if (attribute is XmlNameAttributeSyntax nameAttribute
+                        && nameAttribute.Name?.LocalName.ValueText == attributeName)
                     {
-                        var nameAttribute = (XmlNameAttributeSyntax)attribute;
+                        IdentifierNameSyntax identifierName = nameAttribute.Identifier;
 
-                        if (nameAttribute.Name?.LocalName.ValueText == attributeName)
-                        {
-                            IdentifierNameSyntax identifierName = nameAttribute.Identifier;
-
-                            if (identifierName != null)
-                                return identifierName.Identifier.ValueText;
-                        }
+                        if (identifierName != null)
+                            return identifierName.Identifier.ValueText;
                     }
                 }
             }
@@ -4103,17 +4095,13 @@ namespace Roslynator.CSharp
         {
             foreach (XmlAttributeSyntax attribute in element.Attributes)
             {
-                if (attribute.IsKind(SyntaxKind.XmlNameAttribute))
+                if (attribute is XmlNameAttributeSyntax nameAttribute
+                    && nameAttribute.Name?.LocalName.ValueText == attributeName)
                 {
-                    var nameAttribute = (XmlNameAttributeSyntax)attribute;
+                    IdentifierNameSyntax identifierName = nameAttribute.Identifier;
 
-                    if (nameAttribute.Name?.LocalName.ValueText == attributeName)
-                    {
-                        IdentifierNameSyntax identifierName = nameAttribute.Identifier;
-
-                        if (identifierName != null)
-                            return identifierName.Identifier.ValueText;
-                    }
+                    if (identifierName != null)
+                        return identifierName.Identifier.ValueText;
                 }
             }
 
