@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -36,7 +37,6 @@ namespace Roslynator.Formatting.CSharp
 
             walker.AnalysisContext = context;
             walker.Visit(root);
-            walker.AnalysisContext = default;
 
             UseSpacesInsteadOfTabWalker.Free(walker);
         }
@@ -85,6 +85,9 @@ namespace Roslynator.Formatting.CSharp
 
                 if (walker != null)
                 {
+                    Debug.Assert(walker.AnalysisContext.Tree == null);
+                    Debug.Assert(walker.AnalysisContext.CancellationToken == default);
+
                     _cachedInstance = null;
                     return walker;
                 }
@@ -94,6 +97,8 @@ namespace Roslynator.Formatting.CSharp
 
             public static void Free(UseSpacesInsteadOfTabWalker walker)
             {
+                walker.AnalysisContext = default;
+
                 _cachedInstance = walker;
             }
         }
