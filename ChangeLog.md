@@ -1,3 +1,13 @@
+### 2.2.1 (2019-10-26)
+
+* Add set of formatting analyzers (RCS0...).
+
+### 2.2.0 (2019-09-28)
+
+#### Analyzers
+
+* Disable analyzer [FormatBinaryOperatorOnNextLine](http://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1029.md) by default.
+
 ### 2.1.3 (2019-08-06)
 
 #### Analyzers
