@@ -19,6 +19,10 @@ namespace Roslynator.Tests
     {
         private ImmutableArray<DiagnosticDescriptor> _supportedDiagnostics;
 
+        internal DiagnosticVerifier(WorkspaceFactory workspaceFactory) : base(workspaceFactory)
+        {
+        }
+
         public abstract DiagnosticDescriptor Descriptor { get; }
 
         public abstract DiagnosticAnalyzer Analyzer { get; }

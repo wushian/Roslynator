@@ -12,9 +12,14 @@ namespace Roslynator.Tests
 {
     public abstract class CodeVerifier
     {
+        internal CodeVerifier(WorkspaceFactory workspaceFactory)
+        {
+            WorkspaceFactory = workspaceFactory;
+        }
+
         public abstract CodeVerificationOptions Options { get; }
 
-        internal abstract WorkspaceFactory WorkspaceFactory { get; }
+        internal WorkspaceFactory WorkspaceFactory { get; }
 
         internal virtual TextParser TextParser { get; } = TextParser.Default;
 

@@ -11,16 +11,19 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.Text;
 
 namespace Roslynator.Tests
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public abstract class CompilerDiagnosticFixVerifier : CodeVerifier
     {
-        public abstract string DiagnosticId { get; }
-
         private ImmutableArray<string> _fixableDiagnosticIds;
+
+        internal CompilerDiagnosticFixVerifier(WorkspaceFactory workspaceFactory) : base(workspaceFactory)
+        {
+        }
+
+        public abstract string DiagnosticId { get; }
 
         public abstract CodeFixProvider FixProvider { get; }
 

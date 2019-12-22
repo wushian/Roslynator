@@ -6,8 +6,10 @@ namespace Roslynator.VisualBasic.Tests
 {
     public abstract class VisualBasicDiagnosticVerifier : DiagnosticVerifier
     {
-        public override CodeVerificationOptions Options => VisualBasicCodeVerificationOptions.Default;
+        protected VisualBasicDiagnosticVerifier() : base(VisualBasicWorkspaceFactory.Instance)
+        {
+        }
 
-        internal override WorkspaceFactory WorkspaceFactory => VisualBasicWorkspaceFactory.Instance;
+        public override CodeVerificationOptions Options => VisualBasicCodeVerificationOptions.Default;
     }
 }

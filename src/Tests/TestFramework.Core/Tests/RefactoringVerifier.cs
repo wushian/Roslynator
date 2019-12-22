@@ -18,6 +18,10 @@ namespace Roslynator.Tests
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public abstract class RefactoringVerifier : CodeVerifier
     {
+        internal RefactoringVerifier(WorkspaceFactory workspaceFactory) : base(workspaceFactory)
+        {
+        }
+
         public abstract string RefactoringId { get; }
 
         public abstract CodeRefactoringProvider RefactoringProvider { get; }

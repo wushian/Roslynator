@@ -20,6 +20,10 @@ namespace Roslynator.Tests
     {
         private ImmutableArray<string> _fixableDiagnosticIds;
 
+        internal FixVerifier(WorkspaceFactory workspaceFactory) : base(workspaceFactory)
+        {
+        }
+
         public abstract CodeFixProvider FixProvider { get; }
 
         internal ImmutableArray<string> FixableDiagnosticIds

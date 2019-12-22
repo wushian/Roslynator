@@ -11,21 +11,25 @@ namespace Roslynator.VisualBasic.Tests
     public class VisualBasicCodeVerificationOptions : CodeVerificationOptions
     {
         public VisualBasicCodeVerificationOptions(
-            VisualBasicParseOptions parseOptions = null,
-            VisualBasicCompilationOptions compilationOptions = null,
+            VisualBasicParseOptions parseOptions,
+            VisualBasicCompilationOptions compilationOptions,
             bool allowNewCompilerDiagnostics = false,
             bool enableDiagnosticsDisabledByDefault = true,
             DiagnosticSeverity maxAllowedCompilerDiagnosticSeverity = DiagnosticSeverity.Info,
             IEnumerable<string> allowedCompilerDiagnosticIds = null)
-            : base(parseOptions, compilationOptions, allowNewCompilerDiagnostics, enableDiagnosticsDisabledByDefault, maxAllowedCompilerDiagnosticSeverity, allowedCompilerDiagnosticIds)
+            : base(allowNewCompilerDiagnostics, enableDiagnosticsDisabledByDefault, maxAllowedCompilerDiagnosticSeverity, allowedCompilerDiagnosticIds)
         {
-            ParseOptions = parseOptions;
-            CompilationOptions = compilationOptions;
+            ParseOptions = parseOptions ?? throw new ArgumentNullException(nameof(parseOptions));
+            CompilationOptions = compilationOptions ?? throw new ArgumentNullException(nameof(compilationOptions));
         }
 
         new public VisualBasicParseOptions ParseOptions { get; }
 
         new public VisualBasicCompilationOptions CompilationOptions { get; }
+
+        protected override ParseOptions CommonParseOptions => ParseOptions;
+
+        protected override CompilationOptions CommonCompilationOptions => CompilationOptions;
 
         //TODO: Allowed compiler diagnostic IDs for Visual Basic
         public static VisualBasicCodeVerificationOptions Default { get; } = CreateDefault();

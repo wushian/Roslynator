@@ -6,8 +6,10 @@ namespace Roslynator.CSharp.Tests
 {
     public abstract class CSharpRefactoringVerifier : RefactoringVerifier
     {
-        public override CodeVerificationOptions Options => CSharpCodeVerificationOptions.Default;
+        protected CSharpRefactoringVerifier() : base(CSharpWorkspaceFactory.Instance)
+        {
+        }
 
-        internal override WorkspaceFactory WorkspaceFactory => CSharpWorkspaceFactory.Instance;
+        public override CodeVerificationOptions Options => CSharpCodeVerificationOptions.Default;
     }
 }

@@ -6,8 +6,10 @@ namespace Roslynator.VisualBasic.Tests
 {
     public abstract class VisualBasicRefactoringVerifier : RefactoringVerifier
     {
-        public override CodeVerificationOptions Options => VisualBasicCodeVerificationOptions.Default;
+        protected VisualBasicRefactoringVerifier() : base(VisualBasicWorkspaceFactory.Instance)
+        {
+        }
 
-        internal override WorkspaceFactory WorkspaceFactory => VisualBasicWorkspaceFactory.Instance;
+        public override CodeVerificationOptions Options => VisualBasicCodeVerificationOptions.Default;
     }
 }

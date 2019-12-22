@@ -6,8 +6,10 @@ namespace Roslynator.VisualBasic.Tests
 {
     public abstract class VisualBasicFixVerifier : FixVerifier
     {
-        public override CodeVerificationOptions Options => VisualBasicCodeVerificationOptions.Default;
+        protected VisualBasicFixVerifier() : base(VisualBasicWorkspaceFactory.Instance)
+        {
+        }
 
-        internal override WorkspaceFactory WorkspaceFactory => VisualBasicWorkspaceFactory.Instance;
+        public override CodeVerificationOptions Options => VisualBasicCodeVerificationOptions.Default;
     }
 }

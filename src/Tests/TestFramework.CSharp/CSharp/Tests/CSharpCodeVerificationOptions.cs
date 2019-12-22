@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Josef Pihrt. All rights reserved. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -16,21 +17,25 @@ namespace Roslynator.CSharp.Tests
         private static CSharpCodeVerificationOptions _defaultWithCSharp6;
 
         public CSharpCodeVerificationOptions(
-            CSharpParseOptions parseOptions = null,
-            CSharpCompilationOptions compilationOptions = null,
+            CSharpParseOptions parseOptions,
+            CSharpCompilationOptions compilationOptions,
             bool allowNewCompilerDiagnostics = false,
             bool enableDiagnosticsDisabledByDefault = true,
             DiagnosticSeverity maxAllowedCompilerDiagnosticSeverity = DiagnosticSeverity.Info,
             IEnumerable<string> allowedCompilerDiagnosticIds = null)
-            : base(parseOptions, compilationOptions, allowNewCompilerDiagnostics, enableDiagnosticsDisabledByDefault, maxAllowedCompilerDiagnosticSeverity, allowedCompilerDiagnosticIds)
+            : base(allowNewCompilerDiagnostics, enableDiagnosticsDisabledByDefault, maxAllowedCompilerDiagnosticSeverity, allowedCompilerDiagnosticIds)
         {
-            ParseOptions = parseOptions;
-            CompilationOptions = compilationOptions;
+            ParseOptions = parseOptions ?? throw new ArgumentNullException(nameof(parseOptions));
+            CompilationOptions = compilationOptions ?? throw new ArgumentNullException(nameof(compilationOptions));
         }
 
         new public CSharpParseOptions ParseOptions { get; }
 
         new public CSharpCompilationOptions CompilationOptions { get; }
+
+        protected override ParseOptions CommonParseOptions => ParseOptions;
+
+        protected override CompilationOptions CommonCompilationOptions => CompilationOptions;
 
         public static CSharpCodeVerificationOptions Default { get; } = CreateDefault();
 
