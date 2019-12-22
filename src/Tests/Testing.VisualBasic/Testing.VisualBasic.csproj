@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -6,7 +6,7 @@
 
   <PropertyGroup>
     <AssemblyName>Roslynator.Testing.VisualBasic</AssemblyName>
-    <RootNamespace>Roslynator</RootNamespace>
+    <RootNamespace>Roslynator.Testing</RootNamespace>
     <CodeAnalysisRuleSet>..\..\global.ruleset</CodeAnalysisRuleSet>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\Roslynator.snk</AssemblyOriginatorKeyFile>
@@ -20,10 +20,6 @@
     <Description></Description>
     <Copyright>Copyright (c) 2017-2018 Josef Pihrt</Copyright>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Testing.VisualBasic.snk" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="2.3.0" />
