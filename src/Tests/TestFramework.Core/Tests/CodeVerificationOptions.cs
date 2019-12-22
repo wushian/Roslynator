@@ -2,43 +2,59 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 
 namespace Roslynator.Tests
 {
     public abstract class CodeVerificationOptions
     {
+        private ImmutableArray<MetadataReference> _metadataReferences;
+
         protected CodeVerificationOptions(
-            bool allowNewCompilerDiagnostics = false,
-            bool enableDiagnosticsDisabledByDefault = true,
-            DiagnosticSeverity maxAllowedCompilerDiagnosticSeverity = DiagnosticSeverity.Info,
+            IEnumerable<string> assemblyNames,
+            DiagnosticSeverity allowedCompilerDiagnosticSeverity = DiagnosticSeverity.Info,
             IEnumerable<string> allowedCompilerDiagnosticIds = null)
         {
-            AllowNewCompilerDiagnostics = allowNewCompilerDiagnostics;
-            EnableDiagnosticsDisabledByDefault = enableDiagnosticsDisabledByDefault;
-            MaxAllowedCompilerDiagnosticSeverity = maxAllowedCompilerDiagnosticSeverity;
+            AssemblyNames = assemblyNames;
+            AllowedCompilerDiagnosticSeverity = allowedCompilerDiagnosticSeverity;
             AllowedCompilerDiagnosticIds = allowedCompilerDiagnosticIds?.ToImmutableArray() ?? ImmutableArray<string>.Empty;
         }
 
         protected abstract ParseOptions CommonParseOptions { get; }
 
-        public ParseOptions ParseOptions => CommonParseOptions;
-
         protected abstract CompilationOptions CommonCompilationOptions { get; }
+
+        public ParseOptions ParseOptions => CommonParseOptions;
 
         public CompilationOptions CompilationOptions => CommonCompilationOptions;
 
-        //TODO: AllowNewCompilerDiagnostics > IgnoreNewCompilerDiagnostics
-        public bool AllowNewCompilerDiagnostics { get; }
+        public IEnumerable<string> AssemblyNames { get; }
 
-        //TODO: rename EnableDiagnosticsDisabledByDefault
-        public bool EnableDiagnosticsDisabledByDefault { get; }
+        public DiagnosticSeverity AllowedCompilerDiagnosticSeverity { get; }
 
-        //TODO: MaxAllowedCompilerDiagnosticSeverity > AllowedCompilerDiagnosticSeverity
-        public DiagnosticSeverity MaxAllowedCompilerDiagnosticSeverity { get; }
-
-        //TODO: AllowedCompilerDiagnosticIds > IgnoredCompilerDiagnosticIds
         public ImmutableArray<string> AllowedCompilerDiagnosticIds { get; }
+
+        internal ImmutableArray<MetadataReference> MetadataReferences
+        {
+            get
+            {
+                if (_metadataReferences.IsDefault)
+                    ImmutableInterlocked.InterlockedInitialize(ref _metadataReferences, CreateMetadataReferences());
+
+                return _metadataReferences;
+
+                ImmutableArray<MetadataReference> CreateMetadataReferences()
+                {
+                    ImmutableArray<MetadataReference>.Builder builder = ImmutableArray.CreateBuilder<MetadataReference>();
+
+                    builder.Add(RuntimeMetadataReference.CorLibReference);
+                    builder.AddRange(AssemblyNames.Select(f => RuntimeMetadataReference.CreateFromAssemblyName(f)));
+
+                    return builder.ToImmutableArray();
+                }
+            }
+        }
 
         public abstract CodeVerificationOptions AddAllowedCompilerDiagnosticId(string diagnosticId);
 

@@ -72,6 +72,8 @@ namespace Roslynator.Tests
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            options ??= Options;
+
             if (!FixableDiagnosticIds.Contains(DiagnosticId))
                 Assert.True(false, $"Code fix provider '{FixProvider.GetType().Name}' cannot fix diagnostic '{DiagnosticId}'.");
 
@@ -107,13 +109,7 @@ namespace Roslynator.Tests
                         break;
 
                     if (previousDiagnostics.Any())
-                    {
-                        if (options == null)
-                            options = Options;
-
-                        if (!options.AllowNewCompilerDiagnostics)
-                            VerifyNoNewCompilerDiagnostics(previousDiagnostics, diagnostics, options);
-                    }
+                        VerifyNoNewCompilerDiagnostics(previousDiagnostics, diagnostics, options);
 
                     if (length == previousDiagnostics.Length
                         && !diagnostics.Except(previousDiagnostics, DiagnosticDeepEqualityComparer.Instance).Any())
@@ -199,6 +195,8 @@ namespace Roslynator.Tests
             CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
+
+            options ??= Options;
 
             using (Workspace workspace = new AdhocWorkspace())
             {

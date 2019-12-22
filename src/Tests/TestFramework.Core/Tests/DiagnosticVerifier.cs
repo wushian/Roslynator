@@ -123,28 +123,27 @@ namespace Roslynator.Tests
         public async Task VerifyDiagnosticAsync(
             string source,
             IEnumerable<Diagnostic> expectedDiagnostics,
-            string[] additionalSources = null,
+            IEnumerable<string> additionalSources = null,
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            options ??= Options;
+
             using (Workspace workspace = new AdhocWorkspace())
             {
                 Project project = WorkspaceFactory.AddProject(workspace.CurrentSolution, options);
 
-                Document document = WorkspaceFactory.AddDocument(project, source, additionalSources ?? Array.Empty<string>());
+                Document document = WorkspaceFactory.AddDocument(project, source, additionalSources);
 
                 Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
                 ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
 
-                if (options == null)
-                    options = Options;
-
                 VerifyCompilerDiagnostics(compilerDiagnostics, options);
 
-                if (options.EnableDiagnosticsDisabledByDefault)
+                if (!Descriptor.IsEnabledByDefault)
                     compilation = compilation.EnsureEnabled(Descriptor);
 
                 ImmutableArray<Diagnostic> diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(Analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);
@@ -197,11 +196,13 @@ namespace Roslynator.Tests
 
         public async Task VerifyNoDiagnosticAsync(
             string source,
-            string[] additionalSources = null,
+            IEnumerable<string> additionalSources = null,
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
+
+            options ??= Options;
 
             if (SupportedDiagnostics.IndexOf(Descriptor, DiagnosticDescriptorComparer.Id) == -1)
                 Assert.True(false, $"Diagnostic \"{Descriptor.Id}\" is not supported by analyzer \"{Analyzer.GetType().Name}\".");
@@ -210,18 +211,15 @@ namespace Roslynator.Tests
             {
                 Project project = WorkspaceFactory.AddProject(workspace.CurrentSolution, options);
 
-                Document document = WorkspaceFactory.AddDocument(project, source, additionalSources ?? Array.Empty<string>());
+                Document document = WorkspaceFactory.AddDocument(project, source, additionalSources);
 
                 Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
                 ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
 
-                if (options == null)
-                    options = Options;
-
                 VerifyCompilerDiagnostics(compilerDiagnostics, options);
 
-                if (options.EnableDiagnosticsDisabledByDefault)
+                if (!Descriptor.IsEnabledByDefault)
                     compilation = compilation.EnsureEnabled(Descriptor);
 
                 ImmutableArray<Diagnostic> analyzerDiagnostics = await compilation.GetAnalyzerDiagnosticsAsync(Analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);

@@ -29,7 +29,7 @@ namespace Roslynator.Tests
             ImmutableArray<Diagnostic> diagnostics,
             CodeVerificationOptions options)
         {
-            DiagnosticSeverity maxAllowedSeverity = options.MaxAllowedCompilerDiagnosticSeverity;
+            DiagnosticSeverity maxAllowedSeverity = options.AllowedCompilerDiagnosticSeverity;
 
             ImmutableArray<string> allowedDiagnosticIds = options.AllowedCompilerDiagnosticIds;
 

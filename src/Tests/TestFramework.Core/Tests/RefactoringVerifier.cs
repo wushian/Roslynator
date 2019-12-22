@@ -40,7 +40,7 @@ namespace Roslynator.Tests
         public async Task VerifyRefactoringAsync(
             string source,
             string expected,
-            string[] additionalSources = null,
+            IEnumerable<string> additionalSources = null,
             string equivalenceKey = null,
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default)
@@ -95,7 +95,7 @@ namespace Roslynator.Tests
             string source,
             string expected,
             IEnumerable<TextSpan> spans,
-            string[] additionalSources = null,
+            IEnumerable<string> additionalSources = null,
             string equivalenceKey = null,
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default)
@@ -126,25 +126,24 @@ namespace Roslynator.Tests
             string source,
             string expected,
             TextSpan span,
-            string[] additionalSources = null,
+            IEnumerable<string> additionalSources = null,
             string equivalenceKey = null,
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            options ??= Options;
+
             using (Workspace workspace = new AdhocWorkspace())
             {
                 Project project = WorkspaceFactory.AddProject(workspace.CurrentSolution, options);
 
-                Document document = WorkspaceFactory.AddDocument(project, source, additionalSources ?? Array.Empty<string>());
+                Document document = WorkspaceFactory.AddDocument(project, source, additionalSources);
 
                 SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
                 ImmutableArray<Diagnostic> compilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
-
-                if (options == null)
-                    options = Options;
 
                 VerifyCompilerDiagnostics(compilerDiagnostics, options);
                 CodeAction action = null;
@@ -175,8 +174,7 @@ namespace Roslynator.Tests
 
                 VerifyCompilerDiagnostics(newCompilerDiagnostics, options);
 
-                if (!options.AllowNewCompilerDiagnostics)
-                    VerifyNoNewCompilerDiagnostics(compilerDiagnostics, newCompilerDiagnostics, options);
+                VerifyNoNewCompilerDiagnostics(compilerDiagnostics, newCompilerDiagnostics, options);
 
                 string actual = await document.ToFullStringAsync(simplify: true, format: true, cancellationToken).ConfigureAwait(false);
 
@@ -224,6 +222,8 @@ namespace Roslynator.Tests
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            options ??= Options;
+
             using (Workspace workspace = new AdhocWorkspace())
             {
                 Project project = WorkspaceFactory.AddProject(workspace.CurrentSolution, options);
@@ -233,9 +233,6 @@ namespace Roslynator.Tests
                 SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
                 ImmutableArray<Diagnostic> compilerDiagnostics = semanticModel.GetDiagnostics(cancellationToken: cancellationToken);
-
-                if (options == null)
-                    options = Options;
 
                 VerifyCompilerDiagnostics(compilerDiagnostics, options);
 

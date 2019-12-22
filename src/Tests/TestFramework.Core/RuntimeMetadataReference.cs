@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Immutable;
 using System.IO;
+using System.Threading;
 using Microsoft.CodeAnalysis;
 
 namespace Roslynator
@@ -11,47 +12,57 @@ namespace Roslynator
     {
         internal static readonly MetadataReference CorLibReference = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
 
-        private static readonly ImmutableDictionary<string, string> _assemblyMap = GetTrustedPlatformAssemblies();
-        private static ImmutableArray<MetadataReference> _defaultProjectReferences;
+        private static ImmutableArray<string> _defaultAssemblyNames;
+        private static ImmutableDictionary<string, string> _trustedPlatformAssemblyMap;
 
-        internal static ImmutableArray<MetadataReference> DefaultProjectReferences
+        internal static ImmutableArray<string> DefaultAssemblyNames
         {
             get
             {
-                if (_defaultProjectReferences.IsDefault)
-                    ImmutableInterlocked.InterlockedInitialize(ref _defaultProjectReferences, Create());
+                if (_defaultAssemblyNames.IsDefault)
+                    ImmutableInterlocked.InterlockedInitialize(ref _defaultAssemblyNames, Create());
 
-                return _defaultProjectReferences;
+                return _defaultAssemblyNames;
 
-                static ImmutableArray<MetadataReference> Create()
+                static ImmutableArray<string> Create()
                 {
                     return ImmutableArray.Create(
-                        CorLibReference,
-                        CreateFromAssemblyName("System.Core.dll"),
-                        CreateFromAssemblyName("System.Linq.dll"),
-                        CreateFromAssemblyName("System.Linq.Expressions.dll"),
-                        CreateFromAssemblyName("System.Runtime.Serialization.Formatters.dll"),
-                        CreateFromAssemblyName("System.Runtime.dll"),
-                        CreateFromAssemblyName("System.Collections.dll"),
-                        CreateFromAssemblyName("System.Collections.Immutable.dll"),
-                        CreateFromAssemblyName("System.Composition.AttributedModel.dll"),
-                        CreateFromAssemblyName("System.ObjectModel.dll"),
-                        CreateFromAssemblyName("System.Text.RegularExpressions.dll"),
-                        CreateFromAssemblyName("System.Threading.Tasks.Extensions.dll"),
-                        CreateFromAssemblyName("Microsoft.CodeAnalysis.dll"),
-                        CreateFromAssemblyName("Microsoft.CodeAnalysis.CSharp.dll"),
-                        CreateFromAssemblyName("Microsoft.CodeAnalysis.Workspaces.dll"));
+                        "System.Core.dll",
+                        "System.Linq.dll",
+                        "System.Linq.Expressions.dll",
+                        "System.Runtime.Serialization.Formatters.dll",
+                        "System.Runtime.dll",
+                        "System.Collections.dll",
+                        "System.Collections.Immutable.dll",
+                        "System.Composition.AttributedModel.dll",
+                        "System.ObjectModel.dll",
+                        "System.Text.RegularExpressions.dll",
+                        "System.Threading.Tasks.Extensions.dll",
+                        "Microsoft.CodeAnalysis.dll",
+                        "Microsoft.CodeAnalysis.CSharp.dll",
+                        "Microsoft.CodeAnalysis.Workspaces.dll");
                 }
             }
         }
 
-        private static ImmutableDictionary<string, string> GetTrustedPlatformAssemblies()
+        internal static ImmutableDictionary<string, string> TrustedPlatformAssemblyMap
         {
-            return AppContext
-                .GetData("TRUSTED_PLATFORM_ASSEMBLIES")
-                .ToString()
-                .Split(';')
-                .ToImmutableDictionary(Path.GetFileName);
+            get
+            {
+                if (_trustedPlatformAssemblyMap == null)
+                    Interlocked.CompareExchange(ref _trustedPlatformAssemblyMap, CreateTrustedPlatformAssemblies(), null);
+
+                return _trustedPlatformAssemblyMap;
+
+                static ImmutableDictionary<string, string> CreateTrustedPlatformAssemblies()
+                {
+                    return AppContext
+                        .GetData("TRUSTED_PLATFORM_ASSEMBLIES")
+                        .ToString()
+                        .Split(';')
+                        .ToImmutableDictionary(Path.GetFileName);
+                }
+            }
         }
 
         public static PortableExecutableReference CreateFromAssemblyName(string assemblyName)
@@ -59,9 +70,9 @@ namespace Roslynator
             return MetadataReference.CreateFromFile(GetAssemblyLocation(assemblyName));
         }
 
-        public static string GetAssemblyLocation(string assemblyName)
+        private static string GetAssemblyLocation(string assemblyName)
         {
-            return _assemblyMap[assemblyName];
+            return TrustedPlatformAssemblyMap[assemblyName];
         }
     }
 }

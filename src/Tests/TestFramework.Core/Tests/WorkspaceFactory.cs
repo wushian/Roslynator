@@ -2,9 +2,9 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
-using static Roslynator.RuntimeMetadataReference;
 
 namespace Roslynator.Tests
 {
@@ -16,32 +16,38 @@ namespace Roslynator.Tests
 
         public virtual string DefaultProjectName => "TestProject";
 
-        public virtual Project AddProject(Solution solution, CodeVerificationOptions options = null)
+        public virtual Project AddProject(Solution solution, CodeVerificationOptions options)
         {
-            //TODO: přidat ProjectReferences do CodeVerificationOptions
             return solution
                 .AddProject(DefaultProjectName, DefaultProjectName, Language)
-                .WithMetadataReferences(DefaultProjectReferences);
+                .WithMetadataReferences(options.MetadataReferences);
         }
 
-        public Document AddDocument(Project project, string source, params string[] additionalSources)
+        public Document AddDocument(Project project, string source, IEnumerable<string> additionalSources = null)
         {
             Document document = project.AddDocument(DefaultDocumentName, SourceText.From(source));
 
-            int length = additionalSources.Length;
-
-            if (length > 0)
+            if (additionalSources != null)
             {
-                project = document.Project;
-
-                for (int i = 0; i < length; i++)
+                using (IEnumerator<string> en = additionalSources.GetEnumerator())
                 {
-                    project = project
-                        .AddDocument(PathHelpers.AppendNumberToFileName(document.Name, i + 2), SourceText.From(additionalSources[i]))
-                        .Project;
-                }
+                    if (en.MoveNext())
+                    {
+                        int i = 2;
+                        project = document.Project;
 
-                document = project.GetDocument(document.Id);
+                        do
+                        {
+                            project = project
+                                .AddDocument(AppendNumberToFileName(document.Name, i), SourceText.From(en.Current))
+                                .Project;
+
+                        } while (en.MoveNext());
+
+                        document = project.GetDocument(document.Id);
+                        i++;
+                    }
+                }
             }
 
             return document;
@@ -56,7 +62,7 @@ namespace Roslynator.Tests
             int i = 2;
             foreach ((string source, string expected) in additionalData)
             {
-                Document document = project.AddDocument(PathHelpers.AppendNumberToFileName(DefaultDocumentName, i), SourceText.From(source));
+                Document document = project.AddDocument(AppendNumberToFileName(DefaultDocumentName, i), SourceText.From(source));
                 expectedDocuments.Add(new ExpectedDocument(document.Id, expected));
                 project = document.Project;
 
@@ -64,6 +70,13 @@ namespace Roslynator.Tests
             }
 
             return expectedDocuments.ToImmutableArray();
+        }
+
+        private static string AppendNumberToFileName(string fileName, int number)
+        {
+            int index = fileName.LastIndexOf(".");
+
+            return fileName.Insert(index, (number).ToString(CultureInfo.InvariantCulture));
         }
     }
 }

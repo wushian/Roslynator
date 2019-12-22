@@ -13,11 +13,10 @@ namespace Roslynator.VisualBasic.Tests
         public VisualBasicCodeVerificationOptions(
             VisualBasicParseOptions parseOptions,
             VisualBasicCompilationOptions compilationOptions,
-            bool allowNewCompilerDiagnostics = false,
-            bool enableDiagnosticsDisabledByDefault = true,
-            DiagnosticSeverity maxAllowedCompilerDiagnosticSeverity = DiagnosticSeverity.Info,
+            IEnumerable<string> assemblyNames,
+            DiagnosticSeverity allowedCompilerDiagnosticSeverity = DiagnosticSeverity.Info,
             IEnumerable<string> allowedCompilerDiagnosticIds = null)
-            : base(allowNewCompilerDiagnostics, enableDiagnosticsDisabledByDefault, maxAllowedCompilerDiagnosticSeverity, allowedCompilerDiagnosticIds)
+            : base(assemblyNames, allowedCompilerDiagnosticSeverity, allowedCompilerDiagnosticIds)
         {
             ParseOptions = parseOptions ?? throw new ArgumentNullException(nameof(parseOptions));
             CompilationOptions = compilationOptions ?? throw new ArgumentNullException(nameof(compilationOptions));
@@ -31,8 +30,7 @@ namespace Roslynator.VisualBasic.Tests
 
         protected override CompilationOptions CommonCompilationOptions => CompilationOptions;
 
-        //TODO: Allowed compiler diagnostic IDs for Visual Basic
-        public static VisualBasicCodeVerificationOptions Default { get; } = CreateDefault();
+        internal static VisualBasicCodeVerificationOptions Default { get; } = CreateDefault();
 
         private static VisualBasicCodeVerificationOptions CreateDefault()
         {
@@ -43,7 +41,7 @@ namespace Roslynator.VisualBasic.Tests
             {
                 Project project = workspace
                     .CurrentSolution
-                    .AddProject("Temp", "Temp", LanguageNames.VisualBasic);
+                    .AddProject("TestProject", "TestProject", LanguageNames.VisualBasic);
 
                 compilationOptions = ((VisualBasicCompilationOptions)project.CompilationOptions)
                     .WithOutputKind(OutputKind.DynamicallyLinkedLibrary);
@@ -54,7 +52,8 @@ namespace Roslynator.VisualBasic.Tests
 
             return new VisualBasicCodeVerificationOptions(
                 parseOptions: parseOptions,
-                compilationOptions: compilationOptions);
+                compilationOptions: compilationOptions,
+                assemblyNames: RuntimeMetadataReference.DefaultAssemblyNames);
         }
 
         public override CodeVerificationOptions AddAllowedCompilerDiagnosticId(string diagnosticId)
@@ -75,9 +74,8 @@ namespace Roslynator.VisualBasic.Tests
             return new VisualBasicCodeVerificationOptions(
                 parseOptions: ParseOptions,
                 compilationOptions: CompilationOptions,
-                allowNewCompilerDiagnostics: AllowNewCompilerDiagnostics,
-                enableDiagnosticsDisabledByDefault: EnableDiagnosticsDisabledByDefault,
-                maxAllowedCompilerDiagnosticSeverity: MaxAllowedCompilerDiagnosticSeverity,
+                assemblyNames: AssemblyNames,
+                allowedCompilerDiagnosticSeverity: AllowedCompilerDiagnosticSeverity,
                 allowedCompilerDiagnosticIds: allowedCompilerDiagnosticIds);
         }
 
@@ -86,9 +84,8 @@ namespace Roslynator.VisualBasic.Tests
             return new VisualBasicCodeVerificationOptions(
                 parseOptions: parseOptions,
                 compilationOptions: CompilationOptions,
-                allowNewCompilerDiagnostics: AllowNewCompilerDiagnostics,
-                enableDiagnosticsDisabledByDefault: EnableDiagnosticsDisabledByDefault,
-                maxAllowedCompilerDiagnosticSeverity: MaxAllowedCompilerDiagnosticSeverity,
+                assemblyNames: AssemblyNames,
+                allowedCompilerDiagnosticSeverity: AllowedCompilerDiagnosticSeverity,
                 allowedCompilerDiagnosticIds: AllowedCompilerDiagnosticIds);
         }
 
@@ -97,9 +94,8 @@ namespace Roslynator.VisualBasic.Tests
             return new VisualBasicCodeVerificationOptions(
                 parseOptions: ParseOptions,
                 compilationOptions: compilationOptions,
-                allowNewCompilerDiagnostics: AllowNewCompilerDiagnostics,
-                enableDiagnosticsDisabledByDefault: EnableDiagnosticsDisabledByDefault,
-                maxAllowedCompilerDiagnosticSeverity: MaxAllowedCompilerDiagnosticSeverity,
+                assemblyNames: AssemblyNames,
+                allowedCompilerDiagnosticSeverity: AllowedCompilerDiagnosticSeverity,
                 allowedCompilerDiagnosticIds: AllowedCompilerDiagnosticIds);
         }
     }

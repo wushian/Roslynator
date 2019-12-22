@@ -13,14 +13,9 @@ namespace Roslynator.VisualBasic.Tests
 
         public override string DefaultDocumentName => "Test.vb";
 
-        public override Project AddProject(Solution solution, CodeVerificationOptions options = null)
+        public override Project AddProject(Solution solution, CodeVerificationOptions options)
         {
-            Project project = base.AddProject(solution, options);
-
-            if (options == null)
-                options = VisualBasicCodeVerificationOptions.Default;
-
-            return project
+            return base.AddProject(solution, options)
                 .WithCompilationOptions(options.CompilationOptions)
                 .WithParseOptions(options.ParseOptions);
         }

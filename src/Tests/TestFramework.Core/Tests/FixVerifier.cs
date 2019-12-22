@@ -129,6 +129,8 @@ namespace Roslynator.Tests
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            options ??= Options;
+
             if (!SupportedDiagnostics.Contains(Descriptor, DiagnosticDescriptorComparer.Id))
                 Assert.True(false, $"Diagnostic '{Descriptor.Id}' is not supported by analyzer '{Analyzer.GetType().Name}'.");
 
@@ -153,12 +155,9 @@ namespace Roslynator.Tests
 
                 ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
 
-                if (options == null)
-                    options = Options;
-
                 VerifyCompilerDiagnostics(compilerDiagnostics, options);
 
-                if (options.EnableDiagnosticsDisabledByDefault)
+                if (!Descriptor.IsEnabledByDefault)
                     compilation = compilation.EnsureEnabled(Descriptor);
 
                 ImmutableArray<Diagnostic> previousDiagnostics = ImmutableArray<Diagnostic>.Empty;
@@ -226,10 +225,9 @@ namespace Roslynator.Tests
 
                     VerifyCompilerDiagnostics(newCompilerDiagnostics, options);
 
-                    if (!options.AllowNewCompilerDiagnostics)
-                        VerifyNoNewCompilerDiagnostics(compilerDiagnostics, newCompilerDiagnostics, options);
+                    VerifyNoNewCompilerDiagnostics(compilerDiagnostics, newCompilerDiagnostics, options);
 
-                    if (options.EnableDiagnosticsDisabledByDefault)
+                    if (!Descriptor.IsEnabledByDefault)
                         compilation = compilation.EnsureEnabled(Descriptor);
 
                     previousDiagnostics = diagnostics;
@@ -248,29 +246,28 @@ namespace Roslynator.Tests
 
         public async Task VerifyNoFixAsync(
             string source,
-            string[] additionalSources = null,
+            IEnumerable<string> additionalSources = null,
             string equivalenceKey = null,
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            options ??= Options;
+
             using (Workspace workspace = new AdhocWorkspace())
             {
                 Project project = WorkspaceFactory.AddProject(workspace.CurrentSolution, options);
 
-                Document document = WorkspaceFactory.AddDocument(project, source, additionalSources ?? Array.Empty<string>());
+                Document document = WorkspaceFactory.AddDocument(project, source, additionalSources);
 
                 Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
                 ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(cancellationToken);
 
-                if (options == null)
-                    options = Options;
-
                 VerifyCompilerDiagnostics(compilerDiagnostics, options);
 
-                if (options.EnableDiagnosticsDisabledByDefault)
+                if (!Descriptor.IsEnabledByDefault)
                     compilation = compilation.EnsureEnabled(Descriptor);
 
                 ImmutableArray<Diagnostic> diagnostics = await compilation.GetAnalyzerDiagnosticsAsync(Analyzer, DiagnosticComparer.SpanStart, cancellationToken).ConfigureAwait(false);

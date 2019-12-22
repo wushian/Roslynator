@@ -13,14 +13,9 @@ namespace Roslynator.CSharp.Tests
 
         public override string DefaultDocumentName => "Test.cs";
 
-        public override Project AddProject(Solution solution, CodeVerificationOptions options = null)
+        public override Project AddProject(Solution solution, CodeVerificationOptions options)
         {
-            Project project = base.AddProject(solution, options);
-
-            if (options == null)
-                options = CSharpCodeVerificationOptions.Default;
-
-            return project
+            return base.AddProject(solution, options)
                 .WithCompilationOptions(options.CompilationOptions)
                 .WithParseOptions(options.ParseOptions);
         }

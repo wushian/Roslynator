@@ -45,9 +45,6 @@ namespace Roslynator
 
         public static Compilation EnsureEnabled(this Compilation compilation, DiagnosticDescriptor descriptor)
         {
-            if (descriptor.IsEnabledByDefault)
-                return compilation;
-
             CompilationOptions compilationOptions = compilation.Options;
 
             ImmutableDictionary<string, ReportDiagnostic> specificDiagnosticOptions = compilationOptions.SpecificDiagnosticOptions;

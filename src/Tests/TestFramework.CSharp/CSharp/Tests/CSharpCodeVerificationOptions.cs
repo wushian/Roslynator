@@ -19,11 +19,10 @@ namespace Roslynator.CSharp.Tests
         public CSharpCodeVerificationOptions(
             CSharpParseOptions parseOptions,
             CSharpCompilationOptions compilationOptions,
-            bool allowNewCompilerDiagnostics = false,
-            bool enableDiagnosticsDisabledByDefault = true,
-            DiagnosticSeverity maxAllowedCompilerDiagnosticSeverity = DiagnosticSeverity.Info,
+            IEnumerable<string> assemblyNames,
+            DiagnosticSeverity allowedCompilerDiagnosticSeverity = DiagnosticSeverity.Info,
             IEnumerable<string> allowedCompilerDiagnosticIds = null)
-            : base(allowNewCompilerDiagnostics, enableDiagnosticsDisabledByDefault, maxAllowedCompilerDiagnosticSeverity, allowedCompilerDiagnosticIds)
+            : base(assemblyNames, allowedCompilerDiagnosticSeverity, allowedCompilerDiagnosticIds)
         {
             ParseOptions = parseOptions ?? throw new ArgumentNullException(nameof(parseOptions));
             CompilationOptions = compilationOptions ?? throw new ArgumentNullException(nameof(compilationOptions));
@@ -48,7 +47,7 @@ namespace Roslynator.CSharp.Tests
             {
                 Project project = workspace
                     .CurrentSolution
-                    .AddProject("Temp", "Temp", LanguageNames.CSharp);
+                    .AddProject("TestProject", "TestProject", LanguageNames.CSharp);
 
                 compilationOptions = ((CSharpCompilationOptions)project.CompilationOptions)
                     .WithAllowUnsafe(true)
@@ -64,6 +63,7 @@ namespace Roslynator.CSharp.Tests
             return new CSharpCodeVerificationOptions(
                 parseOptions: parseOptions,
                 compilationOptions: compilationOptions,
+                assemblyNames: RuntimeMetadataReference.DefaultAssemblyNames,
                 allowedCompilerDiagnosticIds: ImmutableArray.Create(
                     "CS0067", // Event is never used
                     "CS0168", // Variable is declared but never used
@@ -119,9 +119,8 @@ namespace Roslynator.CSharp.Tests
             return new CSharpCodeVerificationOptions(
                 parseOptions: ParseOptions,
                 compilationOptions: CompilationOptions,
-                allowNewCompilerDiagnostics: AllowNewCompilerDiagnostics,
-                enableDiagnosticsDisabledByDefault: EnableDiagnosticsDisabledByDefault,
-                maxAllowedCompilerDiagnosticSeverity: MaxAllowedCompilerDiagnosticSeverity,
+                assemblyNames: AssemblyNames,
+                allowedCompilerDiagnosticSeverity: AllowedCompilerDiagnosticSeverity,
                 allowedCompilerDiagnosticIds: allowedCompilerDiagnosticIds);
         }
 
@@ -130,9 +129,8 @@ namespace Roslynator.CSharp.Tests
             return new CSharpCodeVerificationOptions(
                 parseOptions: parseOptions,
                 compilationOptions: CompilationOptions,
-                allowNewCompilerDiagnostics: AllowNewCompilerDiagnostics,
-                enableDiagnosticsDisabledByDefault: EnableDiagnosticsDisabledByDefault,
-                maxAllowedCompilerDiagnosticSeverity: MaxAllowedCompilerDiagnosticSeverity,
+                assemblyNames: AssemblyNames,
+                allowedCompilerDiagnosticSeverity: AllowedCompilerDiagnosticSeverity,
                 allowedCompilerDiagnosticIds: AllowedCompilerDiagnosticIds);
         }
 
@@ -141,9 +139,8 @@ namespace Roslynator.CSharp.Tests
             return new CSharpCodeVerificationOptions(
                 parseOptions: ParseOptions,
                 compilationOptions: compilationOptions,
-                allowNewCompilerDiagnostics: AllowNewCompilerDiagnostics,
-                enableDiagnosticsDisabledByDefault: EnableDiagnosticsDisabledByDefault,
-                maxAllowedCompilerDiagnosticSeverity: MaxAllowedCompilerDiagnosticSeverity,
+                assemblyNames: AssemblyNames,
+                allowedCompilerDiagnosticSeverity: AllowedCompilerDiagnosticSeverity,
                 allowedCompilerDiagnosticIds: AllowedCompilerDiagnosticIds);
         }
     }
