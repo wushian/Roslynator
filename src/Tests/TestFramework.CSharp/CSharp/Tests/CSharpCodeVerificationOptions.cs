@@ -82,7 +82,7 @@ namespace Roslynator.CSharp.Tests
 
                 return _defaultWithCSharp5;
 
-                CSharpCodeVerificationOptions LoadDefaultOptionsWithCSharp5() => Default.WithParseOptions(Default.ParseOptions.WithLanguageVersion(LanguageVersion.CSharp5));
+                static CSharpCodeVerificationOptions LoadDefaultOptionsWithCSharp5() => Default.WithParseOptions(Default.ParseOptions.WithLanguageVersion(LanguageVersion.CSharp5));
             }
         }
 
@@ -95,7 +95,7 @@ namespace Roslynator.CSharp.Tests
 
                 return _defaultWithCSharp6;
 
-                CSharpCodeVerificationOptions LoadDefaultOptionsWithCSharp6() => Default.WithParseOptions(Default.ParseOptions.WithLanguageVersion(LanguageVersion.CSharp6));
+                static CSharpCodeVerificationOptions LoadDefaultOptionsWithCSharp6() => Default.WithParseOptions(Default.ParseOptions.WithLanguageVersion(LanguageVersion.CSharp6));
             }
         }
 

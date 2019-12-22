@@ -11,8 +11,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 using Roslynator.Tests.Text;
-using Xunit;
-using static Roslynator.Tests.CodeVerifierHelpers;
 
 namespace Roslynator.Tests
 {
@@ -184,7 +182,7 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default)
         {
-            (TextSpan span, string text) = TextParser.ReplaceEmptySpan(theory, fromData);
+            (_, string text) = TextParser.ReplaceEmptySpan(theory, fromData);
 
             await VerifyNoDiagnosticAsync(
                 source: text,
@@ -294,7 +292,7 @@ namespace Roslynator.Tests
             }
         }
 
-        private static void VerifyDiagnostic(
+        private void VerifyDiagnostic(
             Diagnostic actualDiagnostic,
             Diagnostic expectedDiagnostic,
             bool checkAdditionalLocations = false)

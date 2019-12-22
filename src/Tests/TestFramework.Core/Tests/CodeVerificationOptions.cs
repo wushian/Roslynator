@@ -32,12 +32,15 @@ namespace Roslynator.Tests
 
         public CompilationOptions CompilationOptions { get; }
 
+        //TODO: AllowNewCompilerDiagnostics > IgnoreNewCompilerDiagnostics
         public bool AllowNewCompilerDiagnostics { get; }
 
         public bool EnableDiagnosticsDisabledByDefault { get; }
 
+        //TODO: MaxAllowedCompilerDiagnosticSeverity > AllowedCompilerDiagnosticSeverity
         public DiagnosticSeverity MaxAllowedCompilerDiagnosticSeverity { get; }
 
+        //TODO: AllowedCompilerDiagnosticIds > IgnoredCompilerDiagnosticIds
         public ImmutableArray<string> AllowedCompilerDiagnosticIds { get; }
 
         public abstract CodeVerificationOptions AddAllowedCompilerDiagnosticId(string diagnosticId);

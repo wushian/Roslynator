@@ -8,7 +8,7 @@ using static Roslynator.RuntimeMetadataReference;
 
 namespace Roslynator.Tests
 {
-    public abstract class WorkspaceFactory
+    internal abstract class WorkspaceFactory
     {
         public abstract string Language { get; }
 
@@ -18,6 +18,7 @@ namespace Roslynator.Tests
 
         public virtual Project AddProject(Solution solution, CodeVerificationOptions options = null)
         {
+            //TODO: přidat ProjectReferences do CodeVerificationOptions
             return solution
                 .AddProject(DefaultProjectName, DefaultProjectName, Language)
                 .WithMetadataReferences(DefaultProjectReferences);

@@ -2,11 +2,14 @@
 
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Roslynator.CSharp.Tests;
+using Roslynator.Tests;
 
 namespace Roslynator.CSharp.Refactorings.Tests
 {
     public abstract class AbstractCSharpRefactoringVerifier : CSharpRefactoringVerifier
     {
+        protected override Assert Assert => XunitAssert.Instance;
+
         public override CodeRefactoringProvider RefactoringProvider { get; } = new RoslynatorCodeRefactoringProvider();
     }
 }

@@ -5,7 +5,7 @@ using Roslynator.Tests;
 
 namespace Roslynator.VisualBasic.Tests
 {
-    public class VisualBasicWorkspaceFactory : WorkspaceFactory
+    internal class VisualBasicWorkspaceFactory : WorkspaceFactory
     {
         internal static VisualBasicWorkspaceFactory Instance { get; } = new VisualBasicWorkspaceFactory();
 

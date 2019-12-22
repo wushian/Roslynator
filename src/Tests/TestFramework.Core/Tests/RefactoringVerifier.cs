@@ -12,8 +12,6 @@ using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.Text;
 using Roslynator.Tests.Text;
-using Xunit;
-using static Roslynator.Tests.CodeVerifierHelpers;
 
 namespace Roslynator.Tests
 {

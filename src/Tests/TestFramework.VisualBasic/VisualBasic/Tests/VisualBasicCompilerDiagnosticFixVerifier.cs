@@ -8,6 +8,6 @@ namespace Roslynator.VisualBasic.Tests
     {
         public override CodeVerificationOptions Options => VisualBasicCodeVerificationOptions.Default;
 
-        protected override WorkspaceFactory WorkspaceFactory => VisualBasicWorkspaceFactory.Instance;
+        internal override WorkspaceFactory WorkspaceFactory => VisualBasicWorkspaceFactory.Instance;
     }
 }

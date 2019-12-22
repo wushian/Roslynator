@@ -12,8 +12,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Text;
-using Xunit;
-using static Roslynator.Tests.CodeVerifierHelpers;
 
 namespace Roslynator.Tests
 {
@@ -51,7 +49,7 @@ namespace Roslynator.Tests
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default)
         {
-            (TextSpan span, string source, string expected) = TextParser.ReplaceEmptySpan(theory, fromData, toData);
+            (_, string source, string expected) = TextParser.ReplaceEmptySpan(theory, fromData, toData);
 
             await VerifyFixAsync(
                 source: source,

@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Refactorings\Refactorings.csproj" />
-    <ProjectReference Include="..\TestFramework.CSharp\TestFramework.CSharp.csproj" />
+    <ProjectReference Include="..\TestFramework.CSharp.Xunit\TestFramework.CSharp.Xunit.csproj" />
   </ItemGroup>
 
   <ItemGroup>

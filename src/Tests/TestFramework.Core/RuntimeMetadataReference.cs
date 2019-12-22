@@ -23,7 +23,7 @@ namespace Roslynator
 
                 return _defaultProjectReferences;
 
-                ImmutableArray<MetadataReference> Create()
+                static ImmutableArray<MetadataReference> Create()
                 {
                     return ImmutableArray.Create(
                         CorLibReference,

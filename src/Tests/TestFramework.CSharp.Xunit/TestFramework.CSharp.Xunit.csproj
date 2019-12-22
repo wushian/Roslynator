@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyName>Roslynator.TestFramework.VisualBasic</AssemblyName>
+    <AssemblyName>Roslynator.TestFramework.CSharp.Xunit</AssemblyName>
     <RootNamespace>Roslynator</RootNamespace>
     <CodeAnalysisRuleSet>..\..\global.ruleset</CodeAnalysisRuleSet>
     <SignAssembly>true</SignAssembly>
@@ -22,15 +22,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="TestFramework.VisualBasic.snk" />
+    <PackageReference Include="xunit" Version="2.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="2.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\TestFramework.Core\TestFramework.Core.csproj" />
+    <ProjectReference Include="..\TestFramework.CSharp\TestFramework.CSharp.csproj" />
   </ItemGroup>
 
 </Project>

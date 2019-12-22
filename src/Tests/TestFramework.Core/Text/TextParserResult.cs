@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 
 namespace Roslynator.Tests.Text
 {
-    public readonly struct TextParserResult : IEquatable<TextParserResult>
+    internal readonly struct TextParserResult : IEquatable<TextParserResult>
     {
         public TextParserResult(string text, ImmutableArray<LinePositionSpanInfo> spans)
         {

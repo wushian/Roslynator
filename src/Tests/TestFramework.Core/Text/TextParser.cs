@@ -9,7 +9,7 @@ using Roslynator.Text;
 
 namespace Roslynator.Tests.Text
 {
-    public abstract class TextParser
+    internal abstract class TextParser
     {
         public static TextParser Default { get; } = new DefaultTextParser();
 
