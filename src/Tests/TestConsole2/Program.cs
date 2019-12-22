@@ -11,7 +11,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Roslynator;
 using Roslynator.CSharp;
-using Roslynator.CSharp.Tests;
+using Roslynator.CSharp.Testing;
 
 namespace Roslynator
 {

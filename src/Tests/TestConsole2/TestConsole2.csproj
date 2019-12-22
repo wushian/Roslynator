@@ -19,8 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TestFramework.CSharp\TestFramework.CSharp.csproj" />
-    <ProjectReference Include="..\TestFramework.Core\TestFramework.Core.csproj" />
+    <ProjectReference Include="..\Testing.Core\Testing.Core.csproj" />
+    <ProjectReference Include="..\Testing.CSharp\Testing.CSharp.csproj" />
   </ItemGroup>
 
   <ItemGroup>

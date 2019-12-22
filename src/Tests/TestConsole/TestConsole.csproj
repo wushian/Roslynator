@@ -20,8 +20,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\CSharp.Workspaces\CSharp.Workspaces.csproj" />
-    <ProjectReference Include="..\TestFramework.CSharp\TestFramework.CSharp.csproj" />
-    <ProjectReference Include="..\TestFramework.Core\TestFramework.Core.csproj" />
+    <ProjectReference Include="..\Testing.CSharp\Testing.CSharp.csproj" />
+    <ProjectReference Include="..\Testing.Core\Testing.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
