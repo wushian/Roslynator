@@ -55,9 +55,5 @@ namespace Roslynator.Testing
                 }
             }
         }
-
-        public abstract CodeVerificationOptions AddAllowedCompilerDiagnosticId(string diagnosticId);
-
-        public abstract CodeVerificationOptions AddAllowedCompilerDiagnosticIds(IEnumerable<string> diagnosticIds);
     }
 }

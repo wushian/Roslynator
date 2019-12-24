@@ -2,11 +2,12 @@
 
 using Roslynator.CSharp.Testing;
 using Roslynator.Testing;
+using Roslynator.Testing.Xunit;
 
 namespace Roslynator.CSharp.Analysis.Tests
 {
     public abstract class AbstractCSharpFixVerifier : CSharpFixVerifier
     {
-        protected override Assert Assert => XunitAssert.Instance;
+        protected override IAssert Assert => XunitAssert.Instance;
     }
 }

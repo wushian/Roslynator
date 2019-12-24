@@ -104,12 +104,12 @@ namespace Roslynator.CSharp.Testing
             }
         }
 
-        public override CodeVerificationOptions AddAllowedCompilerDiagnosticId(string diagnosticId)
+        public CSharpCodeVerificationOptions AddAllowedCompilerDiagnosticId(string diagnosticId)
         {
             return WithAllowedCompilerDiagnosticIds(AllowedCompilerDiagnosticIds.Add(diagnosticId));
         }
 
-        public override CodeVerificationOptions AddAllowedCompilerDiagnosticIds(IEnumerable<string> diagnosticIds)
+        public CSharpCodeVerificationOptions AddAllowedCompilerDiagnosticIds(IEnumerable<string> diagnosticIds)
         {
             return WithAllowedCompilerDiagnosticIds(AllowedCompilerDiagnosticIds.AddRange(diagnosticIds));
         }

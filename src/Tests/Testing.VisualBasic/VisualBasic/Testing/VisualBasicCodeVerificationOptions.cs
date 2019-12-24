@@ -56,12 +56,12 @@ namespace Roslynator.VisualBasic.Testing
                 assemblyNames: RuntimeMetadataReference.DefaultAssemblyNames);
         }
 
-        public override CodeVerificationOptions AddAllowedCompilerDiagnosticId(string diagnosticId)
+        public VisualBasicCodeVerificationOptions AddAllowedCompilerDiagnosticId(string diagnosticId)
         {
             return WithAllowedCompilerDiagnosticIds(AllowedCompilerDiagnosticIds.Add(diagnosticId));
         }
 
-        public override CodeVerificationOptions AddAllowedCompilerDiagnosticIds(IEnumerable<string> diagnosticIds)
+        public VisualBasicCodeVerificationOptions AddAllowedCompilerDiagnosticIds(IEnumerable<string> diagnosticIds)
         {
             return WithAllowedCompilerDiagnosticIds(AllowedCompilerDiagnosticIds.AddRange(diagnosticIds));
         }

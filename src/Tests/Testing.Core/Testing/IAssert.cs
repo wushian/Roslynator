@@ -2,7 +2,7 @@
 
 namespace Roslynator.Testing
 {
-    public abstract class Assert
+    public interface IAssert
     {
         public abstract void Equal(string expected, string actual);
 

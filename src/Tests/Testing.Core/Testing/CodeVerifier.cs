@@ -17,13 +17,15 @@ namespace Roslynator.Testing
             WorkspaceFactory = workspaceFactory;
         }
 
-        public abstract CodeVerificationOptions Options { get; }
+        protected abstract CodeVerificationOptions CommonOptions { get; }
+
+        public CodeVerificationOptions Options => CommonOptions;
 
         internal WorkspaceFactory WorkspaceFactory { get; }
 
         internal virtual TextParser TextParser { get; } = TextParser.Default;
 
-        protected abstract Assert Assert { get; }
+        protected abstract IAssert Assert { get; }
 
         internal void VerifyCompilerDiagnostics(
             ImmutableArray<Diagnostic> diagnostics,
