@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using static Roslynator.RuntimeMetadataReference;
 
 namespace Roslynator.Testing
 {
@@ -12,7 +13,7 @@ namespace Roslynator.Testing
         private ImmutableArray<MetadataReference> _metadataReferences;
 
         protected CodeVerificationOptions(
-            IEnumerable<string> assemblyNames,
+            IEnumerable<string> assemblyNames = null,
             DiagnosticSeverity allowedCompilerDiagnosticSeverity = DiagnosticSeverity.Info,
             IEnumerable<string> allowedCompilerDiagnosticIds = null)
         {
@@ -48,8 +49,19 @@ namespace Roslynator.Testing
                 {
                     ImmutableArray<MetadataReference>.Builder builder = ImmutableArray.CreateBuilder<MetadataReference>();
 
-                    builder.Add(RuntimeMetadataReference.CorLibReference);
-                    builder.AddRange(AssemblyNames.Select(f => RuntimeMetadataReference.CreateFromAssemblyName(f)));
+                    builder.Add(CorLibReference);
+
+                    IEnumerable<MetadataReference> metadataReferences;
+                    if (AssemblyNames != null)
+                    {
+                        metadataReferences = AssemblyNames.Select(f => MetadataReference.CreateFromFile(TrustedPlatformAssemblyMap[f]));
+                    }
+                    else
+                    {
+                        metadataReferences = TrustedPlatformAssemblyMap.Select(f => MetadataReference.CreateFromFile(f.Value));
+                    }
+
+                    builder.AddRange(metadataReferences);
 
                     return builder.ToImmutableArray();
                 }

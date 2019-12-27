@@ -64,15 +64,5 @@ namespace Roslynator
                 }
             }
         }
-
-        public static PortableExecutableReference CreateFromAssemblyName(string assemblyName)
-        {
-            return MetadataReference.CreateFromFile(GetAssemblyLocation(assemblyName));
-        }
-
-        private static string GetAssemblyLocation(string assemblyName)
-        {
-            return TrustedPlatformAssemblyMap[assemblyName];
-        }
     }
 }

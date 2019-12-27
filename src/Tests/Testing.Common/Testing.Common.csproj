@@ -6,7 +6,7 @@
 
   <PropertyGroup>
     <Version>1.0.1.0</Version>
-    <AssemblyName>Roslynator.Testing.VisualBasic</AssemblyName>
+    <AssemblyName>Roslynator.Testing.Common</AssemblyName>
     <RootNamespace>Roslynator.Testing</RootNamespace>
     <CodeAnalysisRuleSet>..\..\global.ruleset</CodeAnalysisRuleSet>
     <SignAssembly>true</SignAssembly>
@@ -18,11 +18,11 @@
     <Deterministic>true</Deterministic>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsNotAsErrors>1591</WarningsNotAsErrors>
-    <DocumentationFile>bin\Release\netstandard1.3\Roslynator.Testing.VisualBasic.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\netstandard1.3\Roslynator.Testing.Common.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>Roslynator.Testing.VisualBasic</PackageId>
+    <PackageId>Roslynator.Testing.Common</PackageId>
     <PackageVersion>1.0.0-beta</PackageVersion>
     <Authors>Josef Pihrt</Authors>
     <Company></Company>
@@ -39,11 +39,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="2.3.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="2.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Testing.Common\Testing.Common.csproj" />
+    <ProjectReference Include="..\..\Core\Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
