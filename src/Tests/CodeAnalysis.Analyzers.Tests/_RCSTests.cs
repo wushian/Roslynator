@@ -41,7 +41,7 @@ class C
 
         //[Theory, Trait(Traits.Analyzer, DiagnosticIdentifiers.UsePropertySyntaxNodeSpanStart)]
         //[InlineData("", "")]
-        public async Task Test2(string fromData, string toData)
+        public async Task Test2(string source, string expected)
         {
             await VerifyDiagnosticAndFixAsync(@"
 using System;
@@ -58,7 +58,7 @@ class C
     {
     }
 }
-", fromData, toData);
+", source, expected);
         }
 
         //[Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UsePropertySyntaxNodeSpanStart)]
@@ -84,7 +84,7 @@ class C
 
         //[Theory, Trait(Traits.Analyzer, DiagnosticIdentifiers.UsePropertySyntaxNodeSpanStart)]
         //[InlineData("")]
-        public async Task TestNoDiagnostic2(string fromData)
+        public async Task TestNoDiagnostic2(string source)
         {
             await VerifyNoDiagnosticAsync(@"
 using System;
@@ -101,7 +101,7 @@ class C
     {
     }
 }
-", fromData);
+", source);
         }
     }
 }

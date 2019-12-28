@@ -74,16 +74,16 @@ namespace Roslynator.Testing
         }
 
         public async Task VerifyDiagnosticAndFixAsync(
-            string theory,
-            string fromData,
-            string toData,
+            string source,
+            string inlineSource,
+            string inlineExpected,
             string equivalenceKey = null,
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default)
         {
-            (TextSpan span, string source, string expected) = TextParser.ReplaceEmptySpan(theory, fromData, toData);
+            (TextSpan span, string source2, string expected) = TextParser.ReplaceEmptySpan(source, inlineSource, inlineExpected);
 
-            TextParserResult result = TextParser.GetSpans(source);
+            TextParserResult result = TextParser.GetSpans(source2);
 
             if (result.Spans.Any())
             {
@@ -95,24 +95,24 @@ namespace Roslynator.Testing
             }
             else
             {
-                await VerifyDiagnosticAsync(source, span, options, cancellationToken).ConfigureAwait(false);
+                await VerifyDiagnosticAsync(source2, span, options, cancellationToken).ConfigureAwait(false);
 
-                await VerifyFixAsync(source, expected, additionalData: null, equivalenceKey: equivalenceKey, options: options, cancellationToken: cancellationToken).ConfigureAwait(false);
+                await VerifyFixAsync(source2, expected, additionalData: null, equivalenceKey: equivalenceKey, options: options, cancellationToken: cancellationToken).ConfigureAwait(false);
             }
         }
 
         public async Task VerifyFixAsync(
-            string theory,
-            string fromData,
-            string toData,
+            string source,
+            string inlineSource,
+            string inlineExpected,
             string equivalenceKey = null,
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default)
         {
-            (_, string source, string expected) = TextParser.ReplaceEmptySpan(theory, fromData, toData);
+            (_, string source2, string expected) = TextParser.ReplaceEmptySpan(source, inlineSource, inlineExpected);
 
             await VerifyFixAsync(
-                source: source,
+                source: source2,
                 expected: expected,
                 equivalenceKey: equivalenceKey,
                 options: options,

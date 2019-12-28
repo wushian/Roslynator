@@ -32,7 +32,7 @@ class C
 
         //[Theory, Trait(Traits.Refactoring, RefactoringIdentifiers.AddBraces)]
         //[InlineData("", "")]
-        public async Task Test2(string fromData, string toData)
+        public async Task Test2(string source, string expected)
         {
             await VerifyRefactoringAsync(@"
 using System;
@@ -46,7 +46,7 @@ class C
     {
     }
 }
-", fromData, toData, equivalenceKey: RefactoringId);
+", source, expected, equivalenceKey: RefactoringId);
         }
 
         //[Fact, Trait(Traits.Refactoring, RefactoringIdentifiers.AddBraces)]

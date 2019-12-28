@@ -58,16 +58,16 @@ namespace Roslynator.Testing
         }
 
         public async Task VerifyRefactoringAsync(
-            string theory,
-            string fromData,
-            string toData,
+            string source,
+            string inlineSource,
+            string inlineExpected,
             string equivalenceKey = null,
             CodeVerificationOptions options = null,
             CancellationToken cancellationToken = default)
         {
-            (TextSpan span, string source, string expected) = TextParser.ReplaceEmptySpan(theory, fromData, toData);
+            (TextSpan span, string source2, string expected) = TextParser.ReplaceEmptySpan(source, inlineSource, inlineExpected);
 
-            TextParserResult result = TextParser.GetSpans(source, LinePositionSpanInfoComparer.IndexDescending);
+            TextParserResult result = TextParser.GetSpans(source2, LinePositionSpanInfoComparer.IndexDescending);
 
             if (result.Spans.Any())
             {
