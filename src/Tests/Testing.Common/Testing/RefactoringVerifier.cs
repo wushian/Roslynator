@@ -82,7 +82,7 @@ namespace Roslynator.Testing
             else
             {
                 await VerifyRefactoringAsync(
-                    source: source,
+                    source: source2,
                     expected: expected,
                     span: span,
                     equivalenceKey: equivalenceKey,
