@@ -2,23 +2,8 @@
 
 set _msbuildPath="C:\Program Files\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild"
 set _properties=Configuration=Release,Deterministic=true,TreatWarningsAsErrors=true,WarningsNotAsErrors=1591,DefineConstants=VSCODE
-set _version=2.2.0.0
-set _apiVersion=1.0.0.16
 
 dotnet restore --force "..\src\VisualStudioCode.sln"
-
-%_msbuildPath% "..\src\Tools\Tools.sln" ^
- /t:Clean,Build ^
- /p:%_properties% ^
- /v:normal ^
- /m
-
-if errorlevel 1 (
- pause
- exit
-)
-
-dotnet "..\src\Tools\VersionUpdater\bin\Release\netcoreapp2.0\VersionUpdater.dll" "..\src" "%_version%" "%_apiVersion%"
 
 %_msbuildPath% "..\src\VisualStudioCode.sln" ^
  /t:Clean,Build ^
@@ -55,8 +40,6 @@ cd ..
 echo Package is being created
 vsce package
 echo Package successfully created
-
-del /S /Q roslyn
 
 echo OK
 

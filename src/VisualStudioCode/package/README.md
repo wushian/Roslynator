@@ -4,28 +4,6 @@ A collection of 500+ [analyzers](https://github.com/JosefPihrt/Roslynator/blob/m
 
 For further information please with Roslynator [repo](https://github.com/JosefPihrt/Roslynator).
 
-## Configuration
-
-To make this extension working it is necessary to add following configuration to **%USERPROFILE%\.omnisharp\omnisharp.json**:
-
-```json
-{
-  "RoslynExtensionsOptions": {
-    "EnableAnalyzersSupport": true,
-    "LocationPaths": [
-      "%USERPROFILE%/.vscode/extensions/josefpihrt-vscode.roslynator-2.2.0/roslyn/common",
-      "%USERPROFILE%/.vscode/extensions/josefpihrt-vscode.roslynator-2.2.0/roslyn/analyzers",
-      "%USERPROFILE%/.vscode/extensions/josefpihrt-vscode.roslynator-2.2.0/roslyn/refactorings",
-      "%USERPROFILE%/.vscode/extensions/josefpihrt-vscode.roslynator-2.2.0/roslyn/fixes"
-    ]
-  }
-}
-```
-
-Replace **%USERPROFILE%** with an actual full path (such as **C:/Users/User**).
-
-After each update of the extension it is necessary to update paths to libraries (i.e. replace version in the path with a new version).
-
 ## Location of Configuration Files
 
 Configuration files are located at `%LOCALAPPDATA%\JosefPihrt\Roslynator\VisualStudioCode`.
