@@ -71,7 +71,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Refactorings.Tests", "Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeFixes.Tests", "Tests\CodeFixes.Tests\CodeFixes.Tests.csproj", "{BD31315B-B89B-43F7-994D-EBE6FFC2D89B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestFramework.Core", "Tests\TestFramework.Core\TestFramework.Core.csproj", "{306D8762-6A4E-4957-ABE6-5C30E13BD95F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Testing.Common", "Tests\Testing.Common\Testing.Common.csproj", "{306D8762-6A4E-4957-ABE6-5C30E13BD95F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharp.Tests", "Tests\CSharp.Tests\CSharp.Tests.csproj", "{9960FC47-14B1-492F-918C-114FDB75790E}"
 EndProject
@@ -120,9 +120,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisualBasic", "VisualBasic\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisualBasic.Workspaces", "VisualBasic.Workspaces\VisualBasic.Workspaces.csproj", "{297D8BED-6E4A-4367-BE8B-832AAC9C3909}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestFramework.CSharp", "Tests\TestFramework.CSharp\TestFramework.CSharp.csproj", "{29F9EF2D-2927-418A-9E45-26807E0FB5D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Testing.CSharp", "Tests\Testing.CSharp\Testing.CSharp.csproj", "{29F9EF2D-2927-418A-9E45-26807E0FB5D1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestFramework.VisualBasic", "Tests\TestFramework.VisualBasic\TestFramework.VisualBasic.csproj", "{CAAD056C-08A2-4132-9652-1BBBDC5D6C22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Testing.VisualBasic", "Tests\Testing.VisualBasic\Testing.VisualBasic.csproj", "{CAAD056C-08A2-4132-9652-1BBBDC5D6C22}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeAnalysis.Analyzers", "CodeAnalysis.Analyzers\CodeAnalysis.Analyzers.csproj", "{22F97324-2BD5-4350-A34F-2E33CD31A78D}"
 EndProject
