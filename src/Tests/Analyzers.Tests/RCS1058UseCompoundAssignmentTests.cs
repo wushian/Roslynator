@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Roslynator.CSharp.CodeFixes;
+using Roslynator.CSharp.Tests;
 using Xunit;
 
 namespace Roslynator.CSharp.Analysis.Tests
@@ -104,6 +105,20 @@ class C
     int P { get; set; }
 }
 ");
+        }
+
+        [Fact, Trait(Traits.Analyzer, DiagnosticIdentifiers.UseCompoundAssignment)]
+        public async Task TestNoDiagnostic_CoalesceExpression_CSharp6()
+        {
+            await VerifyNoDiagnosticAsync(@"
+class C
+{
+    void M(string s)
+    {
+        s = s ?? """";
+    }
+}
+", options: CSharpCodeVerificationOptions.DefaultWithCSharp6);
         }
     }
 }
