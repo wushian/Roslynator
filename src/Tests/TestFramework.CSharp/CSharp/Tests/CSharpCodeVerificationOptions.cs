@@ -12,8 +12,9 @@ namespace Roslynator.CSharp.Tests
 {
     public class CSharpCodeVerificationOptions : CodeVerificationOptions
     {
-        private static CSharpCodeVerificationOptions _defaultWithCSharp5;
-        private static CSharpCodeVerificationOptions _defaultWithCSharp6;
+        private static CSharpCodeVerificationOptions _default_CSharp5;
+        private static CSharpCodeVerificationOptions _default_CSharp6;
+        private static CSharpCodeVerificationOptions _default_CSharp7_3;
 
         public CSharpCodeVerificationOptions(
             CSharpParseOptions parseOptions = null,
@@ -73,29 +74,42 @@ namespace Roslynator.CSharp.Tests
                 ));
         }
 
-        internal static CSharpCodeVerificationOptions DefaultWithCSharp5
+        internal static CSharpCodeVerificationOptions Default_CSharp5
         {
             get
             {
-                if (_defaultWithCSharp5 == null)
-                    Interlocked.CompareExchange(ref _defaultWithCSharp5, LoadDefaultOptionsWithCSharp5(), null);
+                if (_default_CSharp5 == null)
+                    Interlocked.CompareExchange(ref _default_CSharp5, Create(), null);
 
-                return _defaultWithCSharp5;
+                return _default_CSharp5;
 
-                CSharpCodeVerificationOptions LoadDefaultOptionsWithCSharp5() => Default.WithParseOptions(Default.ParseOptions.WithLanguageVersion(LanguageVersion.CSharp5));
+                static CSharpCodeVerificationOptions Create() => Default.WithParseOptions(Default.ParseOptions.WithLanguageVersion(LanguageVersion.CSharp5));
             }
         }
 
-        internal static CSharpCodeVerificationOptions DefaultWithCSharp6
+        internal static CSharpCodeVerificationOptions Default_CSharp6
         {
             get
             {
-                if (_defaultWithCSharp6 == null)
-                    Interlocked.CompareExchange(ref _defaultWithCSharp6, LoadDefaultOptionsWithCSharp6(), null);
+                if (_default_CSharp6 == null)
+                    Interlocked.CompareExchange(ref _default_CSharp6, Create(), null);
 
-                return _defaultWithCSharp6;
+                return _default_CSharp6;
 
-                CSharpCodeVerificationOptions LoadDefaultOptionsWithCSharp6() => Default.WithParseOptions(Default.ParseOptions.WithLanguageVersion(LanguageVersion.CSharp6));
+                static CSharpCodeVerificationOptions Create() => Default.WithParseOptions(Default.ParseOptions.WithLanguageVersion(LanguageVersion.CSharp6));
+            }
+        }
+
+        internal static CSharpCodeVerificationOptions Default_CSharp7_3
+        {
+            get
+            {
+                if (_default_CSharp7_3 == null)
+                    Interlocked.CompareExchange(ref _default_CSharp7_3, Create(), null);
+
+                return _default_CSharp7_3;
+
+                static CSharpCodeVerificationOptions Create() => Default.WithParseOptions(Default.ParseOptions.WithLanguageVersion(LanguageVersion.CSharp7_3));
             }
         }
 
